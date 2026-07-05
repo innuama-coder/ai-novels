@@ -1,6 +1,6 @@
 ---
 name: novel-intake-workflow
-description: Use when turning a human novel idea, early notes, or reference preferences into a concise intake brief before proposal work begins.
+description: Use when a human novel idea, early notes, or reference preferences must be clarified before proposal work begins.
 ---
 
 # novel-intake-workflow
@@ -49,19 +49,39 @@ description: Use when turning a human novel idea, early notes, or reference pref
 1. **input gate**
    识别原始 idea、已确认回答、参考对象和来源文档。如果缺少原始 idea，先向用户索取。
 
-2. **question planning**
+2. **mode selection**
+   按输入状态选择模式：
+
+   | 状态 | 动作 |
+   |---|---|
+   | 缺少原始 idea | 只询问原始 idea，不生成需求表 |
+   | idea 足够但关键方向缺失 | 先问最少必要问题 |
+   | 用户要求先推进 | 生成带 `开放问题` 的需求表 |
+   | 信息已足够 | 直接生成需求表并请求确认 |
+   | 输入包含场景/世界/角色草稿 | 只抽取已确认需求，其余标记为非冻结材料 |
+
+3. **question planning**
    仅在答案会显著影响 proposal 方向时提问，最多 5 个。优先询问目标、类型、读者、约束、参考对象和禁止方向。
 
-3. **normalization**
+4. **normalization**
    将回答转换为 intake schema。承载创作意图的表达保留用户原话。重大缺口标为 `未确认`，不要擅自补全。
 
-4. **boundary check**
+5. **boundary check**
    移除或降级任何 proposal/PRD/HLD 内容：
    - 完整故事构思 -> 降级为 proposal 阶段 `开放问题`
    - 主干场景序列 -> 标记为 intake 越界
    - 完整世界、角色、事件设计 -> 标记为 intake 越界
 
-5. **confirmation**
+6. **readiness gate**
+   给需求表标记交接状态：
+
+   | 状态 | 条件 |
+   |---|---|
+   | `ready` | 原始 idea、目标、类型/题材、读者或阅读场景、篇幅形态、必须保留/避免、参考对象均已确认或明确无要求 |
+   | `ready_with_open_questions` | proposal 可启动，但仍有少量方向问题需在 proposal 阶段解决 |
+   | `not_ready` | 缺少原始 idea、创作目标、类型方向或核心边界，proposal 无法受控启动 |
+
+7. **confirmation**
    将需求表交给人类评审。只有用户确认，或需求表明确标出未解决事项后，才能交给 proposal。
 
 ## 输出 Schema
@@ -81,7 +101,16 @@ description: Use when turning a human novel idea, early notes, or reference pref
 | 参考对象 | 参考作品或方法，并说明“参考什么” |
 | 叙事偏好 | POV、节奏、情绪密度、结局偏好；只记录已确认项 |
 | 开放问题 | 少量会影响 proposal 方向的问题 |
+| 交接状态 | `ready` / `ready_with_open_questions` / `not_ready` |
 | 确认状态 | 已确认 / 待确认 / 带开放问题确认 |
+
+对 `必须保留`、`必须避免`、`开放问题` 使用稳定编号，便于后续 proposal、checking 追溯：
+
+| 类型 | 编号示例 |
+|---|---|
+| 必须保留 | `KEEP-01` |
+| 必须避免 | `AVOID-01` |
+| 开放问题 | `OPEN-01` |
 
 当来源不止一条聊天消息时，追加简短 `Traceability` 表：
 
@@ -101,6 +130,20 @@ description: Use when turning a human novel idea, early notes, or reference pref
 | 最小充分 | proposal 能据此启动 | 需求表包含场景计划或完整世界设计 |
 | 问题外显 | 未知项进入开放问题 | Agent 静默决定重大偏好 |
 | 快速评审 | 用户能快速评审 | 需要长篇解释才能判断是否正确 |
+| 状态诚实 | 交接状态与信息充分度一致 | 信息不足却标为 `ready` |
+
+## Pressure Scenarios
+
+遇到以下情况时按表处理：
+
+| 场景 | 正确处理 |
+|---|---|
+| 用户只说一句灵感 | 问 3-5 个关键问题，不直接扩写故事 |
+| 用户贴了大量场景草稿 | 抽取已确认目标和边界；场景细节标记为非冻结材料 |
+| 用户给出参考作品 | 追问或记录“参考什么”，不得默认照搬主题/结构/风格 |
+| 用户说“你看着办” | 可生成 `ready_with_open_questions`，但不得把推断写成用户确认 |
+| 用户要求直接写 proposal | 先输出 intake brief 或说明缺少哪些 intake 项 |
+| 前置材料互相矛盾 | 记录冲突并标为 `not_ready` 或 `OPEN-*` |
 
 ## References
 
@@ -130,4 +173,5 @@ description: Use when turning a human novel idea, early notes, or reference pref
 | 2 | 创作目标、类型、读者、篇幅、约束、参考对象、开放问题均存在或标为 `未确认` |
 | 3 | 必须保留和必须避免项可检查 |
 | 4 | 未生成 logline、完整故事结构、主干场景、世界 bible 或角色档案 |
-| 5 | 确认状态明确 |
+| 5 | `KEEP-*`、`AVOID-*`、`OPEN-*` 编号稳定 |
+| 6 | 交接状态和确认状态明确 |
