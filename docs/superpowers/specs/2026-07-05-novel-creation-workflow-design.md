@@ -9,6 +9,7 @@
 | v1.2 | 2026-07-05 | Codex | 基于小说创作方法论参考，明确 proposal、PRD、HLD 的职责边界、交付差异与冻结关系 | 草案 |
 | v1.3 | 2026-07-05 | Codex | 将交付物标准升级为 artifact + schema + rules + references 模型，补充可验收规则与参照标准雏形 | 草案 |
 | v1.4 | 2026-07-05 | Codex | 修正 references 定义：references 表示好交付物参照，原引用追溯标准改为 traceability | 草案 |
+| v1.5 | 2026-07-05 | Codex | 新增强 harness workflow 原则：除 intake 外，每个节点由 harness 调度多个独立技能完成 | 草案 |
 
 ## 1. 目标
 
@@ -34,6 +35,51 @@ idea -> intake -> proposal -> prd -> hld -> lld -> novel writing -> novel checki
 | 自顶而下 | 下游阶段只允许展开、细化和执行上游已确认内容，不允许自行改写上游意图 |
 | PRD 后约束冻结 | PRD 及之前的交付物通过评审后，成为 HLD、LLD、writing、checking 的最高约束和边界控制 |
 | 正文服从上层设计 | checking 发现正文背离 PRD 及之前文档时，默认正文需要修订；只有人类明确决定时，才回滚上游重新设计 |
+| 强 harness 驱动 | 除 intake 外，每个节点必须由一个 harness workflow 负责调度、串接、分配、登记、打包和验收 |
+| 业务技能内聚 | harness 不做实际业务设计或写作；所有业务工作必须由职责单一、边界明确、可独立验收的独立技能完成 |
+
+## 2.1 节点执行架构
+
+除 intake 外，每个工作流节点必须采用以下执行架构：
+
+```text
+node = harness workflow + independent skills
+```
+
+harness workflow 的职责：
+
+| 职责 | 内容 |
+|---|---|
+| 输入校验 | 确认上游交付物齐备、版本明确、冻结项可识别 |
+| 任务分解 | 将节点目标拆给多个独立技能，不直接完成业务内容 |
+| 调度编排 | 决定技能调用顺序、并行关系、依赖关系和重试策略 |
+| 边界仲裁 | 阻止独立技能越级修改上游约束或侵入其他技能职责 |
+| 交付打包 | 将独立技能交付物登记、编号、装配为节点交付包 |
+| 质量验收 | 按 artifact、schema、rules、references、traceability 验收节点输出 |
+| 重开管理 | 发现上游根本问题时生成上游重开请求，而不是自行改写上游 |
+
+harness workflow 明确禁止：
+
+| 禁止项 | 原因 |
+|---|---|
+| 不直接设计故事、角色、世界、场景或正文 | 业务内容必须由独立技能完成 |
+| 不用打包名义改写技能输出的核心业务结论 | 打包只解决文件组织、版本登记和交接，不替代业务判断 |
+| 不绕过 rules / references / traceability 验收 | harness 是质量闸门，不是自由生成器 |
+| 不在下游节点修改上游冻结项 | 只能生成上游重开请求 |
+
+需要改写、归并、分级、排序、取舍、过渡或口径统一的集成工作，本身属于业务能力，必须由独立 integrator / checker / router skill 承接，不能由 harness workflow 直接完成。
+
+独立技能必须满足：
+
+| 要求 | 内容 |
+|---|---|
+| 内聚 | 一个技能只负责一个可命名的业务能力 |
+| 边界清晰 | 明确输入、输出、允许做什么、禁止做什么 |
+| 可独立验收 | 技能输出必须有自己的 rules、references 和 traceability |
+| 可被编排 | 技能不得假设自己拥有整个节点控制权 |
+| 可替换 | 更换某个技能不应破坏 harness 的总体契约 |
+
+intake 是例外。intake 可以采用轻量交互式 harness，但不强制拆成多个 Agent 自主技能，因为 intake 的核心任务是与人类用户对齐需求。
 
 ## 3. 阶段定义
 
