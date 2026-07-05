@@ -9,7 +9,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 
 这是 `idea -> intake -> proposal` 边界上的轻量交互式 harness。
 
-它将人类给出的小说 idea 整理为 proposal workflow 可用的 `intake brief / 小说需求表`。它可以提问、收束、记录、确认并生成需求表，但不得设计完整小说。
+它将人类给出的小说 idea 整理为 proposal workflow 可用的极简 `intake brief / 小说需求表`。它可以提问、收束、记录、确认并生成需求表，但不得设计完整小说，也不得为了“补全表格”而扩张用户没有确认的信息。
 
 ## 输入
 
@@ -20,7 +20,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 原始 idea | 保留用户的创作起点 |
 | 用户回答 | 确认目标、边界、偏好和不确定项 |
 | 参考对象 | 记录参考什么，以及不能照搬什么 |
-| 前置材料 | 提取已确认需求，但不把草稿视为冻结设计 |
+| 前置材料 | 只提取最核心、已确认的需求，不把草稿视为冻结设计 |
 
 如果输入不足，只问能够启动 proposal 的最少必要问题。若用户希望继续推进，则将未解决事项记录为 `开放问题`。
 
@@ -47,7 +47,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 ## 工作流
 
 1. **input gate**
-   识别原始 idea、已确认回答、参考对象和来源文档。如果缺少原始 idea，先向用户索取。
+   识别原始 idea、已确认回答、参考对象和来源文档。如果缺少原始 idea，先向用户索取。不要从后期设计文档倒推出“原始需求”。
 
 2. **mode selection**
    按输入状态选择模式：
@@ -58,13 +58,13 @@ description: Use when a human novel idea, early notes, or reference preferences 
    | idea 足够但关键方向缺失 | 先问最少必要问题 |
    | 用户要求先推进 | 生成带 `开放问题` 的需求表 |
    | 信息已足够 | 直接生成需求表并请求确认 |
-   | 输入包含场景/世界/角色草稿 | 只抽取已确认需求，其余标记为非冻结材料 |
+   | 输入包含场景/世界/角色草稿 | 只抽取最小核心需求，其余标记为非冻结材料 |
 
 3. **question planning**
    仅在答案会显著影响 proposal 方向时提问，最多 5 个。优先询问目标、类型、读者、约束、参考对象和禁止方向。
 
 4. **normalization**
-   将回答转换为 intake schema。承载创作意图的表达保留用户原话。重大缺口标为 `未确认`，不要擅自补全。
+   将回答转换为最小 intake schema。承载创作意图的表达保留用户原话。重大缺口标为 `未确认`，不要擅自补全。
 
 5. **boundary check**
    移除或降级任何 proposal/PRD/HLD 内容：
@@ -77,32 +77,29 @@ description: Use when a human novel idea, early notes, or reference preferences 
 
    | 状态 | 条件 |
    |---|---|
-   | `ready` | 原始 idea、目标、类型/题材、读者或阅读场景、篇幅形态、必须保留/避免、参考对象均已确认或明确无要求 |
+   | `ready` | 原始 idea、核心意图、少量硬约束、参考对象和开放问题均清楚 |
    | `ready_with_open_questions` | proposal 可启动，但仍有少量方向问题需在 proposal 阶段解决 |
-   | `not_ready` | 缺少原始 idea、创作目标、类型方向或核心边界，proposal 无法受控启动 |
+   | `not_ready` | 缺少原始 idea、核心意图或关键边界，proposal 无法受控启动 |
 
 7. **confirmation**
    将需求表交给人类评审。只有用户确认，或需求表明确标出未解决事项后，才能交给 proposal。
 
 ## 输出 Schema
 
-需求表以紧凑表格为主。
+需求表以极简表格为主。不要追求字段完整，只保留 proposal 必须服从的核心边界。
 
 | 字段 | 内容标准 |
 |---|---|
 | 项目名称 | 已知标题或工作标题 |
 | 原始 idea | 用户最初想法，不做文学化改写 |
-| 创作目标 | 1-3 句话说明预期阅读体验或作品目标 |
-| 类型与题材 | 类型、题材和大体风格方向 |
-| 目标读者 | 预期读者或阅读场景 |
-| 篇幅形态 | 短篇、中篇、长篇、系列、分部方式或未知 |
-| 必须保留 | 用户确认必须保留的元素，写成可检查约束 |
-| 必须避免 | 用户确认必须避免的方向，写成可检查约束 |
-| 参考对象 | 参考作品或方法，并说明“参考什么” |
-| 叙事偏好 | POV、节奏、情绪密度、结局偏好；只记录已确认项 |
-| 开放问题 | 少量会影响 proposal 方向的问题 |
+| 核心意图 | 1-2 句话说明用户真正想探索的问题或体验 |
+| 硬约束 | 少量 `KEEP-*` / `AVOID-*`；通常合计不超过 3-5 条 |
+| 参考对象 | 只记录用户明确给出的参考对象，并说明“参考什么” |
+| 开放问题 | 少量会影响 proposal 方向的问题；通常不超过 3 条 |
 | 交接状态 | `ready` / `ready_with_open_questions` / `not_ready` |
 | 确认状态 | 已确认 / 待确认 / 带开放问题确认 |
+
+可选字段只在用户明确给出时加入：`类型与题材`、`目标读者`、`篇幅形态`、`叙事偏好`。不要为了让需求表看起来完整而推断这些字段。
 
 对 `必须保留`、`必须避免`、`开放问题` 使用稳定编号，便于后续 proposal、checking 追溯：
 
@@ -126,10 +123,10 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 规则 | 通过标准 | 拒绝条件 |
 |---|---|---|
 | 保留原意 | 原始 idea 被准确保留 | Agent 美化或改变用户意图 |
-| 显式边界 | 必须保留、必须避免、参考对象均可检查 | 约束停留在模糊口号 |
-| 最小充分 | proposal 能据此启动 | 需求表包含场景计划或完整世界设计 |
+| 显式边界 | 少量必须保留、必须避免、参考对象均可检查 | 约束停留在模糊口号 |
+| 最小核心 | 只冻结 proposal 必须服从的关键边界 | 需求表吸收了后续阶段可自行设计的细节 |
 | 问题外显 | 未知项进入开放问题 | Agent 静默决定重大偏好 |
-| 快速评审 | 用户能快速评审 | 需要长篇解释才能判断是否正确 |
+| 快速评审 | 用户能在 1-2 分钟内评审 | 需要长篇解释才能判断是否正确 |
 | 状态诚实 | 交接状态与信息充分度一致 | 信息不足却标为 `ready` |
 
 ## Pressure Scenarios
@@ -139,7 +136,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 场景 | 正确处理 |
 |---|---|
 | 用户只说一句灵感 | 问 3-5 个关键问题，不直接扩写故事 |
-| 用户贴了大量场景草稿 | 抽取已确认目标和边界；场景细节标记为非冻结材料 |
+| 用户贴了大量场景草稿 | 只抽取最小核心目标和边界；场景细节标记为非冻结材料 |
 | 用户给出参考作品 | 追问或记录“参考什么”，不得默认照搬主题/结构/风格 |
 | 用户说“你看着办” | 可生成 `ready_with_open_questions`，但不得把推断写成用户确认 |
 | 用户要求直接写 proposal | 先输出 intake brief 或说明缺少哪些 intake 项 |
@@ -150,6 +147,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 好的 intake brief：
 
 - 普通项目一页内可读完。
+- 字段宁缺毋滥，不为了完整而扩写。
 - 用户能快速判断“对 / 不对 / 缺什么”。
 - `必须保留` 和 `必须避免` 能进入后续 checking。
 - 明确参考对象贡献的是结构、语气、题材、情绪、技法还是市场定位。
@@ -159,6 +157,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 
 - 读起来像 proposal、synopsis、HLD 或场景计划。
 - 用 Agent 自己喜欢的故事替换用户 idea。
+- 从后期 PRD/HLD/LLD/writing 文档里反推大量“需求”。
 - 使用“高级”“有质感”“不要俗”等不可检查表达，却不给出操作含义。
 - 只列参考作品，不说明借鉴什么、避免什么。
 - 推迟太多关键问题，导致 proposal 无法启动。
@@ -170,8 +169,8 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | # | 检查项 |
 |---|---|
 | 1 | 原始 idea 与归一化理解分开记录 |
-| 2 | 创作目标、类型、读者、篇幅、约束、参考对象、开放问题均存在或标为 `未确认` |
-| 3 | 必须保留和必须避免项可检查 |
+| 2 | 核心意图、硬约束、参考对象、开放问题存在；缺失项不强行补全 |
+| 3 | `KEEP-*` 和 `AVOID-*` 数量克制且可检查 |
 | 4 | 未生成 logline、完整故事结构、主干场景、世界 bible 或角色档案 |
 | 5 | `KEEP-*`、`AVOID-*`、`OPEN-*` 编号稳定 |
 | 6 | 交接状态和确认状态明确 |
