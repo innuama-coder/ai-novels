@@ -1,4 +1,11 @@
+---
+name: novel-prd-writer
+description: Use only when reviewing legacy novel PRD material created before the current intake-proposal-PRD workflow; do not use for new proposal or PRD generation.
+---
+
 # novel-prd-writer
+
+> Deprecated: this legacy skill predates the current workflow. For new work, use `novel-proposal-workflow` after intake, then the future `novel-prd-workflow` after proposal acceptance. Do not use this skill to bypass the intake brief or intake boundary ledger.
 
 ## 描述
 

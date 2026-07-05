@@ -110,13 +110,14 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 节点目标 | 生成整部小说的构思契约 |
 | 输入 | intake brief |
 | 输出 | proposal document / 小说构思案 |
-| harness 只做 | 校验 intake、拆分构思任务、调度技能、登记技能输出、打包 proposal、验收简洁性和完整性 |
+| harness 只做 | 校验 intake、生成边界账本、拆分构思任务、调度技能、登记技能输出、打包 proposal、验收简洁性和完整性 |
 | harness 不做 | 不直接写 logline、故事线、角色、世界初设或结局 |
 
 ### 5.2 下挂独立技能
 
 | 技能 | 职责 | 输出 | 独立验收点 |
 |---|---|---|---|
+| `novel-intake-boundary-ledger-builder` | 将 intake brief 转成 proposal 必须服从的边界账本 | intake boundary ledger | `KEEP-*`、`AVOID-*`、`OPEN-*` 是否完整且未被改写 |
 | `novel-reader-promise-designer` | 定义类型、目标读者、阅读体验、题材边界 | 读者承诺表 | 是否能指导下游取舍 |
 | `novel-core-concept-designer` | 设计 logline、核心问题、不可替换钩子 | 核心概念卡 | 是否一眼看出主角、冲突、代价或变化 |
 | `novel-macro-structure-designer` | 设计整部小说宏观结构、分部/分卷/幕结构 | 宏观结构表 | 是否支撑指定部分拆分 |
@@ -131,6 +132,7 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 
 | 技能 | 明确禁止 |
 |---|---|
+| `novel-intake-boundary-ledger-builder` | 不解释、不加强、不削弱 intake 约束，只登记和分类 |
 | `novel-storyline-designer` | 不写 PRD 主干场景表 |
 | `novel-core-character-framer` | 不写 HLD/LLD 全量人物档案 |
 | `novel-world-premise-framer` | 不写世界 bible |
@@ -332,7 +334,7 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 节点 | harness workflow | 独立技能数量 |
 |---|---|---|
 | intake | `novel-intake-workflow` | 0-2 个可选辅助技能 |
-| proposal | `novel-proposal-workflow` | 9 |
+| proposal | `novel-proposal-workflow` | 10 |
 | PRD | `novel-prd-workflow` | 9 |
 | HLD | `novel-hld-workflow` | 9 |
 | LLD | `novel-lld-workflow` | 6 |

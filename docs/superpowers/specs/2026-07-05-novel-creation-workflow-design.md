@@ -11,6 +11,7 @@
 | v1.4 | 2026-07-05 | Codex | 修正 references 定义：references 表示好交付物参照，原引用追溯标准改为 traceability | 草案 |
 | v1.5 | 2026-07-05 | Codex | 新增强 harness workflow 原则：除 intake 外，每个节点由 harness 调度多个独立技能完成 | 草案 |
 | v1.6 | 2026-07-05 | Codex | 收紧 intake 规格：需求表只冻结最小核心信息，避免从 idea 过度补全 | 草案 |
+| v1.7 | 2026-07-05 | Codex | 强化 proposal 对 intake 的服从规则：需求表是 proposal 的核心约束和边界 | 草案 |
 
 ## 1. 目标
 
@@ -141,6 +142,15 @@ proposal 必须明确：
 | 结局方向 | 终局性质、不可反转项、是否开放、是否保留系列钩子 |
 | PRD 建议范围 | 下一阶段适合拆出的指定部分，以及该部分为什么相对独立 |
 | 风险与开放点 | 下一阶段必须控制或细化的问题 |
+
+proposal 的硬标准：
+
+| 标准 | 内容 |
+|---|---|
+| intake 是最高约束 | proposal 必须先建立 intake boundary ledger，逐条登记 `KEEP-*`、`AVOID-*`、`OPEN-*` |
+| 不反写 intake | proposal 可以回答开放问题，但不能把自己的设计决策写成用户已确认需求 |
+| 不吸收后期草稿 | 旧 PRD / HLD / LLD / writing 只能作为非冻结参考，不能覆盖 intake brief |
+| 决策要标源 | 每个新增核心设定必须标明来自 intake 约束、`OPEN-*` 回答，还是 proposal 自主设计 |
 
 proposal 的重点是“小说整体成立”。它是整部小说的顶层构思契约，不承担逐场景细化责任，也不展开完整世界 bible；但必须让 PRD 能够受控地选择并设计指定部分。
 
@@ -495,6 +505,7 @@ proposal rules：
 | 规则 | 通过标准 | 拒绝条件 |
 |---|---|---|
 | 服从 intake | 核心概念、题材、禁区、读者承诺均可追溯到 intake | 改写用户确认过的题材边界或创作目标 |
+| intake 边界账本 | `KEEP-*`、`AVOID-*`、`OPEN-*` 均被登记、处理和追踪 | 跳过需求表，直接从旧 PRD/HLD/LLD 生成构思 |
 | 整体成立 | logline、结构、故事线、主要人物、结局方向互相支撑 | 只有设定堆叠，没有故事问题、冲突或终局方向 |
 | 故事线闭合 | 主线、展开线、隐藏线、情感线、主题线至少有起点和终点 | 故事线只有标签，没有变化路径 |
 | 保持克制 | 只定义支撑构思所需的世界初设和核心人物 | 写成全量世界 bible、主干场景表或章节大纲 |
@@ -517,6 +528,7 @@ proposal traceability：
 | 引用项 | 用途 |
 |---|---|
 | intake brief | 证明 proposal 服从用户需求和边界 |
+| intake boundary ledger | 证明 `KEEP-*`、`AVOID-*`、`OPEN-*` 被逐条处理 |
 | 用户确认的必须保留 / 必须避免项 | 形成 proposal 的硬约束 |
 | story structure / beat / synopsis 方法论参考 | 支撑整体结构、故事线、结局方向的设计 |
 | Snowflake Method 参考 | 支撑由一句话逐层展开的构思方式 |
