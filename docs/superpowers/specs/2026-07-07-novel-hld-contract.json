@@ -1,0 +1,276 @@
+{
+  "node": "hld",
+  "version": "2026-07-13.v18",
+  "harness": "novel-hld-workflow",
+  "required_reference": "docs/superpowers/references/2026-07-08-hld-methodology-and-best-practices.md",
+  "contract_rules": [
+    {
+      "id": "HLD-CONTRACT-01",
+      "rule": "HLD may start only when the upstream PRD risk report has HLD entry verdict pass_to_hld; blocked PRD states may emit only manifest and gate report."
+    },
+    {
+      "id": "HLD-CONTRACT-02",
+      "rule": "novel-hld-workflow is a pure harness: it validates inputs, dispatches the DAG, routes Skill Verdicts, records convergence, and packages artifacts 11 and 12 without writing HLD business facts."
+    },
+    {
+      "id": "HLD-CONTRACT-03",
+      "rule": "Each HLD business artifact 01-12 has exactly one independent skill owner and a required output schema."
+    },
+    {
+      "id": "HLD-CONTRACT-04",
+      "rule": "Artifact 11 must not depend on artifact 12; the final HLD package depends exactly on artifacts 11 and 12."
+    },
+    {
+      "id": "HLD-CONTRACT-05",
+      "rule": "Every HLD artifact must include Artifact Metadata, the required artifact table, HLD Fact Trace fields, and a structured Skill Verdict."
+    },
+    {
+      "id": "HLD-CONTRACT-06",
+      "rule": "Source references must use allowed structured prefixes only and HLD expansion modes must be explain, constrain, support, sequence, permission, exclude, or handoff."
+    },
+    {
+      "id": "HLD-CONTRACT-07",
+      "rule": "Inventory ids before artifact 10 are provisional; artifact 10 must reconstruct its subject register from artifact 01 inventory and declared amendments, bind every inventory disposition to its identity, owner, source, and upstream fact trace, mint exactly one final inventory id only for accepted inventory rows, resolve merges through an accepted canonical subject, block amendment minting and unresolved amendment use, preserve resolved ids across reruns, and let artifact 11 consume only accepted or canonicalized ids. Artifacts 03-09 must not require final inventory ids before reconciliation."
+    },
+    {
+      "id": "HLD-CONTRACT-08",
+      "rule": "Artifact 11 HLD Source Map must be fact-level: every accepted artifact 03-09 fact trace has exactly one Source Map row preserving upstream fact id, upstream fact atom, HLD fact atom, source refs, owner artifact, applicable final inventory id, expansion mode, support mechanism, handoff target, and preservation status; every Source Map row has exactly one ready LLD handoff index row with the same fact-level fields."
+    },
+    {
+      "id": "HLD-CONTRACT-09",
+      "rule": "Same upstream fact id cannot be reused to rewrite an upstream fact atom; the same source ref may support multiple distinct upstream fact ids, while replacement, reinterpretation, contradiction, and unsupported expansion are invalid preservation states."
+    },
+    {
+      "id": "HLD-CONTRACT-10",
+      "rule": "Artifact 12 verdict consistency is closed: unresolved P0/P1 blocks Agent quality pass and pass_to_lld, every non-none risk must have fact traceability, every unresolved P0/P1 must have a convergence-log row, artifact rubric coverage for artifacts 01-12 must pass, Artifact 04 rubric coverage must explicitly check concrete motive pressure, relationship target closure, and the digital-life identity boundary, Artifact 05 rubric coverage must explicitly check inventory coverage, spatial relation, state-change dimension, state transition, event state realization, and Source Map trace closure with one structured Environment closure checks evidence row per environment, Artifact 06 rubric coverage must explicitly check event inventory coverage, causal-chain closure, concrete event action, consequence, visibility, environment integration, and Source Map trace closure with one structured Event closure checks evidence row per event, and Artifact 10 rubric coverage must explicitly check subject register, origin binding, canonical merge, single final inventory id, amendment blocking, and continuity."
+    },
+    {
+      "id": "HLD-CONTRACT-11",
+      "rule": "The legacy novel-hld-writer must be demoted to non-authoritative historical reference and must point to novel-hld-workflow."
+    },
+    {
+      "id": "HLD-CONTRACT-12",
+      "rule": "The methodology reference must contain at least ten cited references and artifact-level rubrics for all 12 HLD artifacts."
+    },
+    {
+      "id": "HLD-CONTRACT-13",
+      "rule": "HLD business artifacts 01-10 must satisfy artifact-level enumerations and cross-artifact references: inventory ids and fact trace ids must be unique, inventory owner routing must match entity type, owners, support types, supports, inventory-bound secondary-owner support obligations must use exact same source refs, support rows must be consumed by their required owner only, artifact 01 character/group inventory assigned to artifact 04, environment inventory assigned to artifact 05, and event inventory assigned to artifact 06 must each have exact design coverage by Inventory id, Entity type, Entity name, source refs, trace Source refs, canonical upstream fact id and atom, mandatory artifact fields, and inventory-bound support consumption by the bound design row; every artifact 05 environment fact and artifact 06 event fact must have exactly one exact artifact 11 Source Map mapping; every artifact 05 environment must define one unique State change id, State change dimension, State before, and State after, artifact 06 must bind each event's resolved environment refs to the exact corresponding Environment state change refs, and each reference must have one matching State before=>State after transition plus one semantic Environment state realization with the same state-change dimension; every artifact 05 environment must be integrated by at least one event; every artifact 06 event must have non-placeholder Event action, Causal role, Consequences, and Cause refs, every non-trigger event must cite at least one predecessor event, and the event causal graph must be acyclic; artifact 04 must additionally close concrete motive evidence, relationship target, and identity boundary; artifact 08 must include main, hidden, emotional, theme, institutional, and identity threads, each with its fixed type-specific Thread function, a resolved type-specific HLD design anchor, a non-empty Required pressure refs set drawn from its consumed artifact 02 support sources, at least one pressure ref not shared by every other core thread, a distinct substantive question, an ordered Thread progression whose semantic states exactly map to the declared HLD event/information nodes, a non-self structured crossover with semantic effect, explicit closure state, and semantic closure outcome, while required-thread crossovers form one connected graph; artifact 09 must cover POV, narrative distance, information access, digital-life interiority, dialogue, image system, prohibited expression, and language style, each with its fixed access policy and reader disclosure mode, resolved artifact 07 information and artifact 08 thread refs, controlled `rule`/`scope`/`effect`, `focalizer`/`permitted`/`evidence`, and `forbidden`/`target`/`trigger` execution fields whose action values are type-specific and reject vague wording while allowing concise Chinese atomic names, and a language-style row with `mode`/`limit`, `sentence`/`variation`, `prefer`/`avoid`, and `pace`/`shift` directives; artifact 12 must independently close every required thread and every style/POV rule, including its type-specific structured execution fields and LLD handoff, against their controlled fields; final inventory closure, participants, knowledge holders, thread nodes, LLD handoffs, amendment requests, and reconciliation decisions must resolve structurally."
+    },
+    {
+      "id": "HLD-CONTRACT-14",
+      "rule": "The HLD input gate must authenticate the registered PRD run and manifest before accepting its final package. The upstream PRD/proposal source inventory must include a structured Upstream required HLD entities table with a permitted Source fact field before HLD artifact 01 may pass. Artifact 01 must import that table and run a secondary scan checklist over scenes, freeze boundaries, HLD requirements, proposal claims, and story-logic rows. Artifact 01 and artifact 02 must prove upstream source coverage against the PRD/proposal source inventory; every required scene, freeze, HLD requirement, proposal claim, and story-logic source ref extracted from upstream must appear in both the initial inventory and PRD support matrix before downstream HLD design may pass. Artifact 01 must prove fact-level coverage for every required entity by upstream fact id, entity name, entity type, and source refs."
+    },
+    {
+      "id": "HLD-CONTRACT-15",
+      "rule": "Artifact 06 event quality is closed: every event preserves its provisional event inventory identity, has non-placeholder Cause refs, Event action, Causal role, and Consequences, keeps narrative function separate from visibility, uses an acyclic predecessor chain in which every non-trigger event cites a prior event, and has exact artifact 11 Source Map and artifact 12 Event closure checks evidence."
+    },
+    {
+      "id": "HLD-CONTRACT-16",
+      "rule": "Artifact 07 information quality is closed: every information object preserves one provisional inventory identity, the same canonical upstream fact atom, one PRD information-boundary id, and exact freeze refs. The PRD boundary contract must be text-identical in artifact 05, artifact 08, and the final PRD package; HLD rejects any unauthenticated or divergent copy. Artifact 07 binds each frozen entity knowledge ref to the artifact 04 character/group row with the same entity name and preserves the PRD boundary's actor knowledge state, reveal order, disclosure tier, reader visibility, predecessor relation, and condition type. It binds one artifact 06 story-anchor event that precedes its reveal event and assigns a contiguous narrative reveal phase and acyclic predecessor information graph. A condition must resolve through the reveal event: action uses that exact action, permission uses a participant, access uses an event environment, and evidence change uses an event no later than revelation. Complete cause must follow operational intelligence when both tiers exist. Every artifact 07 HLD fact atom must bind Supports and all time/information fields, every artifact 07 fact must have exactly one exact artifact 11 Source Map mapping, and artifact 12 must bind the same Source Map HLD fact id in one structured Information closure checks row."
+    },
+    {
+      "id": "HLD-CONTRACT-17",
+      "rule": "Artifact 09 execution fields are fact-bound: scope and target must each resolve to one of the same row's declared information or thread refs, evidence must resolve to one of the same row's declared information refs, trigger must exactly equal the row's Reader disclosure mode, and focalizer must resolve to an artifact 04 entity name while permitting concise Chinese names. Artifact 12 rubric coverage must explicitly check execution-reference closure and focalizer resolution."
+    },
+    {
+      "id": "HLD-CONTRACT-18",
+      "rule": "HLD release preflight is mandatory before release-ready: it must be contract-validated, require one committed and HEAD-clean Git snapshot for the HLD contract, reference, harness, all owner skills, validators, regression tests, actual HLD artifacts, final package index, and authenticated upstream inputs; require final-hld-package to contain exactly artifact 11 and artifact 12 path-and-SHA-256 index rows matching the indexed files; validate the complete artifact directory against authenticated upstream inputs; and permit release only when artifact 12 has Agent quality verdict pass, HLD human review state confirmed or not_required, and LLD entry verdict pass_to_lld."
+    }
+  ],
+  "rule_coverage": {
+    "HLD-CONTRACT-01": {
+      "validators": ["validate_prd_gate_terms", "validate_harness_boundary"],
+      "tests": ["test_harness_declares_prd_gate_and_blocked_behavior"]
+    },
+    "HLD-CONTRACT-02": {
+      "validators": ["validate_harness_boundary", "validate_harness_routing_rules"],
+      "tests": ["test_harness_contains_no_business_authority", "test_harness_rejects_open_inventory_coverage", "test_harness_routing_rules_include_current_contract_gates"]
+    },
+    "HLD-CONTRACT-03": {
+      "validators": ["validate_required_skill_files", "validate_artifact_schemas"],
+      "tests": ["test_required_hld_skills_exist", "test_every_artifact_has_minimum_schema"]
+    },
+    "HLD-CONTRACT-04": {
+      "validators": ["validate_artifact_dag"],
+      "tests": ["test_artifact_dag_is_closed_and_acyclic"]
+    },
+    "HLD-CONTRACT-05": {
+      "validators": ["validate_skill_contract_text", "validate_hld_artifact_trace_binding", "validate_skill_verdict_output", "validate_hld_artifact_package"],
+      "tests": ["test_skills_require_artifact_metadata_fact_trace_and_verdict", "test_contract_fact_trace_fields_include_upstream_fact_id", "test_artifact_trace_must_cover_each_business_row", "test_artifact_trace_rejects_matching_id_with_different_hld_fact_atom", "test_artifact_02_trace_binds_dispatch_semantics", "test_artifact_03_trace_binds_rule_semantics", "test_artifact_04_trace_binds_character_semantics", "test_skill_verdict_output_rejects_invalid_values", "test_skill_verdict_rejects_pass_with_blocking_issue", "test_artifact_package_validation_requires_real_artifacts"]
+    },
+    "HLD-CONTRACT-06": {
+      "validators": ["validate_source_grammar_and_expansion_modes", "validate_source_ref_values"],
+      "tests": ["test_contract_declares_source_grammar_and_expansion_modes", "test_source_map_rejects_free_text_source_refs"]
+    },
+    "HLD-CONTRACT-07": {
+      "validators": ["validate_inventory_id_timing", "validate_hld_business_rules", "validate_hld_source_map_rows", "validate_reconciliation_continuity"],
+      "tests": ["test_skills_use_provisional_inventory_before_reconciliation", "test_artifact_package_rejects_inventory_entity_without_final_disposition", "test_artifact_package_rejects_source_map_final_id_not_minted_by_artifact_10", "test_artifact_package_rejects_non_inventory_final_id_in_reconciler", "test_artifact_package_rejects_non_inventory_final_id_in_source_map", "test_artifact_package_rejects_reconciliation_identity_and_owner_spoof", "test_artifact_package_rejects_phantom_reconciliation_amendment", "test_artifact_package_rejects_merge_without_canonical_subject", "test_artifact_package_rejects_multiple_final_ids_for_one_subject", "test_artifact_package_rejects_reconciliation_final_id_renumbering"]
+    },
+    "HLD-CONTRACT-08": {
+      "validators": ["validate_hld_source_map_rows"],
+      "tests": ["test_source_map_accepts_fact_level_rows"]
+    },
+    "HLD-CONTRACT-09": {
+      "validators": ["validate_hld_source_map_rows", "validate_skill_preservation_status_terms"],
+      "tests": ["test_source_map_accepts_multiple_upstream_fact_ids_from_same_source_ref", "test_source_map_rejects_same_upstream_fact_id_rewritten_with_added_source_ref", "test_source_map_rejects_same_source_fact_rewrite", "test_source_map_rejects_reordered_same_source_fact_rewrite", "test_source_map_rejects_single_source_ref_rewrite_inside_larger_source_set", "test_integrator_skill_preservation_status_matches_contract"]
+    },
+    "HLD-CONTRACT-10": {
+      "validators": ["validate_risk_verdict_consistency", "validate_verdict_consistency_matrix", "validate_artifact_12_risk_rows", "validate_artifact_12_risk_trace_binding", "validate_artifact_12_rubric_coverage", "validate_hld_integrity_environment_rule_terms", "validate_hld_integrity_event_rule_terms"],
+      "tests": ["test_p0_p1_blocks_lld_entry_verdict", "test_convergence_log_must_cover_p1_risk", "test_human_review_pending_blocks_lld_pass", "test_artifact_package_rejects_artifact_12_missing_verdict_matrix", "test_artifact_package_rejects_blocking_risk_without_fact_trace", "test_artifact_package_rejects_failed_verdict_matrix_row", "test_artifact_package_rejects_risk_without_traceability_values", "test_artifact_package_rejects_nonblocking_risk_without_fact_trace", "test_artifact_package_rejects_artifact_12_missing_rubric_coverage", "test_artifact_package_rejects_failed_rubric_coverage", "test_artifact_package_rejects_thread_rubric_without_core_thread_quality_checks", "test_artifact_package_rejects_style_system_without_closure_checks", "test_artifact_12_rubric_requires_character_quality_checks", "test_artifact_12_rubric_requires_environment_closure_checks", "test_artifact_12_rubric_requires_reconciliation_quality_checks", "test_artifact_package_rejects_missing_environment_closure_evidence_table", "test_artifact_package_rejects_environment_closure_state_change_mismatch", "test_artifact_package_rejects_environment_closure_event_mismatch", "test_artifact_package_rejects_environment_closure_source_map_mismatch", "test_artifact_package_rejects_environment_closure_realization_mismatch", "test_artifact_package_rejects_environment_closure_transition_mismatch", "test_integrity_skill_rule_validation_rejects_v2_environment_terms", "test_contract_rule_10_names_all_risk_traceability"]
+    },
+    "HLD-CONTRACT-11": {
+      "validators": ["validate_legacy_writer_demoted"],
+      "tests": ["test_legacy_hld_writer_is_not_authoritative"]
+    },
+    "HLD-CONTRACT-12": {
+      "validators": ["validate_methodology_reference"],
+      "tests": ["test_methodology_reference_has_sources_and_artifact_rubrics"]
+    },
+    "HLD-CONTRACT-13": {
+      "validators": ["validate_hld_business_rules", "validate_hld_artifact_trace_binding", "validate_thread_system_rows", "validate_style_pov_rows", "validate_artifact_12_rubric_coverage", "validate_character_relationship_bound_terms_match_skill", "validate_character_skill_reference_quality", "validate_environment_skill_reference_quality", "validate_event_skill_reference_quality"],
+      "tests": ["test_owner_design_skills_require_consuming_assigned_support_rows", "test_artifact_package_rejects_invalid_inventory_owner", "test_artifact_package_rejects_duplicate_inventory_id", "test_artifact_04_schema_requires_inventory_identity_columns", "test_artifact_05_schema_requires_inventory_identity_columns", "test_artifact_06_schema_requires_environment_integration_columns", "test_artifact_06_schema_requires_environment_state_realization", "test_environment_skill_acceptance_is_locally_evaluable", "test_character_skill_references_define_good_delivery_standards", "test_environment_skill_references_define_good_delivery_standards", "test_artifact_trace_rejects_duplicate_fact_trace_id", "test_artifact_package_rejects_inventory_owner_routing_mismatch", "test_artifact_package_rejects_secondary_owner_support_with_partial_source_binding", "test_artifact_package_rejects_invalid_support_type", "test_artifact_package_rejects_unconsumed_support_row", "test_artifact_package_rejects_support_not_consumed_by_required_owner", "test_artifact_package_rejects_support_consumed_by_non_owner", "test_artifact_package_rejects_character_support_consumed_by_non_owner", "test_artifact_package_rejects_missing_character_inventory_design", "test_artifact_package_rejects_missing_environment_inventory_design", "test_artifact_package_rejects_missing_environment_core_field", "test_artifact_package_rejects_invalid_environment_state_change_id", "test_artifact_package_rejects_duplicate_environment_state_change_id", "test_artifact_package_rejects_environment_inventory_identity_mismatch", "test_artifact_package_rejects_environment_inventory_source_mismatch", "test_artifact_package_rejects_environment_inventory_upstream_fact_mismatch", "test_artifact_package_rejects_environment_trace_upstream_fact_atom_rewrite", "test_artifact_package_rejects_environment_fact_missing_source_map_closure", "test_artifact_package_rejects_unresolved_event_environment_ref", "test_artifact_package_rejects_missing_event_environment_state_change_refs", "test_artifact_package_rejects_event_environment_state_change_mismatch", "test_artifact_package_rejects_missing_event_environment_state_realization", "test_artifact_package_rejects_event_environment_state_realization_dimension_mismatch", "test_artifact_package_rejects_reversed_event_environment_state_transition", "test_artifact_package_rejects_environment_without_event_integration", "test_artifact_package_rejects_support_inventory_obligation_bound_to_wrong_environment", "test_artifact_package_rejects_abstract_character_motive_evidence", "test_artifact_package_rejects_vague_character_motive_evidence", "test_artifact_package_rejects_missing_character_core_field", "test_artifact_package_rejects_unresolved_character_relationship_target", "test_artifact_package_rejects_self_character_relationship_target", "test_artifact_package_rejects_relationship_pressure_without_target", "test_character_skill_relationship_bound_terms_match_validator", "test_artifact_package_rejects_character_trace_source_mismatch", "test_artifact_package_rejects_support_inventory_obligation_bound_to_wrong_character", "test_artifact_package_rejects_digital_life_without_identity_boundary", "test_artifact_package_rejects_digital_life_contradictory_identity_boundary", "test_artifact_package_rejects_character_inventory_design_without_matching_inventory_id", "test_artifact_package_rejects_invalid_world_rule_type", "test_artifact_package_rejects_unclosed_world_rule_amendment_request", "test_artifact_package_rejects_invalid_event_type", "test_artifact_package_rejects_invalid_thread_type_and_closure_state", "test_artifact_package_rejects_core_threads_with_duplicate_question", "test_artifact_package_rejects_core_thread_function_relabeling", "test_artifact_package_rejects_core_threads_with_shared_only_pressure", "test_thread_system_rejects_unordered_or_stateless_progression", "test_thread_system_rejects_type_without_required_design_anchor", "test_artifact_package_rejects_missing_required_style_rule_types", "test_artifact_package_rejects_style_rule_with_unresolved_hld_refs", "test_artifact_package_rejects_style_system_without_closure_checks", "test_artifact_package_rejects_style_system_without_language_profile_rule", "test_artifact_package_rejects_style_rule_without_reader_disclosure_mode", "test_style_skill_rule_type_catalog_matches_validator", "test_artifact_package_rejects_unstructured_style_execution_fields", "test_artifact_package_rejects_style_execution_without_type_specific_behavior", "test_artifact_package_accepts_short_chinese_style_focalizer", "test_artifact_package_rejects_vague_chinese_style_effect", "test_artifact_package_rejects_language_profile_without_dimension_instructions", "test_artifact_12_rubric_requires_complete_style_pov_quality_checks", "test_artifact_12_rubric_requires_structured_style_execution_checks", "test_artifact_12_rubric_requires_type_specific_style_behavior_checks", "test_artifact_package_rejects_unresolved_event_participant", "test_artifact_package_validation_accepts_complete_minimal_package"]
+    },
+    "HLD-CONTRACT-14": {
+      "validators": ["validate_authenticated_prd_handoff", "validate_upstream_source_coverage"],
+      "tests": ["test_upstream_source_coverage_rejects_missing_artifact_01_ref", "test_upstream_source_coverage_rejects_missing_artifact_02_ref", "test_inventory_builder_requires_secondary_scan_checklist", "test_artifact_package_requires_upstream_source_inventory", "test_artifact_package_runs_upstream_source_coverage_when_upstream_text_provided", "test_artifact_dir_runs_upstream_source_coverage_from_upstream_files", "test_artifact_package_rejects_missing_required_upstream_entity", "test_artifact_package_rejects_missing_upstream_required_entities_table", "test_upstream_entity_table_requires_source_fact_field", "test_authenticated_prd_handoff_rejects_unregistered_final_package", "test_authenticated_prd_handoff_accepts_registered_final_package", "test_artifact_package_rejects_secondary_owner_without_support_obligation", "test_artifact_package_rejects_invalid_inventory_initial_status", "test_artifact_package_rejects_unrouteable_inventory_amendment_status", "test_artifact_01_trace_binds_owner_type_secondary_and_status"]
+    },
+    "HLD-CONTRACT-15": {
+      "validators": ["validate_hld_business_rules", "validate_hld_artifact_trace_binding", "validate_event_skill_reference_quality", "validate_hld_integrity_event_rule_terms"],
+      "tests": ["test_artifact_06_schema_requires_inventory_and_causal_chain_fields", "test_artifact_12_schema_requires_event_closure_checks", "test_event_type_and_visibility_are_distinct_axes", "test_event_skill_references_define_good_delivery_standards", "test_event_skill_output_table_has_aligned_markdown_separator", "test_integrity_skill_event_closure_template_has_one_aligned_separator", "test_artifact_package_rejects_empty_event_causal_role", "test_artifact_package_rejects_empty_event_consequences", "test_artifact_package_rejects_nontrigger_event_without_predecessor", "test_artifact_12_rubric_requires_event_quality_checks", "test_artifact_package_validation_accepts_complete_minimal_package"]
+    },
+    "HLD-CONTRACT-16": {
+      "validators": ["validate_hld_business_rules", "validate_hld_artifact_trace_binding", "validate_information_tier_dependencies", "validate_hld_integrity_information_rule_terms", "authenticated_prd_information_boundary_text", "validate_upstream_information_boundary_alignment"],
+      "tests": ["test_artifact_07_schema_requires_inventory_and_reveal_fields", "test_artifact_12_schema_requires_information_closure_checks", "test_time_information_skill_references_define_good_delivery_standards", "test_artifact_package_rejects_information_trace_upstream_fact_atom_rewrite", "test_artifact_package_rejects_information_reveal_action_mismatch", "test_artifact_package_rejects_information_fact_trace_without_support_binding", "test_artifact_package_rejects_duplicate_information_inventory_binding", "test_artifact_package_rejects_noncontiguous_information_reveal_phases", "test_artifact_package_rejects_action_condition_detached_from_reveal_action", "test_information_tier_dependencies_require_operational_predecessor_for_complete_cause", "test_artifact_package_rejects_missing_information_source_map_closure", "test_artifact_package_rejects_information_closure_source_map_mismatch", "test_artifact_package_rejects_unauthenticated_information_boundary_table", "test_information_boundary_alignment_rejects_actor_knowledge_drift", "test_artifact_package_validation_accepts_complete_minimal_package"]
+    },
+    "HLD-CONTRACT-17": {
+      "validators": ["validate_style_pov_rows", "validate_style_focalizer", "validate_artifact_12_rubric_coverage"],
+      "tests": ["test_artifact_package_accepts_short_chinese_style_focalizer", "test_artifact_package_rejects_unresolved_style_focalizer", "test_artifact_package_rejects_execution_refs_outside_row_contract", "test_artifact_12_rubric_requires_style_execution_reference_closure_checks"]
+    },
+    "HLD-CONTRACT-18": {
+      "validators": ["validate_release_preflight_contract"],
+      "tests": ["test_contract_requires_release_preflight_rule_coverage"]
+    }
+  },
+  "source_ref_prefixes": ["scene", "freeze", "hldreq", "claim", "storylogic", "inventory"],
+  "expansion_modes": ["explain", "constrain", "support", "sequence", "permission", "exclude", "handoff"],
+  "skill_verdict_fields": [
+    "Skill quality verdict",
+    "Source closure",
+    "Inventory coverage",
+    "Boundary obedience",
+    "Downstream readiness",
+    "Blocking issue",
+    "Rerun target"
+  ],
+  "artifact_metadata_fields": [
+    "Artifact id",
+    "Owner skill",
+    "Run id",
+    "Upstream package",
+    "Input artifacts",
+    "Output path",
+    "Version"
+  ],
+  "fact_trace_fields": [
+    "Fact trace id",
+    "Upstream fact id",
+    "Upstream fact atom",
+    "HLD fact atom",
+    "Source refs",
+    "Expansion mode",
+    "Support mechanism",
+    "Preservation status"
+  ],
+  "artifacts": [
+    {
+      "id": "01",
+      "skill": "novel-world-entity-inventory-builder",
+      "section": "Initial world entity inventory",
+      "columns": ["Inventory id", "Entity type", "Entity name", "Required HLD owner", "Secondary HLD owners", "Upstream evidence", "Source", "Initial status"],
+      "depends_on": []
+    },
+    {
+      "id": "02",
+      "skill": "novel-prd-support-matrix-builder",
+      "section": "PRD support matrix",
+      "columns": ["Support id", "Supports", "Support type", "Required HLD owner", "Inventory obligations", "Required answer", "Boundary", "Source", "Support status"],
+      "depends_on": ["01"]
+    },
+    {
+      "id": "03",
+      "skill": "novel-world-rule-designer",
+      "section": "World rule design table",
+      "columns": ["Rule id", "Rule type", "Design fact", "Supports", "Boundary", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["02"]
+    },
+    {
+      "id": "04",
+      "skill": "novel-character-system-designer",
+      "section": "Character system table",
+      "columns": ["Character id", "Inventory id", "Entity type", "Entity name", "Role type", "Function", "Relationship/motivation", "Relationship targets", "Concrete motive evidence", "Information permission", "Identity boundary", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["03"]
+    },
+    {
+      "id": "05",
+      "skill": "novel-environment-system-designer",
+      "section": "Environment system table",
+      "columns": ["Environment id", "Inventory id", "Entity type", "Entity name", "Environment type", "Function", "Spatial relation", "State change id", "State change dimension", "State before", "State after", "State change", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["03"]
+    },
+    {
+      "id": "06",
+      "skill": "novel-event-system-designer",
+      "section": "Event system table",
+      "columns": ["Event id", "Inventory id", "Entity type", "Entity name", "Event type", "Visibility", "Cause refs", "Event action", "Causal role", "Participants", "Environment refs", "Environment state change refs", "Environment state transitions", "Environment state realizations", "Consequences", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["04", "05"]
+    },
+    {
+      "id": "07",
+      "skill": "novel-time-information-system-designer",
+      "section": "Time and information table",
+      "columns": ["Info id", "Inventory id", "Entity type", "Entity name", "PRD information boundary id", "Freeze refs", "Story anchor event ref", "Time layer", "Narrative reveal phase", "Disclosure tier", "Information object", "Known by", "Hidden from", "Reveal predecessor refs", "Reveal event ref", "Reveal action", "Reveal condition type", "Reveal condition refs", "Reveal condition", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["06"]
+    },
+    {
+      "id": "08",
+      "skill": "novel-thread-system-designer",
+      "section": "Thread system table",
+      "columns": ["Thread id", "Thread type", "Thread function", "Thread anchor refs", "Required pressure refs", "Core question", "Node distribution", "Thread progression", "Crossover", "Closure state", "Closure outcome", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["07"]
+    },
+    {
+      "id": "09",
+      "skill": "novel-style-pov-system-designer",
+      "section": "Style and POV table",
+      "columns": ["Style/POV id", "Rule type", "Access policy", "Information refs", "Thread refs", "Reader disclosure mode", "Language profile", "Design fact", "POV permission", "Prohibited expression", "Supports", "Source", "LLD handoff", "Amendment request"],
+      "depends_on": ["08"]
+    },
+    {
+      "id": "10",
+      "skill": "novel-hld-inventory-reconciler",
+      "section": "Final inventory reconciliation table",
+      "columns": ["Initial inventory id", "Request id", "Entity name", "Entity type", "Required HLD owner", "Requested by artifact", "Decision", "Canonical subject id", "Final inventory id", "Reason", "Source", "Support status"],
+      "depends_on": ["09"]
+    },
+    {
+      "id": "11",
+      "skill": "novel-hld-integrator",
+      "section": "HLD Source Map",
+      "columns": ["HLD fact id", "Upstream fact id", "Fact type", "Upstream fact atom", "HLD fact atom", "Source refs", "Owner artifact", "Final inventory id", "Expansion mode", "Support mechanism", "LLD handoff target", "Preservation status"],
+      "handoff_section": "LLD handoff index",
+      "handoff_columns": ["LLD handoff target", "HLD fact id", "Owner artifact", "Final inventory id", "Upstream fact id", "Upstream fact atom", "HLD fact atom", "Source refs", "Handoff status"],
+      "depends_on": ["10"]
+    },
+    {
+      "id": "12",
+      "skill": "novel-hld-integrity-checker",
+      "sections": ["Output", "Risks", "Verdict consistency matrix", "Artifact rubric coverage", "Reconciliation closure checks", "Environment closure checks", "Event closure checks", "Information closure checks", "Thread closure checks", "Style/POV closure checks", "HLD Convergence Log"],
+      "columns": ["Field", "Value", "Risk", "Severity", "Source refs", "Owner artifact", "Rerun target", "Handling", "Blocking verdict effect", "Verdict", "Required condition", "Actual evidence", "Resolved value", "Consistency", "Artifact", "Good delivery evidence", "Blocking failure check", "Coverage verdict", "Initial inventory id", "Request id", "Decision", "Canonical subject id", "Final inventory id", "Origin artifact", "Origin source refs", "Origin fact trace id", "Environment id", "Inventory id", "State change id", "State change dimension", "State before", "State after", "Event ids", "Event state transition refs", "Event state realization refs", "Source Map HLD fact id", "Evidence", "Event id", "Cause refs", "Event action", "Causal role", "Consequences", "Event fact id", "Event closure evidence", "Info id", "PRD information boundary id", "Freeze refs", "Story anchor event ref", "Time layer", "Narrative reveal phase", "Disclosure tier", "Reveal predecessor refs", "Reveal event ref", "Reveal action", "Reveal condition type", "Reveal condition refs", "Reveal condition", "Information fact id", "Information closure evidence", "Thread id", "Thread type", "Thread function", "Thread anchor refs", "Required pressure refs", "Thread progression", "Crossover", "Closure outcome", "Style/POV id", "Rule type", "Access policy", "Information refs", "Thread refs", "Reader disclosure mode", "Language profile", "Design fact", "POV permission", "Prohibited expression", "LLD handoff", "Stable issue id", "Root cause", "Fix hypothesis", "Regression proof", "Attempt count", "Status"],
+      "depends_on": ["11"]
+    },
+    {
+      "id": "final-hld-package",
+      "depends_on": ["11", "12"]
+    }
+  ]
+}

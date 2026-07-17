@@ -1,0 +1,10 @@
+version: "2.0"
+name: "design-planning-task-003-global-workflow-spec-and-legacy-hld-writer-migration-design"
+repo:
+  url: "/Users/royzuo/github/ai-novels"
+  branch: "main"
+task_dir: "tasks/design/fixtures/TASK-003"
+executor: "codex"
+deliverables:
+  - path: "docs/design/DP-HLD-003-global-spec-migration-design.md"
+    verify: "py -3 tasks/design/validate_design_doc_quality.py --planning tasks/design/design-planning.json docs/design/DP-HLD-003-global-spec-migration-design.md || python3 tasks/design/validate_design_doc_quality.py --planning tasks/design/design-planning.json docs/design/DP-HLD-003-global-spec-migration-design.md || python tasks/design/validate_design_doc_quality.py --planning tasks/design/design-planning.json docs/design/DP-HLD-003-global-spec-migration-design.md"

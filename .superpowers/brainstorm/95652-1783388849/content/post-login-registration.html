@@ -1,0 +1,94 @@
+<h2>扫码 / 手机验证后的新用户注册页</h2>
+<p class="subtitle">用户已经完成身份验证；这里不是再登录一次，而是补齐开户信息并选择订阅模式。</p>
+
+<div class="mockup">
+  <div class="mockup-header" style="background:#F8FBFF;color:#061A3A;border-bottom:1px solid #B8CCEA">鲲工坊 KUNORA.AI · 完善资料</div>
+  <div class="mockup-body" style="height:720px;background:#F8FBFF;padding:28px;display:flex;align-items:center;justify-content:center">
+    <div style="width:760px;background:#fff;border:1px solid #B8CCEA;border-radius:16px;box-shadow:0 18px 42px rgba(7,59,159,.10);overflow:hidden">
+      <div style="padding:24px 28px;border-bottom:1px solid #B8CCEA;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <img src="file:///Users/royzuo/Downloads/KUNORA.ai.png" style="width:72px;height:56px;object-fit:contain" />
+          <div>
+            <div style="font-size:24px;font-weight:850;color:#061A3A">欢迎来到鲲工坊</div>
+            <div style="font-size:14px;color:#344563;margin-top:4px">再用一分钟完成设置，就可以开始创建项目。</div>
+          </div>
+        </div>
+        <div style="background:#EAF3FF;color:#073B9F;border:1px solid #B8CCEA;border-radius:999px;padding:7px 10px;font-size:12px">微信已验证</div>
+      </div>
+
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <div style="font-size:18px;font-weight:850;color:#061A3A;margin-bottom:14px">基本信息</div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+            <div style="width:58px;height:58px;border-radius:999px;background:#EAF3FF;border:1px solid #B8CCEA;display:flex;align-items:center;justify-content:center;color:#073B9F;font-weight:850">头像</div>
+            <button class="mock-button" style="background:#EAF3FF;color:#073B9F;border:1px solid #B8CCEA">更换头像</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input class="mock-input" style="height:46px;border-color:#B8CCEA" placeholder="昵称，例如：Roy">
+            <input class="mock-input" style="height:46px;border-color:#B8CCEA" placeholder="手机号，可用于账号安全">
+            <select class="mock-input" style="height:46px;border-color:#B8CCEA;color:#344563">
+              <option>主要使用场景</option>
+              <option>知识内容创作</option>
+              <option>教学课程设计</option>
+              <option>自由行旅行规划</option>
+              <option>暂时不确定</option>
+            </select>
+            <input class="mock-input" style="height:46px;border-color:#B8CCEA" placeholder="身份/职业，可选">
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:18px;font-weight:850;color:#061A3A;margin-bottom:14px">选择订阅模式</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="border:2px solid #1677FF;background:#EAF3FF;border-radius:12px;padding:16px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="color:#073B9F;font-weight:850;font-size:16px">体验版</div>
+                <div style="background:#1677FF;color:#fff;border-radius:999px;padding:4px 8px;font-size:12px">推荐开始</div>
+              </div>
+              <div style="color:#344563;font-size:13px;margin-top:8px;line-height:1.5">适合先体验完整工作流，创建少量项目并查看交付质量。</div>
+            </div>
+
+            <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:12px;padding:16px">
+              <div style="color:#073B9F;font-weight:850;font-size:16px">个人版</div>
+              <div style="color:#344563;font-size:13px;margin-top:8px;line-height:1.5">适合个人创作、备课、旅行规划等日常高频使用。</div>
+            </div>
+
+            <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:12px;padding:16px">
+              <div style="color:#073B9F;font-weight:850;font-size:16px">专业版</div>
+              <div style="color:#344563;font-size:13px;margin-top:8px;line-height:1.5">适合更完整的交付包、更高项目额度和专业服务深度。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:18px 28px;border-top:1px solid #B8CCEA;display:flex;align-items:center;justify-content:space-between">
+        <div style="color:#344563;font-size:12px">
+          之后可在个人中心修改基本信息和订阅模式。
+        </div>
+        <button class="mock-button" style="height:44px;background:#1677FF">完成设置，进入首页</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>状态规则</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>扫码登录后</h4>
+      <ul>
+        <li>顶部显示“微信/支付宝/抖音/快手已验证”。</li>
+        <li>头像和昵称可从第三方账号预填，但允许修改。</li>
+        <li>手机号可作为账号安全项，不阻断首要路径，除非业务要求必须绑定。</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>手机验证后</h4>
+      <ul>
+        <li>顶部显示“手机号已验证”。</li>
+        <li>手机号字段自动填入并锁定或标记已验证。</li>
+        <li>仍需要用户补昵称、使用场景，并选择订阅模式。</li>
+      </ul>
+    </div>
+  </div>
+</div>

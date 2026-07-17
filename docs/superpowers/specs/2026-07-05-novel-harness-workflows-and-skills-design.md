@@ -50,6 +50,7 @@ node = harness workflow + independent skills
 | quality gate | 按 artifact/schema/rules/references/traceability 验收 | 不用“看起来不错”替代规则 |
 | handoff packager | 生成下游可用交接包 | 不隐藏开放问题或风险 |
 | reopen manager | 生成上游重开请求 | 不直接改上游 |
+| convergence manager | 记录 Stable issue id、Root cause、Fix hypothesis、Regression proof、Attempt count，并在同一 P0/P1 三次不收敛时触发版本化重构讨论 | 不在缺少根因和回归证据时继续尝试补丁 |
 
 ### 3.2 independent skill 通用契约
 
@@ -60,8 +61,7 @@ node = harness workflow + independent skills
 | responsibility | 这个技能唯一负责什么业务能力 |
 | input | 从 harness 接收哪些上游材料 |
 | output | 输出什么独立交付物 |
-| allowed | 允许决定什么 |
-| forbidden | 明确禁止什么 |
+| boundary | 允许决定什么、明确禁止什么、不得越过哪些上游边界 |
 | rules | 通过标准和拒绝条件 |
 | references | 好交付物参照、正例特征、反例特征 |
 | traceability | 输出必须追溯到哪些上游约束或方法论 |
@@ -108,36 +108,56 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 项目 | 设计 |
 |---|---|
 | 节点目标 | 生成整部小说的构思契约 |
-| 输入 | intake brief |
+| 输入 | intake brief，必须包含 `KEEP-*`、`AVOID-*`、`CONFLICT-*`、`OPEN-*` |
 | 输出 | proposal document / 小说构思案 |
-| harness 只做 | 校验 intake、生成边界账本、拆分构思任务、调度技能、登记技能输出、打包 proposal、验收简洁性和完整性 |
+| harness 只做 | 校验 intake source path、调度 boundary ledger 技能、拆分构思任务、调度技能、登记技能输出、打包 proposal、按独立技能 verdict 路由 |
 | harness 不做 | 不直接写 logline、故事线、角色、世界初设或结局 |
+
+proposal harness 的调度状态机：
+
+| 阶段 | 调度 | 进入条件 | 失败处理 |
+|---|---|---|---|
+| intake source gate | 校验 intake source path 和声明状态 | intake 文档可读取，且状态不是 `not_ready` | 缺失则重开 intake |
+| ledger/readiness | 调度 boundary ledger 技能生成 intake boundary ledger 和 readiness verdict | intake source gate 通过 | ledger verdict 为 `reopen_intake` 或 gate blocked 则重开 intake |
+| promise/concept hypothesis | 并行调度 reader promise、core concept 的前置假设 | ledger 通过 | 对应技能自报 violation report，或 integrator/risk checker verdict 指向该技能时，按 verdict 定向重跑 |
+| storyline | 调度 storyline designer | promise/concept 可用 | storyline designer 自报 reopen，或 storyline quality evaluator verdict 指向 storyline 时，按 verdict 重跑或重开 intake |
+| storyline gate | 调度 storyline quality evaluator | storyline 输出完成 | quality evaluator verdict 非 `pass` 或缺少 reference evidence 时，禁止继续展开后续技能 |
+| final promise/concept | 并行调度 final reader promise、final core concept，再调度 consistency checker | storyline gate 通过且 quality report 提供 reference evidence | consistency checker verdict 非 `pass` 时按 verdict 重跑指定技能或重开 storyline |
+| expansion | 并行调度 macro、character、world、ending | final reader promise、final core concept 和 consistency report 均通过 | expansion 技能自报无法满足约束，或 integrator/risk checker 报告不一致时，按独立 verdict 重跑 |
+| integration | 调度 integrator | 所有业务输出和带 reference evidence 的故事线质量报告通过 | integrator 报告缺源、矛盾、缺少 quality report、缺少 reference evidence 或新增业务内容时退回对应技能 |
+| final gate | 调度 risk checker | integrator 输出完成 | 按 risk checker 输出的 Agent quality / Human-intake confirmation / PRD entry 三段 verdict 路由；harness 不自行判定业务质量 |
+
+proposal harness 必须为每个 P0/P1 rerun 记录收敛日志。收敛日志至少包含 Stable issue id、Root cause、Fix hypothesis、Regression proof、Attempt count；同一 P0/P1 三次修复后仍不收敛时，停止局部补丁，进入新版本 workflow/skill contract 重构讨论。
 
 ### 5.2 下挂独立技能
 
 | 技能 | 职责 | 输出 | 独立验收点 |
 |---|---|---|---|
-| `novel-intake-boundary-ledger-builder` | 将 intake brief 转成 proposal 必须服从的边界账本 | intake boundary ledger | `KEEP-*`、`AVOID-*`、`OPEN-*` 是否完整且未被改写 |
-| `novel-reader-promise-designer` | 定义类型、目标读者、阅读体验、题材边界 | 读者承诺表 | 是否能指导下游取舍 |
-| `novel-core-concept-designer` | 设计 logline、核心问题、不可替换钩子 | 核心概念卡 | 是否一眼看出主角、冲突、代价或变化 |
-| `novel-macro-structure-designer` | 设计整部小说宏观结构、分部/分卷/幕结构 | 宏观结构表 | 是否支撑指定部分拆分 |
-| `novel-storyline-designer` | 设计主线、展开线、隐藏线、情感线、主题线 | 故事线总览 | 每条线是否有问题、起点、终点 |
-| `novel-core-character-framer` | 定义核心角色、关系、初始冲突、终局变化 | 核心角色框架 | 是否克制，不写全量人物档案 |
-| `novel-world-premise-framer` | 定义足够支撑构思的世界初设 | 世界初设卡 | 是否只定义必要前提 |
-| `novel-ending-direction-designer` | 定义终局性质、不可反转项、系列钩子 | 结局方向表 | 是否能成为下游冻结项 |
-| `novel-proposal-integrator` | 将 proposal 各技能输出归并为统一构思案 | proposal document | 是否只做归并和口径统一，不新增核心构思 |
-| `novel-proposal-risk-checker` | 检查 proposal 是否完整、克制、可拆分 | proposal 检查结果 | 是否符合 rules/references/traceability |
+| `novel-intake-boundary-ledger-builder` | 将 intake brief 转成 proposal 必须服从的边界账本，并判断 proposal 是否可继续 | intake boundary ledger + conflict seed ledger + readiness verdict | `KEEP-*`、`AVOID-*`、`CONFLICT-*`、`OPEN-*` 是否完整且未被改写，是否具备人性动机种子和外部压力/悬念种子 |
+| `novel-reader-promise-designer` | 设计前置读者承诺假设和故事线通过后的最终读者承诺 | 读者承诺表 | 是否继承冲突种子，且最终版本服从已验收故事线 |
+| `novel-core-concept-designer` | 设计前置核心概念假设和故事线通过后的最终核心概念 | 核心概念卡 | 是否一眼看出焦点压力、冲突、代价、人性动机或变化，且最终版本服从已验收故事线 |
+| `novel-macro-structure-designer` | 基于已验收故事线、final reader promise 和 final core concept 设计整部小说宏观结构、分部/分卷/幕结构 | 宏观结构表 | 是否支撑指定部分拆分并体现冲突升级，且不改写已验收故事线或最终承诺/概念 |
+| `novel-storyline-designer` | 基于 intake boundary ledger、冲突种子和前置假设设计完整故事梗概、主故事链、视角规则和辅助故事线 | 完整故事梗概 + 故事线总览 | 是否可连续读懂故事，且人性动机、冲突层、悬念、Terminal agency map 和 terminal outcome 成立 |
+| `novel-storyline-quality-evaluator` | 对故事线进行 references 主观质量评估 | 故事线质量报告 | 是否符合好故事梗概和好故事线参照、提供 reference evidence，且无阻塞 P0/P1 |
+| `novel-final-promise-concept-consistency-checker` | 检查 final reader promise 与 final core concept 是否互相支撑且共同服从 accepted storyline | final promise/concept consistency report | 是否无方向冲突，且不会让下游展开两套小说方向 |
+| `novel-core-character-framer` | 基于已验收故事线、final reader promise 和 final core concept 定义核心角色、关系、初始冲突、终局变化 | 核心角色框架 | 是否克制，每个核心角色承载故事压力或人性动机，且不改写叙事功能分工或最终承诺/概念 |
+| `novel-world-premise-framer` | 基于已验收故事线、final reader promise 和 final core concept 定义足够支撑构思的世界初设 | 世界初设卡 | 是否只定义必要前提，并服务冲突和读者承诺，而非替代人性动机 |
+| `novel-ending-direction-designer` | 基于已验收故事线、final reader promise 和 final core concept 定义终局性质、不可反转项、系列钩子 | 结局方向表 | 是否能成为下游冻结项，并回收人性动机，且不替换 Terminal agency map、terminal outcome 或读者承诺 |
+| `novel-proposal-integrator` | 将 proposal 各技能输出和故事线质量报告归并为统一构思案 | proposal document | 是否只做归并和口径统一，不新增核心构思，且不丢失 `CONFLICT-*`、reference evidence 或 quality gate |
+| `novel-proposal-risk-checker` | 检查 proposal 是否完整、克制、可拆分，并区分质量通过与 PRD 准入 | proposal 检查结果 + gate verdicts | 是否逐项复核 workflow acceptance gate，故事线质量报告已通过且有 reference evidence，无缺失冲突种子、视角混乱或 consistency report 未通过 |
 
 ### 5.3 技能边界
 
 | 技能 | 明确禁止 |
 |---|---|
-| `novel-intake-boundary-ledger-builder` | 不解释、不加强、不削弱 intake 约束，只登记和分类 |
-| `novel-storyline-designer` | 不写 PRD 主干场景表 |
-| `novel-core-character-framer` | 不写 HLD/LLD 全量人物档案 |
-| `novel-world-premise-framer` | 不写世界 bible |
-| `novel-proposal-integrator` | 不新增 reader promise、logline、故事线、角色框架或世界前提 |
-| `novel-proposal-risk-checker` | 不替代其他技能重写内容，只报告问题 |
+| `novel-intake-boundary-ledger-builder` | 不解释、不加强、不削弱 intake 约束，只登记、分类并给出 readiness verdict；缺少 `CONFLICT-*` 或必要冲突种子时重开 intake |
+| `novel-storyline-designer` | 不写 PRD 主干场景表；不用抽象伦理、大善恶或主题口号替代人物私心 |
+| `novel-storyline-quality-evaluator` | 不重写故事线；只依据 references 判断是否可交付，并将阻塞问题退回指定技能 |
+| `novel-final-promise-concept-consistency-checker` | 不重写 final reader promise 或 final core concept；只报告一致性问题和重跑目标 |
+| `novel-core-character-framer` | 不写 HLD/LLD 全量人物档案；不改变已验收故事线的人物叙事功能 |
+| `novel-world-premise-framer` | 不写世界 bible；不用世界规则改写已验收故事线 |
+| `novel-proposal-integrator` | 不新增 reader promise、logline、故事线、角色框架或世界前提；不丢失冲突种子、视角规则、reference evidence 和故事线质量报告 |
+| `novel-proposal-risk-checker` | 不替代其他技能重写内容，只报告问题；缺少冲突种子、人性动机、视角规则、reference evidence 或通过的故事线质量报告时标为 P1；不得把待确认 intake 包装成 PRD 可进入 |
 
 ## 6. PRD 节点
 
@@ -150,6 +170,54 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 输出 | PRD document / 主干场景表 |
 | harness 只做 | 校验 proposal、确认指定范围、调度主干场景设计技能、登记技能输出、打包 PRD、冻结约束 |
 | harness 不做 | 不设计具体主干场景，不写世界系统，不写 LLD 细节 |
+
+PRD harness 的第一道硬闸门是 proposal PRD entry verdict。只有上游 proposal Risk Report 明确 `PRD entry verdict = pass_to_prd` 时，PRD harness 才能调度业务技能；若 verdict 为 `blocked_pending_human_confirmation`、`blocked_revision_required` 或缺失，harness 必须停止并返回 proposal/人类确认流程。
+
+PRD harness 的调度状态机：
+
+| 阶段 | 调度 | 进入条件 | 失败处理 |
+|---|---|---|---|
+| proposal entry gate | 校验 proposal source path、proposal version、proposal PRD entry verdict | proposal 文档和风险报告可读取 | PRD entry 非 `pass_to_prd` 则停止，不生成 PRD |
+| scope gate | 调度 `novel-part-scope-selector` | proposal entry gate 通过 | scope verdict 非 `pass` 则重跑 scope 或重开 proposal |
+| part goal gate | 调度 `novel-part-goal-definer` | scope verdict 通过 | goal 无 proposal trace 或无法验收则重跑 goal/scope |
+| trunk scene design | 调度 `novel-trunk-scene-designer` | part goal 通过 | 缺角色、环境、事件、因果输出或违反 proposal 冻结项则重跑 trunk scene |
+| conflict/value design | 调度 `novel-scene-conflict-value-designer` | trunk scene table 完成 | 任一主干场景无冲突或价值变化则重跑 conflict/value |
+| information flow design | 调度 `novel-scene-information-flow-designer` | trunk scene + conflict/value 完成 | 任一主干场景信息变化缺失或 POV 越界则重跑 information flow |
+| freeze/handoff | 依次调度 `novel-prd-freeze-boundary-writer` 与 `novel-hld-expansion-requirement-writer` | scope、goal、scene、conflict/value、information flow 均通过 | 冻结项模糊或 HLD 隐性假设未列出则重跑对应技能 |
+| integration | 调度 `novel-prd-integrator` | artifacts 01-07 齐备 | integrator 报告缺源、改写、删除、重排或新增业务内容则退回对应技能 |
+| final gate | 调度 `novel-prd-causality-checker` | integration verdict 完成 | 按 Agent quality / Human review / HLD entry 三段 verdict 路由；harness 不自行判定主干场景质量 |
+| final package | 打包 `final-prd-package` | integrator 与 checker 均给出可打包 verdict | 只做索引、版本、交接，不补写业务内容 |
+
+PRD artifact topology 必须固定：
+
+| Artifact | 来源 | 依赖 |
+|---|---|---|
+| 01 | `novel-part-scope-selector` | 无 |
+| 02 | `novel-part-goal-definer` | 01 |
+| 03 | `novel-trunk-scene-designer` | 01, 02 |
+| 04 | `novel-scene-conflict-value-designer` | 03 |
+| 05 | `novel-scene-information-flow-designer` | 03, 04 |
+| 06 | `novel-prd-freeze-boundary-writer` | 01-05 |
+| 07 | `novel-hld-expansion-requirement-writer` | 01-06 |
+| 08 | `novel-prd-integrator` | 01-07 |
+| 09 | `novel-prd-causality-checker` | 01-08 |
+| final-prd-package | harness package | 08, 09 |
+
+PRD Convergence Protocol 与 proposal 保持同构：每个 P0/P1 rerun 必须记录 Stable issue id、Root cause、Fix hypothesis、Regression proof、Attempt count、Versioned refactor trigger；同一 P0/P1 三次不收敛时，停止局部补丁并进入版本化重构讨论。
+
+若 proposal PRD entry verdict 尚未通过，PRD workflow 必须生成 blocked run manifest，而不是生成空 PRD 或绕过入口闸门。blocked run manifest 至少记录 Harness、Input proposal、Upstream proposal Risk Report、Execution status、Blocking verdict 和结构化 Convergence log。
+
+正式 PRD run 进入 artifact 03 后，`novel-trunk-scene-designer` 输出的 `Scene id`、`Order`、`Event`、`Causal output`、`Proposal trace` 构成 canonical trunk-scene facts。`Proposal trace` 必须使用 `CLAIM-xx; role=<upstream Constraint role>`，同时保留上游 Claim ID 和 Constraint role。artifact 08 的 Scene Source Map 必须以 `Scene id`、`Order`、`Event fact`、`Causal output`、`Proposal trace`、`Source artifact` 逐行覆盖这些事实，不得用同一 Scene id 改写事件、因果输出或 proposal trace。
+
+artifact 09 的 PRD risk report 必须包含 `## Output` 的 `Field | Value` 表和 `## Risks` 的 `Risk | Severity | Handling` 表，并且作为独立技能 artifact 输出结构化 `## Skill Verdict`。Agent quality / Human review / HLD entry 三段 verdict 必须与 P0/P1 风险、核心检查状态和人类评审状态一致。
+
+PRD Skill Contract v3：artifacts 01-09 必须各自输出结构化 `## Skill Verdict`，字段为 `Skill quality verdict`、`Source closure`、`Boundary obedience`、`Downstream readiness`、`Blocking issue`、`Rerun target`。harness 只能按这些 verdict、artifact 08 Integration Verdict 与 artifact 09 风险报告路由，不得从正文描述中自行推断业务通过。
+
+artifact 03 的主干场景必须额外证明 `Previous dependency`、`Next pressure`、`Indispensability proof`。PRD freeze boundary 与 HLD expansion requirement 的 `Source` 必须使用结构化引用语法：`scene:PRD-Sxx` 指向 canonical PRD scene fact，`claim:CLAIM-xx` 指向上游 proposal claim；自由文本 source、裸 `PRD-Sxx` 或裸 `CLAIM-xx` 均不形成 source closure。artifact 08 必须输出 `PRD Integration Verdict`，证明 source completeness、scene fact preservation、no new business content 与 package readiness。
+
+HLD entry verdict 必须是闭合状态机：Agent quality pass + Human review confirmed + 无 P0/P1 + 核心检查全 pass 时只能是 `pass_to_hld`；Agent quality pass + Human review pending 时只能是 `blocked_pending_human_review`；存在 P0/P1、核心检查非 pass、Agent quality 非 pass 或 Human review `reopen_prd` 时只能是 `blocked_revision_required`。Agent quality 非 pass 必须有 P0/P1 或核心检查非 pass 作为阻塞证据。
+
+PRD contract rule coverage matrix 是 v4 的硬规则：每条 `PRD-CONTRACT-*` 必须声明对应 validator 函数和 regression tests。缺失 coverage 的 contract 不完整，不允许用“文档已写明”替代可执行校验。
 
 ### 6.2 下挂独立技能
 
@@ -184,33 +252,41 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 节点目标 | 生成支撑 PRD 主干场景成立的完整世界系统契约 |
 | 输入 | PRD document、proposal document |
 | 输出 | HLD document / 世界观与世界结构文档 |
-| harness 只做 | 校验 PRD 冻结项、调度世界系统技能、登记技能输出、打包 HLD、验收支持矩阵 |
-| harness 不做 | 不直接设计世界规则、人物系统、环境系统、事件系统或风格规范 |
+| harness 只做 | 校验 PRD HLD 入口状态、调度 12 个 HLD 独立技能、登记技能输出、打包 HLD、验收支持矩阵、Source Map、风险 verdict 和收敛日志 |
+| harness 不做 | 不直接设计世界规则、人物系统、环境系统、事件系统、线索系统、时间信息系统或风格规范 |
 
 ### 7.2 下挂独立技能
 
 | 技能 | 职责 | 输出 | 独立验收点 |
 |---|---|---|---|
-| `novel-prd-support-matrix-builder` | 将 PRD 主干场景映射到所需世界支撑 | PRD 支撑矩阵 | 每个主干场景是否有支撑项 |
+| `novel-world-entity-inventory-builder` | 从 PRD、proposal、风险报告中建立 HLD 覆盖宇宙 | 初始世界实体清单 | 角色、组织、环境、事件、规则、信息对象、线索对象和风格约束是否有源头 |
+| `novel-prd-support-matrix-builder` | 将 PRD 主干场景、冻结项、HLD 要求、故事逻辑边界映射到所需世界支撑 | PRD 支撑矩阵 | 每个主干场景、HLD-REQ、冻结项、故事逻辑边界和 inventory item 是否有支撑项 |
 | `novel-world-rule-designer` | 设计历史、制度、技术、社会、规则边界 | 世界规则文档 | 规则是否能解释 PRD 场景 |
 | `novel-character-system-designer` | 设计全量角色系统 | 角色系统文档 | 所有角色功能、关系、动机、权限是否明确 |
 | `novel-environment-system-designer` | 设计全量环境与空间系统 | 环境系统文档 | 空间关系、功能、状态变化是否完整 |
 | `novel-event-system-designer` | 设计关键事件、背景事件、隐藏事件及因果 | 事件系统文档 | 事件链是否解释 PRD 主干 |
 | `novel-time-information-system-designer` | 设计时间结构、信息流、视角权限 | 时间/信息系统 | 信息不对称是否可执行 |
+| `novel-thread-system-designer` | 设计主线、支线、隐藏线、情感线和主题线的节点分布、交叉和闭合 | 线索系统文档 | 所有线索是否支撑 PRD 主干并具备闭合状态 |
 | `novel-style-pov-system-designer` | 设计语言风格、POV、叙述距离、禁用语 | 风格与 POV 规范 | writing/checking 是否可直接使用 |
-| `novel-hld-integrator` | 将各世界系统输出归并为 HLD 文档 | HLD document | 是否保持各系统边界和 PRD 支撑关系 |
-| `novel-hld-integrity-checker` | 检查 HLD 完整性、可运行性、受控性 | HLD 检查结果 | 是否符合 HLD rules |
+| `novel-hld-inventory-reconciler` | 归并设计期新增实体请求，形成最终 inventory 和支撑闭环 | 最终实体清单与 amendment 处置表 | 新增实体是否被接受、拒绝或阻塞，且没有悬空支撑 |
+| `novel-hld-integrator` | 将各世界系统输出归并为 HLD 文档并产出事实级 HLD Source Map | HLD document | 是否保持各系统边界、PRD 支撑关系和 fact-atom preservation |
+| `novel-hld-integrity-checker` | 检查 HLD 完整性、可运行性、受控性、风险 verdict 与收敛状态 | HLD 检查结果 | 是否符合 HLD rules，且 P0/P1 与 LLD entry verdict 一致 |
 
 ### 7.3 技能边界
 
 | 技能 | 明确禁止 |
 |---|---|
+| `novel-world-entity-inventory-builder` | 不把旧 HLD/LLD/writing 内容作为冻结输入，不提前设计世界细节 |
+| `novel-prd-support-matrix-builder` | 不发明新业务事实，只登记 PRD、proposal、story logic 与 inventory 支撑需求 |
 | `novel-world-rule-designer` | 不以世界观合理性为由改写 PRD 主干 |
 | `novel-character-system-designer` | 不写 LLD 外貌、逐场景行为或 prose |
 | `novel-environment-system-designer` | 不写具体空间描写段落 |
 | `novel-event-system-designer` | 不删除、替换或重排 PRD 主干场景 |
+| `novel-time-information-system-designer` | 不改变 PRD 已冻结的信息可见性和揭示顺序 |
+| `novel-thread-system-designer` | 不新增会改写 PRD 因果答案的主线或隐藏线 |
 | `novel-style-pov-system-designer` | 不生成正文样章 |
-| `novel-hld-integrator` | 不借归并之名新增或覆盖世界规则、角色系统、环境系统、事件系统 |
+| `novel-hld-inventory-reconciler` | 不把未被 source 支撑的 amendment 接受进最终 inventory |
+| `novel-hld-integrator` | 不借归并之名新增或覆盖世界规则、角色系统、环境系统、事件系统、线索系统或风格规范 |
 | `novel-hld-integrity-checker` | 不直接修正文档，只报告和提出 reopen request |
 
 ## 8. LLD 节点
@@ -334,9 +410,9 @@ intake 的核心是人机对齐，不要求用多技能自主完成。
 | 节点 | harness workflow | 独立技能数量 |
 |---|---|---|
 | intake | `novel-intake-workflow` | 0-2 个可选辅助技能 |
-| proposal | `novel-proposal-workflow` | 10 |
+| proposal | `novel-proposal-workflow` | 12 |
 | PRD | `novel-prd-workflow` | 9 |
-| HLD | `novel-hld-workflow` | 9 |
+| HLD | `novel-hld-workflow` | 12 |
 | LLD | `novel-lld-workflow` | 6 |
 | writing | `novel-writing-workflow` | 6 |
 | checking | `novel-checking-workflow` | 7 |

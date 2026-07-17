@@ -1,0 +1,125 @@
+<h2>工作台 · Intake 阶段简化版</h2>
+<p class="subtitle">去掉保存修改、继续对齐、统计和进度条；只保留对话、可编辑需求表、确认需求。</p>
+
+<div class="mockup">
+  <div class="mockup-header" style="background:#F8FBFF;color:#061A3A;border-bottom:1px solid #B8CCEA">鲲工坊 KUNORA.AI · 项目工作台 / 明确需求</div>
+  <div class="mockup-body" style="height:720px;background:#F8FBFF;padding:0;display:grid;grid-template-rows:auto 1fr">
+    <div style="height:58px;background:#fff;border-bottom:1px solid #B8CCEA;display:flex;align-items:center;justify-content:space-between;padding:0 18px">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <img src="file:///Users/royzuo/Downloads/KUNORA.ai.png" style="width:42px;height:34px;object-fit:contain" />
+        <div style="font-weight:850;color:#061A3A">初中生 AI 入门课</div>
+        <div style="color:#344563;font-size:12px;background:#EAF3FF;border:1px solid #B8CCEA;border-radius:999px;padding:5px 9px">教学课堂</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;color:#344563;font-size:12px">
+        <span style="color:#073B9F;font-weight:800">明确需求</span>
+        <span>→</span>
+        <span>生成方案</span>
+        <span>→</span>
+        <span>细化设计</span>
+        <span>→</span>
+        <span>制作成果</span>
+        <span>→</span>
+        <span>验收交付</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:25% minmax(0,1fr) 42px;gap:12px;padding:12px;background:#F8FBFF">
+      <div style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="padding:14px 16px;border-bottom:1px solid #EAF3FF">
+          <div style="font-weight:850;color:#061A3A">AI 助手</div>
+          <div style="font-size:12px;color:#344563;margin-top:3px">我会帮你把想法整理成需求表</div>
+        </div>
+
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;flex:1;overflow:hidden">
+          <div style="align-self:flex-start;max-width:92%;background:#F8FBFF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#344563;font-size:13px;line-height:1.5">
+            我想做一套适合初中生的 AI 入门课。
+          </div>
+          <div style="align-self:flex-end;max-width:96%;background:#EAF3FF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            好，我先帮你整理。这个课程更偏兴趣启蒙、项目实践，还是考试辅助？
+          </div>
+          <div style="align-self:flex-start;max-width:88%;background:#F8FBFF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#344563;font-size:13px;line-height:1.5">
+            兴趣启蒙，零基础，最好能有课堂互动。
+          </div>
+          <div style="align-self:flex-end;max-width:96%;background:#EAF3FF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            明白。我还需要知道课程时长和上课形式。你也可以直接在右侧需求表里改。
+          </div>
+        </div>
+
+        <div style="padding:12px;border-top:1px solid #EAF3FF">
+          <input class="mock-input" style="height:44px;border-color:#B8CCEA" placeholder="继续补充你的想法">
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid #EAF3FF;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="mock-button" style="background:#073B9F;height:34px">需求表</button>
+            <span style="font-size:12px;color:#344563">内容会随对话更新，也可以直接修改</span>
+          </div>
+        </div>
+
+        <div style="padding:18px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start">
+          <div style="grid-column:1/3;background:#EAF3FF;border:1px solid #B8CCEA;border-radius:10px;padding:14px">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">原始 idea</div>
+            <textarea class="mock-input" style="height:76px;border-color:#B8CCEA;margin-top:8px;resize:none">做一套适合初中生的 AI 入门课，面向零基础学生，以兴趣启蒙为主。</textarea>
+          </div>
+
+          <div style="border:1px solid #B8CCEA;border-radius:10px;padding:14px;background:#fff">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">专业方向</div>
+            <input class="mock-input" style="height:42px;border-color:#B8CCEA;margin-top:8px" value="教学课堂设计">
+          </div>
+
+          <div style="border:1px solid #B8CCEA;border-radius:10px;padding:14px;background:#fff">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">目标用户</div>
+            <input class="mock-input" style="height:42px;border-color:#B8CCEA;margin-top:8px" value="零基础初中生">
+          </div>
+
+          <div style="border:1px solid #B8CCEA;border-radius:10px;padding:14px;background:#fff">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">目标体验</div>
+            <input class="mock-input" style="height:42px;border-color:#B8CCEA;margin-top:8px" value="兴趣启蒙，有课堂互动">
+          </div>
+
+          <div style="border:1px solid #B8CCEA;border-radius:10px;padding:14px;background:#fff">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">交付物</div>
+            <input class="mock-input" style="height:42px;border-color:#B8CCEA;margin-top:8px" value="课程方案、PPT、练习题/测试题">
+          </div>
+
+          <div style="grid-column:1/3;border:1px solid #B8CCEA;border-radius:10px;padding:14px;background:#fff">
+            <div style="font-size:12px;color:#073B9F;font-weight:800">补充说明</div>
+            <textarea class="mock-input" style="height:110px;border-color:#B8CCEA;margin-top:8px;resize:none" placeholder="例如课程时长、上课形式、风格偏好、必须避免的内容"></textarea>
+          </div>
+        </div>
+
+        <div style="padding:14px 18px;border-top:1px solid #EAF3FF;display:flex;align-items:center;justify-content:flex-end">
+          <button class="mock-button" style="background:#1677FF">确认需求，生成方案</button>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#344563;writing-mode:vertical-rl;font-size:12px">
+        辅助栏收起
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>简化原则</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>保留</h4>
+      <ul>
+        <li>左侧自然对话。</li>
+        <li>右侧可编辑需求表。</li>
+        <li>唯一阶段动作：确认需求，生成方案。</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>移除</h4>
+      <ul>
+        <li>保存修改：自动保存，不要求用户理解保存状态。</li>
+        <li>继续对齐：用户直接在对话框继续说即可。</li>
+        <li>已确认/待确认统计和进度条：由 AI 对话自然提醒缺失信息。</li>
+      </ul>
+    </div>
+  </div>
+</div>

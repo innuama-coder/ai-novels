@@ -1,0 +1,383 @@
+{
+  "node": "prd",
+  "version": "2026-07-12.v9",
+  "prd_skill_count": 9,
+  "harness": "novel-prd-workflow",
+  "contract_rules": [
+    {
+      "id": "PRD-CONTRACT-01",
+      "rule": "PRD may start only when the upstream proposal Risk Report has PRD entry verdict pass_to_prd."
+    },
+    {
+      "id": "PRD-CONTRACT-02",
+      "rule": "The PRD harness may only validate inputs, dispatch skills, route verdicts, package artifacts, and manage reopen requests; it must not design trunk scenes."
+    },
+    {
+      "id": "PRD-CONTRACT-03",
+      "rule": "Every PRD business gate must have an independent skill owner."
+    },
+    {
+      "id": "PRD-CONTRACT-04",
+      "rule": "The final PRD package must be assembled from the integrator artifact and the causality/risk checker artifact; the integrator must not depend on the checker."
+    },
+    {
+      "id": "PRD-CONTRACT-05",
+      "rule": "Unresolved P0/P1 risks must block Agent quality pass and HLD entry."
+    },
+    {
+      "id": "PRD-CONTRACT-06",
+      "rule": "Every PRD Proposal trace must use CLAIM-xx; role=<upstream Constraint role> and preserve the upstream proposal Claim Source Map fact and constraint role, not only cite an existing Claim ID."
+    },
+    {
+      "id": "PRD-CONTRACT-07",
+      "rule": "Any non-pass PRD core risk check must create an unresolved P0/P1 risk and convergence-log coverage before rerun or packaging."
+    },
+    {
+      "id": "PRD-CONTRACT-08",
+      "rule": "Every PRD business skill artifact must include a structured Skill Verdict with source closure, boundary obedience, downstream readiness, blocking issue, and rerun target."
+    },
+    {
+      "id": "PRD-CONTRACT-09",
+      "rule": "PRD freeze boundaries and HLD expansion requirements must close every Source reference to canonical PRD scene facts or upstream proposal claims."
+    },
+    {
+      "id": "PRD-CONTRACT-10",
+      "rule": "The PRD integrator artifact must include a structured PRD Integration Verdict before final risk checking or packaging."
+    },
+    {
+      "id": "PRD-CONTRACT-11",
+      "rule": "Freeze boundary Source and HLD expansion Source fields must use structured source references: scene:PRD-Sxx for canonical PRD scenes and claim:CLAIM-xx for upstream proposal claims; free-text source labels are invalid."
+    },
+    {
+      "id": "PRD-CONTRACT-12",
+      "rule": "Artifact 09 is an independent PRD skill artifact and must include the same structured Skill Verdict required of artifacts 01-08."
+    },
+    {
+      "id": "PRD-CONTRACT-13",
+      "rule": "HLD entry verdict is a state machine: agent pass plus human confirmed plus no P0/P1 or non-pass core checks requires pass_to_hld; agent pass plus human pending requires blocked_pending_human_review; any revision blocker requires blocked_revision_required."
+    },
+    {
+      "id": "PRD-CONTRACT-14",
+      "rule": "Formal PRD artifact validation must run against the full upstream proposal claim map, not only a set of valid Claim IDs."
+    },
+    {
+      "id": "PRD-CONTRACT-15",
+      "rule": "Every PRD contract rule must declare executable coverage by naming validator functions and regression tests; missing coverage makes the contract incomplete."
+    },
+    {
+      "id": "PRD-CONTRACT-16",
+      "rule": "Formal PRD trunk scene rows must include concrete Scene content so PRD advances the proposal into scene-level design rather than repeating proposal-level plot claims."
+    },
+    {
+      "id": "PRD-CONTRACT-17",
+      "rule": "When a selected PRD part contains post-death memory reading, the trunk scene chain must include a prior causal setup scene explaining how critical intelligence failed normal handoff, transmission, or reporting because of the accident/death context."
+    },
+    {
+      "id": "PRD-CONTRACT-18",
+      "rule": "Formal PRD artifact 03 must include a Scene execution table with at least two execution units per trunk scene, and each unit must state scene objective, on-page action, conflict turn, exit state, and proposal trace."
+    },
+    {
+      "id": "PRD-CONTRACT-19",
+      "rule": "When PRD scenes create story-logic risks around usable intelligence versus complete cause, protected-person causality, or digital-life terminal deception, artifact 03 must include a Story logic boundary table that freezes those causal answers and names HLD expansion room."
+    },
+    {
+      "id": "PRD-CONTRACT-20",
+      "rule": "Story logic boundary rows must include minimum plausibility anchors for the major-event action window, protected-person relationship weight, digital-life terminal execution conditions, and organization pressure limits."
+    },
+    {
+      "id": "PRD-CONTRACT-21",
+      "rule": "Formal PRD artifact 07 must include a structured Upstream required HLD entities table with a canonical Upstream fact atom so HLD artifact 01 receives fact/entity-level input before world inventory design begins."
+    },
+    {
+      "id": "PRD-CONTRACT-22",
+      "rule": "Formal PRD artifact 05 must include a fact-level HLD information boundary table. Every boundary must bind stable identity, story-anchor and narrative-reveal scenes, canonical reveal order, disclosure tier, reader visibility, frozen known-by and hidden-from entity refs, predecessor boundary refs, condition type, exact freeze refs, source, and HLD obligation. Artifact 08 and the final PRD package must preserve the exact same table, and HLD must consume the authenticated three-copy contract without changing frozen information state, actor knowledge state, or reveal order."
+    },
+    {
+      "id": "PRD-CONTRACT-23",
+      "rule": "Every artifact 07 Upstream fact id must anchor its own PRD scene; its Source fact field must name one permitted canonical scene field; its fact atom must equal that field's complete value exactly; and its required HLD entity must occur verbatim in the atom. Every artifact 05 entity knowledge ref must resolve to one character or group row, and the final PRD package must reproduce the artifact 07 entity table exactly."
+    },
+    {
+      "id": "PRD-CONTRACT-24",
+      "rule": "Every artifact 05 HLD obligation must be consumed by one or more artifact 07 requirements through resolved Information boundary refs, whose support scenes and source overlap the boundary anchor or reveal scene and whose Inherited HLD obligations field reproduces the exact obligation."
+    },
+    {
+      "id": "PRD-CONTRACT-25",
+      "rule": "The final PRD package must reproduce artifact 07's complete HLD expansion requirement list exactly; omission, reordering, or any field-level drift blocks packaging."
+    },
+    {
+      "id": "PRD-CONTRACT-26",
+      "rule": "Every artifact 07 HLD expansion requirement must use one unique HLD-REQ-nn identifier, cite only existing supported scenes, and have a scene-source set exactly equal to its Supports scene ids set; proposal claims may add evidence but cannot substitute for a supported scene source."
+    },
+    {
+      "id": "PRD-CONTRACT-27",
+      "rule": "Every artifact 03 Story logic boundary must declare required HLD character/group refs. Artifact 07 must map each boundary exactly once to a requirement that anchors the boundary scenes and reproduces its complete frozen answer; every declared entity must resolve to an artifact 07 character/group fact row whose Upstream fact id scene belongs to that boundary's Source scenes, and the final PRD package must reproduce the coverage table exactly."
+    }
+  ],
+  "rule_coverage": {
+    "PRD-CONTRACT-01": {
+      "validators": ["validate_upstream_proposal_entry_gate", "validate_formal_prd_artifact_run", "validate_blocked_run"],
+      "tests": ["test_blocks_when_upstream_proposal_prd_entry_is_not_pass", "test_rejects_upstream_claim_source_map_with_non_pass_coverage", "test_formal_artifact_run_requires_upstream_proposal_risk_report"]
+    },
+    "PRD-CONTRACT-02": {
+      "validators": ["validate_prd_artifact_topology", "validate_formal_prd_artifact_run", "require_terms"],
+      "tests": ["test_contract_declares_prd_harness_and_nine_skills", "test_rejects_integrator_depending_on_risk_checker"]
+    },
+    "PRD-CONTRACT-03": {
+      "validators": ["validate_skill_contract_text"],
+      "tests": ["test_contract_declares_prd_harness_and_nine_skills", "test_rejects_missing_independent_skill_sections"]
+    },
+    "PRD-CONTRACT-04": {
+      "validators": ["validate_prd_artifact_topology", "validate_final_prd_package"],
+      "tests": ["test_rejects_integrator_depending_on_risk_checker", "test_requires_final_package_over_integrator_and_risk_checker"]
+    },
+    "PRD-CONTRACT-05": {
+      "validators": ["validate_prd_risk_verdict_consistency"],
+      "tests": ["test_rejects_agent_pass_with_p1_risk", "test_rejects_core_check_fail_without_blocking_risk"]
+    },
+    "PRD-CONTRACT-06": {
+      "validators": ["validate_proposal_trace_text", "validate_proposal_claim_support"],
+      "tests": ["test_validate_formal_prd_artifact_texts_rejects_claim_fact_drift", "test_validate_formal_prd_artifact_texts_rejects_negated_claim_fact_with_same_keywords", "test_validate_formal_prd_artifact_texts_rejects_claim_constraint_role_drift"]
+    },
+    "PRD-CONTRACT-07": {
+      "validators": ["validate_prd_risk_verdict_consistency", "validate_convergence_covers_blocking_risks"],
+      "tests": ["test_rejects_agent_pass_when_core_check_is_not_checked", "test_convergence_log_must_cover_p1_risk_rows"]
+    },
+    "PRD-CONTRACT-08": {
+      "validators": ["validate_skill_contract_text", "validate_skill_output_verdict", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_rejects_skill_without_structured_skill_verdict", "test_validate_formal_prd_artifact_texts_requires_risk_skill_verdict"]
+    },
+    "PRD-CONTRACT-09": {
+      "validators": ["validate_source_references", "validate_freeze_artifact", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_rejects_free_text_freeze_source", "test_validate_formal_prd_artifact_texts_rejects_free_text_hld_source"]
+    },
+    "PRD-CONTRACT-10": {
+      "validators": ["validate_prd_integration_verdict", "validate_scene_source_map_rows"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_integration_verdict", "test_validate_formal_prd_artifact_texts_rejects_integrator_scene_drift"]
+    },
+    "PRD-CONTRACT-11": {
+      "validators": ["structured_source_refs", "validate_source_references"],
+      "tests": ["test_validate_formal_prd_artifact_texts_rejects_free_text_freeze_source", "test_validate_formal_prd_artifact_texts_rejects_hld_unknown_source_scene"]
+    },
+    "PRD-CONTRACT-12": {
+      "validators": ["validate_skill_output_verdict", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_risk_skill_verdict"]
+    },
+    "PRD-CONTRACT-13": {
+      "validators": ["validate_prd_risk_verdict_consistency"],
+      "tests": ["test_rejects_confirmed_human_review_with_pending_hld_entry", "test_rejects_human_pending_hld_entry_when_revision_blocker_exists", "test_rejects_non_pass_agent_quality_without_blocking_evidence"]
+    },
+    "PRD-CONTRACT-14": {
+      "validators": ["proposal_claims_from_risk_report", "validate_formal_prd_artifact_run", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_full_claim_map", "test_validate_formal_prd_artifact_texts_accepts_full_claim_map_fixture"]
+    },
+    "PRD-CONTRACT-15": {
+      "validators": ["validate_contract_rule_coverage"],
+      "tests": ["test_contract_rules_require_executable_coverage", "test_rejects_contract_rule_without_executable_coverage"]
+    },
+    "PRD-CONTRACT-16": {
+      "validators": ["validate_trunk_scene_rows", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_trunk_scene_content"]
+    },
+    "PRD-CONTRACT-17": {
+      "validators": ["validate_pre_extraction_causal_setup", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_pre_extraction_causal_setup"]
+    },
+    "PRD-CONTRACT-18": {
+      "validators": ["validate_scene_execution_table", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_scene_execution_table"]
+    },
+    "PRD-CONTRACT-19": {
+      "validators": ["validate_story_logic_boundary_table", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_story_logic_boundary_table", "test_validate_formal_prd_artifact_texts_accepts_story_logic_boundary_table"]
+    },
+    "PRD-CONTRACT-20": {
+      "validators": ["validate_story_logic_boundary_table", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_story_logic_plausibility_anchors", "test_validate_formal_prd_artifact_texts_accepts_story_logic_plausibility_anchors"]
+    },
+    "PRD-CONTRACT-21": {
+      "validators": ["validate_upstream_required_hld_entities", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_upstream_required_hld_entities"]
+    },
+    "PRD-CONTRACT-22": {
+      "validators": ["validate_hld_information_boundary_table", "validate_formal_prd_artifact_texts"],
+      "tests": ["test_validate_formal_prd_artifact_texts_requires_hld_information_boundary_table"]
+    },
+    "PRD-CONTRACT-23": {
+      "validators": ["validate_upstream_required_hld_entities", "validate_information_boundary_knowledge_entity_closure", "validate_upstream_hld_entity_integration"],
+      "tests": ["test_rejects_upstream_hld_entity_without_fact_atom", "test_rejects_upstream_hld_entity_with_crossed_scene_or_entity_identity", "test_rejects_upstream_hld_entity_when_atom_omits_entity", "test_rejects_upstream_hld_entity_when_atom_is_not_whole_source_field", "test_rejects_information_boundary_entity_not_registered_for_hld_handoff", "test_rejects_upstream_hld_entity_table_drift"]
+    },
+    "PRD-CONTRACT-24": {
+      "validators": ["validate_information_boundary_obligation_coverage"],
+      "tests": ["test_rejects_unmapped_information_boundary_obligation", "test_rejects_information_boundary_ref_without_obligation_preservation", "test_rejects_information_boundary_ref_without_scene_anchor"]
+    },
+    "PRD-CONTRACT-25": {
+      "validators": ["validate_hld_expansion_requirement_integration"],
+      "tests": ["test_rejects_final_package_without_hld_expansion_requirement_table"]
+    },
+    "PRD-CONTRACT-26": {
+      "validators": ["validate_hld_expansion_requirements"],
+      "tests": ["test_rejects_hld_requirement_source_scene_drift", "test_rejects_duplicate_hld_expansion_requirement_id"]
+    },
+    "PRD-CONTRACT-27": {
+      "validators": ["validate_story_logic_boundary_table", "validate_story_logic_requirement_coverage", "validate_story_logic_entity_closure", "validate_story_logic_requirement_coverage_integration"],
+      "tests": ["test_rejects_unmapped_story_logic_requirement", "test_rejects_story_logic_entity_missing_from_hld_handoff", "test_rejects_story_logic_entity_registered_only_in_unrelated_scene"]
+    }
+  },
+  "skills": [
+    "novel-part-scope-selector",
+    "novel-part-goal-definer",
+    "novel-trunk-scene-designer",
+    "novel-scene-conflict-value-designer",
+    "novel-scene-information-flow-designer",
+    "novel-prd-freeze-boundary-writer",
+    "novel-hld-expansion-requirement-writer",
+    "novel-prd-integrator",
+    "novel-prd-causality-checker"
+  ],
+  "hard_gates": [
+    {
+      "id": "PRD-GATE-SCOPE",
+      "name": "specified part scope gate",
+      "owner": "novel-part-scope-selector",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if the selected part lacks clear start, end, acceptance boundary, or proposal trace."
+    },
+    {
+      "id": "PRD-GATE-TRUNK-SCENE",
+      "name": "trunk scene table gate",
+      "owner": "novel-trunk-scene-designer",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if trunk scenes are not linear, not indispensable, or lack role, environment, event, and causal output."
+    },
+    {
+      "id": "PRD-GATE-CONFLICT-VALUE",
+      "name": "scene conflict and value-shift gate",
+      "owner": "novel-scene-conflict-value-designer",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if any trunk scene does not change situation, information, relationship, or pressure."
+    },
+    {
+      "id": "PRD-GATE-INFORMATION-FLOW",
+      "name": "scene information-flow gate",
+      "owner": "novel-scene-information-flow-designer",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if any trunk scene lacks reader knowledge, focal-character knowledge, asymmetric information, concealment, next-scene pressure, or HLD information need."
+    },
+    {
+      "id": "PRD-GATE-FREEZE",
+      "name": "PRD freeze boundary gate",
+      "owner": "novel-prd-freeze-boundary-writer",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if frozen items are missing, ambiguous, or add proposal-unauthorized concepts."
+    },
+    {
+      "id": "PRD-GATE-HLD-EXPANSION",
+      "name": "HLD expansion requirement gate",
+      "owner": "novel-hld-expansion-requirement-writer",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if any trunk scene lacks source-backed HLD expansion requirements or if requirements rewrite PRD/proposal boundaries."
+    },
+    {
+      "id": "PRD-GATE-INTEGRATION",
+      "name": "PRD integration gate",
+      "owner": "novel-prd-integrator",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if the integrated PRD adds, deletes, reorders, or rewrites trunk scene facts from source artifacts."
+    },
+    {
+      "id": "PRD-GATE-CAUSALITY",
+      "name": "PRD causality and risk gate",
+      "owner": "novel-prd-causality-checker",
+      "owner_type": "independent_skill",
+      "blocking_rule": "Block if causality, proposal obedience, boundary control, risk severity, or HLD entry verdict fails."
+    }
+  ],
+  "artifact_dag": [
+    {"id": "01", "depends_on": []},
+    {"id": "02", "depends_on": ["01"]},
+    {"id": "03", "depends_on": ["01", "02"]},
+    {"id": "04", "depends_on": ["03"]},
+    {"id": "05", "depends_on": ["03", "04"]},
+    {"id": "06", "depends_on": ["01", "02", "03", "04", "05"]},
+    {"id": "07", "depends_on": ["01", "02", "03", "04", "05", "06"]},
+    {"id": "08", "depends_on": ["01", "02", "03", "04", "05", "06", "07"]},
+    {"id": "09", "depends_on": ["01", "02", "03", "04", "05", "06", "07", "08"]},
+    {"id": "final-prd-package", "depends_on": ["08", "09"]}
+  ],
+  "artifact_runs": [
+    {
+      "id": "2026-07-07-duanxian-prd-workflow",
+      "manifest": "docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/manifest.md",
+      "upstream_proposal_risk_report": "docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/00-proposal-risk-report-human-confirmed.md",
+      "final_prd_package": "docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/final-prd-package.md",
+      "skill_artifacts": {
+        "novel-part-scope-selector": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/01-part-scope.md"],
+        "novel-part-goal-definer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/02-part-goal.md"],
+        "novel-trunk-scene-designer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/03-trunk-scenes.md"],
+        "novel-scene-conflict-value-designer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/04-conflict-value.md"],
+        "novel-scene-information-flow-designer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/05-information-flow.md"],
+        "novel-prd-freeze-boundary-writer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/06-freeze-boundaries.md"],
+        "novel-hld-expansion-requirement-writer": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/07-hld-expansion-requirements.md"],
+        "novel-prd-integrator": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/08-prd-integrator.md"],
+        "novel-prd-causality-checker": ["docs/superpowers/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/09-prd-risk-report.md"]
+      }
+    }
+  ],
+  "blocked_runs": [
+    {
+      "id": "2026-07-06-duanxian-prd-workflow-blocked",
+      "manifest": "docs/superpowers/runs/prd/2026-07-06-duanxian-prd-workflow-blocked/manifest.md",
+      "upstream_proposal_risk_report": "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/14-proposal-risk-checker.md",
+      "blocking_verdict": "blocked_pending_human_confirmation"
+    }
+  ],
+  "static_checks": [
+    "prd_skill_count_matches_design_doc",
+    "all_prd_skills_have_required_contract_sections",
+    "all_prd_hard_gates_owned_by_independent_skills",
+    "upstream_proposal_prd_entry_gate_required",
+    "prd_artifact_dag_required",
+    "prd_artifact_topology_required",
+    "integrator_before_risk_checker_required",
+    "final_prd_package_topology_required",
+    "prd_risk_verdict_consistency_required",
+    "prd_convergence_protocol_required",
+    "prd_blocked_run_manifest_required",
+    "upstream_proposal_prd_entry_gate_validated",
+    "scene_source_map_fact_trace_required",
+    "scene_coverage_required",
+    "formal_artifact_run_validation_required",
+    "information_flow_hard_gate_required",
+    "hld_expansion_hard_gate_required",
+    "risk_report_schema_required",
+    "convergence_log_schema_required",
+    "formal_run_upstream_proposal_gate_required",
+    "proposal_claim_trace_closure_required",
+    "proposal_claim_fact_trace_required",
+    "prd_skill_verdict_required",
+    "prd_artifact_source_closure_required",
+    "prd_integration_verdict_required",
+    "full_prd_artifact_text_validation_required",
+    "conflict_information_semantic_field_validation_required",
+    "blocking_risk_convergence_coverage_required",
+    "core_check_failure_blocks_as_p0_p1_required",
+    "final_prd_package_source_map_required",
+    "prd_risk_core_checks_required",
+    "hld_support_scene_id_closure_required",
+    "structured_source_reference_grammar_required",
+    "prd_risk_checker_skill_verdict_required",
+    "hld_entry_verdict_state_machine_required",
+    "formal_prd_full_claim_map_validation_required",
+    "contract_rule_coverage_matrix_required",
+    "pre_extraction_causal_setup_required",
+    "scene_execution_table_required",
+    "story_logic_boundary_table_required",
+    "story_logic_plausibility_anchors_required",
+    "upstream_required_hld_entities_required",
+    "hld_fact_atom_entity_registry_closure_required",
+    "hld_information_obligation_coverage_required",
+    "hld_expansion_requirement_final_package_integration_required",
+    "hld_expansion_requirement_identity_and_scene_source_closure_required",
+    "story_logic_hld_handoff_closure_required"
+  ]
+}

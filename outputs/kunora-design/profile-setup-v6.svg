@@ -1,0 +1,82 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .font { font-family: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .title { font-size: 30px; font-weight: 700; fill: #061A3A; }
+      .section { font-size: 18px; font-weight: 700; fill: #061A3A; }
+      .body { font-size: 15px; font-weight: 450; fill: #344563; }
+      .small { font-size: 13px; font-weight: 500; fill: #344563; }
+      .tiny { font-size: 12px; font-weight: 450; fill: #344563; }
+      .link { fill: #073B9F; font-weight: 600; }
+      .muted { fill: #72819A; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="900" fill="#F8FBFF"/>
+
+  <g transform="translate(440 58)">
+    <image href="KUNORA.ai.png" x="112" y="-4" width="336" height="124" preserveAspectRatio="xMidYMid meet"/>
+    <text class="font title" x="280" y="156" text-anchor="middle">完善个人信息</text>
+    <text class="font body" x="280" y="190" text-anchor="middle">首次登录后补充基础资料，并选择订阅模式</text>
+  </g>
+
+  <g transform="translate(340 276)">
+    <rect x="0" y="0" width="760" height="536" rx="8" fill="#FFFFFF" stroke="#B8CCEA"/>
+
+    <g transform="translate(32 28)">
+      <text class="font section" x="0" y="0" dominant-baseline="hanging">基础信息</text>
+      <text class="font tiny muted" x="0" y="31">这些信息用于创建你的鲲工坊账户，后续可在个人设置中修改</text>
+
+      <g transform="translate(0 68)">
+        <circle cx="42" cy="42" r="42" fill="#EAF3FF" stroke="#B8CCEA"/>
+        <circle cx="42" cy="33" r="14" fill="#073B9F" opacity="0.92"/>
+        <path d="M18 70C24 54 34 47 42 47C50 47 60 54 66 70" stroke="#073B9F" stroke-width="8" stroke-linecap="round"/>
+        <rect x="108" y="6" width="252" height="52" rx="8" fill="#F8FBFF" stroke="#B8CCEA"/>
+        <text class="font tiny muted" x="124" y="25">头像</text>
+        <text class="font small link" x="124" y="45">使用登录头像或重新上传</text>
+
+        <rect x="384" y="6" width="312" height="52" rx="8" fill="#F8FBFF" stroke="#B8CCEA"/>
+        <text class="font tiny muted" x="400" y="25">昵称</text>
+        <text class="font small" x="400" y="45">Roy</text>
+
+        <rect x="108" y="80" width="252" height="52" rx="8" fill="#F8FBFF" stroke="#B8CCEA"/>
+        <text class="font tiny muted" x="124" y="99">手机</text>
+        <text class="font small" x="124" y="119">138 **** 2468</text>
+        <text class="font tiny" x="300" y="119" fill="#36D399">已验证</text>
+
+        <rect x="384" y="80" width="312" height="52" rx="8" fill="#F8FBFF" stroke="#B8CCEA"/>
+        <text class="font tiny muted" x="400" y="99">密码</text>
+        <text class="font small" x="400" y="119">设置后可用于手机登录</text>
+      </g>
+    </g>
+
+    <line x1="32" y1="256.5" x2="728" y2="256.5" stroke="#B8CCEA" stroke-opacity="0.75"/>
+
+    <g transform="translate(32 286)">
+      <text class="font section" x="0" y="0" dominant-baseline="hanging">订阅模式</text>
+      <text class="font tiny muted" x="0" y="31">选择适合当前使用阶段的模式，之后可以升级或调整</text>
+
+      <g transform="translate(0 68)">
+        <rect x="0" y="0" width="220" height="112" rx="8" fill="#FFFFFF" stroke="#B8CCEA"/>
+        <text class="font small link" x="18" y="30">体验版</text>
+        <text class="font tiny muted" x="18" y="56">适合先完成一次流程验证</text>
+        <text class="font tiny" x="18" y="84" fill="#344563">基础额度</text>
+
+        <rect x="238" y="0" width="220" height="112" rx="8" fill="#EAF3FF" stroke="#1677FF" stroke-width="1.5"/>
+        <text class="font small link" x="256" y="30">个人专业版</text>
+        <text class="font tiny muted" x="256" y="56">适合持续创建项目与任务</text>
+        <text class="font tiny" x="256" y="84" fill="#1677FF">推荐选择</text>
+
+        <rect x="476" y="0" width="220" height="112" rx="8" fill="#FFFFFF" stroke="#B8CCEA"/>
+        <text class="font small link" x="494" y="30">团队版</text>
+        <text class="font tiny muted" x="494" y="56">适合多人协作与项目管理</text>
+        <text class="font tiny" x="494" y="84" fill="#344563">可稍后开通</text>
+      </g>
+
+      <rect x="220" y="210" width="256" height="46" rx="8" fill="#1677FF"/>
+      <text class="font small" x="348" y="239" text-anchor="middle" fill="#FFFFFF" font-weight="700">完成并进入鲲工坊</text>
+    </g>
+  </g>
+
+  <text class="font tiny" x="64" y="862">KUNORA.AI 个人信息补充页 / 宪法 v6 平面化设计</text>
+</svg>

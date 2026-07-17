@@ -22,13 +22,13 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 参考对象 | 记录参考什么，以及不能照搬什么 |
 | 前置材料 | 只提取最核心、已确认的需求，不把草稿视为冻结设计 |
 
-如果输入不足，只问能够启动 proposal 的最少必要问题。若用户希望继续推进，则将未解决事项记录为 `开放问题`。
+如果输入不足，只问能够启动 proposal 的最少必要问题。最少必要问题必须覆盖故事冲突种子：故事里谁被什么逼迫、谁想保护/隐瞒/得到什么、读者要追问什么。若这些问题缺失，不要交给 proposal 静默发明。
 
 ## Harness 职责
 
 | 职责 | 允许行为 |
 |---|---|
-| 提问 | 提出澄清 proposal 输入所需的聚焦问题 |
+| 提问 | 提出澄清 proposal 输入所需的聚焦问题，尤其是矛盾、冲突、悬念和人性动机 |
 | 收束 | 将零散回答整理为简短、可评审字段 |
 | 记录 | 对关键意象、约束和参考对象保留用户原话 |
 | 确认 | 标记哪些来自用户确认，哪些只是 Agent 推断 |
@@ -40,6 +40,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 
 - 写 logline、synopsis、beat sheet、主干场景表、章节计划或结局设计。
 - 发明角色弧线、世界规则、机构、技术系统或场景事件。
+- 用“主题”“伦理”“大善恶”替代人物的私人欲望、保护、亏欠、恐惧、软弱或爱。
 - 未经确认就把模糊审美偏好变成硬约束。
 - 将研究笔记、草稿或例子当作冻结需求，除非用户明确确认。
 - 默认写超 1 页；复杂项目也不应超过 2-3 页。
@@ -61,7 +62,15 @@ description: Use when a human novel idea, early notes, or reference preferences 
    | 输入包含场景/世界/角色草稿 | 只抽取最小核心需求，其余标记为非冻结材料 |
 
 3. **question planning**
-   仅在答案会显著影响 proposal 方向时提问，最多 5 个。优先询问目标、类型、读者、约束、参考对象和禁止方向。
+   仅在答案会显著影响 proposal 方向时提问，最多 5 个。优先询问目标、冲突种子、悬念、人物私心、约束、参考对象和禁止方向。
+
+   intake 阶段只冻结“冲突种子”，不写完整故事。人性动机必须被澄清；外部压力和悬念问题至少澄清一类。若缺少人性动机，或同时缺少外部压力与悬念问题，标记 `not_ready`：
+
+   | 类型 | 问题 |
+   |---|---|
+   | 外部压力 | 什么事情逼迫故事必须发生？失败会造成什么后果？ |
+   | 人性动机 | 谁想保护、隐瞒、得到、赎回或逃避什么？ |
+   | 悬念问题 | 读者最需要追问的未知是什么？ |
 
 4. **normalization**
    将回答转换为最小 intake schema。承载创作意图的表达保留用户原话。重大缺口标为 `未确认`，不要擅自补全。
@@ -77,9 +86,9 @@ description: Use when a human novel idea, early notes, or reference preferences 
 
    | 状态 | 条件 |
    |---|---|
-   | `ready` | 原始 idea、核心意图、少量硬约束、参考对象和开放问题均清楚 |
-   | `ready_with_open_questions` | proposal 可启动，但仍有少量方向问题需在 proposal 阶段解决 |
-   | `not_ready` | 缺少原始 idea、核心意图或关键边界，proposal 无法受控启动 |
+   | `ready` | 原始 idea、核心意图、少量硬约束、参考对象、冲突种子和开放问题均清楚 |
+   | `ready_with_open_questions` | proposal 可启动，但仍有少量方向问题需在 proposal 阶段解决；不得缺少冲突种子 |
+   | `not_ready` | 缺少原始 idea、核心意图、冲突种子或关键边界，proposal 无法受控启动 |
 
 7. **confirmation**
    将需求表交给人类评审。只有用户确认，或需求表明确标出未解决事项后，才能交给 proposal。
@@ -93,6 +102,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 项目名称 | 已知标题或工作标题 |
 | 原始 idea | 用户最初想法，不做文学化改写 |
 | 核心意图 | 1-2 句话说明用户真正想探索的问题或体验 |
+| 冲突种子 | 只记录最小矛盾、冲突、悬念和人性动机，不写完整故事 |
 | 硬约束 | 少量 `KEEP-*` / `AVOID-*`；通常合计不超过 3-5 条 |
 | 参考对象 | 只记录用户明确给出的参考对象，并说明“参考什么” |
 | 开放问题 | 少量会影响 proposal 方向的问题；通常不超过 3 条 |
@@ -107,6 +117,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 |---|---|
 | 必须保留 | `KEEP-01` |
 | 必须避免 | `AVOID-01` |
+| 冲突种子 | `CONFLICT-01` |
 | 开放问题 | `OPEN-01` |
 
 当来源不止一条聊天消息时，追加简短 `Traceability` 表：
@@ -124,6 +135,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 |---|---|---|
 | 保留原意 | 原始 idea 被准确保留 | Agent 美化或改变用户意图 |
 | 显式边界 | 少量必须保留、必须避免、参考对象均可检查 | 约束停留在模糊口号 |
+| 冲突可讲 | 人性动机存在，且外部压力 / 悬念问题至少一类清楚 | proposal 必须自己发明核心冲突或人物私心 |
 | 最小核心 | 只冻结 proposal 必须服从的关键边界 | 需求表吸收了后续阶段可自行设计的细节 |
 | 问题外显 | 未知项进入开放问题 | Agent 静默决定重大偏好 |
 | 快速评审 | 用户能在 1-2 分钟内评审 | 需要长篇解释才能判断是否正确 |
@@ -136,6 +148,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 | 场景 | 正确处理 |
 |---|---|
 | 用户只说一句灵感 | 问 3-5 个关键问题，不直接扩写故事 |
+| 用户只给主题没有冲突 | 追问外部压力、人性动机、悬念问题，不交给 proposal 自行补 |
 | 用户贴了大量场景草稿 | 只抽取最小核心目标和边界；场景细节标记为非冻结材料 |
 | 用户给出参考作品 | 追问或记录“参考什么”，不得默认照搬主题/结构/风格 |
 | 用户说“你看着办” | 可生成 `ready_with_open_questions`，但不得把推断写成用户确认 |
@@ -150,6 +163,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 - 字段宁缺毋滥，不为了完整而扩写。
 - 用户能快速判断“对 / 不对 / 缺什么”。
 - `必须保留` 和 `必须避免` 能进入后续 checking。
+- `冲突种子` 能让 proposal 讲故事，而不是从主题口号里发明故事。
 - 明确参考对象贡献的是结构、语气、题材、情绪、技法还是市场定位。
 - 只保留会影响方向的开放问题。
 
@@ -160,6 +174,7 @@ description: Use when a human novel idea, early notes, or reference preferences 
 - 从后期 PRD/HLD/LLD/writing 文档里反推大量“需求”。
 - 使用“高级”“有质感”“不要俗”等不可检查表达，却不给出操作含义。
 - 只列参考作品，不说明借鉴什么、避免什么。
+- 只有题材、主题、设定，没有人性动机或悬念。
 - 推迟太多关键问题，导致 proposal 无法启动。
 
 ## Acceptance Checklist
@@ -170,7 +185,8 @@ description: Use when a human novel idea, early notes, or reference preferences 
 |---|---|
 | 1 | 原始 idea 与归一化理解分开记录 |
 | 2 | 核心意图、硬约束、参考对象、开放问题存在；缺失项不强行补全 |
-| 3 | `KEEP-*` 和 `AVOID-*` 数量克制且可检查 |
-| 4 | 未生成 logline、完整故事结构、主干场景、世界 bible 或角色档案 |
-| 5 | `KEEP-*`、`AVOID-*`、`OPEN-*` 编号稳定 |
-| 6 | 交接状态和确认状态明确 |
+| 3 | 冲突种子存在，且包含人性动机，并至少包含外部压力或悬念问题之一 |
+| 4 | `KEEP-*` 和 `AVOID-*` 数量克制且可检查 |
+| 5 | 未生成 logline、完整故事结构、主干场景、世界 bible 或角色档案 |
+| 6 | `KEEP-*`、`AVOID-*`、`CONFLICT-*`、`OPEN-*` 编号稳定 |
+| 7 | 交接状态和确认状态明确 |

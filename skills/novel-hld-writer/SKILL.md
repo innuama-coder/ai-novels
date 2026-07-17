@@ -1,13 +1,19 @@
 # novel-hld-writer
 
+## Legacy status
+
+This file is a historical reference only. It is not an authoritative HLD entry point.
+
+Use `novel-hld-workflow` for all current HLD work. This file may be read only to understand old assumptions; it must not be used as frozen authority, must not dispatch HLD business work, and must not override proposal, PRD, HLD contract, or current workflow specifications.
+
 ## 描述
 
-撰写小说 HLD（High-Level Design / 高层架构文档）。HLD 完成从"故事概念"到"线程上的关键场景（Threads with Key Scenes）"的全部设计工作。
+历史版本的小说 HLD（High-Level Design / 高层架构文档）写作说明。当前项目已经改为 `novel-hld-workflow` harness 加 12 个独立 HLD 技能，本文件不再承担写作入口职责。
 
 **输入**：PRD（角色6参数 + 核心矛盾 + 情节约定 + 约束条件）  
 **输出**：Threads with Key Scenes（9 字段关键场景定义表）→ 交付给 LLD  
 
-本技能是**自包含的**——打开即可直接指导 HLD 写作。线（Thread）设计部分调用 `novel-thread-designer` 技能（独立模块）。
+旧版本曾把多种 HLD 业务能力放在一个文件中；当前不得沿用这种执行方式。线（Thread）设计等业务内容必须由新 HLD contract 中指定的独立技能承担。
 
 ## 设计管线总览
 

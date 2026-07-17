@@ -1,0 +1,184 @@
+<h2>项目模式 · 产品设计环节</h2>
+<p class="subtitle">选择专家后，由 requirement-table 创建项目。工作台进入项目模式，左侧变成产品专家协作对话，右侧主视图承载产品设计阶段的成果。</p>
+
+<div class="mockup">
+  <div class="mockup-header" style="background:#F8FBFF;color:#061A3A;border-bottom:1px solid #B8CCEA">鲲工坊 KUNORA.AI · 项目模式 / 产品设计</div>
+  <div class="mockup-body" style="height:760px;background:#F8FBFF;padding:0;display:grid;grid-template-rows:auto 1fr">
+    <div style="height:62px;background:#fff;border-bottom:1px solid #B8CCEA;display:flex;align-items:center;justify-content:space-between;padding:0 18px">
+      <div style="display:flex;align-items:center;gap:11px;min-width:0">
+        <img src="file:///Users/royzuo/Downloads/KUNORA.ai.png" style="width:42px;height:34px;object-fit:contain" />
+        <div style="min-width:0">
+          <div style="font-weight:850;color:#061A3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">初中生 AI 入门课</div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:3px;font-size:12px;color:#344563">
+            <span style="color:#073B9F;font-weight:800">项目 KUN-20260707-018</span>
+            <span>教学课堂设计</span>
+            <span style="background:#EAF3FF;color:#073B9F;border:1px solid #B8CCEA;border-radius:999px;padding:2px 7px">产品设计中</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;color:#344563;font-size:12px;white-space:nowrap">
+        <span style="color:#36D399;font-weight:800">明确需求</span>
+        <span>→</span>
+        <span style="color:#36D399;font-weight:800">创建项目</span>
+        <span>→</span>
+        <span style="color:#1677FF;font-weight:850">产品设计</span>
+        <span>→</span>
+        <span>细化设计</span>
+        <span>→</span>
+        <span>制作成果</span>
+        <span>→</span>
+        <span>验收交付</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:25% minmax(0,1fr) 42px;gap:12px;padding:12px;background:#F8FBFF;min-height:0">
+      <aside style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="padding:14px 16px;border-bottom:1px solid #EAF3FF">
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="width:32px;height:32px;border-radius:999px;background:#073B9F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:850;font-size:14px">课</div>
+            <div>
+              <div style="font-weight:850;color:#061A3A">教学课堂产品专家</div>
+              <div style="font-size:12px;color:#344563;margin-top:2px">正在生成产品方案</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;flex:1;overflow:hidden">
+          <div style="align-self:flex-start;max-width:96%;background:#F8FBFF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            项目已创建。我会基于确认后的需求，先完成产品方案，再等待你确认。
+          </div>
+          <div style="align-self:flex-start;max-width:96%;background:#F8FBFF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            当前我会重点处理：课程目标、课程结构、每节课的内容安排、PPT 产出范围和练习测试方式。
+          </div>
+          <div style="align-self:flex-end;max-width:92%;background:#EAF3FF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            好的，先生成方案。
+          </div>
+          <div style="align-self:flex-start;max-width:96%;background:#F0EDFF;border:1px solid #B8CCEA;border-radius:10px;padding:10px;color:#061A3A;font-size:13px;line-height:1.5">
+            我正在整理方案草稿。右侧会同步显示已形成的内容。
+          </div>
+        </div>
+
+        <div style="padding:12px;border-top:1px solid #EAF3FF">
+          <input class="mock-input" style="height:44px;border-color:#B8CCEA" placeholder="告诉专家你的补充想法">
+        </div>
+      </aside>
+
+      <main style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="height:50px;padding:0 16px;border-bottom:1px solid #EAF3FF;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="mock-button" style="background:#073B9F;height:34px">产品方案</button>
+            <button class="mock-button" style="background:#EAF3FF;color:#073B9F;border:1px solid #B8CCEA;height:34px">需求表</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#344563">
+            <span style="width:8px;height:8px;border-radius:999px;background:#1ED7E6;display:inline-block"></span>
+            <span>AI 正在生成</span>
+          </div>
+        </div>
+
+        <div style="padding:18px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:16px;min-height:0;overflow:hidden">
+          <section style="border:1px solid #B8CCEA;border-radius:12px;background:#F8FBFF;padding:16px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+              <div>
+                <div style="font-size:18px;font-weight:850;color:#061A3A">项目已创建</div>
+                <div style="font-size:13px;color:#344563;margin-top:5px;line-height:1.5">需求表已转为项目基础信息，后续方案、设计、制作与验收都会归档到这个项目。</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;white-space:nowrap">
+                <div style="background:#EAF3FF;border:1px solid #B8CCEA;border-radius:999px;color:#073B9F;font-size:12px;font-weight:800;padding:7px 10px">专家：教学课堂产品专家</div>
+                <div style="background:#36D399;border-radius:999px;color:#061A3A;font-size:12px;font-weight:800;padding:7px 10px">需求已锁定</div>
+              </div>
+            </div>
+          </section>
+
+          <section style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,0.9fr);gap:16px;min-height:0;overflow:hidden">
+            <div style="border:1px solid #B8CCEA;border-radius:12px;background:#fff;display:flex;flex-direction:column;min-height:0;overflow:hidden">
+              <div style="padding:16px;border-bottom:1px solid #EAF3FF;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+                <div>
+                  <div style="font-size:20px;font-weight:850;color:#061A3A">产品方案草稿</div>
+                  <div style="font-size:13px;color:#344563;margin-top:5px">产品专家会自主完成，生成后进入确认关口。</div>
+                </div>
+                <div style="background:#F0EDFF;border:1px solid #B8CCEA;border-radius:999px;color:#073B9F;font-size:12px;font-weight:800;padding:6px 10px;white-space:nowrap">草稿生成中</div>
+              </div>
+
+              <div style="padding:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;min-height:0;overflow:hidden">
+                <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:10px;padding:14px">
+                  <div style="font-size:12px;color:#073B9F;font-weight:850">课程定位</div>
+                  <div style="font-size:14px;color:#061A3A;font-weight:800;margin-top:8px">面向零基础初中生的 AI 兴趣启蒙课</div>
+                  <div style="font-size:12px;color:#344563;line-height:1.6;margin-top:8px">降低概念门槛，以体验、案例和小任务建立兴趣。</div>
+                </div>
+                <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:10px;padding:14px">
+                  <div style="font-size:12px;color:#073B9F;font-weight:850">课程结构</div>
+                  <div style="font-size:14px;color:#061A3A;font-weight:800;margin-top:8px">6 节课，每节 45 分钟</div>
+                  <div style="font-size:12px;color:#344563;line-height:1.6;margin-top:8px">从 AI 是什么，到提示词、图像、故事和课堂展示。</div>
+                </div>
+                <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:10px;padding:14px">
+                  <div style="font-size:12px;color:#073B9F;font-weight:850">课堂体验</div>
+                  <div style="font-size:14px;color:#061A3A;font-weight:800;margin-top:8px">轻讲解 + 小组实践 + 展示反馈</div>
+                  <div style="font-size:12px;color:#344563;line-height:1.6;margin-top:8px">每节课都保留学生可完成的可见成果。</div>
+                </div>
+                <div style="border:1px solid #B8CCEA;background:#F8FBFF;border-radius:10px;padding:14px">
+                  <div style="font-size:12px;color:#073B9F;font-weight:850">交付范围</div>
+                  <div style="font-size:14px;color:#061A3A;font-weight:800;margin-top:8px">课程方案、PPT、练习题与测试题</div>
+                  <div style="font-size:12px;color:#344563;line-height:1.6;margin-top:8px">后续设计阶段会拆成可制作的文档与课件任务。</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden">
+              <div style="border:1px solid #B8CCEA;border-radius:12px;background:#F8FBFF;padding:16px">
+                <div style="font-size:16px;font-weight:850;color:#061A3A">本阶段完成后</div>
+                <div style="font-size:13px;color:#344563;line-height:1.6;margin-top:8px">用户确认产品方案。确认后进入细化设计，AI 会继续自主完成课程设计文档和课件结构。</div>
+              </div>
+
+              <div style="border:1px solid #B8CCEA;border-radius:12px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:16px;font-weight:850;color:#061A3A">项目资产</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EAF3FF;border-radius:8px;padding:10px">
+                  <span style="font-size:13px;color:#061A3A">需求表</span>
+                  <span style="font-size:12px;color:#36D399;font-weight:800">已归档</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EAF3FF;border-radius:8px;padding:10px">
+                  <span style="font-size:13px;color:#061A3A">产品方案</span>
+                  <span style="font-size:12px;color:#1677FF;font-weight:800">生成中</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EAF3FF;border-radius:8px;padding:10px">
+                  <span style="font-size:13px;color:#061A3A">设计文档</span>
+                  <span style="font-size:12px;color:#344563">待开始</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div style="padding:14px 18px;border-top:1px solid #EAF3FF;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:13px;color:#344563">方案生成完成后，需要用户确认再进入下一阶段。</div>
+          <button class="mock-button" style="background:#1677FF">等待方案完成</button>
+        </div>
+      </main>
+
+      <aside style="background:#fff;border:1px solid #B8CCEA;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#344563;writing-mode:vertical-rl;font-size:12px">
+        项目资产
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>状态变化规则</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>创建项目</h4>
+      <ul>
+        <li>选择专家后，确认后的 requirement-table 创建正式项目。</li>
+        <li>项目拥有项目名、项目编号、专业方向、当前专家和阶段状态。</li>
+        <li>需求表变为项目基础资产，后续阶段都围绕项目推进。</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>项目模式</h4>
+      <ul>
+        <li>左侧对话从 intake 助手变成当前阶段专家协作对话。</li>
+        <li>右侧主视图从需求/专家选择变成阶段成果内容。</li>
+        <li>右侧浮动栏开始承载项目资产、版本、文件等辅助能力。</li>
+      </ul>
+    </div>
+  </div>
+</div>

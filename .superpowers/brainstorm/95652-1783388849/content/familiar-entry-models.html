@@ -1,0 +1,79 @@
+<h2>鲲工坊第一体验：哪种“熟悉环境”更对？</h2>
+<p class="subtitle">目标不是炫技，而是让普通用户一进来就知道：我把想法说清楚，平台帮我推进到交付。</p>
+
+<div class="cards">
+  <div class="card" data-choice="chat-plus-project" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="height:250px">
+        <div class="mockup-header">A · 熟悉的聊天窗口</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:1fr 220px;gap:16px;height:190px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="placeholder" style="height:34px;width:76%;align-self:flex-start">我想做一个亲子北京自由行</div>
+            <div class="placeholder" style="height:58px;width:86%;align-self:flex-end">AI 追问：天数、预算、孩子年龄、节奏偏好</div>
+            <div class="placeholder" style="height:42px;width:68%;align-self:flex-start">用户补充偏好</div>
+            <input class="mock-input" placeholder="继续说你的想法">
+          </div>
+          <div class="mock-sidebar">
+            <div class="label">项目进度</div>
+            <div class="placeholder" style="height:22px">需求确认</div>
+            <div class="placeholder" style="height:22px">方案生成</div>
+            <div class="placeholder" style="height:22px">细节修改</div>
+            <button class="mock-button">查看交付物</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · 聊天入口 + 轻项目侧栏</h3>
+      <p>最像微信/客服/专家咨询。用户阻力最低，适合把“说想法”作为第一动作，右侧只露出必要进度。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="template-plus-wizard" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="height:250px">
+        <div class="mockup-header">B · 熟悉的模板选择</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;height:190px">
+          <div class="placeholder" style="display:flex;align-items:center;justify-content:center">知识短视频</div>
+          <div class="placeholder" style="display:flex;align-items:center;justify-content:center">教学课堂</div>
+          <div class="placeholder" style="display:flex;align-items:center;justify-content:center">旅行规划</div>
+          <input class="mock-input" style="grid-column:1/4" placeholder="用一句话描述你想完成什么">
+          <button class="mock-button" style="grid-column:1/4">开始生成方案</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 服务模板 + 简短向导</h3>
+      <p>最像美团/淘宝/Canva 的服务入口。选择清楚，但容易让用户感觉自己在填表。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="document-workbench" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="height:250px">
+        <div class="mockup-header">C · 熟悉的文档工作区</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:180px 1fr 220px;gap:14px;height:190px">
+          <div class="mock-sidebar">
+            <div class="placeholder" style="height:24px">1. 创意简报</div>
+            <div class="placeholder" style="height:24px">2. 方案大纲</div>
+            <div class="placeholder" style="height:24px">3. 交付清单</div>
+          </div>
+          <div class="mock-content">
+            <div class="placeholder" style="height:24px;width:72%">标题与目标</div>
+            <div class="placeholder" style="height:76px">当前方案内容</div>
+            <div class="placeholder" style="height:38px;width:82%">待确认修改</div>
+          </div>
+          <div class="mock-sidebar">
+            <div class="label">AI 专家</div>
+            <div class="placeholder" style="height:58px">建议补充人群与约束</div>
+            <button class="mock-button">应用建议</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 文档工作区 + AI 专家</h3>
+      <p>最像飞书/Notion/在线文档。产物感强，适合长项目，但首屏可能比聊天更有学习成本。</p>
+    </div>
+  </div>
+</div>

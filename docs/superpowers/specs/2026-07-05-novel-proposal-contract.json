@@ -1,0 +1,222 @@
+{
+  "node": "proposal",
+  "version": "2026-07-05.v1",
+  "proposal_skill_count": 12,
+  "harness": "novel-proposal-workflow",
+  "contract_rules": [
+    {
+      "id": "CONTRACT-01",
+      "rule": "Every business gate must have an independent skill owner; the harness may only dispatch, package, reject, rerun, or reopen."
+    },
+    {
+      "id": "CONTRACT-02",
+      "rule": "A proposal cannot proceed past storyline gate unless the storyline quality report passes with concrete reference evidence."
+    },
+    {
+      "id": "CONTRACT-03",
+      "rule": "A proposal cannot proceed to expansion unless final reader promise and final core concept pass an independent consistency report."
+    },
+    {
+      "id": "CONTRACT-04",
+      "rule": "Integrator and risk checker must consume all hard gate reports; they cannot infer pass from missing reports."
+    },
+    {
+      "id": "CONTRACT-05",
+      "rule": "A sample proposal must include proof rows for every hard gate before it can be treated as workflow evidence."
+    }
+  ],
+  "skills": [
+    "novel-intake-boundary-ledger-builder",
+    "novel-reader-promise-designer",
+    "novel-core-concept-designer",
+    "novel-storyline-designer",
+    "novel-storyline-quality-evaluator",
+    "novel-final-promise-concept-consistency-checker",
+    "novel-macro-structure-designer",
+    "novel-core-character-framer",
+    "novel-world-premise-framer",
+    "novel-ending-direction-designer",
+    "novel-proposal-integrator",
+    "novel-proposal-risk-checker"
+  ],
+  "hard_gates": [
+    {
+      "id": "GATE-INTAKE",
+      "name": "intake boundary gate",
+      "owner": "novel-intake-boundary-ledger-builder",
+      "owner_type": "independent_skill",
+      "input": ["intake brief"],
+      "output": ["intake boundary ledger", "readiness verdict", "reopen_intake"],
+      "blocking_rule": "Block if intake is not_ready or lacks a human motive seed plus at least one external pressure or suspense seed.",
+      "sample_proof_required": "Readiness verdict"
+    },
+    {
+      "id": "GATE-STORYLINE-QUALITY",
+      "name": "storyline reference quality gate",
+      "owner": "novel-storyline-quality-evaluator",
+      "owner_type": "independent_skill",
+      "input": ["complete story synopsis", "main story chain", "auxiliary storylines", "intake boundary ledger"],
+      "output": ["storyline quality report", "reference evidence", "verdict"],
+      "blocking_rule": "Block if verdict is not pass, if unresolved P0/P1 exists, or if reference evidence is missing.",
+      "sample_proof_required": "Reference Evidence"
+    },
+    {
+      "id": "GATE-FINAL-PROMISE-CONCEPT-CONSISTENCY",
+      "name": "final promise concept consistency gate",
+      "owner": "novel-final-promise-concept-consistency-checker",
+      "owner_type": "independent_skill",
+      "input": ["accepted storyline", "storyline quality report", "final reader promise", "final core concept"],
+      "output": ["consistency report", "verdict"],
+      "blocking_rule": "Block if final reader promise and final core concept are not mutually supportive or if either contradicts the accepted storyline.",
+      "sample_proof_required": "Final Promise / Concept Consistency"
+    },
+    {
+      "id": "GATE-INTEGRATION",
+      "name": "proposal integration gate",
+      "owner": "novel-proposal-integrator",
+      "owner_type": "independent_skill",
+      "input": [
+        "all proposal skill outputs",
+        "storyline quality report",
+        "final promise/concept consistency report",
+        "intake boundary ledger with readiness verdict",
+        "accepted storyline",
+        "all proposal expansion outputs"
+      ],
+      "output": ["proposal document", "integration verdict"],
+      "blocking_rule": "Block if any source report is missing, evidence-free, contradictory, untraceable, or if critical final-proposal business claims lack Claim Source Map coverage.",
+      "sample_proof_required": "Integration Verdict"
+    },
+    {
+      "id": "GATE-FINAL-RISK",
+      "name": "final proposal risk gate",
+      "owner": "novel-proposal-risk-checker",
+      "owner_type": "independent_skill",
+      "input": [
+        "proposal assembly artifact",
+        "intake boundary ledger with readiness verdict",
+        "accepted storyline",
+        "storyline quality report",
+        "final promise/concept consistency report",
+        "integration verdict",
+        "all proposal expansion outputs",
+        "human/intake confirmation status"
+      ],
+      "output": ["agent quality verdict", "human/intake confirmation verdict", "PRD entry verdict"],
+      "blocking_rule": "Block agent quality pass on unresolved P0/P1, missing reference evidence, missing consistency report, failed consistency verdict, or Integration Verdict without Claim Source Map coverage.",
+      "sample_proof_required": "Agent quality verdict"
+    }
+  ],
+  "artifact_runs": [
+    {
+    "id": "2026-07-05-duanxian-proposal-workflow",
+    "manifest": "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/manifest.md",
+    "final_proposal_package": "docs/superpowers/specs/2026-07-05-duanxian-proposal.md",
+    "integration_verdict_artifact": "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/13-proposal-integrator.md",
+    "risk_report_artifact": "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/14-proposal-risk-checker.md",
+    "artifact_dag": [
+      {"id": "01", "depends_on": []},
+      {"id": "02", "depends_on": ["01"]},
+      {"id": "03", "depends_on": ["01"]},
+      {"id": "04", "depends_on": ["01", "02", "03"]},
+      {"id": "05", "depends_on": ["01", "04"]},
+      {"id": "06", "depends_on": ["01", "04", "05"]},
+      {"id": "07", "depends_on": ["04", "05", "06"]},
+      {"id": "08", "depends_on": ["01", "04", "05", "06", "07"]},
+      {"id": "09", "depends_on": ["04", "05", "06", "07", "08"]},
+      {"id": "10", "depends_on": ["04", "05", "06", "07", "08"]},
+      {"id": "11", "depends_on": ["04", "05", "06", "07", "08"]},
+      {"id": "12", "depends_on": ["04", "05", "06", "07", "08"]},
+      {"id": "13", "depends_on": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]},
+      {"id": "14", "depends_on": ["01", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"]},
+      {"id": "final-proposal-package", "depends_on": ["13", "14"]}
+    ],
+    "skill_artifacts": {
+      "novel-intake-boundary-ledger-builder": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/01-intake-boundary-ledger.md"
+      ],
+      "novel-reader-promise-designer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/02-reader-promise-pre-story.md",
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/06-reader-promise-final.md"
+      ],
+      "novel-core-concept-designer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/03-core-concept-pre-story.md",
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/07-core-concept-final.md"
+      ],
+      "novel-storyline-designer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/04-storyline-design.md"
+      ],
+      "novel-storyline-quality-evaluator": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/05-storyline-quality-report.md"
+      ],
+      "novel-final-promise-concept-consistency-checker": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/08-final-promise-concept-consistency.md"
+      ],
+      "novel-macro-structure-designer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/09-macro-structure.md"
+      ],
+      "novel-core-character-framer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/10-core-character-frame.md"
+      ],
+      "novel-world-premise-framer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/11-world-premise.md"
+      ],
+      "novel-ending-direction-designer": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/12-ending-direction.md"
+      ],
+      "novel-proposal-integrator": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/13-proposal-integrator.md"
+      ],
+      "novel-proposal-risk-checker": [
+        "docs/superpowers/runs/proposal/2026-07-05-duanxian-proposal-workflow/artifacts/14-proposal-risk-checker.md"
+      ]
+      }
+    }
+  ],
+  "sample_proposal": "docs/superpowers/specs/2026-07-05-duanxian-proposal.md",
+  "static_checks": [
+    "proposal_skill_count_matches_design_doc",
+    "all_hard_gate_owners_are_independent_skills",
+    "all_proposal_skills_have_required_contract_sections",
+    "harness_and_design_docs_do_not_own_business_gates",
+    "harness_routing_gate_is_not_business_acceptance",
+    "integrator_and_risk_checker_inputs_match_contract",
+    "risk_checker_blocks_missing_evidence_and_consistency_report",
+    "canonical_reference_evidence_term_only",
+    "canonical_story_evidence_terms_absent",
+    "all_proposal_skills_have_boundary_section",
+    "storyline_terminal_agency_split_required",
+    "integration_gate_has_independent_proof",
+    "risk_checker_consumes_integration_verdict",
+    "harness_packages_integration_verdict",
+    "proposal_artifact_run_manifest_required",
+    "all_proposal_skill_outputs_have_independent_artifacts",
+    "proposal_artifact_schema_fields_required",
+    "integration_verdict_has_section_source_map",
+    "integration_claim_source_map_required",
+    "storyline_critical_business_claims_required",
+    "critical_business_claim_schema_required",
+    "claim_trace_canonical_consistency_required",
+    "artifact_runs_list_supported",
+    "sample_critical_claims_trace_to_storyline_artifact",
+    "risk_report_claim_source_map_coverage_required",
+    "proposal_convergence_protocol_required",
+    "convergence_log_schema_required",
+    "convergence_log_refactor_trigger_required",
+    "negative_contract_tests_required",
+    "artifact_dag_required",
+    "artifact_dag_acyclic_required",
+    "proposal_artifact_topology_required",
+    "artifact_source_dependency_required",
+    "final_proposal_claim_source_map_required",
+    "risk_verdict_consistency_required",
+    "legacy_integrated_proposal_terms_absent",
+    "risk_watch_item_count_matches_quality_report",
+    "manifest_execution_metadata_required",
+    "harness_dispatch_owner_points_to_business_skills",
+    "terminal_agency_legacy_terms_absent",
+    "sample_storyline_reference_evidence_has_multiple_dimensions",
+    "sample_terminal_agency_map_required",
+    "sample_proposal_contains_required_gate_proof"
+  ]
+}
