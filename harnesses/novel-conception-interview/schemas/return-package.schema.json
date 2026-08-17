@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Bounded conception return package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["harness", "run_id", "status", "origin_stage", "target_stage", "defect", "evidence", "requested_decision", "affected_artifacts"],
+  "properties": {
+    "harness": {"const": "novel-conception-interview"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["active", "closed"]},
+    "origin_stage": {"type": "string"},
+    "target_stage": {"type": "string"},
+    "author_approval": {"type": "object", "required": ["path", "sha256"]},
+    "defect": {"type": "string", "minLength": 1},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "requested_decision": {"type": "string", "minLength": 1},
+    "affected_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

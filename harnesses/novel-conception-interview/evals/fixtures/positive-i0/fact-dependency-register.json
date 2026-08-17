@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-positive-run",
+  "stage": "V1",
+  "status": "ready",
+  "fact_dependencies": [
+    {
+      "id": "FACT-EVAL-001",
+      "status": "not_applicable",
+      "claim": "This fixture needs no external factual dependency.",
+      "rationale": "It tests contract wiring only."
+    }
+  ]
+}

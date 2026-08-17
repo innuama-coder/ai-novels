@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fragment-package.schema.json",
+  "title": "H1 fragment package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "h1_session_id", "p1_completion", "plan_manifest", "fragments", "authority_status"],
+  "properties": {
+    "schema_version": {"const": "2.0"}, "run_id": {"type": "string", "minLength": 1}, "h1_session_id": {"type": "string", "minLength": 1}, "p1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "plan_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "fragments": {"type": "array", "minItems": 1, "items": {"$ref": "human-review-report.schema.json#/$defs/fragment"}}, "authority_status": {"const": "non_authoritative_sample"}
+  }
+}

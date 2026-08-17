@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "preparation-request.schema.json",
+  "title": "Novel development baseline preparation request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "skill", "project_id", "baseline_version", "source_root",
+    "completion_path", "current_state_pointer", "release_descriptor", "contract_dir",
+    "finalizer_source", "output_dir", "replace"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "skill": {"const": "novel-development-baseline-preparer"},
+    "project_id": {"type": "string", "minLength": 1},
+    "baseline_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "source_root": {"type": "string", "minLength": 1},
+    "completion_path": {"type": "string", "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "current_state_pointer": {"type": "string", "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "release_descriptor": {"type": "string", "minLength": 1},
+    "contract_dir": {"type": "string", "minLength": 1},
+    "finalizer_source": {"type": "string", "minLength": 1},
+    "output_dir": {"type": "string", "minLength": 1},
+    "replace": {"type": "boolean"}
+  }
+}

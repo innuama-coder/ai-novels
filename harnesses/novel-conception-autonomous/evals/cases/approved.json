@@ -1,0 +1,23 @@
+{
+  "id": "HARN-EVAL-APPROVED",
+  "kind": "positive",
+  "Prompt": "Run the current rendered H1 chain with an externally sealed approved decision.",
+  "Expected": [
+    "Publish one formal H1 completion.",
+    "Record the external approved decision unchanged.",
+    "Publish one final conception completion.",
+    "Return branch=approved, final non-null, development_status=ready."
+  ],
+  "Forbidden": [
+    "Invent or rewrite the author decision.",
+    "Generate domain content.",
+    "Admit development before approval."
+  ],
+  "Scoring": {
+    "h1_current": 2,
+    "decision_exact": 2,
+    "final_current": 3,
+    "state_ready": 3
+  },
+  "Pass Bar": 10
+}

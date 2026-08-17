@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "autonomous-run-state.schema.json",
+  "title": "Autonomous conception V2 immutable run-state snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow",
+    "run_id",
+    "revision",
+    "status",
+    "source_interview_state",
+    "current_stage_completions",
+    "h1_workspace",
+    "active_return",
+    "resolved_returns",
+    "superseded_completions",
+    "author_decision",
+    "development_status",
+    "previous_state"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "workflow": {"const": "novel-conception-autonomous-v2"},
+    "run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "status": {
+      "enum": [
+        "running",
+        "waiting_author",
+        "revise",
+        "approved",
+        "rejected",
+        "blocked"
+      ]
+    },
+    "source_interview_state": {
+      "$ref": "common-defs.schema.json#/$defs/artifactReference"
+    },
+    "current_stage_completions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "B0": {"$ref": "#/$defs/B0Ref"},
+        "S1": {"$ref": "#/$defs/S1Ref"},
+        "W1": {"$ref": "#/$defs/W1Ref"},
+        "E1": {"$ref": "#/$defs/E1Ref"},
+        "T1": {"$ref": "#/$defs/T1Ref"},
+        "C1": {"$ref": "#/$defs/C1Ref"},
+        "Q1": {"$ref": "#/$defs/Q1Ref"},
+        "P1": {"$ref": "#/$defs/P1Ref"},
+        "H1": {"$ref": "#/$defs/H1Ref"}
+      }
+    },
+    "h1_workspace": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
+    "active_return": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
+    "resolved_returns": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/resolvedReturn"}
+    },
+    "superseded_completions": {
+      "type": "array",
+      "items": {
+        "$ref": "common-defs.schema.json#/$defs/stageArtifactReference"
+      },
+      "uniqueItems": true
+    },
+    "author_decision": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
+    "development_status": {
+      "enum": ["not_ready", "ready", "stale_input"]
+    },
+    "previous_state": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"revision": {"const": 0}}, "required": ["revision"]},
+      "then": {"properties": {"previous_state": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "approved"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "active_return": {"type": "null"},
+          "author_decision": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          },
+          "development_status": {"enum": ["not_ready", "ready"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "revise"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "active_return": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          },
+          "development_status": {"enum": ["not_ready", "stale_input"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "rejected"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "active_return": {"type": "null"},
+          "author_decision": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          },
+          "development_status": {"const": "not_ready"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "B0Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "B0"}}}
+      ]
+    },
+    "S1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "S1"}}}
+      ]
+    },
+    "W1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "W1"}}}
+      ]
+    },
+    "E1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "E1"}}}
+      ]
+    },
+    "T1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "T1"}}}
+      ]
+    },
+    "C1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "C1"}}}
+      ]
+    },
+    "Q1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "Q1"}}}
+      ]
+    },
+    "P1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "P1"}}}
+      ]
+    },
+    "H1Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "H1"}}}
+      ]
+    },
+    "resolvedReturn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "return_binding",
+        "resolving_completion",
+        "pre_resolution_state"
+      ],
+      "properties": {
+        "return_binding": {
+          "$ref": "common-defs.schema.json#/$defs/returnBinding"
+        },
+        "resolving_completion": {
+          "$ref": "common-defs.schema.json#/$defs/stageArtifactReference"
+        },
+        "pre_resolution_state": {
+          "$ref": "common-defs.schema.json#/$defs/artifactReference"
+        }
+      }
+    }
+  }
+}

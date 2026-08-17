@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说构思呈现一致性审查"
+  short_description: "独立核验人审呈现与机器构思在意义、边界和权威层级上的一致性"
+  default_prompt: "独立审查当前小说构思的人审报告是否忠实呈现机器构思包，并输出可被组装门消费的一致性审查。"

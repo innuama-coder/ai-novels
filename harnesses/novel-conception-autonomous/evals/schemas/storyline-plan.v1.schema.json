@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "storyline-plan.v1.schema.json",
+  "title": "Evaluation-owned autonomous storyline proposal plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "plan_id",
+    "fixture_binding",
+    "ownership",
+    "design_decisions",
+    "demands",
+    "lines",
+    "connections",
+    "architecture",
+    "anchor_bindings",
+    "consistency_evidence",
+    "downstream_requirements",
+    "open_control_treatments"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "eval-owned-autonomous-storyline-plan"},
+    "plan_id": {"type": "string", "pattern": "^SPLAN-[A-Za-z0-9._-]+$"},
+    "fixture_binding": {"$ref": "#/$defs/fixtureBinding"},
+    "ownership": {"$ref": "#/$defs/ownership"},
+    "design_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/designDecision"},
+      "uniqueItems": true
+    },
+    "demands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/demand"},
+      "uniqueItems": true
+    },
+    "lines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/line"},
+      "uniqueItems": true
+    },
+    "connections": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/connection"},
+      "uniqueItems": true
+    },
+    "architecture": {"$ref": "#/$defs/architecture"},
+    "anchor_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/anchorBinding"},
+      "uniqueItems": true
+    },
+    "consistency_evidence": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/consistencyEvidence"},
+      "uniqueItems": true
+    },
+    "downstream_requirements": {"$ref": "#/$defs/downstreamRequirements"},
+    "open_control_treatments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/openControlTreatment"},
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]+$"},
+    "ids": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/id"},
+      "uniqueItems": true
+    },
+    "nonEmptyIds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/id"},
+      "uniqueItems": true
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9._/-]+$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "fixtureBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture",
+        "fixture_id",
+        "run_id",
+        "control_inventory_sha256",
+        "anchor_inventory_sha256"
+      ],
+      "properties": {
+        "fixture": {"$ref": "#/$defs/artifactReference"},
+        "fixture_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "control_inventory_sha256": {"$ref": "#/$defs/sha256"},
+        "anchor_inventory_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "authority", "author_authority", "usage"],
+      "properties": {
+        "owner": {"const": "eval_harness"},
+        "authority": {"const": "eval_owned_autonomous_proposal"},
+        "author_authority": {"const": false},
+        "usage": {"const": "S1_phase_payload_only"}
+      }
+    },
+    "designDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_control_ids",
+        "source_anchor_ids",
+        "gap",
+        "options",
+        "selection",
+        "authority_basis",
+        "reversibility",
+        "projection_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DEC-[A-Za-z0-9._-]+$"},
+        "source_control_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "source_anchor_ids": {"$ref": "#/$defs/ids"},
+        "gap": {"type": "string", "minLength": 1},
+        "options": {"$ref": "#/$defs/nonEmptyStrings"},
+        "selection": {"type": "string", "minLength": 1},
+        "authority_basis": {"type": "string", "minLength": 1},
+        "reversibility": {"enum": ["reversible", "costly", "locked_by_downstream"]},
+        "projection_ids": {"$ref": "#/$defs/nonEmptyIds"}
+      }
+    },
+    "demand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_control_id",
+        "obligation",
+        "disposition",
+        "realization_line_ids",
+        "rationale"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLD-[A-Za-z0-9._-]+$"},
+        "source_control_id": {"$ref": "#/$defs/id"},
+        "obligation": {"type": "string", "minLength": 1},
+        "disposition": {
+          "enum": [
+            "independent_line",
+            "merged",
+            "background_pressure",
+            "optional_melody",
+            "not_applicable"
+          ]
+        },
+        "realization_line_ids": {"$ref": "#/$defs/ids"},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "phase", "description"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLS-[A-Za-z0-9._-]+$"},
+        "phase": {"enum": ["start", "change", "end"]},
+        "description": {"type": "string", "minLength": 1}
+      }
+    },
+    "line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "responsibility",
+        "actor_slot_ids",
+        "demand_ids",
+        "goal",
+        "pressure",
+        "states",
+        "connection_ids",
+        "decision_ids",
+        "downstream_freedom"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "type": {
+          "enum": ["precursor", "main", "supporting", "background", "optional_melody"]
+        },
+        "responsibility": {"type": "string", "minLength": 1},
+        "actor_slot_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "demand_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "goal": {"type": "string", "minLength": 1},
+        "pressure": {"type": "string", "minLength": 1},
+        "states": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/state"},
+          "uniqueItems": true
+        },
+        "connection_ids": {"$ref": "#/$defs/ids"},
+        "decision_ids": {"$ref": "#/$defs/ids"},
+        "downstream_freedom": {"type": "string", "minLength": 1}
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "relation",
+        "from_line_id",
+        "to_line_id",
+        "from_state_id",
+        "to_state_id",
+        "responsibility"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"},
+        "type": {"enum": ["merge", "split", "handoff", "collision", "reveal", "synchronization"]},
+        "relation": {"enum": ["causal", "associative"]},
+        "from_line_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "to_line_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "from_state_id": {"type": "string", "pattern": "^SLS-[A-Za-z0-9._-]+$"},
+        "to_state_id": {"type": "string", "pattern": "^SLS-[A-Za-z0-9._-]+$"},
+        "responsibility": {"type": "string", "minLength": 1}
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "main_line_id",
+        "entry_line_ids",
+        "terminal_line_ids",
+        "subject",
+        "opening_condition",
+        "development_logic",
+        "turning_logic",
+        "resolution_condition",
+        "theme_test",
+        "line_order"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ARCH-[A-Za-z0-9._-]+$"},
+        "main_line_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "entry_line_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "terminal_line_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "subject": {"type": "string", "minLength": 1},
+        "opening_condition": {"type": "string", "minLength": 1},
+        "development_logic": {"type": "string", "minLength": 1},
+        "turning_logic": {"type": "string", "minLength": 1},
+        "resolution_condition": {"type": "string", "minLength": 1},
+        "theme_test": {"type": "string", "minLength": 1},
+        "line_order": {"$ref": "#/$defs/nonEmptyIds"}
+      }
+    },
+    "anchorBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "semantic_anchor_id",
+        "assurance",
+        "source_control_ids",
+        "target_ids",
+        "treatment",
+        "evidence"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AB-[A-Za-z0-9._-]+$"},
+        "semantic_anchor_id": {"$ref": "#/$defs/id"},
+        "assurance": {
+          "enum": [
+            "author_locked",
+            "author_locked_correction",
+            "author_open",
+            "derived_unsealed"
+          ]
+        },
+        "source_control_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "target_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "treatment": {
+          "enum": ["locked_constraint", "preserved_open", "reversible_hypothesis"]
+        },
+        "evidence": {"type": "string", "minLength": 1}
+      }
+    },
+    "consistencyEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "dimension",
+        "line_ids",
+        "witness_ids",
+        "claim",
+        "failure_condition"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLCHECK-[A-Za-z0-9._-]+$"},
+        "dimension": {"enum": ["time", "causality", "information", "authority", "state", "theme"]},
+        "line_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "witness_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "claim": {"type": "string", "minLength": 1},
+        "failure_condition": {"type": "string", "minLength": 1}
+      }
+    },
+    "downstreamRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "target_stage",
+        "line_id",
+        "demand_ids",
+        "responsibility",
+        "required_capability",
+        "constraints",
+        "acceptance_checks",
+        "downstream_freedom"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "target_stage": {"enum": ["W1", "E1", "T1", "C1"]},
+        "line_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "demand_ids": {"$ref": "#/$defs/nonEmptyIds"},
+        "responsibility": {"type": "string", "minLength": 1},
+        "required_capability": {"type": "string", "minLength": 1},
+        "constraints": {"$ref": "#/$defs/nonEmptyStrings"},
+        "acceptance_checks": {"$ref": "#/$defs/nonEmptyStrings"},
+        "downstream_freedom": {"type": "string", "minLength": 1}
+      }
+    },
+    "downstreamRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["W1", "E1", "T1", "C1"],
+      "properties": {
+        "W1": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/downstreamRequirement"}, "uniqueItems": true},
+        "E1": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/downstreamRequirement"}, "uniqueItems": true},
+        "T1": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/downstreamRequirement"}, "uniqueItems": true},
+        "C1": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/downstreamRequirement"}, "uniqueItems": true}
+      }
+    },
+    "openControlTreatment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_control_id", "status", "question", "target_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^OPEN-[A-Za-z0-9._-]+$"},
+        "source_control_id": {"$ref": "#/$defs/id"},
+        "status": {"const": "preserved_open"},
+        "question": {"type": "string", "minLength": 1},
+        "target_ids": {"$ref": "#/$defs/nonEmptyIds"}
+      }
+    }
+  }
+}

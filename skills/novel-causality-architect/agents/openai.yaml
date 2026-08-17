@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说因果架构"
+  short_description: "以确认式访谈建立可追溯的主线因果、危机与结局。"
+  default_prompt: "Use $novel-causality-architect to turn my confirmed intent card, subject definition, and core character design into a causal storyline."

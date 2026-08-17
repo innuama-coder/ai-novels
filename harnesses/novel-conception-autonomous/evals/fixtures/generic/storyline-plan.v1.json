@@ -1,0 +1,889 @@
+{
+  "schema_version": "1.0",
+  "kind": "eval-owned-autonomous-storyline-plan",
+  "plan_id": "SPLAN-GENERIC-001",
+  "fixture_binding": {
+    "fixture": {
+      "path": "fixtures/generic/fixture.json",
+      "sha256": "0867a1a2d56bfa72ebccc840d2de835c7e247a9b15e1896b3ca7ac54bdce0f28"
+    },
+    "fixture_id": "generic-conception-e2e",
+    "run_id": "RUN-E2E-GENERIC-001",
+    "control_inventory_sha256": "8dfa22d6064487c7995ed8d8aceef8cea368497533b85451c9e25ef5e47a873a",
+    "anchor_inventory_sha256": "8f66be52d1d4d2d9fe9d25b8f77298e6bdb3b76313ac5d128c0e4f1cdfaa24e0"
+  },
+  "ownership": {
+    "owner": "eval_harness",
+    "authority": "eval_owned_autonomous_proposal",
+    "author_authority": false,
+    "usage": "S1_phase_payload_only"
+  },
+  "design_decisions": [
+    {
+      "id": "DEC-EVIDENCE-CHAIN",
+      "source_control_ids": [
+        "WLD-001",
+        "CHR-001",
+        "CAU-001"
+      ],
+      "source_anchor_ids": [
+        "GEN-CAUSALITY"
+      ],
+      "gap": "The controls define three proof sources and two legal opponents but do not fix how their discoveries become one dramatic verification.",
+      "options": [
+        "Let the gate keeper solve the warning from council records alone.",
+        "Let the surveyor solve the warning from hydraulic timing alone.",
+        "Require the opponents to combine physical flow, upstream marks, and seal custody before either can defeat the warning."
+      ],
+      "selection": "Require the opponents to combine physical flow, upstream marks, and seal custody before either can defeat the warning.",
+      "authority_basis": "This reversible evaluation proposal joins locked causal ingredients without changing their facts or deciding an author-open consequence.",
+      "reversibility": "reversible",
+      "projection_ids": [
+        "SL-VERIFICATION",
+        "SLC-FLOW-EVIDENCE",
+        "SLC-PROOF-TO-CHOICE"
+      ]
+    },
+    {
+      "id": "DEC-COVENANT-TEST",
+      "source_control_ids": [
+        "INT-001",
+        "SUB-001",
+        "CHR-001",
+        "CAU-001"
+      ],
+      "source_anchor_ids": [
+        "GEN-IDENTITY",
+        "GEN-CAUSALITY"
+      ],
+      "gap": "The controls require a decision about the spring but leave the exact dramatic test that turns proof into a stewardship choice open.",
+      "options": [
+        "Treat the proof as a courtroom victory with no immediate water allocation.",
+        "Use the defeated warning to force an emergency gate choice whose downstream cost makes the charter consequential.",
+        "Delay the allocation until every district reaches consensus."
+      ],
+      "selection": "Use the defeated warning to force an emergency gate choice whose downstream cost makes the charter consequential.",
+      "authority_basis": "The selected test is a reversible structural realization of the locked charter and shared-stewardship obligations.",
+      "reversibility": "reversible",
+      "projection_ids": [
+        "SL-MAIN",
+        "SLC-PROOF-TO-CHOICE",
+        "SLC-RANK-PRESSURE"
+      ]
+    }
+  ],
+  "demands": [
+    {
+      "id": "SLD-INTENT",
+      "source_control_id": "INT-001",
+      "obligation": "Intent: A drought-struck valley must decide whether an ancient communal canal charter still governs a newly discovered spring.",
+      "disposition": "merged",
+      "realization_line_ids": [
+        "SL-MAIN"
+      ],
+      "rationale": "The charter decision is inseparable from the subject's public-versus-private stewardship test, so both controls govern one main line."
+    },
+    {
+      "id": "SLD-SUBJECT",
+      "source_control_id": "SUB-001",
+      "obligation": "Subject: The subject is how shared stewardship survives when private survival rewards breaking a public promise.",
+      "disposition": "merged",
+      "realization_line_ids": [
+        "SL-MAIN"
+      ],
+      "rationale": "The main allocation choice must make private relief attractive while keeping the public promise consequential."
+    },
+    {
+      "id": "SLD-WORLD",
+      "source_control_id": "WLD-001",
+      "obligation": "World: Water moves only downhill through hand-built gates; opening one district's gate reduces every downstream allotment.",
+      "disposition": "background_pressure",
+      "realization_line_ids": [
+        "SL-WATERSHED"
+      ],
+      "rationale": "Hydraulic scarcity is a persistent background mechanism that constrains both the warning investigation and the final allocation."
+    },
+    {
+      "id": "SLD-CHARACTER",
+      "source_control_id": "CHR-001",
+      "obligation": "Character: A young gate keeper and an exiled surveyor begin as legal opponents and become reluctant custodians of the same watershed.",
+      "disposition": "merged",
+      "realization_line_ids": [
+        "SL-VERIFICATION"
+      ],
+      "rationale": "Their relationship changes because neither opponent can authenticate all three evidence classes alone."
+    },
+    {
+      "id": "SLD-CAUSALITY",
+      "source_control_id": "CAU-001",
+      "obligation": "Causality: A forged flood warning can be defeated only by comparing upstream marks, council seals, and the physical travel time of water.",
+      "disposition": "merged",
+      "realization_line_ids": [
+        "SL-VERIFICATION"
+      ],
+      "rationale": "The proof protocol and the opponents' reluctant cooperation are one causal investigation rather than parallel summaries."
+    },
+    {
+      "id": "SLD-OPEN-RANK",
+      "source_control_id": "NAR-001",
+      "obligation": "Narrative boundary: Whether the valley should abolish inherited water rank after the emergency remains unresolved.",
+      "disposition": "optional_melody",
+      "realization_line_ids": [
+        "SL-RANK-DEBATE"
+      ],
+      "rationale": "The emergency may expose the inherited system's weakness, but the plan preserves the reform outcome as an optional unresolved resonance."
+    }
+  ],
+  "lines": [
+    {
+      "id": "SL-WATERSHED",
+      "type": "background",
+      "responsibility": "Make downhill flow and coupled downstream allotments an active constraint: no gate can create water, and every local release transfers scarcity to another district.",
+      "actor_slot_ids": [
+        "SLOT-UPSTREAM-DISTRICT",
+        "SLOT-DOWNSTREAM-DISTRICTS"
+      ],
+      "demand_ids": [
+        "SLD-WORLD"
+      ],
+      "goal": "Establish a measurable watershed whose physical delays and shared losses cannot be overruled by rhetoric.",
+      "pressure": "Drought turns every gate movement into a visible gain for one district and a calculable loss downstream.",
+      "states": [
+        {
+          "id": "SLS-WATERSHED-START",
+          "phase": "start",
+          "description": "The newly discovered spring enters a canal already running below every district's expected allotment."
+        },
+        {
+          "id": "SLS-WATERSHED-COUPLED",
+          "phase": "change",
+          "description": "An upstream gate test produces a timed reduction at successive downstream markers, proving that district allotments are physically coupled."
+        },
+        {
+          "id": "SLS-WATERSHED-END",
+          "phase": "end",
+          "description": "The measured downhill delay becomes an independent clock against which any claimed flood movement can be checked."
+        }
+      ],
+      "connection_ids": [
+        "SLC-FLOW-EVIDENCE"
+      ],
+      "decision_ids": [],
+      "downstream_freedom": "W1 may choose the canal's terrain and gate layout, but it must preserve one-way flow, measurable delay, and transferred downstream loss."
+    },
+    {
+      "id": "SL-VERIFICATION",
+      "type": "supporting",
+      "responsibility": "Turn legal opposition into reluctant joint custody by requiring the young gate keeper and exiled surveyor to compare upstream marks, council seals, and travel time before the forged warning can be defeated.",
+      "actor_slot_ids": [
+        "SLOT-GATE-KEEPER",
+        "SLOT-EXILED-SURVEYOR",
+        "SLOT-SEAL-CUSTODIAN"
+      ],
+      "demand_ids": [
+        "SLD-CHARACTER",
+        "SLD-CAUSALITY"
+      ],
+      "goal": "Produce a proof that is valid only when each opponent contributes access or expertise the other lacks.",
+      "pressure": "The forged warning demands an immediate gate opening, while institutional distrust makes shared verification look like betrayal.",
+      "states": [
+        {
+          "id": "SLS-VERIFY-START",
+          "phase": "start",
+          "description": "The gate keeper treats the warning as binding and the exiled surveyor as an interested legal adversary."
+        },
+        {
+          "id": "SLS-VERIFY-MARKS",
+          "phase": "change",
+          "description": "The surveyor shows that fresh upstream marks do not match the water level claimed by the warning."
+        },
+        {
+          "id": "SLS-VERIFY-SEALS",
+          "phase": "change",
+          "description": "The gate keeper traces the council seal to a custody interval in which the document could have been forged."
+        },
+        {
+          "id": "SLS-VERIFY-TIMING",
+          "phase": "change",
+          "description": "Their combined marks and seal history are tested against the watershed clock, and the alleged flood proves physically too fast."
+        },
+        {
+          "id": "SLS-VERIFY-END",
+          "phase": "end",
+          "description": "The warning is defeated by convergent evidence, and the former opponents accept joint responsibility for what the verified spring now requires."
+        }
+      ],
+      "connection_ids": [
+        "SLC-FLOW-EVIDENCE",
+        "SLC-PROOF-TO-RANK",
+        "SLC-PROOF-TO-CHOICE"
+      ],
+      "decision_ids": [
+        "DEC-EVIDENCE-CHAIN"
+      ],
+      "downstream_freedom": "T1 may distribute discoveries across events, but no single source or character may independently defeat the warning."
+    },
+    {
+      "id": "SL-RANK-DEBATE",
+      "type": "optional_melody",
+      "responsibility": "Expose how inherited water rank can amplify or resist forged authority while preserving the question of abolition after the emergency.",
+      "actor_slot_ids": [
+        "SLOT-RANKED-HOLDERS",
+        "SLOT-UNRANKED-FAMILIES",
+        "SLOT-DISTRICT-DELEGATES"
+      ],
+      "demand_ids": [
+        "SLD-OPEN-RANK"
+      ],
+      "goal": "Make the reform question consequential enough to shape the emergency debate without supplying its final answer.",
+      "pressure": "Each faction tries to convert proof of the forgery into advance authorization for its preferred post-emergency order.",
+      "states": [
+        {
+          "id": "SLS-RANK-START",
+          "phase": "start",
+          "description": "Inherited rank is treated as a background allocation custom rather than the emergency's explicit question."
+        },
+        {
+          "id": "SLS-RANK-EXPOSED",
+          "phase": "change",
+          "description": "The forged seal shows both the coercive vulnerability of inherited authority and the danger of abolishing procedure during panic."
+        },
+        {
+          "id": "SLS-RANK-END",
+          "phase": "end",
+          "description": "Opposing reform demands enter the final allocation debate, but neither abolition nor preservation receives authorial settlement."
+        }
+      ],
+      "connection_ids": [
+        "SLC-PROOF-TO-RANK",
+        "SLC-RANK-PRESSURE"
+      ],
+      "decision_ids": [],
+      "downstream_freedom": "Later development may foreground, defer, or continue this debate, but it must not treat this plan as resolving inherited water rank."
+    },
+    {
+      "id": "SL-MAIN",
+      "type": "main",
+      "responsibility": "Carry the communal canal charter and shared stewardship through a trigger, escalating scarcity, a costly守约 choice, its immediate result, and an aftermath that leaves inherited-rank reform open.",
+      "actor_slot_ids": [
+        "SLOT-GATE-KEEPER",
+        "SLOT-EXILED-SURVEYOR",
+        "SLOT-COUNCIL",
+        "SLOT-DISTRICT-DELEGATES"
+      ],
+      "demand_ids": [
+        "SLD-INTENT",
+        "SLD-SUBJECT"
+      ],
+      "goal": "Decide whether the new spring enters the communal charter when private district survival makes unilateral capture immediately rewarding.",
+      "pressure": "Every defensible release saves one group first, lowers downstream allotments, and risks proving that public promises vanish under drought.",
+      "states": [
+        {
+          "id": "SLS-MAIN-START",
+          "phase": "start",
+          "description": "The spring is discovered while the canal charter's application to new water is disputed and no district accepts a reduced share."
+        },
+        {
+          "id": "SLS-MAIN-TRIGGER",
+          "phase": "change",
+          "description": "Trigger: the forged flood warning demands an emergency upstream opening that would place the spring under private control."
+        },
+        {
+          "id": "SLS-MAIN-ESCALATION",
+          "phase": "change",
+          "description": "Escalation: premature gate preparation reduces downstream reserves, while refusal threatens an upstream district already near failure."
+        },
+        {
+          "id": "SLS-MAIN-PROOF",
+          "phase": "change",
+          "description": "Verified marks, seals, and hydraulic timing remove the false emergency excuse but leave the genuine drought allocation unresolved."
+        },
+        {
+          "id": "SLS-MAIN-DECISION",
+          "phase": "change",
+          "description": "Decision: the reluctant custodians reject unilateral capture and submit the spring to a charter-governed emergency rotation with visible downstream costs."
+        },
+        {
+          "id": "SLS-MAIN-RESULT",
+          "phase": "change",
+          "description": "Result: immediate collapse is avoided without hiding which districts receive less water or pretending the public promise is painless."
+        },
+        {
+          "id": "SLS-MAIN-END",
+          "phase": "end",
+          "description": "Aftermath: the communal allocation survives this emergency, trust remains contested, and the inherited water-rank question proceeds without a decided outcome."
+        }
+      ],
+      "connection_ids": [
+        "SLC-PROOF-TO-CHOICE",
+        "SLC-RANK-PRESSURE"
+      ],
+      "decision_ids": [
+        "DEC-COVENANT-TEST"
+      ],
+      "downstream_freedom": "E1 and T1 may choose the concrete allocation sequence and losses, but the charter must govern the emergency spring and the reform question must remain open."
+    }
+  ],
+  "connections": [
+    {
+      "id": "SLC-FLOW-EVIDENCE",
+      "type": "handoff",
+      "relation": "causal",
+      "from_line_id": "SL-WATERSHED",
+      "to_line_id": "SL-VERIFICATION",
+      "from_state_id": "SLS-WATERSHED-END",
+      "to_state_id": "SLS-VERIFY-TIMING",
+      "responsibility": "Hand the measured downhill travel interval into the evidence comparison so documentary claims remain answerable to physical time."
+    },
+    {
+      "id": "SLC-PROOF-TO-RANK",
+      "type": "reveal",
+      "relation": "associative",
+      "from_line_id": "SL-VERIFICATION",
+      "to_line_id": "SL-RANK-DEBATE",
+      "from_state_id": "SLS-VERIFY-END",
+      "to_state_id": "SLS-RANK-EXPOSED",
+      "responsibility": "Let proof of forged authority expose competing interpretations of inherited water rank without selecting a reform outcome."
+    },
+    {
+      "id": "SLC-PROOF-TO-CHOICE",
+      "type": "handoff",
+      "relation": "causal",
+      "from_line_id": "SL-VERIFICATION",
+      "to_line_id": "SL-MAIN",
+      "from_state_id": "SLS-VERIFY-END",
+      "to_state_id": "SLS-MAIN-PROOF",
+      "responsibility": "Remove the false flood premise before the main line decides the real drought allocation."
+    },
+    {
+      "id": "SLC-RANK-PRESSURE",
+      "type": "collision",
+      "relation": "associative",
+      "from_line_id": "SL-RANK-DEBATE",
+      "to_line_id": "SL-MAIN",
+      "from_state_id": "SLS-RANK-END",
+      "to_state_id": "SLS-MAIN-DECISION",
+      "responsibility": "Carry unresolved reform pressure into the守约 decision while preventing the emergency result from answering the post-emergency rank question."
+    }
+  ],
+  "architecture": {
+    "id": "ARCH-GENERIC-WATERSHED",
+    "main_line_id": "SL-MAIN",
+    "entry_line_ids": [
+      "SL-WATERSHED"
+    ],
+    "terminal_line_ids": [
+      "SL-MAIN"
+    ],
+    "subject": "Shared stewardship is tested when authenticated public rules impose visible private losses during drought.",
+    "opening_condition": "A new spring appears inside a failing canal system before the valley agrees whether the old communal charter covers it.",
+    "development_logic": "Physical flow establishes a clock; legal opponents combine access and expertise to defeat a forged warning; that proof exposes an unresolved rank debate and strips the final choice of a false emergency excuse.",
+    "turning_logic": "Once the warning is disproved, the gate keeper and surveyor can no longer blame forged authority: they must allocate genuinely scarce water under the public promise they now jointly understand.",
+    "resolution_condition": "The emergency spring is governed through a costly communal rotation, immediate collapse is avoided, and affected districts can see both the守约 result and its losses.",
+    "theme_test": "The outcome demonstrates whether shared stewardship can survive an incentive to privatize relief without claiming that one emergency settles inherited water rank.",
+    "line_order": [
+      "SL-WATERSHED",
+      "SL-VERIFICATION",
+      "SL-RANK-DEBATE",
+      "SL-MAIN"
+    ]
+  },
+  "anchor_bindings": [
+    {
+      "id": "AB-GENERIC-IDENTITY",
+      "semantic_anchor_id": "GEN-IDENTITY",
+      "assurance": "author_locked",
+      "source_control_ids": [
+        "INT-001",
+        "SUB-001"
+      ],
+      "target_ids": [
+        "SL-MAIN",
+        "ARCH-GENERIC-WATERSHED"
+      ],
+      "treatment": "locked_constraint",
+      "evidence": "The main responsibility and architecture explicitly retain the communal canal charter as the mechanism through which shared stewardship is tested."
+    },
+    {
+      "id": "AB-GENERIC-CAUSALITY",
+      "semantic_anchor_id": "GEN-CAUSALITY",
+      "assurance": "author_locked",
+      "source_control_ids": [
+        "CAU-001"
+      ],
+      "target_ids": [
+        "SL-VERIFICATION",
+        "SLC-FLOW-EVIDENCE"
+      ],
+      "treatment": "locked_constraint",
+      "evidence": "The verification line requires upstream marks, council seals, and travel time, while the handoff binds physical timing to the documentary comparison."
+    },
+    {
+      "id": "AB-GENERIC-OPEN-END",
+      "semantic_anchor_id": "GEN-OPEN-END",
+      "assurance": "author_open",
+      "source_control_ids": [
+        "NAR-001"
+      ],
+      "target_ids": [
+        "OPEN-INHERITED-WATER-RANK",
+        "SL-RANK-DEBATE"
+      ],
+      "treatment": "preserved_open",
+      "evidence": "The optional line makes both reform arguments consequential but ends before either inherited-rank outcome is selected."
+    }
+  ],
+  "consistency_evidence": [
+    {
+      "id": "SLCHECK-GENERIC-TIME",
+      "dimension": "time",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "SLS-WATERSHED-END",
+        "SLC-FLOW-EVIDENCE",
+        "SLS-VERIFY-END",
+        "SLC-PROOF-TO-CHOICE",
+        "SLS-MAIN-END"
+      ],
+      "claim": "Measured hydraulic delay precedes the completed proof, and completed proof precedes the charter decision and aftermath.",
+      "failure_condition": "A downstream realization places verification before the measured flow interval or the main decision before the warning is defeated."
+    },
+    {
+      "id": "SLCHECK-GENERIC-CAUSALITY",
+      "dimension": "causality",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "SLD-WORLD",
+        "SLC-FLOW-EVIDENCE",
+        "DEC-EVIDENCE-CHAIN",
+        "SLC-PROOF-TO-CHOICE",
+        "SLD-INTENT"
+      ],
+      "claim": "World mechanics supply the timing evidence, convergent proof defeats the forgery, and removal of the false premise exposes the real charter choice.",
+      "failure_condition": "The warning is defeated without all required evidence or the spring is allocated before the forged premise is removed."
+    },
+    {
+      "id": "SLCHECK-GENERIC-INFORMATION",
+      "dimension": "information",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "AB-GENERIC-CAUSALITY",
+        "SLS-VERIFY-MARKS",
+        "SLS-VERIFY-SEALS",
+        "SLC-PROOF-TO-CHOICE"
+      ],
+      "claim": "Marks, seal custody, and physical timing become available in distinct steps before their combined conclusion enters the main line.",
+      "failure_condition": "A character acts on the forgery conclusion before the source that character can access has been established."
+    },
+    {
+      "id": "SLCHECK-GENERIC-AUTHORITY",
+      "dimension": "authority",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "DEC-COVENANT-TEST",
+        "AB-GENERIC-IDENTITY",
+        "AB-GENERIC-OPEN-END",
+        "OPEN-INHERITED-WATER-RANK"
+      ],
+      "claim": "Evaluation-owned structural choices realize locked identity constraints while the inherited-rank outcome remains explicitly under author-open authority.",
+      "failure_condition": "The proposal is treated as author approval or any selected decision states whether inherited water rank is abolished."
+    },
+    {
+      "id": "SLCHECK-GENERIC-STATE",
+      "dimension": "state",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "SL-WATERSHED",
+        "SLC-FLOW-EVIDENCE",
+        "SL-VERIFICATION",
+        "SLC-PROOF-TO-RANK",
+        "SL-RANK-DEBATE",
+        "SLC-RANK-PRESSURE",
+        "SL-MAIN"
+      ],
+      "claim": "Each connection transfers a declared end or change state into a declared later line state, and every non-main line reaches the main line.",
+      "failure_condition": "A connection bypasses its declared endpoint state or removal of a structural line leaves its assigned obligation and transition unrealized."
+    },
+    {
+      "id": "SLCHECK-GENERIC-THEME",
+      "dimension": "theme",
+      "line_ids": [
+        "SL-WATERSHED",
+        "SL-VERIFICATION",
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ],
+      "witness_ids": [
+        "SLD-SUBJECT",
+        "SLD-INTENT",
+        "ARCH-GENERIC-WATERSHED",
+        "AB-GENERIC-IDENTITY"
+      ],
+      "claim": "The ending tests shared stewardship through a costly charter-governed allocation rather than through abstract agreement or cost-free virtue.",
+      "failure_condition": "Private capture carries no public cost, the charter has no effect on allocation, or the outcome avoids choosing how the emergency spring is governed."
+    }
+  ],
+  "downstream_requirements": {
+    "W1": [
+      {
+        "id": "WR-GENERIC-WATERSHED",
+        "target_stage": "W1",
+        "line_id": "SL-WATERSHED",
+        "demand_ids": [
+          "SLD-WORLD"
+        ],
+        "responsibility": "Define a watershed in which gate operations, elevation, travel delay, and downstream allotment loss can carry causal events.",
+        "required_capability": "Provide distinct upstream and downstream positions plus observable markers for flow timing and allocation change.",
+        "constraints": [
+          "Water moves only downhill through hand-built gates.",
+          "Opening one district's gate reduces downstream allotments.",
+          "The environment must permit the travel interval to be measured rather than asserted."
+        ],
+        "acceptance_checks": [
+          "Every verification event can be placed at a location with the evidence it uses.",
+          "No environment feature creates water or reverses the locked downhill rule."
+        ],
+        "downstream_freedom": "Place names, terrain scale, construction style, and exact distances remain for W1 to define."
+      },
+      {
+        "id": "WR-GENERIC-VERIFICATION",
+        "target_stage": "W1",
+        "line_id": "SL-VERIFICATION",
+        "demand_ids": [
+          "SLD-CHARACTER",
+          "SLD-CAUSALITY"
+        ],
+        "responsibility": "Provide evidence-bearing environments that separate access to upstream marks, seal custody, and hydraulic timing.",
+        "required_capability": "Force the legal opponents to exchange evidence across controlled boundaries before a valid conclusion is possible.",
+        "constraints": [
+          "No single room or institution may supply all three proof classes without cooperation.",
+          "Seal records and physical marks must remain independently inspectable."
+        ],
+        "acceptance_checks": [
+          "The gate keeper and surveyor each have unique access or expertise.",
+          "The final comparison can trace every conclusion to a concrete evidence source."
+        ],
+        "downstream_freedom": "W1 may choose the council archive, marker sites, and comparison workspace."
+      },
+      {
+        "id": "WR-GENERIC-RANK-DEBATE",
+        "target_stage": "W1",
+        "line_id": "SL-RANK-DEBATE",
+        "demand_ids": [
+          "SLD-OPEN-RANK"
+        ],
+        "responsibility": "Provide a civic arena where ranked and unranked claims can affect emergency pressure without producing a binding reform verdict.",
+        "required_capability": "Keep public argument visible while separating emergency gate authority from post-emergency constitutional authority.",
+        "constraints": [
+          "No environment affordance may make one faction's rank outcome final.",
+          "The debate must remain connected to water access rather than detached exposition."
+        ],
+        "acceptance_checks": [
+          "Both abolition and preservation arguments can be heard or observed.",
+          "The space lacks a mechanism that silently converts debate into final law."
+        ],
+        "downstream_freedom": "The forum, crowd scale, and communication method remain for W1."
+      },
+      {
+        "id": "WR-GENERIC-MAIN",
+        "target_stage": "W1",
+        "line_id": "SL-MAIN",
+        "demand_ids": [
+          "SLD-INTENT",
+          "SLD-SUBJECT"
+        ],
+        "responsibility": "Provide an operational decision environment where the spring can be captured privately or entered into a visible communal rotation.",
+        "required_capability": "Make immediate private relief, downstream cost, public authorization, and accountable gate control simultaneously legible.",
+        "constraints": [
+          "The charter decision must alter actual water routing.",
+          "守约 must impose a visible cost rather than remain a declaration."
+        ],
+        "acceptance_checks": [
+          "The final action can be observed by affected districts.",
+          "The environment preserves evidence of who gained and lost water."
+        ],
+        "downstream_freedom": "W1 may choose the control chamber, assembly interface, and observation points."
+      }
+    ],
+    "E1": [
+      {
+        "id": "END-GENERIC-WATERSHED",
+        "target_stage": "E1",
+        "line_id": "SL-WATERSHED",
+        "demand_ids": [
+          "SLD-WORLD"
+        ],
+        "responsibility": "Define the environmental state changes that turn a gate test into a reliable hydraulic clock.",
+        "required_capability": "Represent before and after allotments plus propagation delay across districts.",
+        "constraints": [
+          "Each local gain must preserve its downstream loss.",
+          "The end state must be usable by the verification line."
+        ],
+        "acceptance_checks": [
+          "The state system exposes a measurable timing invariant.",
+          "No state transition violates downhill flow."
+        ],
+        "downstream_freedom": "Exact volumes, durations, and measurement notation remain for E1."
+      },
+      {
+        "id": "END-GENERIC-VERIFICATION",
+        "target_stage": "E1",
+        "line_id": "SL-VERIFICATION",
+        "demand_ids": [
+          "SLD-CHARACTER",
+          "SLD-CAUSALITY"
+        ],
+        "responsibility": "Define evidence states that can move from disputed fragments to a convergent falsification of the warning.",
+        "required_capability": "Track authenticity, custody, accessibility, and comparison readiness for all three evidence classes.",
+        "constraints": [
+          "No evidence state may jump from unknown to conclusive without its comparison step.",
+          "Joint custody must follow, not precede, meaningful cooperation."
+        ],
+        "acceptance_checks": [
+          "Each proof source has a distinct before and after state.",
+          "The terminal proof state requires contributions from both opponents."
+        ],
+        "downstream_freedom": "E1 may define intermediate confidence levels and resource identifiers."
+      },
+      {
+        "id": "END-GENERIC-RANK-DEBATE",
+        "target_stage": "E1",
+        "line_id": "SL-RANK-DEBATE",
+        "demand_ids": [
+          "SLD-OPEN-RANK"
+        ],
+        "responsibility": "Define an open civic-pressure state that changes salience without becoming a decided legal state.",
+        "required_capability": "Represent competing reform positions and their pressure on the main choice.",
+        "constraints": [
+          "The terminal state remains unresolved.",
+          "No state label may encode abolition or preservation as achieved."
+        ],
+        "acceptance_checks": [
+          "At least two incompatible positions remain active.",
+          "The state can pressure the main line without determining its rank outcome."
+        ],
+        "downstream_freedom": "E1 may define factional support and urgency scales."
+      },
+      {
+        "id": "END-GENERIC-MAIN",
+        "target_stage": "E1",
+        "line_id": "SL-MAIN",
+        "demand_ids": [
+          "SLD-INTENT",
+          "SLD-SUBJECT"
+        ],
+        "responsibility": "Define the trigger-to-aftermath state progression for charter scope, water allocation, public trust, and private survival pressure.",
+        "required_capability": "Make the守约 decision change both resource state and public obligation state.",
+        "constraints": [
+          "The false warning must be removed before the real allocation decision.",
+          "The emergency result cannot close inherited-rank reform."
+        ],
+        "acceptance_checks": [
+          "Trigger, escalation, proof, decision, result, and aftermath remain distinguishable.",
+          "The end state contains visible benefit, visible cost, and unresolved reform."
+        ],
+        "downstream_freedom": "E1 may define precise district states and trust measures."
+      }
+    ],
+    "T1": [
+      {
+        "id": "EVD-GENERIC-WATERSHED",
+        "target_stage": "T1",
+        "line_id": "SL-WATERSHED",
+        "demand_ids": [
+          "SLD-WORLD"
+        ],
+        "responsibility": "Create causal events that establish the spring, drought pressure, gate test, and measured downstream delay.",
+        "required_capability": "Order physical changes so the travel interval can later falsify the warning.",
+        "constraints": [
+          "Every gate action has a downstream consequence.",
+          "The measured interval precedes its use as proof."
+        ],
+        "acceptance_checks": [
+          "Causal edges connect gate action, marker change, and recorded interval.",
+          "World times are consistent with downhill propagation."
+        ],
+        "downstream_freedom": "T1 may choose event granularity and exact chronology."
+      },
+      {
+        "id": "EVD-GENERIC-VERIFICATION",
+        "target_stage": "T1",
+        "line_id": "SL-VERIFICATION",
+        "demand_ids": [
+          "SLD-CHARACTER",
+          "SLD-CAUSALITY"
+        ],
+        "responsibility": "Create an investigation chain in which marks, seals, and travel time converge through reluctant cooperation.",
+        "required_capability": "Bind every inference to evidence access and make the relationship change a result of necessary joint action.",
+        "constraints": [
+          "All three evidence classes are necessary.",
+          "Neither opponent can solve the warning alone."
+        ],
+        "acceptance_checks": [
+          "The forgery conclusion has causal predecessors from marks, seals, and timing.",
+          "The joint-custodian state follows a costly act of cooperation."
+        ],
+        "downstream_freedom": "T1 may add reversals and failed comparisons that preserve the locked proof rule."
+      },
+      {
+        "id": "EVD-GENERIC-RANK-DEBATE",
+        "target_stage": "T1",
+        "line_id": "SL-RANK-DEBATE",
+        "demand_ids": [
+          "SLD-OPEN-RANK"
+        ],
+        "responsibility": "Create optional pressure events that expose incompatible rank interpretations after the forgery is known.",
+        "required_capability": "Connect the debate to the main decision while withholding a terminal reform event.",
+        "constraints": [
+          "No event abolishes or preserves inherited rank.",
+          "The line remains removable only with an explicit open-boundary coverage gap."
+        ],
+        "acceptance_checks": [
+          "The debate is causally downstream of proof.",
+          "Its last event leaves multiple post-emergency outcomes possible."
+        ],
+        "downstream_freedom": "T1 may vary the number and prominence of debate events."
+      },
+      {
+        "id": "EVD-GENERIC-MAIN",
+        "target_stage": "T1",
+        "line_id": "SL-MAIN",
+        "demand_ids": [
+          "SLD-INTENT",
+          "SLD-SUBJECT"
+        ],
+        "responsibility": "Create the main event chain from forged-warning trigger through scarcity escalation, verified proof, charter decision, allocation result, and aftermath.",
+        "required_capability": "Make private capture tempting,守约 costly, and the public consequence observable.",
+        "constraints": [
+          "The proof removes only the false emergency, not the real drought.",
+          "The final emergency allocation follows the communal charter.",
+          "Post-emergency rank remains unresolved."
+        ],
+        "acceptance_checks": [
+          "Every main state has at least one event that changes it.",
+          "The decision produces both relief and downstream cost.",
+          "The aftermath preserves the open boundary."
+        ],
+        "downstream_freedom": "T1 may choose secondary complications and event pacing."
+      }
+    ],
+    "C1": [
+      {
+        "id": "CHD-GENERIC-WATERSHED",
+        "target_stage": "C1",
+        "line_id": "SL-WATERSHED",
+        "demand_ids": [
+          "SLD-WORLD"
+        ],
+        "responsibility": "Define actor slots whose upstream gains and downstream losses make watershed coupling socially legible.",
+        "required_capability": "Assign distinct district interests without turning the physical rule into a villain's arbitrary choice.",
+        "constraints": [
+          "At least one upstream and one downstream constituency are represented.",
+          "Actor goals cannot override hydraulic causality."
+        ],
+        "acceptance_checks": [
+          "Each district role has a concrete water stake.",
+          "The same gate action creates opposed but intelligible responses."
+        ],
+        "downstream_freedom": "C1 may name districts and define their internal representatives."
+      },
+      {
+        "id": "CHD-GENERIC-VERIFICATION",
+        "target_stage": "C1",
+        "line_id": "SL-VERIFICATION",
+        "demand_ids": [
+          "SLD-CHARACTER",
+          "SLD-CAUSALITY"
+        ],
+        "responsibility": "Define the gate keeper, exiled surveyor, and seal custodian as an asymmetric evidence-access system.",
+        "required_capability": "Give each opponent a credible legal position, unique competence, and costly reason to cooperate.",
+        "constraints": [
+          "The gate keeper and surveyor begin as legal opponents.",
+          "Their custodianship emerges from joint verification rather than inherited affection."
+        ],
+        "acceptance_checks": [
+          "Neither lead possesses all evidence access.",
+          "Their relationship change is observable in decisions and responsibilities."
+        ],
+        "downstream_freedom": "C1 may define biographies, speech, loyalties, and the identity of the forger."
+      },
+      {
+        "id": "CHD-GENERIC-RANK-DEBATE",
+        "target_stage": "C1",
+        "line_id": "SL-RANK-DEBATE",
+        "demand_ids": [
+          "SLD-OPEN-RANK"
+        ],
+        "responsibility": "Define credible advocates for retaining and abolishing inherited water rank without designating either as the author's answer.",
+        "required_capability": "Ground incompatible reform positions in lived water access and emergency risk.",
+        "constraints": [
+          "Both positions retain moral and practical force.",
+          "No character definition canonizes a final reform outcome."
+        ],
+        "acceptance_checks": [
+          "At least two incompatible advocates have non-caricatured stakes.",
+          "Their goals can survive beyond the emergency ending."
+        ],
+        "downstream_freedom": "C1 may decide whether advocates become major, minor, or composite roles."
+      },
+      {
+        "id": "CHD-GENERIC-MAIN",
+        "target_stage": "C1",
+        "line_id": "SL-MAIN",
+        "demand_ids": [
+          "SLD-INTENT",
+          "SLD-SUBJECT"
+        ],
+        "responsibility": "Define the decision authority, affected district voices, and two reluctant custodians who must own the charter allocation's benefits and harms.",
+        "required_capability": "Distribute authority so no private actor can make a cost-free or invisible final choice.",
+        "constraints": [
+          "The gate keeper and surveyor participate as custodians, not unilateral rulers.",
+          "Affected districts can contest the emergency allocation.",
+          "No role is authorized to settle inherited-rank reform in this conception."
+        ],
+        "acceptance_checks": [
+          "Every decisive action has an accountable initiator and affected counterparty.",
+          "The final character positions retain conflict after immediate survival is secured."
+        ],
+        "downstream_freedom": "C1 may define council procedure, alliances, and personal consequences."
+      }
+    ]
+  },
+  "open_control_treatments": [
+    {
+      "id": "OPEN-INHERITED-WATER-RANK",
+      "source_control_id": "NAR-001",
+      "status": "preserved_open",
+      "question": "Whether the valley should abolish inherited water rank after the emergency remains unresolved.",
+      "target_ids": [
+        "SL-RANK-DEBATE",
+        "SL-MAIN"
+      ]
+    }
+  ]
+}

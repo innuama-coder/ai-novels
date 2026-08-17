@@ -1,0 +1,707 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "environment-system.schema.json",
+  "title": "E1 environment system canonical model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "source_artifacts", "authority_partition", "design_decisions", "derivation_claims", "storyline_environment_requirements", "environment_demands", "environments", "functional_zones", "environment_topology", "access_and_authority", "resource_and_information_channels", "hazards_and_failure_modes", "storyline_hosting_ledger", "event_affordance_catalog", "transition_contracts", "open_items"],
+  "properties": {
+    "schema_version": {"enum": ["2.0", "2.1", "2.2", "2.3", "2.4"]}, "skill": {"const": "novel-environment-system-designer"}, "stage": {"const": "E1"}, "run_id": {"type": "string", "minLength": 1}, "status": {"const": "ready"}, "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "source_artifacts": {"$ref": "canonical-common.schema.json#/$defs/sourceArtifacts"}, "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"}, "design_decisions": {"$ref": "canonical-common.schema.json#/$defs/designDecisions"}, "derivation_claims": {"$ref": "canonical-common.schema.json#/$defs/derivationClaims"},
+    "storyline_environment_requirements": {"$ref": "canonical-common.schema.json#/$defs/environmentRequirements"},
+    "environment_demands": {},
+    "environments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/environment"}},
+    "functional_zones": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/zone"}},
+    "environment_topology": {"type": "array"},
+    "access_and_authority": {"type": "array", "minItems": 1, "items": {"$ref": "canonical-common.schema.json#/$defs/assignment"}},
+    "resource_and_information_channels": {"type": "array", "minItems": 1, "items": {"$ref": "canonical-common.schema.json#/$defs/relationEdge"}},
+    "hazards_and_failure_modes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/failureMode"}},
+    "storyline_hosting_ledger": {"type": "array", "minItems": 1},
+    "event_affordance_catalog": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/affordance"}},
+    "transition_contracts": {"type": "array", "minItems": 1},
+    "open_items": {"$ref": "canonical-common.schema.json#/$defs/openItems"},
+    "story_transition_universe_digest": {"$ref": "#/$defs/universeDigest"},
+    "milestone_universe_digest": {"$ref": "#/$defs/universeDigest"},
+    "connection_universe_digest": {"$ref": "#/$defs/universeDigest"},
+    "obligation_universe_digest": {"$ref": "#/$defs/universeDigest"},
+    "initial_anchor_support": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/initialAnchorSupport"}},
+    "capability_fact_registry": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/capabilityFact"}},
+    "capability_step_registry": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/capabilityStep"}},
+    "ambient_context_hosts": {"type": "array", "items": {"$ref": "#/$defs/ambientContextHost"}},
+    "actor_authority_bindings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/actorAuthorityBinding"}},
+    "capability_occurrence_requirements": {"type": "array", "items": {"$ref": "#/$defs/capabilityOccurrenceRequirement"}},
+    "story_transition_support": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/storyTransitionSupport"}},
+    "connection_path_readiness": {"type": "array", "items": {"$ref": "#/$defs/connectionReadiness"}},
+    "milestone_capability_readiness": {"type": "array", "items": {"$ref": "#/$defs/milestoneReadiness"}},
+    "obligation_capability_readiness": {"type": "array", "items": {"$ref": "#/$defs/obligationReadiness"}},
+    "obligation_occurrence_bindings": {"type": "array", "items": {"$ref": "#/$defs/obligationOccurrenceBinding"}},
+    "initial_anchor_option_realization_ledger": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/initialAnchorRealization"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "2.0"}}, "required": ["schema_version"]},
+      "then": {
+        "properties": {
+          "storyline_hosting_ledger": {"$ref": "canonical-common.schema.json#/$defs/coverageRecords"},
+          "environment_demands": {"$ref": "canonical-common.schema.json#/$defs/environmentRequirements"},
+          "environment_topology": {"items": {"$ref": "canonical-common.schema.json#/$defs/relationEdge"}},
+          "transition_contracts": {"items": {"$ref": "canonical-common.schema.json#/$defs/stateTransition"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "2.1"}}, "required": ["schema_version"]},
+      "then": {
+        "properties": {
+          "storyline_hosting_ledger": {"$ref": "canonical-common.schema.json#/$defs/coverageRecords"},
+          "environment_demands": {"$ref": "canonical-common.schema.json#/$defs/environmentRequirements"},
+          "environment_topology": {"items": {"$ref": "#/$defs/environmentTopologyEdge"}},
+          "transition_contracts": {"items": {"$ref": "#/$defs/environmentStateTransition"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "2.2"}}, "required": ["schema_version"]},
+      "then": {
+        "properties": {
+          "storyline_hosting_ledger": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"$ref": "#/$defs/hostingRecord"}
+          },
+          "environment_demands": {"$ref": "world-model.schema.json#/$defs/currentEnvironmentDemands"},
+          "environment_topology": {"items": {"$ref": "#/$defs/environmentTopologyEdge"}},
+          "transition_contracts": {"items": {"$ref": "#/$defs/environmentStateTransition"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "2.3"}}, "required": ["schema_version"]},
+      "then": {
+        "properties": {
+          "storyline_hosting_ledger": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"$ref": "#/$defs/hostingRecord"}
+          },
+          "environment_demands": {"$ref": "world-model.schema.json#/$defs/currentEnvironmentDemands"},
+          "environment_topology": {"items": {"$ref": "#/$defs/environmentTopologyEdge"}},
+          "transition_contracts": {"items": {"$ref": "#/$defs/environmentStateTransition"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "2.4"}}, "required": ["schema_version"]},
+      "then": {
+        "required": [
+          "story_transition_universe_digest", "milestone_universe_digest",
+          "connection_universe_digest", "obligation_universe_digest",
+          "initial_anchor_support", "capability_fact_registry",
+          "capability_step_registry", "ambient_context_hosts",
+          "actor_authority_bindings", "capability_occurrence_requirements",
+          "story_transition_support", "connection_path_readiness",
+          "milestone_capability_readiness", "obligation_capability_readiness",
+          "obligation_occurrence_bindings",
+          "initial_anchor_option_realization_ledger"
+        ],
+        "properties": {
+          "storyline_hosting_ledger": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hostingRecord"}},
+          "environment_demands": {"$ref": "world-model.schema.json#/$defs/currentEnvironmentDemands"},
+          "environment_topology": {"items": {"$ref": "#/$defs/environmentTopologyEdge"}},
+          "transition_contracts": {"items": {"$ref": "#/$defs/environmentStateTransition"}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sourceMeaningBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_kind",
+        "storyline_id",
+        "responsibility_sha256",
+        "constraint_sha256s"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^END-[A-Za-z0-9._-]+$"},
+        "source_kind": {"enum": ["storyline_environment_requirement", "world_environment_demand"]},
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "responsibility_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "constraint_sha256s": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "localMeaningProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "token_kind",
+        "token_sha256",
+        "environment_pointer",
+        "projection_sha256",
+        "rationale"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^END-[A-Za-z0-9._-]+$"},
+        "token_kind": {"enum": ["responsibility", "constraint"]},
+        "token_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "environment_pointer": {
+          "type": "string",
+          "pattern": "^/(scope|narrative_responsibility|features/[0-9]+|sensory_conditions/[0-9]+|access_rules/[0-9]+|resources/[0-9]+|allowed_actions/[0-9]+|hazards/[0-9]+|blockers/[0-9]+|state_vocabulary/[0-9]+)$"
+        },
+        "projection_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "realizationMeaningBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment_id", "local_projections"],
+      "properties": {
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "local_projections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/localMeaningProjection"}
+        }
+      }
+    },
+    "hostingEvidenceEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_bindings", "realization_bindings"],
+      "properties": {
+        "source_bindings": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"$ref": "#/$defs/sourceMeaningBinding"}
+        },
+        "realization_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/realizationMeaningBinding"}
+        }
+      }
+    },
+    "hostingRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ids", "realization_ids", "status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^COV-[A-Za-z0-9._-]+$"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "realization_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "status": {"const": "covered"},
+        "evidence": {"$ref": "#/$defs/hostingEvidenceEnvelope"}
+      }
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "scope", "narrative_responsibility", "features", "sensory_conditions", "access_rules", "resources", "allowed_actions", "hazards", "zone_ids", "connections", "blockers", "state_vocabulary", "allowed_transitions", "storyline_stage_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "scope": {"type": "string", "minLength": 1},
+        "narrative_responsibility": {"type": "string", "minLength": 1},
+        "features": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "sensory_conditions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "access_rules": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "resources": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "allowed_actions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "hazards": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "zone_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^ZONE-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "connections": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "blockers": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "state_vocabulary": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "allowed_transitions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "storyline_stage_ids": {"type": "array", "minItems": 1, "items": {"$ref": "common-defs.schema.json#/$defs/objectId"}, "uniqueItems": true}
+      }
+    },
+    "zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "environment_id",
+        "responsibility",
+        "features",
+        "access_rules",
+        "resources",
+        "constraints"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ZONE-[A-Za-z0-9._-]+$"},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "responsibility": {"type": "string", "minLength": 1},
+        "features": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "access_rules": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "resources": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "failureMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "environment_id", "trigger", "effect", "mitigation_limits"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HAZ-[A-Za-z0-9._-]+$"},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "trigger": {"type": "string", "minLength": 1},
+        "effect": {"type": "string", "minLength": 1},
+        "mitigation_limits": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "affordance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "environment_id",
+        "event_requirement_ids",
+        "allowed_actions",
+        "prerequisites",
+        "constraints"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AFF-[A-Za-z0-9._-]+$"},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "event_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "allowed_actions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "prerequisites": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "environmentTopologyEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "from_id", "to_id", "relation", "mechanism", "constraints",
+        "directionality", "transfer_capabilities"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TOP-[A-Za-z0-9._-]+$"},
+        "from_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "to_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "relation": {"type": "string", "minLength": 1},
+        "mechanism": {"type": "string", "minLength": 1},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "directionality": {"enum": ["forward", "bidirectional"]},
+        "transfer_capabilities": {
+          "type": "array", "minItems": 1,
+          "items": {"type": "string", "minLength": 1}, "uniqueItems": true
+        }
+      }
+    },
+    "triggerBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger_id",
+        "source_environment_id",
+        "source_storyline_id",
+        "source_state_index",
+        "target_storyline_id",
+        "target_state_index",
+        "causal_evidence_ids",
+        "topology_path_ids",
+        "transport_capability"
+      ],
+      "properties": {
+        "trigger_id": {"type": "string", "pattern": "^AFF-[A-Za-z0-9._-]+$"},
+        "source_environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "source_storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "source_state_index": {"type": "integer", "minimum": 0},
+        "target_storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "target_state_index": {"type": "integer", "minimum": 0},
+        "causal_evidence_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^(SLC|SOB)-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "topology_path_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^TOP-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "transport_capability": {"type": "string", "minLength": 1}
+      }
+    },
+    "universeDigest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["algorithm", "source_artifact", "source_pointer", "item_count", "canonical_items_sha256"],
+      "properties": {
+        "algorithm": {"const": "v2-canonical-json-sha256"},
+        "source_artifact": {
+          "type": "object", "additionalProperties": false,
+          "required": ["stage", "path", "sha256"],
+          "properties": {
+            "stage": {"const": "S1"},
+            "path": {"type": "string", "pattern": "^sources/S1/.+$"},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          }
+        },
+        "source_pointer": {"type": "string", "pattern": "^/.+$"},
+        "item_count": {"type": "integer", "minimum": 0},
+        "canonical_items_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "actionBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["environment_id", "affordance_id", "action"],
+      "properties": {
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "affordance_id": {"type": "string", "pattern": "^AFF-[A-Za-z0-9._-]+$"},
+        "action": {"type": "string", "minLength": 1}
+      }
+    },
+    "authorityScope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["actor_slot_ids", "action_bindings"],
+      "properties": {
+        "authority_source_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "actor_slot_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "action_bindings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/actionBinding"}, "uniqueItems": true},
+        "capability_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"}
+      }
+    },
+    "capabilityFact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "statement", "statement_sha256", "source_anchor", "root_policy", "producer_semantics", "producer_step_ids", "producer_transition_keys", "consumer_step_ids", "cross_line_dependency", "constraints"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CF-[A-Za-z0-9._-]+$"},
+        "kind": {"enum": ["upstream_initial", "story_state_anchor", "world_system_output", "authority_token", "resource_state", "environment_state", "capability_output"]},
+        "statement": {"type": "string", "minLength": 1},
+        "statement_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "source_anchor": {"$ref": "#/$defs/capabilitySourceAnchor"},
+        "root_policy": {"enum": ["root_allowed", "t1_predecessor_required", "producer_required"]},
+        "producer_semantics": {"enum": ["none", "any_of", "all_of", "exactly_one"]},
+        "producer_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "producer_transition_keys": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "consumer_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "cross_line_dependency": {
+          "type": ["object", "null"], "additionalProperties": false,
+          "required": ["source_transition_key", "consumer_transition_key", "precedence_status", "s1_precedence_edge_ids"],
+          "properties": {
+            "source_transition_key": {"type": "string", "minLength": 1},
+            "consumer_transition_key": {"type": "string", "minLength": 1},
+            "precedence_status": {"enum": ["structurally_precedes", "incomparable_dependency_candidate"]},
+            "s1_precedence_edge_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+          }
+        },
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "token_kind": {"type": "string", "minLength": 1},
+        "issuer_scope": {"$ref": "#/$defs/authorityScope"},
+        "consumer_scope": {"$ref": "#/$defs/authorityScope"},
+        "consumption_policy": {"enum": ["single_use", "multi_use", "non_consumable"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "authority_token"}}, "required": ["kind"]},
+          "then": {"required": ["token_kind", "issuer_scope", "consumer_scope", "consumption_policy"]},
+          "else": {"not": {"anyOf": [{"required": ["token_kind"]}, {"required": ["issuer_scope"]}, {"required": ["consumer_scope"]}, {"required": ["consumption_policy"]}]}}
+        }
+      ]
+    },
+    "capabilitySourceArtifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "path", "sha256"],
+      "properties": {
+        "stage": {"enum": ["S1", "W1", "E1"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "capabilitySourceAnchor": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_kind", "source_artifact", "source_pointer", "value_sha256", "storyline_id", "state_index", "state_sha256"],
+          "properties": {
+            "source_kind": {"const": "s1_story_state"},
+            "source_artifact": {"$ref": "#/$defs/capabilitySourceArtifact"},
+            "source_pointer": {"type": "string", "pattern": "^/.+$"},
+            "value_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+            "state_index": {"type": "integer", "minimum": 0},
+            "state_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_kind", "source_artifact", "source_pointer", "value_sha256", "system_or_flow_id", "output_index"],
+          "properties": {
+            "source_kind": {"const": "w1_system_output"},
+            "source_artifact": {"$ref": "#/$defs/capabilitySourceArtifact"},
+            "source_pointer": {"type": "string", "pattern": "^/.+$"},
+            "value_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "system_or_flow_id": {"type": "string", "minLength": 1},
+            "output_index": {"type": "integer", "minimum": 0}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_kind", "source_artifact", "source_pointer", "value_sha256", "environment_id", "subject_kind", "subject_id", "state"],
+          "properties": {
+            "source_kind": {"const": "e1_initial_state"},
+            "source_artifact": {"$ref": "#/$defs/capabilitySourceArtifact"},
+            "source_pointer": {"type": "string", "pattern": "^/.+$"},
+            "value_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+            "subject_kind": {"enum": ["environment", "resource", "authority"]},
+            "subject_id": {"type": "string", "minLength": 1},
+            "state": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "capabilityStep": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "environment_id", "zone_id", "affordance_id", "action", "actor_slot_ids", "actor_authority_binding_ids", "requires_fact_ids", "produces_fact_ids", "requires_token_kinds", "produces_token_kinds", "forbidden_token_kinds", "supported_modes", "repeatability", "source_ids", "constraints"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CSTEP-[A-Za-z0-9._-]+$"},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "zone_id": {"type": "string", "pattern": "^ZONE-[A-Za-z0-9._-]+$"},
+        "affordance_id": {"type": "string", "pattern": "^AFF-[A-Za-z0-9._-]+$"},
+        "action": {"type": "string", "minLength": 1},
+        "actor_slot_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "actor_authority_binding_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "requires_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "produces_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "requires_token_kinds": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "produces_token_kinds": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "forbidden_token_kinds": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "supported_modes": {"type": "array", "minItems": 1, "items": {"enum": ["enact", "observe", "communicate", "constrain"]}, "uniqueItems": true},
+        "repeatability": {"enum": ["once", "repeatable"]},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/strings"}
+      }
+    },
+    "actorAuthorityBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "actor_slot_id", "world_authority_source_ids", "semantic_review_claim_id", "e1_access_assignment_id", "environment_id", "permitted_actions", "requires_token_fact_ids", "produces_token_fact_ids", "forbidden_token_kinds", "scope_constraints"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AAB-[A-Za-z0-9._-]+$"},
+        "actor_slot_id": {"type": "string", "pattern": "^SLOT-[A-Za-z0-9._-]+$"},
+        "world_authority_source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1},
+        "e1_access_assignment_id": {"type": "string", "minLength": 1},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "permitted_actions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "requires_token_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "produces_token_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "forbidden_token_kinds": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "scope_constraints": {"$ref": "canonical-common.schema.json#/$defs/strings"}
+      }
+    },
+    "ambientContextHost": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "environment_id", "zone_id", "storyline_id", "host_kind", "subject_or_actor_slot_ids", "support_basis_fact_ids", "source_ids", "constraints", "semantic_review_claim_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ACH-[A-Za-z0-9._-]+$"},
+        "environment_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "zone_id": {"type": "string", "pattern": "^ZONE-[A-Za-z0-9._-]+$"},
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "host_kind": {"enum": ["bounded_internal_context", "ambient_pressure_context"]},
+        "subject_or_actor_slot_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "support_basis_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "capabilityOccurrenceRequirement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "step_id", "minimum_occurrences", "maximum_occurrences", "distinct_group_id", "share_policy", "allowed_shared_requirement_ids", "source_ids", "objective_atomicity_basis", "semantic_review_claim_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^COR-[A-Za-z0-9._-]+$"},
+        "step_id": {"type": "string", "pattern": "^CSTEP-[A-Za-z0-9._-]+$"},
+        "minimum_occurrences": {"type": "integer", "minimum": 1},
+        "maximum_occurrences": {"type": ["integer", "null"], "minimum": 1},
+        "distinct_group_id": {"type": "string", "minLength": 1},
+        "share_policy": {"enum": ["exclusive", "allow_list", "shareable"]},
+        "allowed_shared_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "objective_atomicity_basis": {"type": "string", "minLength": 1},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "initialAnchorSupport": {
+      "type": "object", "additionalProperties": false,
+      "required": ["storyline_id", "state_index", "state", "state_sha256", "support_options", "source_ids"],
+      "properties": {
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "state_index": {"const": 0},
+        "state": {"type": "string", "minLength": 1},
+        "state_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "support_options": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/initialAnchorOption"}},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "initialAnchorOption": {
+      "type": "object", "additionalProperties": false,
+      "required": ["support_option_id", "capability_demand_id", "capability_descriptor", "source_ids", "semantic_review_claim_id"],
+      "properties": {
+        "support_option_id": {"type": "string", "pattern": "^IAO-[A-Za-z0-9._-]+$"},
+        "capability_demand_id": {"type": "string", "pattern": "^ICD-[A-Za-z0-9._-]+$"},
+        "capability_descriptor": {
+          "type": "object", "additionalProperties": false,
+          "required": ["support_kind", "environment_ids", "required_modes", "required_fact_kinds", "topology_requirement", "authority_required", "resource_constraints", "boundary_constraints"],
+          "properties": {
+            "support_kind": {"enum": ["static_context_host", "process_host", "connection_entry_host"]},
+            "environment_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+            "required_modes": {"type": "array", "items": {"enum": ["enact", "observe", "communicate", "constrain"]}, "uniqueItems": true},
+            "required_fact_kinds": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "topology_requirement": {"enum": ["none", "local_path", "cross_environment_path"]},
+            "authority_required": {"type": "boolean"},
+            "resource_constraints": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+            "boundary_constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+          }
+        },
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "supportClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["step_id", "support_mode", "source_ids", "boundary"],
+      "properties": {
+        "step_id": {"type": "string", "pattern": "^CSTEP-[A-Za-z0-9._-]+$"},
+        "support_mode": {"enum": ["enact", "observe", "communicate", "constrain"]},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "storyTransitionSupport": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "storyline_id", "from_state_index", "to_state_index", "from_state", "to_state", "event_requirement_ids", "support_claims", "required_fact_ids", "occurrence_requirement_ids", "ambient_context_host_ids", "semantic_review_claim_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TRS-[A-Za-z0-9._-]+$"},
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "from_state_index": {"type": "integer", "minimum": 0},
+        "to_state_index": {"type": "integer", "minimum": 1},
+        "from_state": {"type": "string", "minLength": 1},
+        "to_state": {"type": "string", "minLength": 1},
+        "event_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "support_claims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/supportClaim"}},
+        "required_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "occurrence_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "ambient_context_host_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "semantic_review_claim_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "connectionReadiness": {
+      "type": "object", "additionalProperties": false,
+      "required": ["connection_id", "relation", "source_endpoint_step_ids", "target_endpoint_step_ids", "transfer_fact_id", "transport_step_ids", "topology_path_ids", "occurrence_requirement_ids", "semantic_review_claim_ids"],
+      "properties": {
+        "connection_id": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"},
+        "relation": {"enum": ["causal", "associative"]},
+        "source_endpoint_step_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "target_endpoint_step_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "transfer_fact_id": {"type": ["string", "null"]},
+        "transport_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "topology_path_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "occurrence_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "semantic_review_claim_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "milestoneReadiness": {
+      "type": "object", "additionalProperties": false,
+      "required": ["milestone_id", "order", "phase_id", "storyline_ids", "state_refs", "connection_ids", "transition_support_ids", "initial_support_option_ids", "connection_readiness_ids", "occurrence_requirement_ids"],
+      "properties": {
+        "milestone_id": {"type": "string", "minLength": 1},
+        "order": {"type": "integer", "minimum": 0},
+        "phase_id": {"type": "string", "minLength": 1},
+        "storyline_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "state_refs": {"type": "array", "items": {"type": "object"}},
+        "connection_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "transition_support_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "initial_support_option_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "connection_readiness_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "occurrence_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"}
+      }
+    },
+    "obligationReadiness": {
+      "type": "object", "additionalProperties": false,
+      "required": ["obligation_id", "kind", "antecedent_support_ids", "consequent_support_ids", "required_fact_ids", "required_step_ids", "occurrence_requirement_ids", "allowed_disclosure_fact_ids", "forbidden_disclosure_fact_ids", "readiness_mode", "semantic_review_claim_ids"],
+      "properties": {
+        "obligation_id": {"type": "string", "pattern": "^SOB-[A-Za-z0-9._-]+$"},
+        "kind": {"type": "string", "minLength": 1},
+        "antecedent_support_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "consequent_support_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "required_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "required_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "occurrence_requirement_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "allowed_disclosure_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "forbidden_disclosure_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "readiness_mode": {"enum": ["direct_path", "inherited_anchor_path"]},
+        "semantic_review_claim_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "obligationOccurrenceBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "obligation_id", "occurrence_requirement_id", "step_id", "support_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^OOB-[A-Za-z0-9._-]+$"},
+        "obligation_id": {"type": "string", "pattern": "^SOB-[A-Za-z0-9._-]+$"},
+        "occurrence_requirement_id": {"type": "string", "pattern": "^COR-[A-Za-z0-9._-]+$"},
+        "step_id": {"type": "string", "pattern": "^CSTEP-[A-Za-z0-9._-]+$"},
+        "support_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "initialAnchorRealization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "storyline_id", "state_index", "support_option_id", "capability_demand_id", "descriptor_sha256", "capability_fact_ids", "capability_step_ids", "ambient_context_host_ids", "topology_path_ids", "realized_environment_ids", "semantic_review_claim_id", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^IAR-[A-Za-z0-9._-]+$"},
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "state_index": {"const": 0},
+        "support_option_id": {"type": "string", "pattern": "^IAO-[A-Za-z0-9._-]+$"},
+        "capability_demand_id": {"type": "string", "pattern": "^ICD-[A-Za-z0-9._-]+$"},
+        "descriptor_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "capability_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "capability_step_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "ambient_context_host_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "topology_path_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "realized_environment_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1},
+        "status": {"const": "ready"}
+      }
+    },
+    "environmentStateTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "from_state",
+        "trigger_ids",
+        "trigger_bindings",
+        "to_state",
+        "allowed_by_ids",
+        "consequence"
+      ],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "subject_id": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"},
+        "from_state": {"type": "string", "minLength": 1},
+        "trigger_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "trigger_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/triggerBinding"},
+          "uniqueItems": true
+        },
+        "to_state": {"type": "string", "minLength": 1},
+        "allowed_by_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "consequence": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

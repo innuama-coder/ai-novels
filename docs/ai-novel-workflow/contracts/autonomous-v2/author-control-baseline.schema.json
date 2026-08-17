@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "author-control-baseline.schema.json",
+  "title": "Autonomous conception V2 author control baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "stage",
+    "run_id",
+    "source_run_id",
+    "status",
+    "run_state",
+    "design_artifacts",
+    "v1_completion",
+    "v2_completion",
+    "v2_author_approval",
+    "fact_dependency_register",
+    "control_registry",
+    "fact_dependencies",
+    "open_items"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "stage": {"const": "B0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "source_run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "run_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "design_artifacts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["domain", "completion", "artifact", "control_ids"],
+        "properties": {
+          "domain": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]},
+          "completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+          "artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+          "source_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+          "control_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "v1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "v2_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "v2_author_approval": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "migration_finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "fact_dependency_register": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "control_registry": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "domain", "hardness", "artifact", "heading", "value_sha256"],
+        "properties": {
+          "id": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+          "domain": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]},
+          "hardness": {
+            "enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]
+          },
+          "artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+          "heading": {"type": "string", "minLength": 1},
+          "value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+        }
+      }
+    },
+    "fact_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/factDependency"}
+    },
+    "open_items": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I0"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I1"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I2"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I3"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I4"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I5"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I0"}}, "required": ["domain"]}}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I1"}}, "required": ["domain"]}}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I2"}}, "required": ["domain"]}}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I3"}}, "required": ["domain"]}}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I4"}}, "required": ["domain"]}}}},
+    {"properties": {"control_registry": {"contains": {"properties": {"domain": {"const": "I5"}}, "required": ["domain"]}}}}
+  ],
+  "$defs": {
+    "factDependency": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "claim", "rationale"],
+          "properties": {
+            "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"},
+            "status": {"const": "not_applicable"},
+            "claim": {"type": "string", "minLength": 1},
+            "rationale": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id", "status", "claim", "research_package", "adoption_record",
+            "allowed_use", "fiction_boundary"
+          ],
+          "properties": {
+            "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"},
+            "status": {"const": "adopted"},
+            "claim": {"type": "string", "minLength": 1},
+            "research_package": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+            "adoption_record": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+            "allowed_use": {"type": "string", "minLength": 1},
+            "fiction_boundary": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status", "claim", "blocking", "allowed_handling", "rationale"],
+          "properties": {
+            "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"},
+            "status": {"const": "open"},
+            "claim": {"type": "string", "minLength": 1},
+            "blocking": {"const": false},
+            "allowed_handling": {"const": "preserve_open"},
+            "rationale": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,479 @@
+{
+  "schema_version": "1.0",
+  "fixture_id": "duanxian-conception-e2e",
+  "run_id": "duanxian-20260722",
+  "repository_root": {
+    "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels",
+    "path_policy": "repo_relative_path is portable authority; absolute_path records the audited workstation location"
+  },
+  "authority_policy": {
+    "higher_number_wins": true,
+    "priorities": [
+      {
+        "authority_class": "author_approval_record",
+        "priority": 120,
+        "meaning": "An explicit author decision approving the V2 review projection."
+      },
+      {
+        "authority_class": "author_answer_event_log",
+        "priority": 110,
+        "meaning": "Direct author answers and corrections recorded during I0-I5."
+      },
+      {
+        "authority_class": "author_approved_review_projection",
+        "priority": 100,
+        "meaning": "The V2 review brief bound by the explicit author approval."
+      },
+      {
+        "authority_class": "sealed_stage_artifact",
+        "priority": 90,
+        "meaning": "A ready I0-I5 canonical artifact bound by its stage completion."
+      },
+      {
+        "authority_class": "independent_integrity_pass",
+        "priority": 80,
+        "meaning": "The V1 semantic integrity pass over the complete I0-I5 chain."
+      },
+      {
+        "authority_class": "lineage_completion",
+        "priority": 70,
+        "meaning": "A ready stage-completion record that binds artifact, validation and upstream lineage hashes."
+      },
+      {
+        "authority_class": "mechanical_validation",
+        "priority": 60,
+        "meaning": "A ready structural or mechanical validation record."
+      },
+      {
+        "authority_class": "derived_unsealed",
+        "priority": 10,
+        "meaning": "A useful derived statement without approval in the authoritative I0-I5 to V1 to V2 chain."
+      }
+    ],
+    "conflict_resolution": [
+      "A later direct author correction overrides an earlier question premise or normalized recap.",
+      "Author-approved V2 may summarize but may not contradict a direct author correction.",
+      "Ready artifacts and V1 may interpret only within direct author answers.",
+      "derived_unsealed material may be tested as a hypothesis but never promoted to author_locked."
+    ]
+  },
+  "forbidden_substitutes": [
+    "projects/duanxian/autonomous/R1/conception-review-15",
+    "projects/duanxian/autonomous/D1/development-map-36",
+    "projects/duanxian/autonomous/R1/conception-review-17",
+    "projects/duanxian/human-review/review-04"
+  ],
+  "sources": [
+    {
+      "source_id": "SRC-I0-ARTIFACT",
+      "stage": "I0",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I0/intent-revalidation-01/intent-card.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I0\\intent-revalidation-01\\intent-card.md",
+      "sha256": "c37b0413733e9ae5a75d5127b5dd136e7ede6e23b5ce653edac70217bd80e77d",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I0-EVENTS",
+      "stage": "I0",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I0/intent-revalidation-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I0\\intent-revalidation-01\\events.ndjson",
+      "sha256": "3d774a66b5c7bbaef4268c9fcca11dd6acb5f5d5ea12d110ec193179946faefc",
+      "approval_status": "author_answers_recorded",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I0-COMPLETION",
+      "stage": "I0",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I0/intent-revalidation-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I0\\intent-revalidation-01\\stage-completion.json",
+      "sha256": "756fd3b96699ff17ee8bfa712c3f3b4bed7296a617b4f5407589f53454acf983",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I0-VALIDATION",
+      "stage": "I0",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I0/intent-revalidation-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I0\\intent-revalidation-01\\validation.json",
+      "sha256": "36453fe9633e18f2e474a68093e3ca747483116e50194b9625c76d97bbbf7e6c",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-I1-ARTIFACT",
+      "stage": "I1",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I1/subject-revalidation-01/subject-definition.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I1\\subject-revalidation-01\\subject-definition.md",
+      "sha256": "84d50b4b6270c7d23a4e19eeee7aace8575b2488ee17ed0002c049c7183326f6",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I1-EVENTS",
+      "stage": "I1",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I1/subject-revalidation-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I1\\subject-revalidation-01\\events.ndjson",
+      "sha256": "95c25cc7bb1c070f15289493c5d42a8f6eebebe4686b76573b0de41ad9667f19",
+      "approval_status": "author_answers_recorded",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I1-COMPLETION",
+      "stage": "I1",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I1/subject-revalidation-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I1\\subject-revalidation-01\\stage-completion.json",
+      "sha256": "484be9e9423e0b8c442ec8accf00ee7ba000749cb4e9a8d49fab2186de72c839",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I1-VALIDATION",
+      "stage": "I1",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I1/subject-revalidation-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I1\\subject-revalidation-01\\validation.json",
+      "sha256": "62a4adb55696042ab0045ffded4c981afb94746f6ed838e321f4ef1228c142b1",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-I2-ARTIFACT",
+      "stage": "I2",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I2/world-interview-01/world-operating-contract.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I2\\world-interview-01\\world-operating-contract.md",
+      "sha256": "f6c4e6cf5930995e9f1a2c8219a091ee46de564cb4ab5ad2321e932452756a45",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I2-EVENTS",
+      "stage": "I2",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I2/world-interview-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I2\\world-interview-01\\events.ndjson",
+      "sha256": "0e72f02045ba568ff3547080be01979f9d6e67ad8b07a312dc97f74866ad04d1",
+      "approval_status": "author_answers_recorded",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I2-COMPLETION",
+      "stage": "I2",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I2/world-interview-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I2\\world-interview-01\\stage-completion.json",
+      "sha256": "f7eb41e3f3bfe496aa07165127990c17d3eb4b9cc0745b47dabaf8f74d4d29b9",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I2-VALIDATION",
+      "stage": "I2",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I2/world-interview-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I2\\world-interview-01\\validation.json",
+      "sha256": "a7eae10900a46889f53c852ffa6f820cacc4c1f19f2d60dc955592dd05271f5e",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-I3-ARTIFACT",
+      "stage": "I3",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I3/character-revalidation-01/core-character-design.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I3\\character-revalidation-01\\core-character-design.md",
+      "sha256": "eb1f8b4ba33d6485d0a99e9f1b6af9790e4ccfc7bc2ca80a1f4b9d19cfbdff01",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I3-EVENTS",
+      "stage": "I3",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I3/character-revalidation-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I3\\character-revalidation-01\\events.ndjson",
+      "sha256": "f29faae849c973e31c74d7ac99e00c9e15065a4fc98843561279f2fdc23f8ea1",
+      "approval_status": "author_answers_recorded_with_explicit_corrections",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I3-COMPLETION",
+      "stage": "I3",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I3/character-revalidation-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I3\\character-revalidation-01\\stage-completion.json",
+      "sha256": "be17ff33891de6999c8e87f88b9d4edf593a0f5f1b984b3a38a77637ebad7d71",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I3-VALIDATION",
+      "stage": "I3",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I3/character-revalidation-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I3\\character-revalidation-01\\validation.json",
+      "sha256": "786b8e549580e394ac3e34e9a8fbdb13cf7ac29d5f3387d51bc46d8ef63eef6a",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-I4-ARTIFACT",
+      "stage": "I4",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I4/causality-interview-01/causal-storyline.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I4\\causality-interview-01\\causal-storyline.md",
+      "sha256": "9d06937900eecf95d6f0eb82383821b3aa4db96b3f00c2dfe704d470d8a67719",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I4-EVENTS",
+      "stage": "I4",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I4/causality-interview-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I4\\causality-interview-01\\events.ndjson",
+      "sha256": "49a5794041a40282486f689cb48efce0df49b25e42ef229badb449d79a5b9fcf",
+      "approval_status": "author_answers_recorded",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I4-COMPLETION",
+      "stage": "I4",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I4/causality-interview-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I4\\causality-interview-01\\stage-completion.json",
+      "sha256": "d5dbb972fa8154e7c88a0d9cf143f43aa29fdf10141a001a4108ecee41f73811",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I4-VALIDATION",
+      "stage": "I4",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I4/causality-interview-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I4\\causality-interview-01\\validation.json",
+      "sha256": "ff181015ed5de08b7f25b929f0979a3e46eb9fd2a34f93881bc8cdde8318e756",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-I5-ARTIFACT",
+      "stage": "I5",
+      "role": "canonical_artifact",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I5/narrative-contract-interview-01/narrative-contract.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I5\\narrative-contract-interview-01\\narrative-contract.md",
+      "sha256": "5ca2e9c2f37e4818efe5187261651dbee7f5999b6b808448c4106cda12e29ade",
+      "approval_status": "ready_and_in_v2_approved_chain",
+      "authority_class": "sealed_stage_artifact",
+      "authority_priority": 90
+    },
+    {
+      "source_id": "SRC-I5-EVENTS",
+      "stage": "I5",
+      "role": "author_interview_events",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I5/narrative-contract-interview-01/events.ndjson",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I5\\narrative-contract-interview-01\\events.ndjson",
+      "sha256": "91588925f766889f1d1fe2f1cc001a532efa4f55ce249eb5b679cc5dd2a22191",
+      "approval_status": "author_answers_recorded",
+      "authority_class": "author_answer_event_log",
+      "authority_priority": 110
+    },
+    {
+      "source_id": "SRC-I5-COMPLETION",
+      "stage": "I5",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I5/narrative-contract-interview-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I5\\narrative-contract-interview-01\\stage-completion.json",
+      "sha256": "dc96acac65aed9c7f4a498f66071cb2988691846f80353cadb0e37085354494a",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-I5-VALIDATION",
+      "stage": "I5",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/I5/narrative-contract-interview-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\I5\\narrative-contract-interview-01\\validation.json",
+      "sha256": "3828e66a47e482e8494957556203efa354b0ca864819133718ac442c8efc9c04",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-V1-SEMANTIC",
+      "stage": "V1",
+      "role": "semantic_integrity_review",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V1/integrity-audit-01/semantic-review.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V1\\integrity-audit-01\\semantic-review.json",
+      "sha256": "a60ad25bfb01b270804ace5d10a86e09010e17bab1814f43789510a0ea2ffe2d",
+      "approval_status": "pass",
+      "authority_class": "independent_integrity_pass",
+      "authority_priority": 80
+    },
+    {
+      "source_id": "SRC-V1-COMPLETION",
+      "stage": "V1",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V1/integrity-audit-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V1\\integrity-audit-01\\stage-completion.json",
+      "sha256": "53d2b6b681d26a15b31a0bdb5c90e7038e4634f8760863e4a05d10678fcd8fc1",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-V1-VALIDATION",
+      "stage": "V1",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V1/integrity-audit-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V1\\integrity-audit-01\\validation.json",
+      "sha256": "208bc63726b0da7eba8d6f6bdccc4094a7e4f1bf159f3f130f8e9f6a6bad00c8",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-V2-BRIEF",
+      "stage": "V2",
+      "role": "author_review_brief",
+      "repo_relative_path": "docs/ai-novel-workflow/duanxian-interview-review-brief.html",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\docs\\ai-novel-workflow\\duanxian-interview-review-brief.html",
+      "sha256": "89441994556d4680c09b1186107a1842548c286f029476f704cda1eb9177996d",
+      "approval_status": "author_approved",
+      "authority_class": "author_approved_review_projection",
+      "authority_priority": 100
+    },
+    {
+      "source_id": "SRC-V2-APPROVAL",
+      "stage": "V2",
+      "role": "author_approval",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V2/brief-generation-01/author-approval.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V2\\brief-generation-01\\author-approval.json",
+      "sha256": "c103895c17928ee742190dec145d77b254339e46ed44a41aa16847d2df611889",
+      "approval_status": "approved",
+      "authority_class": "author_approval_record",
+      "authority_priority": 120
+    },
+    {
+      "source_id": "SRC-V2-COMPLETION",
+      "stage": "V2",
+      "role": "stage_completion",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V2/brief-generation-01/stage-completion.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V2\\brief-generation-01\\stage-completion.json",
+      "sha256": "dbd447a4aa552e82aa7c8acd6d87474c7b7fa89407527766db458a84b84f4b3a",
+      "approval_status": "ready",
+      "authority_class": "lineage_completion",
+      "authority_priority": 70
+    },
+    {
+      "source_id": "SRC-V2-VALIDATION",
+      "stage": "V2",
+      "role": "validation",
+      "repo_relative_path": "projects/duanxian/interview-sessions/V2/brief-generation-01/validation.json",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\projects\\duanxian\\interview-sessions\\V2\\brief-generation-01\\validation.json",
+      "sha256": "7883b717e04bcd201de702077dca4e5c8f2ed5561a3f5ca517c0c516442a1fa3",
+      "approval_status": "ready",
+      "authority_class": "mechanical_validation",
+      "authority_priority": 60
+    },
+    {
+      "source_id": "SRC-DERIVED-DUAL-LINE",
+      "stage": "derived",
+      "role": "unsealed_storyline_interpretation",
+      "repo_relative_path": "docs/ai-novel-workflow/duanxian-narrative-contract.md",
+      "absolute_path": "C:\\Users\\54256213\\Documents\\github\\ai-novels\\docs\\ai-novel-workflow\\duanxian-narrative-contract.md",
+      "sha256": "0b647986c548050245af2a0c870b7a957f58779aabf54b40d21b6af10b27d6ac",
+      "approval_status": "derived_unsealed_not_in_authoritative_chain",
+      "authority_class": "derived_unsealed",
+      "authority_priority": 10
+    }
+  ],
+  "lineage_assertions": [
+    {
+      "stage": "I0",
+      "status": "ready",
+      "artifact_source_id": "SRC-I0-ARTIFACT",
+      "completion_source_id": "SRC-I0-COMPLETION",
+      "validation_source_id": "SRC-I0-VALIDATION"
+    },
+    {
+      "stage": "I1",
+      "status": "ready",
+      "artifact_source_id": "SRC-I1-ARTIFACT",
+      "completion_source_id": "SRC-I1-COMPLETION",
+      "validation_source_id": "SRC-I1-VALIDATION"
+    },
+    {
+      "stage": "I2",
+      "status": "ready",
+      "artifact_source_id": "SRC-I2-ARTIFACT",
+      "completion_source_id": "SRC-I2-COMPLETION",
+      "validation_source_id": "SRC-I2-VALIDATION"
+    },
+    {
+      "stage": "I3",
+      "status": "ready",
+      "artifact_source_id": "SRC-I3-ARTIFACT",
+      "completion_source_id": "SRC-I3-COMPLETION",
+      "validation_source_id": "SRC-I3-VALIDATION"
+    },
+    {
+      "stage": "I4",
+      "status": "ready",
+      "artifact_source_id": "SRC-I4-ARTIFACT",
+      "completion_source_id": "SRC-I4-COMPLETION",
+      "validation_source_id": "SRC-I4-VALIDATION"
+    },
+    {
+      "stage": "I5",
+      "status": "ready",
+      "artifact_source_id": "SRC-I5-ARTIFACT",
+      "completion_source_id": "SRC-I5-COMPLETION",
+      "validation_source_id": "SRC-I5-VALIDATION"
+    },
+    {
+      "stage": "V1",
+      "status": "pass_ready",
+      "semantic_source_id": "SRC-V1-SEMANTIC",
+      "completion_source_id": "SRC-V1-COMPLETION",
+      "validation_source_id": "SRC-V1-VALIDATION"
+    },
+    {
+      "stage": "V2",
+      "status": "author_approved_ready",
+      "artifact_source_id": "SRC-V2-BRIEF",
+      "approval_source_id": "SRC-V2-APPROVAL",
+      "completion_source_id": "SRC-V2-COMPLETION",
+      "validation_source_id": "SRC-V2-VALIDATION"
+    }
+  ]
+}

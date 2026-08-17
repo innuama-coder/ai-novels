@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Semantic integrity review evidence",
+  "type": "object",
+  "required": ["harness", "run_id", "stage", "verdict", "reviewer_role", "evidence", "return_package"],
+  "properties": {
+    "harness": {"const": "novel-conception-interview"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"const": "V1"},
+    "verdict": {"enum": ["pass", "revise", "blocked"]},
+    "reviewer_role": {"const": "integrity_auditor"},
+    "evidence": {"type": "array", "minItems": 6, "items": {"type": "object", "required": ["control_area", "owner_stage", "artifact", "finding"]}},
+    "return_package": {"type": ["object", "null"]}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "HARN-EVAL-REVISE",
+  "kind": "positive",
+  "Prompt": "Run the current rendered H1 chain with an externally sealed revise decision containing valid targets.",
+  "Expected": [
+    "Publish one formal H1 completion.",
+    "Route the revision through the authoritative return router.",
+    "Return branch=revise, final=null, active_return non-null."
+  ],
+  "Forbidden": [
+    "Publish final completion.",
+    "Treat revise as approval.",
+    "Choose a revision owner by prose inference in the harness."
+  ],
+  "Scoring": {
+    "h1_current": 2,
+    "return_exact": 4,
+    "final_absent": 2,
+    "state_revise": 2
+  },
+  "Pass Bar": 10
+}

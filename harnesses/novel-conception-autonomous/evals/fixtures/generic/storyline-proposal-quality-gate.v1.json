@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0",
+  "kind": "storyline-proposal-quality-gate",
+  "gate_id": "SPQG-GENERIC-STORYLINE-V1",
+  "ownership": {
+    "owner": "eval_harness",
+    "authority": "non_authoritative_quality_evidence",
+    "artifact_role": "not_completion"
+  },
+  "subject": {
+    "manifest_id": "ECASE-GENERIC-STORYLINE-V1",
+    "fixture": {
+      "path": "fixtures/generic/fixture.json",
+      "sha256": "0867a1a2d56bfa72ebccc840d2de835c7e247a9b15e1896b3ca7ac54bdce0f28"
+    },
+    "storyline_plan": {
+      "path": "fixtures/generic/storyline-plan.v1.json",
+      "sha256": "263b44ee0692bf22a72ac48b9e91cecda6475b0d332a10d506dcd28e1bd1959c"
+    },
+    "storyline_plan_schema": {
+      "path": "schemas/storyline-plan.v1.schema.json",
+      "sha256": "737982217abc975f9a0dac5cb36b41bdff24d13d1af06956c19ceedc653d0983"
+    },
+    "fixture_id": "generic-conception-e2e",
+    "run_id": "RUN-E2E-GENERIC-001",
+    "plan_id": "SPLAN-GENERIC-001",
+    "structural_validation_sha256": "6f058c4fa85d3eb71ff9b4164a7f3f7bcaa0272662d0cd4c784e007779d1b98f"
+  },
+  "producer": {
+    "task_id": "/root/task011_impl",
+    "thread_id": "/root/task011_impl",
+    "role": "proposal_producer"
+  },
+  "reviewer": {
+    "task_id": "/root/generic_quality_gate",
+    "thread_id": "/root/generic_quality_gate",
+    "role": "independent_proposal_reviewer"
+  },
+  "checks": [
+    {
+      "id": "authority_preservation",
+      "status": "pass",
+      "target_ids": [
+        "CAU-001",
+        "CHR-001",
+        "GEN-CAUSALITY",
+        "GEN-IDENTITY",
+        "GEN-OPEN-END",
+        "INT-001",
+        "NAR-001",
+        "SUB-001",
+        "WLD-001"
+      ],
+      "evidence": "CAU-001, CHR-001, INT-001, SUB-001, and WLD-001 remain locked inputs, while NAR-001 and GEN-OPEN-END retain author-open authority; the proposal's two reversible decisions combine locked material without selecting an inherited-rank outcome.",
+      "failure_condition": "Fail if any realization contradicts CAU-001, CHR-001, INT-001, SUB-001, or WLD-001, or if NAR-001 or GEN-OPEN-END is treated as evaluation-owned permission to decide inherited water rank."
+    },
+    {
+      "id": "main_arc_completeness",
+      "status": "pass",
+      "target_ids": [
+        "ARCH-GENERIC-WATERSHED",
+        "SL-MAIN"
+      ],
+      "evidence": "ARCH-GENERIC-WATERSHED and SL-MAIN provide a genuine main arc from disputed spring and forged-warning trigger through scarcity escalation, convergent proof, costly charter-governed choice, observable result, and unresolved aftermath.",
+      "failure_condition": "Fail if ARCH-GENERIC-WATERSHED or SL-MAIN loses the trigger, escalation, proof turn, consequential allocation decision, immediate result, or aftermath, or if the main arc becomes a summary without state-changing pressure."
+    },
+    {
+      "id": "causal_topology",
+      "status": "pass",
+      "target_ids": [
+        "ARCH-GENERIC-WATERSHED",
+        "SL-MAIN",
+        "SL-RANK-DEBATE",
+        "SL-VERIFICATION",
+        "SL-WATERSHED",
+        "SLC-FLOW-EVIDENCE",
+        "SLC-PROOF-TO-CHOICE",
+        "SLC-PROOF-TO-RANK",
+        "SLC-RANK-PRESSURE"
+      ],
+      "evidence": "SL-WATERSHED supplies the measured clock through SLC-FLOW-EVIDENCE, SL-VERIFICATION removes the forged premise through SLC-PROOF-TO-CHOICE, and ARCH-GENERIC-WATERSHED reaches SL-MAIN; SL-RANK-DEBATE branches and rejoins only through the associative SLC-PROOF-TO-RANK and SLC-RANK-PRESSURE links.",
+      "failure_condition": "Fail if SLC-FLOW-EVIDENCE no longer makes SL-WATERSHED timing necessary to SL-VERIFICATION, if SLC-PROOF-TO-CHOICE no longer precedes SL-MAIN's real allocation choice, or if either SL-RANK-DEBATE connection becomes causal load-bearing."
+    },
+    {
+      "id": "role_clustering",
+      "status": "pass",
+      "target_ids": [
+        "CHD-GENERIC-MAIN",
+        "CHD-GENERIC-RANK-DEBATE",
+        "CHD-GENERIC-VERIFICATION",
+        "CHD-GENERIC-WATERSHED",
+        "SL-MAIN",
+        "SL-RANK-DEBATE",
+        "SL-VERIFICATION",
+        "SL-WATERSHED"
+      ],
+      "evidence": "CHD-GENERIC-WATERSHED assigns opposed district stakes, CHD-GENERIC-VERIFICATION separates evidence access between legal opponents, CHD-GENERIC-RANK-DEBATE requires credible incompatible advocates, and CHD-GENERIC-MAIN distributes accountable decision authority across the four corresponding lines.",
+      "failure_condition": "Fail if any of SL-WATERSHED, SL-VERIFICATION, SL-RANK-DEBATE, or SL-MAIN lacks the actor capability required by its matching CHD-GENERIC-WATERSHED, CHD-GENERIC-VERIFICATION, CHD-GENERIC-RANK-DEBATE, or CHD-GENERIC-MAIN cluster."
+    },
+    {
+      "id": "open_preservation",
+      "status": "pass",
+      "target_ids": [
+        "GEN-OPEN-END",
+        "NAR-001"
+      ],
+      "evidence": "NAR-001 and GEN-OPEN-END remain explicitly unresolved: no state, decision, connection, terminal condition, or W1/E1/T1/C1 requirement declares inherited water rank abolished or preserved, and the emergency charter rotation answers only immediate spring governance.",
+      "failure_condition": "Fail if NAR-001 or GEN-OPEN-END is resolved directly or by implication anywhere in a selected decision, state transition, connection responsibility, terminal outcome, or downstream acceptance rule."
+    },
+    {
+      "id": "optional_non_load_bearing",
+      "status": "pass",
+      "target_ids": [
+        "SL-RANK-DEBATE",
+        "SLC-PROOF-TO-RANK",
+        "SLC-RANK-PRESSURE"
+      ],
+      "evidence": "SL-RANK-DEBATE is an optional melody whose incident SLC-PROOF-TO-RANK and SLC-RANK-PRESSURE connections are both associative; the independent causal SLC-PROOF-TO-CHOICE route carries verified proof to the main decision without requiring this branch.",
+      "failure_condition": "Fail if SL-RANK-DEBATE, SLC-PROOF-TO-RANK, or SLC-RANK-PRESSURE becomes necessary to authenticate the warning, authorize the charter choice, or reach the main terminal state, rather than remaining removable thematic pressure."
+    },
+    {
+      "id": "non_placeholder_evidence",
+      "status": "pass",
+      "target_ids": [
+        "AB-GENERIC-CAUSALITY",
+        "AB-GENERIC-IDENTITY",
+        "AB-GENERIC-OPEN-END",
+        "ARCH-GENERIC-WATERSHED",
+        "CAU-001",
+        "CHD-GENERIC-MAIN",
+        "CHD-GENERIC-RANK-DEBATE",
+        "CHD-GENERIC-VERIFICATION",
+        "CHD-GENERIC-WATERSHED",
+        "CHR-001",
+        "DEC-COVENANT-TEST",
+        "DEC-EVIDENCE-CHAIN",
+        "END-GENERIC-MAIN",
+        "END-GENERIC-RANK-DEBATE",
+        "END-GENERIC-VERIFICATION",
+        "END-GENERIC-WATERSHED",
+        "EVD-GENERIC-MAIN",
+        "EVD-GENERIC-RANK-DEBATE",
+        "EVD-GENERIC-VERIFICATION",
+        "EVD-GENERIC-WATERSHED",
+        "GEN-CAUSALITY",
+        "GEN-IDENTITY",
+        "GEN-OPEN-END",
+        "INT-001",
+        "NAR-001",
+        "OPEN-INHERITED-WATER-RANK",
+        "SL-MAIN",
+        "SL-RANK-DEBATE",
+        "SL-VERIFICATION",
+        "SL-WATERSHED",
+        "SLC-FLOW-EVIDENCE",
+        "SLC-PROOF-TO-CHOICE",
+        "SLC-PROOF-TO-RANK",
+        "SLC-RANK-PRESSURE",
+        "SLCHECK-GENERIC-AUTHORITY",
+        "SLCHECK-GENERIC-CAUSALITY",
+        "SLCHECK-GENERIC-INFORMATION",
+        "SLCHECK-GENERIC-STATE",
+        "SLCHECK-GENERIC-THEME",
+        "SLCHECK-GENERIC-TIME",
+        "SLD-CAUSALITY",
+        "SLD-CHARACTER",
+        "SLD-INTENT",
+        "SLD-OPEN-RANK",
+        "SLD-SUBJECT",
+        "SLD-WORLD",
+        "SLS-MAIN-DECISION",
+        "SLS-MAIN-END",
+        "SLS-MAIN-ESCALATION",
+        "SLS-MAIN-PROOF",
+        "SLS-MAIN-RESULT",
+        "SLS-MAIN-START",
+        "SLS-MAIN-TRIGGER",
+        "SLS-RANK-END",
+        "SLS-RANK-EXPOSED",
+        "SLS-RANK-START",
+        "SLS-VERIFY-END",
+        "SLS-VERIFY-MARKS",
+        "SLS-VERIFY-SEALS",
+        "SLS-VERIFY-START",
+        "SLS-VERIFY-TIMING",
+        "SLS-WATERSHED-COUPLED",
+        "SLS-WATERSHED-END",
+        "SLS-WATERSHED-START",
+        "SPLAN-GENERIC-001",
+        "SUB-001",
+        "WLD-001",
+        "WR-GENERIC-MAIN",
+        "WR-GENERIC-RANK-DEBATE",
+        "WR-GENERIC-VERIFICATION",
+        "WR-GENERIC-WATERSHED",
+        "generic-conception-e2e"
+      ],
+      "evidence": "The complete registry from generic-conception-e2e through SPLAN-GENERIC-001 contains specific obligations, actors, state changes, connections, acceptance checks, failure witnesses, and downstream freedoms; representative chains such as SLS-WATERSHED-COUPLED to SLS-VERIFY-TIMING to SLS-MAIN-DECISION are concrete and operational.",
+      "failure_condition": "Fail if any registered object, including DEC-EVIDENCE-CHAIN, SLCHECK-GENERIC-CAUSALITY, or WR-GENERIC-MAIN, is reduced to generic filler, loses a story-specific obligation or witness, or no longer supports inspection of its claimed relationship."
+    },
+    {
+      "id": "downstream_usefulness",
+      "status": "pass",
+      "target_ids": [
+        "CHD-GENERIC-MAIN",
+        "CHD-GENERIC-RANK-DEBATE",
+        "CHD-GENERIC-VERIFICATION",
+        "CHD-GENERIC-WATERSHED",
+        "END-GENERIC-MAIN",
+        "END-GENERIC-RANK-DEBATE",
+        "END-GENERIC-VERIFICATION",
+        "END-GENERIC-WATERSHED",
+        "EVD-GENERIC-MAIN",
+        "EVD-GENERIC-RANK-DEBATE",
+        "EVD-GENERIC-VERIFICATION",
+        "EVD-GENERIC-WATERSHED",
+        "WR-GENERIC-MAIN",
+        "WR-GENERIC-RANK-DEBATE",
+        "WR-GENERIC-VERIFICATION",
+        "WR-GENERIC-WATERSHED"
+      ],
+      "evidence": "WR-GENERIC-MAIN and its three peer requirements define event-bearing places and physical affordances; END-GENERIC-MAIN and its peers define state systems, EVD-GENERIC-MAIN and its peers define event causality, and CHD-GENERIC-MAIN and its peers define actor capabilities, each with constraints, acceptance checks, and bounded downstream freedom tied to one line.",
+      "failure_condition": "Fail if any WR-GENERIC-MAIN, END-GENERIC-MAIN, EVD-GENERIC-MAIN, CHD-GENERIC-MAIN, or corresponding watershed, verification, and rank-debate requirement cannot guide its target stage without inventing a missing causal obligation or deciding the open reform question."
+    }
+  ],
+  "findings": [],
+  "verdict": "ready"
+}

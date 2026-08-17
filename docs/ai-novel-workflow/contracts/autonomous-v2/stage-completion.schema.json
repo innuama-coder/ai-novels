@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "stage-completion.schema.json",
+  "title": "Autonomous conception V2 stage completion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "status",
+    "manifest",
+    "validation",
+    "input_gate",
+    "state_before",
+    "previous_stage_completions",
+    "return_binding"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
+    "status": {"const": "ready"},
+    "manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "validation": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "state_before": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "session_id": {"type": "string", "minLength": 1},
+    "previous_stage_completions": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+      "uniqueItems": true
+    },
+    "return_binding": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/returnBinding"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stage": {"enum": ["S1", "W1", "E1", "T1", "C1", "Q1", "H1"]}
+        }
+      },
+      "then": {"required": ["session_id"]}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "B0"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "S1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "W1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/OnlyS1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "E1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/ThroughW1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "T1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/ThroughE1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "C1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/ThroughT1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "Q1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/ThroughC1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "P1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/ThroughQ1"}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "H1"}}, "required": ["stage"]},
+      "then": {"properties": {"previous_stage_completions": {"$ref": "input-gate.schema.json#/$defs/OnlyP1"}}}
+    }
+  ]
+}

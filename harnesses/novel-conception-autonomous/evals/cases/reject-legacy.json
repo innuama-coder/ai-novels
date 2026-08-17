@@ -1,0 +1,20 @@
+{
+  "id": "HARN-EVAL-LEGACY",
+  "kind": "negative",
+  "Prompt": "Attempt to substitute a D1 or R1 package for a required V2 package.",
+  "Expected": [
+    "Fail closed at the owning manifest/schema boundary.",
+    "Do not advance coordinator state."
+  ],
+  "Forbidden": [
+    "Alias D1 or R1 to a V2 profile.",
+    "Produce a half-V2 package.",
+    "Patch the upstream validator."
+  ],
+  "Scoring": {
+    "legacy_rejected": 5,
+    "state_unchanged": 3,
+    "no_output_claim": 2
+  },
+  "Pass Bar": 10
+}

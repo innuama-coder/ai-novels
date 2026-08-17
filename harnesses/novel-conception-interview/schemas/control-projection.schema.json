@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Interview design control projection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "run_id", "stage", "session_id", "status", "source_artifact", "controls", "evidence_bindings"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-conception-interview"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]},
+    "session_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "source_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "hardness", "heading", "value"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9._-]+$"},
+          "hardness": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]},
+          "heading": {"type": "string", "minLength": 1},
+          "value": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "evidence_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["control_id", "ranges"],
+        "properties": {
+          "control_id": {"type": "string", "minLength": 1},
+          "ranges": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["start_line", "end_line", "text_sha256"],
+              "properties": {
+                "start_line": {"type": "integer", "minimum": 1},
+                "end_line": {"type": "integer", "minimum": 1},
+                "text_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

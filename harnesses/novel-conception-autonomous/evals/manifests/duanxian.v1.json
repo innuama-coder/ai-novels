@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "kind": "novel-conception-eval-case",
+  "manifest_id": "ECASE-DUANXIAN-V1",
+  "fixture": {
+    "path": "fixtures/duanxian/fixture.json",
+    "sha256": "c2cac509af0549dfac3d31045c812226c19e9c6dd95d17cc5ebb22f882129798"
+  },
+  "storyline_plan": {
+    "path": "fixtures/duanxian/storyline-plan.v1.json",
+    "sha256": "abbba8341b7a38d6f4b5aa8dbd030ac129538ef63f79d9c16ae8714b189deb7c"
+  },
+  "storyline_plan_schema": {
+    "path": "schemas/storyline-plan.v1.schema.json",
+    "sha256": "737982217abc975f9a0dac5cb36b41bdff24d13d1af06956c19ceedc653d0983"
+  },
+  "storyline_quality_gate": {
+    "path": "fixtures/duanxian/storyline-proposal-quality-gate.v1.json",
+    "sha256": "b311395b22bf824182fe1662adf819e91563f2af752d525aaf28cb46e63ca02c"
+  },
+  "storyline_quality_gate_schema": {
+    "path": "schemas/storyline-proposal-quality-gate.v1.schema.json",
+    "sha256": "56fe7cdcfe33945ab4778d01f972d6e5efaf55991640ae1e3bdb3594323072de"
+  }
+}

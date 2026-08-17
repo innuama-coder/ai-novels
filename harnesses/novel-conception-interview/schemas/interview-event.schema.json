@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Append-only interview event",
+  "type": "object",
+  "required": ["seq", "type", "text"],
+  "properties": {
+    "seq": {"type": "integer", "minimum": 1},
+    "type": {"enum": ["plan_presented", "question", "author_answer", "agent_recap", "decision", "plan_revision", "stage_close"]},
+    "question_id": {"type": "string"},
+    "group_id": {"type": "string"},
+    "plan_revision": {"type": "integer", "minimum": 1},
+    "text": {"type": "string", "minLength": 1},
+    "decision": {"type": "string"},
+    "author_approved": {"type": "boolean"},
+    "approval_ref": {"type": "string"},
+    "announced_question_budget": {"type": "integer", "minimum": 1},
+    "announced_minutes": {"type": "integer", "minimum": 1}
+  }
+}

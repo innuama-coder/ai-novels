@@ -1,0 +1,32 @@
+{
+  "contract_version": "2.0",
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-positive-run",
+  "stage": "I0",
+  "session_id": "nested-return-target-i0",
+  "status": "ready",
+  "design_artifact": "../intent-card.md",
+  "design_artifact_sha256": "a93c75d4519e06b3aee80dbd02972d92f10e2521c8f746d567fdb4f4df9f8f19",
+  "report": {
+    "path": "../report.md",
+    "sha256": "171a9c7e5099a9e4dcb16a499f792a21fcc6f18fd52531b31ad45b29f09e443a"
+  },
+  "validation": {
+    "path": "../validation.json",
+    "verdict": "ready",
+    "sha256": "0bd965abf3b855d2b4652fb08eb00ed611846aa9b79abd9b24f14ac70839facf"
+  },
+  "control_projection": {
+    "path": "../control-projection-nested-i0.json",
+    "sha256": "bc19ac9c73e477964ec81959170a4e0995af5f3fe2f531761f3c0cbb12596535"
+  },
+  "run_state": {
+    "path": "../active-run-state.json",
+    "sha256": "4d36aa00149c9c4e00630565d89baa13ac47dcf5bbddcc768dfa3c1cfba59688"
+  },
+  "input_completions": [],
+  "return_resolution": {
+    "path": "../active-return.json",
+    "sha256": "7b820001437aed6c7afeee1c2ee179257403a55ebe7080993aeb67f4e27cdf86"
+  }
+}

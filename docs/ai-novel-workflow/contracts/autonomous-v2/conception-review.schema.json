@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "conception-review.schema.json",
+  "title": "Q1 independent conception review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "domain_reviews", "cross_domain_checks", "reality_claim_review", "coverage_recalculation", "consistency_matrix", "causal_challenges", "easy_solution_challenges", "development_usability_test", "quality_coverage", "handoff_test_evidence", "task_isolation", "findings", "return_request", "verdict"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-conception-reviewer"},
+    "stage": {"const": "Q1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["ready", "revise", "blocked"]},
+    "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "domain_reviews": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/reviewCheck"},
+      "allOf": [
+        {"contains": {"properties": {"scope": {"const": "S1"}}, "required": ["scope"]}, "minContains": 1, "maxContains": 1},
+        {"contains": {"properties": {"scope": {"const": "W1"}}, "required": ["scope"]}, "minContains": 1, "maxContains": 1},
+        {"contains": {"properties": {"scope": {"const": "E1"}}, "required": ["scope"]}, "minContains": 1, "maxContains": 1},
+        {"contains": {"properties": {"scope": {"const": "T1"}}, "required": ["scope"]}, "minContains": 1, "maxContains": 1},
+        {"contains": {"properties": {"scope": {"const": "C1"}}, "required": ["scope"]}, "minContains": 1, "maxContains": 1}
+      ]
+    },
+    "cross_domain_checks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "reality_claim_review": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "coverage_recalculation": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "consistency_matrix": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "causal_challenges": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "easy_solution_challenges": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reviewCheck"}},
+    "development_usability_test": {"$ref": "#/$defs/developmentUsabilityTest"},
+    "quality_coverage": {"$ref": "#/$defs/qualityCoverage"},
+    "handoff_test_evidence": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "task_isolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_task_id", "handoff_task_id", "handoff_allowlist", "forbidden_reads"],
+      "properties": {
+        "semantic_task_id": {"type": "string", "minLength": 1},
+        "handoff_task_id": {"type": "string", "minLength": 1},
+        "handoff_allowlist": {"type": "array", "minItems": 6, "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "uniqueItems": true},
+        "forbidden_reads": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "return_request": {"oneOf": [{"type": "null"}, {"$ref": "common-defs.schema.json#/$defs/artifactReference"}]},
+    "verdict": {"enum": ["ready", "revise", "blocked"]}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"verdict": {"const": "ready"}},
+        "required": ["verdict"]
+      },
+      "then": {
+        "properties": {
+          "status": {"const": "ready"},
+          "findings": {
+            "items": {
+              "allOf": [
+                {"$ref": "#/$defs/finding"},
+                {"properties": {"severity": {"const": "note"}}}
+              ]
+            }
+          },
+          "domain_reviews": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "cross_domain_checks": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "reality_claim_review": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "coverage_recalculation": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "consistency_matrix": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "causal_challenges": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "easy_solution_challenges": {"items": {"$ref": "#/$defs/passingReviewCheck"}},
+          "development_usability_test": {
+            "allOf": [
+              {"$ref": "#/$defs/developmentUsabilityTest"},
+              {"properties": {"result": {"const": "pass"}}}
+            ]
+          },
+          "quality_coverage": {
+            "allOf": [
+              {"$ref": "#/$defs/qualityCoverage"},
+              {
+                "properties": {
+                  "unresolved_blocking_quality_record_ids": {"maxItems": 0},
+                  "result": {"const": "complete"}
+                }
+              }
+            ]
+          },
+          "return_request": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"verdict": {"const": "revise"}},
+        "required": ["verdict"]
+      },
+      "then": {
+        "properties": {
+          "status": {"const": "revise"},
+          "findings": {
+            "contains": {
+              "properties": {"severity": {"enum": ["contradictory", "revise"]}},
+              "required": ["severity"]
+            }
+          },
+          "return_request": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"verdict": {"const": "blocked"}},
+        "required": ["verdict"]
+      },
+      "then": {
+        "properties": {
+          "status": {"const": "blocked"},
+          "findings": {
+            "contains": {
+              "properties": {"severity": {"const": "blocked"}},
+              "required": ["severity"]
+            }
+          },
+          "return_request": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "reviewCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "scope",
+        "checked_contract",
+        "method",
+        "evidence_ids",
+        "conclusion",
+        "result"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CHK-[A-Za-z0-9._-]+$"},
+        "scope": {"type": "string", "minLength": 1},
+        "checked_contract": {"type": "string", "minLength": 1},
+        "method": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "conclusion": {"type": "string", "minLength": 1},
+        "result": {"enum": ["pass", "revise", "blocked"]}
+      }
+    },
+    "passingReviewCheck": {
+      "allOf": [
+        {"$ref": "#/$defs/reviewCheck"},
+        {"properties": {"result": {"const": "pass"}}}
+      ]
+    },
+    "developmentUsabilityTest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tested_tasks", "evidence_ids", "conclusion", "result"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HANDOFF-[A-Za-z0-9._-]+$"},
+        "tested_tasks": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "evidence_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "conclusion": {"type": "string", "minLength": 1},
+        "result": {"enum": ["pass", "revise", "blocked"]}
+      }
+    },
+    "qualityObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "id", "classification", "value_sha256"],
+      "properties": {
+        "stage": {"enum": ["S1", "T1"]},
+        "id": {"type": "string", "minLength": 1},
+        "classification": {"enum": ["s1_obligation", "t1_realization"]},
+        "value_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"stage": {"const": "S1"}}, "required": ["stage"]},
+          "then": {"properties": {"classification": {"const": "s1_obligation"}}}
+        },
+        {
+          "if": {"properties": {"stage": {"const": "T1"}}, "required": ["stage"]},
+          "then": {"properties": {"classification": {"const": "t1_realization"}}}
+        }
+      ]
+    },
+    "coveredQualityObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "id", "classification", "value_sha256", "handoff_check_ids"],
+      "properties": {
+        "stage": {"enum": ["S1", "T1"]},
+        "id": {"type": "string", "minLength": 1},
+        "classification": {"enum": ["s1_obligation", "t1_realization"]},
+        "value_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "handoff_check_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^CHK-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"stage": {"const": "S1"}}, "required": ["stage"]},
+          "then": {"properties": {"classification": {"const": "s1_obligation"}}}
+        },
+        {
+          "if": {"properties": {"stage": {"const": "T1"}}, "required": ["stage"]},
+          "then": {"properties": {"classification": {"const": "t1_realization"}}}
+        }
+      ]
+    },
+    "qualityCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_basis", "required_objects", "covered_objects", "unresolved_blocking_quality_record_ids", "result"],
+      "properties": {
+        "coverage_basis": {"const": "all-id-bearing-objects-in-S1-and-T1-canonical-models"},
+        "required_objects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/qualityObject"}
+        },
+        "covered_objects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/coveredQualityObject"}
+        },
+        "unresolved_blocking_quality_record_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "result": {"enum": ["complete", "incomplete"]}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "severity",
+        "problem",
+        "evidence_ids",
+        "affected_ids",
+        "violated_contract",
+        "calculated_owner",
+        "required_revision",
+        "minimum_rerun"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^FND-[A-Za-z0-9._-]+$"},
+        "severity": {"enum": ["note", "contradictory", "revise", "blocked"]},
+        "problem": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "affected_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "violated_contract": {"type": "string", "minLength": 1},
+        "calculated_owner": {"$ref": "common-defs.schema.json#/$defs/ownerId"},
+        "required_revision": {"type": "string", "minLength": 1},
+        "minimum_rerun": {"$ref": "common-defs.schema.json#/$defs/resumePoint"}
+      }
+    }
+  }
+}

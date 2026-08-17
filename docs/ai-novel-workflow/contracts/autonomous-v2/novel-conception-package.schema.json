@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "novel-conception-package.schema.json",
+  "title": "P1 machine conception package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "author_control_baseline", "authoritative_design_artifacts", "canonical_models", "review", "quality_admission", "cross_model_index", "authority_partition", "open_items", "development_handoff"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-conception-deliverable-assembler"},
+    "stage": {"const": "P1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "author_control_baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "authoritative_design_artifacts": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "uniqueItems": true},
+    "canonical_models": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["S1", "W1", "E1", "T1", "C1"],
+      "properties": {
+        "S1": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "W1": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "E1": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "T1": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "C1": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    },
+    "review": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "quality_admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review", "coverage_basis", "required_object_count", "covered_object_count", "unresolved_blocking_quality_record_ids", "result"],
+      "properties": {
+        "review": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "coverage_basis": {"const": "all-id-bearing-objects-in-S1-and-T1-canonical-models"},
+        "required_object_count": {"type": "integer", "minimum": 1},
+        "covered_object_count": {"type": "integer", "minimum": 1},
+        "unresolved_blocking_quality_record_ids": {"type": "array", "maxItems": 0},
+        "result": {"const": "admitted"}
+      }
+    },
+    "cross_model_index": {"type": "object"},
+    "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"},
+    "open_items": {"$ref": "canonical-common.schema.json#/$defs/openItems"},
+    "development_handoff": {"$ref": "common-defs.schema.json#/$defs/pathReference"}
+  }
+}

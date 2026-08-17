@@ -1,0 +1,4 @@
+interface:
+  display_name: "历史 D1 开发地图检查"
+  short_description: "只读检查既有 D1 包，不生成新构思"
+  default_prompt: "使用 $novel-development-map-designer 只读检查用户明确指定的既有历史 D1 包；禁止创建、修订或发布 D1/V2 构思，新的构思请求转交 novel-conception-autonomous。"

@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "package-manifest.schema.json",
+  "title": "Autonomous conception V2 package manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "package_profile",
+    "verdict",
+    "files",
+    "artifact_roles",
+    "validation",
+    "implementation"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
+    "package_profile": {
+      "enum": [
+        "baseline",
+        "generated-model",
+        "independent-review",
+        "conception-package",
+        "h1-plan",
+        "h1-fragments",
+        "h1-assembly",
+        "h1-html",
+        "h1-stage"
+      ]
+    },
+    "verdict": {"const": "ready"},
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+      "uniqueItems": true
+    },
+    "artifact_roles": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "control_coverage": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "canonical": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "generation_session": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "session_workspace_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "generation_evidence_index": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "execution_record": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "preview": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "handoff_evidence": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "conception_package": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "author_control_baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "authoritative_design_index": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "spec": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "cross_model_index": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "traceability": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "development_handoff": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "source_inventory": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "review_plan": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragment_briefs": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragment_package": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragments": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "human_review_report_json": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "human_review_report_md": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "presentation_fidelity_review": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "html": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "render_record": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "plan_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragment_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "assembly_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "html_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    },
+    "validation": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "implementation": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+    },
+    "parent_state_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+    "session_id": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"stage": {"const": "H1"}}},
+      "then": {"required": ["session_id", "parent_state_sha256"]}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "B0"}}, "required": ["stage"]},
+      "then": {
+        "properties": {
+          "package_profile": {"const": "baseline"},
+          "artifact_roles": {"required": ["baseline", "control_coverage", "execution_record"]}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {"enum": ["S1", "W1", "E1", "T1", "C1"]}
+        },
+        "required": ["stage"]
+      },
+      "then": {
+        "properties": {
+          "package_profile": {"const": "generated-model"},
+          "artifact_roles": {
+            "required": [
+              "canonical",
+              "generation_session",
+              "generation_evidence_index",
+              "execution_record",
+              "preview"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"stage": {"const": "Q1"}}, "required": ["stage"]},
+      "then": {
+        "properties": {
+          "package_profile": {"const": "independent-review"},
+          "artifact_roles": {
+            "required": [
+              "canonical",
+              "generation_session",
+              "generation_evidence_index",
+              "execution_record",
+              "preview",
+              "handoff_evidence"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"stage": {"const": "P1"}}, "required": ["stage"]},
+      "then": {
+        "properties": {
+          "package_profile": {"const": "conception-package"},
+          "artifact_roles": {
+            "required": [
+              "conception_package",
+              "author_control_baseline",
+              "authoritative_design_index",
+              "spec",
+              "cross_model_index",
+              "traceability",
+              "development_handoff",
+              "execution_record"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"package_profile": {"const": "h1-plan"}}, "required": ["package_profile"]},
+      "then": {"properties": {"stage": {"const": "H1"}, "artifact_roles": {"required": ["source_inventory", "review_plan", "fragment_briefs", "generation_session", "generation_evidence_index", "execution_record"]}}}
+    },
+    {
+      "if": {"properties": {"package_profile": {"const": "h1-fragments"}}, "required": ["package_profile"]},
+      "then": {"properties": {"stage": {"const": "H1"}, "artifact_roles": {"required": ["fragment_package", "fragments", "generation_session", "session_workspace_completion", "generation_evidence_index", "execution_record"]}}}
+    },
+    {
+      "if": {"properties": {"package_profile": {"const": "h1-assembly"}}, "required": ["package_profile"]},
+      "then": {"properties": {"stage": {"const": "H1"}, "artifact_roles": {"required": ["human_review_report_json", "human_review_report_md", "presentation_fidelity_review", "execution_record"]}}}
+    },
+    {
+      "if": {"properties": {"package_profile": {"const": "h1-html"}}, "required": ["package_profile"]},
+      "then": {"properties": {"stage": {"const": "H1"}, "artifact_roles": {"required": ["html", "render_record"]}}}
+    },
+    {
+      "if": {"properties": {"package_profile": {"const": "h1-stage"}}, "required": ["package_profile"]},
+      "then": {"properties": {"stage": {"const": "H1"}, "artifact_roles": {"required": ["plan_manifest", "fragment_manifest", "assembly_manifest", "html_manifest"]}}}
+    }
+  ]
+}

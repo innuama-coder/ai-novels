@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "return-request.schema.json",
+  "title": "Autonomous conception V2 routed return request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "return_id",
+    "return_kind",
+    "origin_kind",
+    "origin_stage",
+    "author_decision",
+    "problem",
+    "evidence_ids",
+    "violated_contract",
+    "calculated_owner",
+    "owner_basis",
+    "required_revision",
+    "target_stage",
+    "resume_stage",
+    "resume_point",
+    "invalidated_stages",
+    "invalidated_h1_artifacts",
+    "invalidate_author_decision",
+    "invalidate_conception_completion",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "return_id": {"type": "string", "pattern": "^RET-[A-Za-z0-9._-]+$"},
+    "return_kind": {"$ref": "common-defs.schema.json#/$defs/returnKind"},
+    "origin_kind": {"enum": ["stage", "author"]},
+    "origin_stage": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/stageId"}
+      ]
+    },
+    "author_decision": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
+    "problem": {"type": "string", "minLength": 1},
+    "evidence_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "violated_contract": {"type": "string", "minLength": 1},
+    "calculated_owner": {"$ref": "common-defs.schema.json#/$defs/ownerId"},
+    "owner_basis": {"type": "string", "minLength": 1},
+    "required_revision": {"type": "string", "minLength": 1},
+    "target_stage": {
+      "enum": [
+        "I0", "I1", "I2", "I3", "I4", "I5",
+        "B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"
+      ]
+    },
+    "resume_stage": {"$ref": "common-defs.schema.json#/$defs/autonomousStageId"},
+    "resume_point": {"$ref": "common-defs.schema.json#/$defs/resumePoint"},
+    "invalidated_stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/autonomousStageId"},
+      "uniqueItems": true
+    },
+    "invalidated_h1_artifacts": {
+      "type": "array",
+      "items": {
+        "enum": ["plan", "fragments", "assembly", "html", "completion"]
+      },
+      "uniqueItems": true
+    },
+    "invalidate_author_decision": {"type": "boolean"},
+    "invalidate_conception_completion": {"type": "boolean"},
+    "status": {"const": "active"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"origin_kind": {"const": "stage"}},
+        "required": ["origin_kind"]
+      },
+      "then": {
+        "properties": {
+          "origin_stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
+          "author_decision": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"origin_kind": {"const": "author"}},
+        "required": ["origin_kind"]
+      },
+      "then": {
+        "properties": {
+          "origin_stage": {"type": "null"},
+          "author_decision": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          },
+          "return_kind": {"const": "author_revision"}
+          ,
+          "invalidate_author_decision": {"const": true},
+          "invalidate_conception_completion": {"const": true}
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "properties": {"origin_kind": {"const": "stage"}},
+            "required": ["origin_kind"]
+          },
+          {
+            "properties": {
+              "target_stage": {
+                "enum": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"]
+              }
+            },
+            "required": ["target_stage"]
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "return_kind": {"const": "local_revision"}
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "properties": {
+              "target_stage": {
+                "enum": ["I0", "I1", "I2", "I3", "I4", "I5"]
+              }
+            },
+            "required": ["target_stage"]
+          },
+          {
+            "not": {
+              "properties": {"origin_kind": {"const": "author"}},
+              "required": ["origin_kind"]
+            }
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "return_kind": {"const": "upstream_reentry"},
+          "resume_stage": {"const": "B0"},
+          "resume_point": {"const": "B0"},
+          "invalidated_stages": {"$ref": "#/$defs/FromB0"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "target_stage": {
+            "enum": [
+              "I0", "I1", "I2", "I3", "I4", "I5",
+              "B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1"
+            ]
+          }
+        },
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "invalidated_h1_artifacts": {"$ref": "#/$defs/H1FromPlan"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "B0"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "B0"},
+          "resume_point": {"const": "B0"},
+          "invalidated_stages": {"$ref": "#/$defs/FromB0"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "S1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "S1"},
+          "resume_point": {"const": "S1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromS1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "W1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "W1"},
+          "resume_point": {"const": "W1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromW1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "E1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "E1"},
+          "resume_point": {"const": "E1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromE1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "T1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "T1"},
+          "resume_point": {"const": "T1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromT1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "C1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "C1"},
+          "resume_point": {"const": "C1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromC1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "Q1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "Q1"},
+          "resume_point": {"const": "Q1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromQ1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "P1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "P1"},
+          "resume_point": {"const": "P1"},
+          "invalidated_stages": {"$ref": "#/$defs/FromP1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"target_stage": {"const": "H1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "resume_stage": {"const": "H1"},
+          "resume_point": {
+            "enum": ["H1-A-plan", "H1-B", "H1-A-assemble", "H1-C"]
+          },
+          "invalidated_stages": {"$ref": "#/$defs/OnlyH1"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"resume_point": {"const": "H1-A-plan"}},
+        "required": ["resume_point"]
+      },
+      "then": {
+        "properties": {
+          "target_stage": {"const": "H1"},
+          "resume_stage": {"const": "H1"},
+          "invalidated_h1_artifacts": {"$ref": "#/$defs/H1FromPlan"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"resume_point": {"const": "H1-B"}},
+        "required": ["resume_point"]
+      },
+      "then": {
+        "properties": {
+          "target_stage": {"const": "H1"},
+          "resume_stage": {"const": "H1"},
+          "invalidated_h1_artifacts": {"$ref": "#/$defs/H1FromFragments"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"resume_point": {"const": "H1-A-assemble"}},
+        "required": ["resume_point"]
+      },
+      "then": {
+        "properties": {
+          "target_stage": {"const": "H1"},
+          "resume_stage": {"const": "H1"},
+          "invalidated_h1_artifacts": {"$ref": "#/$defs/H1FromAssembly"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"resume_point": {"const": "H1-C"}},
+        "required": ["resume_point"]
+      },
+      "then": {
+        "properties": {
+          "target_stage": {"const": "H1"},
+          "resume_stage": {"const": "H1"},
+          "invalidated_h1_artifacts": {"$ref": "#/$defs/H1FromHtml"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stageSequence": {
+      "type": "array",
+      "uniqueItems": true
+    },
+    "FromB0": {"type": "array", "minItems": 9, "maxItems": 9, "prefixItems": [{"const": "B0"}, {"const": "S1"}, {"const": "W1"}, {"const": "E1"}, {"const": "T1"}, {"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromS1": {"type": "array", "minItems": 8, "maxItems": 8, "prefixItems": [{"const": "S1"}, {"const": "W1"}, {"const": "E1"}, {"const": "T1"}, {"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromW1": {"type": "array", "minItems": 7, "maxItems": 7, "prefixItems": [{"const": "W1"}, {"const": "E1"}, {"const": "T1"}, {"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromE1": {"type": "array", "minItems": 6, "maxItems": 6, "prefixItems": [{"const": "E1"}, {"const": "T1"}, {"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromT1": {"type": "array", "minItems": 5, "maxItems": 5, "prefixItems": [{"const": "T1"}, {"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromC1": {"type": "array", "minItems": 4, "maxItems": 4, "prefixItems": [{"const": "C1"}, {"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromQ1": {"type": "array", "minItems": 3, "maxItems": 3, "prefixItems": [{"const": "Q1"}, {"const": "P1"}, {"const": "H1"}]},
+    "FromP1": {"type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{"const": "P1"}, {"const": "H1"}]},
+    "OnlyH1": {"type": "array", "minItems": 1, "maxItems": 1, "prefixItems": [{"const": "H1"}]},
+    "H1FromPlan": {"type": "array", "minItems": 5, "maxItems": 5, "prefixItems": [{"const": "plan"}, {"const": "fragments"}, {"const": "assembly"}, {"const": "html"}, {"const": "completion"}]},
+    "H1FromFragments": {"type": "array", "minItems": 4, "maxItems": 4, "prefixItems": [{"const": "fragments"}, {"const": "assembly"}, {"const": "html"}, {"const": "completion"}]},
+    "H1FromAssembly": {"type": "array", "minItems": 3, "maxItems": 3, "prefixItems": [{"const": "assembly"}, {"const": "html"}, {"const": "completion"}]},
+    "H1FromHtml": {"type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{"const": "html"}, {"const": "completion"}]}
+  }
+}

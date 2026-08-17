@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "migration_id", "source_run_id", "status", "source_inventory", "control_projections", "fact_candidates", "migration_review_json", "migration_review_html", "validation"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "kind": {"const": "interview-b0-migration-candidate"},
+    "migration_id": {"type": "string", "minLength": 1}, "source_run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "waiting_author"}, "source_inventory": {"$ref": "#/$defs/ref"},
+    "control_projections": {"type": "object", "additionalProperties": false, "required": ["I0", "I1", "I2", "I3", "I4", "I5"], "properties": {
+      "I0": {"$ref": "#/$defs/ref"}, "I1": {"$ref": "#/$defs/ref"}, "I2": {"$ref": "#/$defs/ref"}, "I3": {"$ref": "#/$defs/ref"}, "I4": {"$ref": "#/$defs/ref"}, "I5": {"$ref": "#/$defs/ref"}
+    }},
+    "fact_candidates": {"$ref": "#/$defs/ref"}, "migration_review_json": {"$ref": "#/$defs/ref"},
+    "migration_review_html": {"$ref": "#/$defs/ref"}, "validation": {"$ref": "#/$defs/ref"}
+  },
+  "$defs": {"ref": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}}}
+}

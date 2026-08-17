@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Novel conception run state",
+  "type": "object",
+  "required": ["harness", "run_id", "active_return"],
+  "properties": {
+    "harness": {"const": "novel-conception-interview"},
+    "run_id": {"type": "string", "minLength": 1},
+    "active_return": {"type": ["object", "null"]},
+    "current_interview_completions": {"type": "object", "additionalProperties": {"type": "object", "required": ["path", "sha256"]}},
+    "resolved_returns": {"type": "array", "items": {"type": "object", "required": ["return", "target_completion"], "properties": {"return": {"type": "object", "required": ["path", "sha256"]}, "target_completion": {"type": "object", "required": ["path", "sha256"]}}}}
+  }
+}

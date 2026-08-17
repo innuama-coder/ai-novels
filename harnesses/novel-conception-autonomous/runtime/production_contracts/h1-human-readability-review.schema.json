@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "h1-human-readability-review.schema.json",
+  "title": "Production H1 author-facing human readability review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "review_id", "run_id", "session_id", "phase",
+    "reviewer", "inputs", "dimensions", "findings", "verdict"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "review_id": {"type": "string", "pattern": "^H1-READABILITY-[A-Za-z0-9._-]+$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "phase": {"enum": ["prepublish", "postpublish_failure"]},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "thread_id", "independence_basis"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "thread_id": {"type": "string", "minLength": 1},
+        "independence_basis": {"const": "separate-task-no-producer-context"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "h1_completion", "h1_manifest", "html", "report",
+        "fragment_manifest", "fragment_package", "fragments"
+      ],
+      "properties": {
+        "h1_completion": {"$ref": "#/$defs/nullableTypedH1Completion"},
+        "h1_manifest": {"$ref": "#/$defs/nullableReference"},
+        "html": {"$ref": "#/$defs/reference"},
+        "report": {"$ref": "#/$defs/reference"},
+        "fragment_manifest": {"$ref": "#/$defs/reference"},
+        "fragment_package": {"$ref": "#/$defs/reference"},
+        "fragments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["fragment_id", "text_sha256"],
+            "properties": {
+              "fragment_id": {"type": "string", "minLength": 1},
+              "text_sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "natural_zh"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "readability"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "humanized_character_voice"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "scene_not_spec"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "excludes_internal_ids_and_audit_jargon"}}}
+      ],
+      "items": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    },
+    "verdict": {"enum": ["pass", "fail"]}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "not": {"pattern": "\\\\"}},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "nullableReference": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/reference"}]
+    },
+    "typedH1Completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "path", "sha256"],
+      "properties": {
+        "stage": {"const": "H1"},
+        "path": {"type": "string", "minLength": 1, "not": {"pattern": "\\\\"}},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "nullableTypedH1Completion": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/typedH1Completion"}]
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "verdict", "finding"],
+      "properties": {
+        "id": {"type": "string"},
+        "verdict": {"enum": ["pass", "fail"]},
+        "finding": {"type": "string", "minLength": 1}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id", "dimension", "artifact_kind", "artifact_id",
+        "evidence", "explanation"
+      ],
+      "properties": {
+        "finding_id": {"type": "string", "pattern": "^H1-READABILITY-FINDING-[A-Za-z0-9._-]+$"},
+        "dimension": {"enum": ["natural_zh", "readability", "humanized_character_voice", "scene_not_spec", "excludes_internal_ids_and_audit_jargon"]},
+        "artifact_kind": {"enum": ["report", "fragment"]},
+        "artifact_id": {"type": "string", "minLength": 1},
+        "evidence": {"type": "string", "minLength": 1},
+        "explanation": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

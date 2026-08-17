@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "development-baseline.schema.json",
+  "title": "Novel development baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill",
+    "project_id",
+    "baseline_version",
+    "status",
+    "source_release",
+    "run_id",
+    "lineage",
+    "input_gate",
+    "authority",
+    "control_bindings",
+    "design_inventory",
+    "hld_assignment",
+    "change_policy",
+    "semantic_review"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-development-baseline-preparer"},
+    "project_id": {"type": "string", "minLength": 1},
+    "baseline_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "status": {"const": "ready"},
+    "source_release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "status", "descriptor_sha256", "contract_catalog_sha256", "finalizer_sha256"],
+      "properties": {
+        "name": {"const": "novel-conception-stage"},
+        "version": {"const": "1.0.0"},
+        "status": {"const": "frozen"},
+        "descriptor_sha256": {"$ref": "#/$defs/sha256"},
+        "contract_catalog_sha256": {"$ref": "#/$defs/sha256"},
+        "finalizer_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "run_id": {"type": "string", "minLength": 1},
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_descriptor", "conception_completion", "final_validation",
+        "approval_state", "current_state", "author_decision", "stage_completions",
+        "p1_manifest", "h1_html_manifest", "conception_package",
+        "author_control_baseline", "authoritative_design_index", "cross_model_index",
+        "traceability", "development_handoff", "q1_review"
+      ],
+      "properties": {
+        "release_descriptor": {"$ref": "#/$defs/rootArtifactReference"},
+        "conception_completion": {"$ref": "#/$defs/rootArtifactReference"},
+        "final_validation": {"$ref": "#/$defs/rootArtifactReference"},
+        "approval_state": {"$ref": "#/$defs/rootArtifactReference"},
+        "current_state": {"$ref": "#/$defs/rootArtifactReference"},
+        "author_decision": {"$ref": "#/$defs/rootArtifactReference"},
+        "stage_completions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"],
+          "properties": {
+            "B0": {"$ref": "#/$defs/rootArtifactReference"},
+            "S1": {"$ref": "#/$defs/rootArtifactReference"},
+            "W1": {"$ref": "#/$defs/rootArtifactReference"},
+            "E1": {"$ref": "#/$defs/rootArtifactReference"},
+            "T1": {"$ref": "#/$defs/rootArtifactReference"},
+            "C1": {"$ref": "#/$defs/rootArtifactReference"},
+            "Q1": {"$ref": "#/$defs/rootArtifactReference"},
+            "P1": {"$ref": "#/$defs/rootArtifactReference"},
+            "H1": {"$ref": "#/$defs/rootArtifactReference"}
+          }
+        },
+        "p1_manifest": {"$ref": "#/$defs/rootArtifactReference"},
+        "h1_html_manifest": {"$ref": "#/$defs/rootArtifactReference"},
+        "conception_package": {"$ref": "#/$defs/rootArtifactReference"},
+        "author_control_baseline": {"$ref": "#/$defs/rootArtifactReference"},
+        "authoritative_design_index": {"$ref": "#/$defs/rootArtifactReference"},
+        "cross_model_index": {"$ref": "#/$defs/rootArtifactReference"},
+        "traceability": {"$ref": "#/$defs/rootArtifactReference"},
+        "development_handoff": {"$ref": "#/$defs/rootArtifactReference"},
+        "q1_review": {"$ref": "#/$defs/rootArtifactReference"}
+      }
+    },
+    "input_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "formal_completion_valid", "released_finalizer_valid", "current_state_valid",
+        "author_approved", "nine_stages_current", "p1_integrity_valid",
+        "h1_integrity_valid", "q1_ready", "one_run_id", "hash_chain_valid"
+      ],
+      "properties": {
+        "formal_completion_valid": {"const": true},
+        "released_finalizer_valid": {"const": true},
+        "current_state_valid": {"const": true},
+        "author_approved": {"const": true},
+        "nine_stages_current": {"const": true},
+        "p1_integrity_valid": {"const": true},
+        "h1_integrity_valid": {"const": true},
+        "q1_ready": {"const": true},
+        "one_run_id": {"const": true},
+        "hash_chain_valid": {"const": true}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["design_authority", "human_review_role", "conflict_policy"],
+      "properties": {
+        "design_authority": {"const": "P1"},
+        "human_review_role": {"const": "verification-only"},
+        "conflict_policy": {"const": "block-and-route-never-silent-merge"}
+      }
+    },
+    "control_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/controlBinding"}
+    },
+    "design_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storylines", "world", "environments", "events", "characters", "narrative"],
+      "properties": {
+        "storylines": {"$ref": "#/$defs/nonEmptyInventory"},
+        "world": {"$ref": "#/$defs/nonEmptyInventory"},
+        "environments": {"$ref": "#/$defs/nonEmptyInventory"},
+        "events": {"$ref": "#/$defs/nonEmptyInventory"},
+        "characters": {"$ref": "#/$defs/nonEmptyInventory"},
+        "narrative": {"$ref": "#/$defs/nonEmptyInventory"}
+      }
+    },
+    "hld_assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["next_stage", "responsibilities", "required_capabilities", "prohibitions", "unresolved_author_questions"],
+      "properties": {
+        "next_stage": {"const": "novel-hld"},
+        "responsibilities": {"type": "array", "minItems": 8, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "required_capabilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "prohibitions": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "unresolved_author_questions": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true}
+      }
+    },
+    "change_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_hld_choice", "author_question", "conception_conflict"],
+      "properties": {
+        "local_hld_choice": {"const": "decide-only-within-development-freedom"},
+        "author_question": {"const": "block-affected-decision-and-return-to-author-gate"},
+        "conception_conflict": {"const": "return-to-earliest-authoritative-owner"}
+      }
+    },
+    "semantic_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_mode", "verdict", "binding_count", "inventory_counts"],
+      "properties": {
+        "review_mode": {"const": "deterministic-lossless-projection"},
+        "verdict": {"const": "pass"},
+        "binding_count": {"type": "integer", "minimum": 1},
+        "inventory_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["storylines", "world", "environments", "events", "characters", "narrative"],
+          "properties": {
+            "storylines": {"type": "integer", "minimum": 1},
+            "world": {"type": "integer", "minimum": 1},
+            "environments": {"type": "integer", "minimum": 1},
+            "events": {"type": "integer", "minimum": 1},
+            "characters": {"type": "integer", "minimum": 1},
+            "narrative": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {"type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "rootArtifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "path", "sha256"],
+      "properties": {
+        "root": {"enum": ["source", "release"]},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "sourceId": {"type": "string", "pattern": "^(INT|SUB|WLD|CHR|CAU|NAR|SLD|SL|SLC|WR|WF|WS|END|ENV|ZONE|EVD|EV|CHD|SLOT|REL|DEV|FND)-[A-Za-z0-9._-]+$"},
+    "domain": {"enum": ["intent", "storylines", "world", "environments", "events", "characters", "narrative", "quality", "cross-domain"]},
+    "controlBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "classification", "open_item", "authority_class", "domain", "source", "locator", "source_text", "source_value_sha256", "hld_instruction", "preserve_unresolved"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/sourceId"},
+        "classification": {"enum": ["mandatory", "freedom", "must_ask", "open"]},
+        "open_item": {"type": "boolean"},
+        "authority_class": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]},
+        "domain": {"$ref": "#/$defs/domain"},
+        "source": {"$ref": "#/$defs/rootArtifactReference"},
+        "locator": {"type": "string", "pattern": "^/"},
+        "source_text": {"type": "string", "minLength": 1},
+        "source_value_sha256": {"$ref": "#/$defs/sha256"},
+        "hld_instruction": {"type": "string", "minLength": 1},
+        "preserve_unresolved": {"type": "boolean"}
+      }
+    },
+    "inventoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source", "locator", "source_value_sha256", "hld_use"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/sourceId"},
+        "source": {"$ref": "#/$defs/rootArtifactReference"},
+        "locator": {"type": "string", "pattern": "^/"},
+        "source_value_sha256": {"$ref": "#/$defs/sha256"},
+        "hld_use": {"type": "string", "minLength": 1}
+      }
+    },
+    "nonEmptyInventory": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/inventoryEntry"}}
+  }
+}

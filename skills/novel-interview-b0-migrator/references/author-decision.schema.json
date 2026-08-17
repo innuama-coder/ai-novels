@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "migration_id", "source_run_id", "candidate_manifest_sha256", "decision", "author_role", "control_decisions", "fact_decisions"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "interview-b0-migration-author-decision"},
+    "migration_id": {"type": "string", "minLength": 1},
+    "source_run_id": {"type": "string", "minLength": 1},
+    "candidate_manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "decision": {"const": "approved"},
+    "author_role": {"const": "author"},
+    "control_decisions": {"type": "array", "minItems": 6, "items": {"$ref": "#/$defs/item"}},
+    "fact_decisions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}}
+  },
+  "$defs": {"item": {
+    "type": "object", "additionalProperties": false, "required": ["id", "decision"],
+    "properties": {"id": {"type": "string", "minLength": 1}, "decision": {"const": "accept"}}
+  }}
+}

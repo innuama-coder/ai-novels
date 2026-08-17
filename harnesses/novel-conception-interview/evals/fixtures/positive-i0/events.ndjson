@@ -1,0 +1,5 @@
+{"seq":1,"type":"plan_presented","plan_revision":1,"announced_question_budget":2,"announced_minutes":5,"text":"本次共 2 个问题，预计 5 分钟。"}
+{"seq":2,"type":"question","question_id":"I0-Q1","group_id":"meaning","plan_revision":1,"text":"这部小说最想让读者思考什么？"}
+{"seq":3,"type":"author_answer","question_id":"I0-Q1","text":"选择如何定义一个人。"}
+{"seq":4,"type":"question","question_id":"I0-Q2","group_id":"boundary","plan_revision":1,"text":"有哪些表达边界？"}
+{"seq":5,"type":"author_answer","question_id":"I0-Q2","text":"不要把伤害写成浪漫化的捷径。"}

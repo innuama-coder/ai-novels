@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说角色系统设计"
+  short_description: "解析角色槽并构建人物、弧线与三层关系"
+  default_prompt: "使用 $novel-character-system-designer 按自主构思 V2 契约完成 C1 角色系统。"

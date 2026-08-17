@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "name": "novel-conception-stage",
+  "version": "1.0.0",
+  "status": "frozen",
+  "release_date": "2026-08-05",
+  "entry": "I0",
+  "terminal": "final",
+  "workflow": [
+    "I0", "I1", "I2", "I3", "I4", "I5", "V1", "V2",
+    "author-interview-approval", "B0", "S1", "W1", "E1", "T1",
+    "C1", "Q1", "P1", "H1-A-plan", "H1-B", "H1-A-assemble",
+    "H1-C", "H1", "author-decision", "final"
+  ],
+  "components": {
+    "interview": {
+      "name": "novel-conception-interview",
+      "version": "1.0.0",
+      "manifest": "harnesses/novel-conception-interview/manifest.yaml",
+      "skills": [
+        "novel-intent-facilitator",
+        "novel-subject-designer",
+        "novel-world-interviewer",
+        "novel-character-interviewer",
+        "novel-causality-architect",
+        "novel-narrative-contract-designer",
+        "novel-interview-integrity-auditor",
+        "novel-interview-brief-generator"
+      ]
+    },
+    "autonomous": {
+      "name": "novel-conception-autonomous",
+      "version": "1.0.0",
+      "manifest": "harnesses/novel-conception-autonomous/manifest.yaml",
+      "dependency_spec": "harnesses/novel-conception-autonomous/dependency-spec.json",
+      "skills": [
+        "novel-storyline-architecture-designer",
+        "novel-world-model-designer",
+        "novel-environment-system-designer",
+        "novel-event-timeline-designer",
+        "novel-character-system-designer",
+        "novel-conception-reviewer",
+        "novel-conception-deliverable-assembler",
+        "novel-conception-human-review-assembler",
+        "novel-conception-fragment-writer",
+        "novel-conception-review-html-generator",
+        "novel-conception-presentation-fidelity-reviewer"
+      ]
+    }
+  },
+  "authoritative_contracts": [
+    "docs/ai-novel-workflow/conception-orchestration.md",
+    "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md",
+    "harnesses/novel-conception-autonomous/docs/final-delivery-contract.md",
+    "docs/ai-novel-workflow/conception-chain-final-audit.md"
+  ],
+  "final_deliverables": [
+    "approved interview evidence and V2 review brief",
+    "machine-readable conception package P1",
+    "human review package H1 with world, characters, storyline and sample fragments",
+    "offline HTML human-review report",
+    "external author decision receipt",
+    "approved final completion and development handoff"
+  ],
+  "compatibility_policy": {
+    "product_version_is_not_schema_version": true,
+    "legacy_autonomous_profiles_forbidden": ["D1", "R1"],
+    "author_approval_required_for_final": true,
+    "historical_release_artifacts_are_not_overwritten": true
+  }
+}

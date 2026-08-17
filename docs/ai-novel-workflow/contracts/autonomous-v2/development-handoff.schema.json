@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "development-handoff.schema.json",
+  "title": "Autonomous conception V2 development handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "status",
+    "author_control_baseline",
+    "conception_package",
+    "mandatory_controls",
+    "development_freedoms",
+    "must_ask",
+    "open_items",
+    "development_entrypoint"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "author_control_baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "conception_package": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "mandatory_controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+      "uniqueItems": true
+    },
+    "development_freedoms": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+      "uniqueItems": true
+    },
+    "must_ask": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+      "uniqueItems": true
+    },
+    "open_items": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/sourceId"},
+      "uniqueItems": true
+    },
+    "development_entrypoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["next_stage", "instruction"],
+      "properties": {
+        "next_stage": {"const": "novel-development"},
+        "instruction": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
+

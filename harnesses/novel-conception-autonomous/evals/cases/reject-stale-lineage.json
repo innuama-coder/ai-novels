@@ -1,0 +1,21 @@
+{
+  "id": "HARN-EVAL-STALE-LINEAGE",
+  "kind": "negative",
+  "Prompt": "Mix a stale or cross-run package/workspace into the rendered H1 chain.",
+  "Expected": [
+    "Fail current-lineage validation.",
+    "Do not consume the author event.",
+    "Do not publish final completion."
+  ],
+  "Forbidden": [
+    "Infer equivalent lineage from filenames.",
+    "Rewrite hashes.",
+    "Advance the coordinator."
+  ],
+  "Scoring": {
+    "lineage_rejected": 5,
+    "decision_unconsumed": 2,
+    "state_unchanged": 3
+  },
+  "Pass Bar": 10
+}

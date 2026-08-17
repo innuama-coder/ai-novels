@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{PROJECT}}｜三部分访谈简报</title>
+  <style>
+    :root{--ink:#17212b;--muted:#586575;--paper:#f4f7f9;--card:#fff;--line:#cbd5df;--blue:#145da0;--green:#176b4d;--amber:#805000;--red:#8e2c2c;--focus:#f3b51b}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}header{padding:42px 0 24px;background:var(--card);border-bottom:6px solid var(--blue)}h1,h2,h3{line-height:1.2}h1{margin:.35rem 0 .7rem}.lede{max-width:72ch;font-size:1.12rem}section{margin:28px 0;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:14px}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.84rem;font-weight:700}.confirmed{color:#07563d;background:#dff4e9}.open{color:#694400;background:#fff0c2}.delegated{color:#174a7e;background:#ddebf9}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.card,.center,.orbit,.node,.person,.bridge{padding:15px;border:1px solid var(--line);border-radius:10px;background:#fff}.world{display:grid;grid-template-columns:1fr minmax(220px,1.25fr) 1fr;gap:14px;align-items:center}.center{border:3px solid var(--blue);text-align:center}.orbit{border-left:5px solid var(--blue)}.rail{list-style:none;margin:0;padding:0 0 0 30px;border-left:3px solid var(--blue)}.rail li{position:relative;margin:18px 0}.rail li::before{content:"";position:absolute;left:-39px;top:8px;width:14px;height:14px;border:3px solid var(--blue);border-radius:50%;background:#fff}.merge{border-style:dashed;border-color:var(--amber)}.people{display:grid;grid-template-columns:1fr minmax(180px,.65fr) 1fr;gap:14px;align-items:center}.bridge{text-align:center;border-style:dashed;border-color:var(--amber)}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:9px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f8}.review{border-left:6px solid var(--amber);margin-top:18px;padding-left:14px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}a:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}@media(max-width:760px){.wrap{width:min(100% - 20px,1160px)}header{padding:30px 0 20px}section{padding:16px}.world,.people{grid-template-columns:1fr}.center{order:-1}.table-scroll{overflow:visible}table{display:block;overflow-x:auto}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}@media print{body{background:#fff;font-size:11pt}header,section{border-color:#777;break-inside:avoid}.tag{background:#fff;border:1px solid currentColor}details{display:block}details:not([open])>*:not(summary){display:block}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><span class="tag open">awaiting_author_review</span><h1>{{PROJECT}}｜访谈审阅简报</h1><p class="lede">{{ONE_LINE_PROMISE}}</p><p>本页只汇总已确认的开发控制点；它不等于作者批准。</p></div></header>
+  <main class="wrap">
+    <section aria-labelledby="world"><h2 id="world">1. 小说世界设定：什么规则使故事成立？</h2><p>{{WORLD_TEXT_SUMMARY}}</p><div class="world">{{WORLD_CONSTRAINTS_LEFT}}<article class="center">{{WORLD_CENTER}}</article>{{WORLD_CONSTRAINTS_RIGHT}}</div><div class="review">{{WORLD_REVIEW_PROMPT}}</div></section>
+    <section aria-labelledby="story"><h2 id="story">2. 小说故事线设定：为什么会走到结局？</h2><p>{{STORY_TEXT_SUMMARY}}</p><ol class="rail" aria-label="因果主轨">{{STORY_NODES}}</ol>{{OPTIONAL_REAL_LANES}}<div class="review">{{STORY_REVIEW_PROMPT}}</div></section>
+    <section aria-labelledby="characters"><h2 id="characters">3. 小说人物设定：谁承担什么选择？</h2><p>{{CHARACTER_TEXT_SUMMARY}}</p><div class="people">{{LEFT_PERSON_CARD}}<article class="bridge">{{RELATIONSHIP_BRIDGE}}</article>{{RIGHT_PERSON_CARD}}</div><div class="review">{{CHARACTER_REVIEW_PROMPT}}</div></section>
+  </main>
+  <footer class="wrap"><p>{{TRACEABILITY}}</p></footer>
+</body>
+</html>

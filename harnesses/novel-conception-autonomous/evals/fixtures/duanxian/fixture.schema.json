@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/novel-conception-eval-fixture.schema.json",
+  "title": "Novel conception declarative evaluation fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "fixture_id",
+    "run_id",
+    "source_assurance",
+    "provenance_manifest",
+    "evidence_manifest",
+    "fact_dependencies",
+    "interviews",
+    "semantic_assertions"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.1"},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "source_assurance": {
+      "enum": [
+        "synthetic_author_approved",
+        "author_approved",
+        "mixed_author_approved_and_derived_unsealed"
+      ]
+    },
+    "provenance_manifest": {"$ref": "#/$defs/fileReference"},
+    "evidence_manifest": {"$ref": "#/$defs/fileReference"},
+    "fact_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "claim", "rationale"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["verified", "not_applicable", "unverified"]},
+          "claim": {"type": "string", "minLength": 1},
+          "rationale": {"type": "string", "minLength": 1},
+          "source_ids": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "interviews": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage",
+          "control_id",
+          "hardness",
+          "heading",
+          "value",
+          "authority",
+          "provenance_source_ids"
+        ],
+        "properties": {
+          "stage": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]},
+          "control_id": {"type": "string", "minLength": 1},
+          "hardness": {"enum": ["author_locked", "author_open"]},
+          "heading": {"type": "string", "minLength": 1},
+          "value": {"type": "string", "minLength": 1},
+          "authority": {
+            "enum": [
+              "author_locked",
+              "author_locked_correction",
+              "author_open"
+            ]
+          },
+          "provenance_source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "semantic_assertions": {
+      "type": "array",
+      "minItems": 13,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "anchor_id",
+          "required_source_ids",
+          "required_terms",
+          "assurance",
+          "evidence_anchor_id"
+        ],
+        "properties": {
+          "anchor_id": {"type": "string", "minLength": 1},
+          "required_source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "required_terms": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "required_status": {"enum": ["author_locked", "author_open"]},
+          "assurance": {
+            "enum": [
+              "author_locked",
+              "author_locked_correction",
+              "author_open",
+              "derived_unsealed"
+            ]
+          },
+          "evidence_anchor_id": {"type": "string", "minLength": 1},
+          "approved_floor": {"type": "string", "minLength": 1},
+          "derived_extension": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

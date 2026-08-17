@@ -1,0 +1,23 @@
+{
+  "id": "HARN-EVAL-PRODUCTION-FULL-CHAIN",
+  "kind": "positive",
+  "Prompt": "Starting from one approved interview completion chain, produce the current machine conception and human review, pause for the external author decision, then resume an approved run to final completion.",
+  "Expected": [
+    "Initialize one persisted production run and complete B0 through H1 in exact owner order.",
+    "Persist every top-level state and H1 workspace transition behind one current work order.",
+    "Present the current HTML only after formal H1 publication and wait for an external decision.",
+    "Resume the approved state and publish one current final completion."
+  ],
+  "Forbidden": [
+    "Use the terminal compatibility API as the initial entrypoint.",
+    "Select a semantic fallback owner or the legacy D1 skill.",
+    "Synthesize the author decision or reconstruct state from conversation memory."
+  ],
+  "Scoring": {
+    "full_topology": 3,
+    "durable_state": 3,
+    "external_authority": 2,
+    "final_current": 2
+  },
+  "Pass Bar": 10
+}

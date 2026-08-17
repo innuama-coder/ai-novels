@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eval-case-manifest.v1.schema.json",
+  "title": "Autonomous conception evaluation case manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "manifest_id",
+    "fixture",
+    "storyline_plan",
+    "storyline_plan_schema",
+    "storyline_quality_gate",
+    "storyline_quality_gate_schema"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "novel-conception-eval-case"},
+    "manifest_id": {"type": "string", "pattern": "^ECASE-[A-Za-z0-9._-]+$"},
+    "fixture": {"$ref": "#/$defs/artifactReference"},
+    "storyline_plan": {"$ref": "#/$defs/artifactReference"},
+    "storyline_plan_schema": {"$ref": "#/$defs/artifactReference"},
+    "storyline_quality_gate": {"$ref": "#/$defs/artifactReference"},
+    "storyline_quality_gate_schema": {"$ref": "#/$defs/artifactReference"}
+  },
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9._/-]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

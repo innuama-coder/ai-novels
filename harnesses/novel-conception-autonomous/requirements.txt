@@ -1,0 +1,17 @@
+# Reproducible runtime dependency set for JSON Schema Draft 2020-12.
+#
+# Online install:
+#   python -m pip install --requirement requirements.txt
+#
+# Prepare an offline wheelhouse on a connected machine:
+#   python -m pip download --only-binary=:all: --dest wheelhouse --requirement requirements.txt
+# Offline install:
+#   python -m pip install --no-index --find-links wheelhouse --requirement requirements.txt
+#
+# Keep all transitive dependencies pinned.  A wheelhouse is platform/Python
+# specific and must be regenerated when either changes.
+attrs==26.1.0
+jsonschema==4.23.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.6.3

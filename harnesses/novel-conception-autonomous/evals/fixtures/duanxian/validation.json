@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "fixture_id": "duanxian-conception-e2e",
+  "run_id": "duanxian-20260722",
+  "verdict": "ready",
+  "validated_artifacts": [
+    {
+      "path": "fixture.json",
+      "sha256": "c2cac509af0549dfac3d31045c812226c19e9c6dd95d17cc5ebb22f882129798"
+    },
+    {
+      "path": "fixture.schema.json",
+      "sha256": "388f1f50bee10f7c5f88f7ee0d919067797ed7aa06e2f459df1ee17b9625b856"
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "6b71a579f06e72b75188a9a267ad1d2dd1f99860b926b0a99d0d1b3d6221027a"
+    },
+    {
+      "path": "semantic-anchor-evidence.json",
+      "sha256": "a217dd9e4b602b00673bd61670bb5d5a07ce5c1244504176a26163a9ad517ff9"
+    }
+  ],
+  "checks": [
+    {
+      "id": "FIXTURE-SCHEMA",
+      "status": "passed",
+      "evidence": "fixture.json validates against the general fixture.schema.json Draft 2020-12 contract."
+    },
+    {
+      "id": "SOURCE-PATH-CLOSURE",
+      "status": "passed",
+      "evidence": "All 32 source rows resolve from repo_relative_path, and every resolved path equals its recorded absolute_path."
+    },
+    {
+      "id": "SOURCE-SHA-CLOSURE",
+      "status": "passed",
+      "evidence": "All 32 current source SHA-256 values equal the sealed provenance values."
+    },
+    {
+      "id": "LINEAGE-CLOSURE",
+      "status": "passed",
+      "evidence": "I0-I5, V1 and V2 completions all report ready for run duanxian-20260722; 39 artifact, validation, upstream-completion and approval links resolve and match SHA; V1 semantic review is pass and V2 decision is approved."
+    },
+    {
+      "id": "CONTROL-CLOSURE",
+      "status": "passed",
+      "evidence": "All 22 control IDs are unique, cover I0-I5, and reference only registered provenance source IDs."
+    },
+    {
+      "id": "ANCHOR-CLOSURE",
+      "status": "passed",
+      "evidence": "All 16 semantic assertion IDs are unique, have a one-to-one evidence record, and reference only fixture control IDs."
+    },
+    {
+      "id": "AUTHORITY-BOUNDARY",
+      "status": "passed",
+      "evidence": "The sole derived-only dual-line extension is marked derived_unsealed, has no author_locked required_status, and is not represented by any author-locked interview control."
+    },
+    {
+      "id": "FORBIDDEN-SUBSTITUTE-EXCLUSION",
+      "status": "passed",
+      "evidence": "No source path uses R1-15, D1-36, R1-17 or review-04."
+    },
+    {
+      "id": "GENERIC-SCHEMA",
+      "status": "passed",
+      "evidence": "The schema contains no novel title, character name or fixture-specific enum; the adapter-facing interviews and semantic_assertions fields remain the generic declarative interface."
+    }
+  ],
+  "counts": {
+    "source_records": 32,
+    "source_sha_matches": 32,
+    "control_records": 22,
+    "semantic_anchors": 16,
+    "derived_unsealed_anchors": 1,
+    "lineage_stages": 8,
+    "lineage_links_verified": 39,
+    "forbidden_substitutes_used": 0
+  },
+  "validation_command": "uv run --with jsonschema python - < read-only schema, source-SHA, lineage-link and adapter-constructor validator",
+  "scope": {
+    "allowed_root": "harnesses/novel-conception-autonomous/evals/fixtures/duanxian",
+    "adapter_modified": false,
+    "tests_modified": false,
+    "runtime_modified": false,
+    "generic_fixture_modified": false
+  }
+}

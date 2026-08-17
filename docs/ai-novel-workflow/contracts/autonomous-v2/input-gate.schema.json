@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "input-gate.schema.json",
+  "title": "Autonomous conception V2 stage-aware input gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "target_stage",
+    "entry_mode",
+    "run_state",
+    "baseline_completion",
+    "upstream_completions",
+    "active_return",
+    "return_binding"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "target_stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
+    "entry_mode": {"enum": ["forward", "return_resolution"]},
+    "run_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "baseline_completion": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/B0Ref"}
+      ]
+    },
+    "upstream_completions": {
+      "type": "array",
+      "items": {
+        "$ref": "common-defs.schema.json#/$defs/stageArtifactReference"
+      },
+      "uniqueItems": true
+    },
+    "active_return": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
+    "return_binding": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/returnBinding"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"entry_mode": {"const": "forward"}},
+        "required": ["entry_mode"]
+      },
+      "then": {
+        "properties": {
+          "active_return": {"type": "null"},
+          "return_binding": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"entry_mode": {"const": "return_resolution"}},
+        "required": ["entry_mode"]
+      },
+      "then": {
+        "properties": {
+          "active_return": {
+            "$ref": "common-defs.schema.json#/$defs/artifactReference"
+          },
+          "return_binding": {
+            "$ref": "common-defs.schema.json#/$defs/returnBinding"
+          }
+        }
+      }
+    },
+    {"$ref": "#/$defs/B0Gate"},
+    {"$ref": "#/$defs/S1Gate"},
+    {"$ref": "#/$defs/W1Gate"},
+    {"$ref": "#/$defs/E1Gate"},
+    {"$ref": "#/$defs/T1Gate"},
+    {"$ref": "#/$defs/C1Gate"},
+    {"$ref": "#/$defs/Q1Gate"},
+    {"$ref": "#/$defs/P1Gate"},
+    {"$ref": "#/$defs/H1Gate"}
+  ],
+  "$defs": {
+    "B0Ref": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "B0"}}}
+      ]
+    },
+    "completionArray": {
+      "type": "array",
+      "items": {
+        "$ref": "common-defs.schema.json#/$defs/stageArtifactReference"
+      },
+      "uniqueItems": true
+    },
+    "B0Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "B0"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"type": "null"},
+          "upstream_completions": {"maxItems": 0},
+          "return_binding": {
+            "oneOf": [
+              {"type": "null"},
+              {
+                "allOf": [
+                  {"$ref": "common-defs.schema.json#/$defs/returnBinding"},
+                  {"properties": {"resume_stage": {"const": "B0"}}}
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "S1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "S1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"maxItems": 0},
+          "return_binding": {"$ref": "#/$defs/S1Return"}
+        }
+      }
+    },
+    "W1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "W1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/OnlyS1"},
+          "return_binding": {"$ref": "#/$defs/W1Return"}
+        }
+      }
+    },
+    "E1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "E1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/ThroughW1"},
+          "return_binding": {"$ref": "#/$defs/E1Return"}
+        }
+      }
+    },
+    "T1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "T1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/ThroughE1"},
+          "return_binding": {"$ref": "#/$defs/T1Return"}
+        }
+      }
+    },
+    "C1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "C1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/ThroughT1"},
+          "return_binding": {"$ref": "#/$defs/C1Return"}
+        }
+      }
+    },
+    "Q1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "Q1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/ThroughC1"},
+          "return_binding": {"$ref": "#/$defs/Q1Return"}
+        }
+      }
+    },
+    "P1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "P1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/ThroughQ1"},
+          "return_binding": {"$ref": "#/$defs/P1Return"}
+        }
+      }
+    },
+    "H1Gate": {
+      "if": {
+        "properties": {"target_stage": {"const": "H1"}},
+        "required": ["target_stage"]
+      },
+      "then": {
+        "properties": {
+          "baseline_completion": {"$ref": "#/$defs/B0Ref"},
+          "upstream_completions": {"$ref": "#/$defs/OnlyP1"},
+          "return_binding": {"$ref": "#/$defs/H1Return"}
+        }
+      }
+    },
+    "OnlyS1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 1,
+          "maxItems": 1,
+          "prefixItems": [
+            {
+              "allOf": [
+                {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+                {"properties": {"stage": {"const": "S1"}}}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "ThroughW1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {"$ref": "#/$defs/S1Ref"},
+            {"$ref": "#/$defs/W1Ref"}
+          ]
+        }
+      ]
+    },
+    "ThroughE1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            {"$ref": "#/$defs/S1Ref"},
+            {"$ref": "#/$defs/W1Ref"},
+            {"$ref": "#/$defs/E1Ref"}
+          ]
+        }
+      ]
+    },
+    "ThroughT1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/S1Ref"},
+            {"$ref": "#/$defs/W1Ref"},
+            {"$ref": "#/$defs/E1Ref"},
+            {"$ref": "#/$defs/T1Ref"}
+          ]
+        }
+      ]
+    },
+    "ThroughC1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 5,
+          "maxItems": 5,
+          "prefixItems": [
+            {"$ref": "#/$defs/S1Ref"},
+            {"$ref": "#/$defs/W1Ref"},
+            {"$ref": "#/$defs/E1Ref"},
+            {"$ref": "#/$defs/T1Ref"},
+            {"$ref": "#/$defs/C1Ref"}
+          ]
+        }
+      ]
+    },
+    "ThroughQ1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 6,
+          "maxItems": 6,
+          "prefixItems": [
+            {"$ref": "#/$defs/S1Ref"},
+            {"$ref": "#/$defs/W1Ref"},
+            {"$ref": "#/$defs/E1Ref"},
+            {"$ref": "#/$defs/T1Ref"},
+            {"$ref": "#/$defs/C1Ref"},
+            {"$ref": "#/$defs/Q1Ref"}
+          ]
+        }
+      ]
+    },
+    "OnlyP1": {
+      "allOf": [
+        {"$ref": "#/$defs/completionArray"},
+        {
+          "minItems": 1,
+          "maxItems": 1,
+          "prefixItems": [{"$ref": "#/$defs/P1Ref"}]
+        }
+      ]
+    },
+    "S1Ref": {"$ref": "#/$defs/stageRefS1"},
+    "W1Ref": {"$ref": "#/$defs/stageRefW1"},
+    "E1Ref": {"$ref": "#/$defs/stageRefE1"},
+    "T1Ref": {"$ref": "#/$defs/stageRefT1"},
+    "C1Ref": {"$ref": "#/$defs/stageRefC1"},
+    "Q1Ref": {"$ref": "#/$defs/stageRefQ1"},
+    "P1Ref": {"$ref": "#/$defs/stageRefP1"},
+    "stageRefS1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "S1"}}}]},
+    "stageRefW1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "W1"}}}]},
+    "stageRefE1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "E1"}}}]},
+    "stageRefT1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "T1"}}}]},
+    "stageRefC1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "C1"}}}]},
+    "stageRefQ1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "Q1"}}}]},
+    "stageRefP1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "P1"}}}]},
+    "nullableReturn": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/returnBinding"}
+      ]
+    },
+    "S1Return": {"$ref": "#/$defs/returnForS1"},
+    "W1Return": {"$ref": "#/$defs/returnForW1"},
+    "E1Return": {"$ref": "#/$defs/returnForE1"},
+    "T1Return": {"$ref": "#/$defs/returnForT1"},
+    "C1Return": {"$ref": "#/$defs/returnForC1"},
+    "Q1Return": {"$ref": "#/$defs/returnForQ1"},
+    "P1Return": {"$ref": "#/$defs/returnForP1"},
+    "H1Return": {"$ref": "#/$defs/returnForH1"},
+    "returnForS1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "S1"}}}]}]},
+    "returnForW1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "W1"}}}]}]},
+    "returnForE1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "E1"}}}]}]},
+    "returnForT1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "T1"}}}]}]},
+    "returnForC1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "C1"}}}]}]},
+    "returnForQ1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "Q1"}}}]}]},
+    "returnForP1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "P1"}}}]}]},
+    "returnForH1": {"oneOf": [{"type": "null"}, {"allOf": [{"$ref": "common-defs.schema.json#/$defs/returnBinding"}, {"properties": {"resume_stage": {"const": "H1"}}}]}]}
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "character-system.schema.json",
+  "title": "C1 character system canonical model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "source_artifacts", "authority_partition", "design_decisions", "derivation_claims", "character_demands", "slot_resolution", "profiles", "responsibility_matrix", "agency_matrix", "information_matrix", "character_arcs", "relationships", "three_layer_networks", "storyline_cast_coverage", "event_cast_coverage", "aftermath_responsibility", "development_freedoms", "open_items"],
+  "properties": {
+    "schema_version": {"const": "2.0"}, "skill": {"const": "novel-character-system-designer"}, "stage": {"const": "C1"}, "run_id": {"type": "string", "minLength": 1}, "status": {"const": "ready"}, "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "source_artifacts": {"$ref": "canonical-common.schema.json#/$defs/sourceArtifacts"}, "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"}, "design_decisions": {"$ref": "canonical-common.schema.json#/$defs/designDecisions"}, "derivation_claims": {"$ref": "canonical-common.schema.json#/$defs/derivationClaims"},
+    "character_demands": {"$ref": "canonical-common.schema.json#/$defs/characterRequirements"},
+    "slot_resolution": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/slotResolution"}},
+    "profiles": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/profile"}},
+    "responsibility_matrix": {"type": "array", "minItems": 1, "items": {"$ref": "canonical-common.schema.json#/$defs/assignment"}},
+    "agency_matrix": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/agencyAssignment"}},
+    "information_matrix": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/informationState"}},
+    "character_arcs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/characterArc"}},
+    "relationships": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/relationship"}},
+    "three_layer_networks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/threeLayerNetwork"}},
+    "storyline_cast_coverage": {"$ref": "canonical-common.schema.json#/$defs/coverageRecords"},
+    "event_cast_coverage": {"$ref": "canonical-common.schema.json#/$defs/coverageRecords"},
+    "aftermath_responsibility": {"type": "array", "items": {"$ref": "canonical-common.schema.json#/$defs/assignment"}},
+    "development_freedoms": {"$ref": "canonical-common.schema.json#/$defs/developmentFreedoms"},
+    "open_items": {"$ref": "canonical-common.schema.json#/$defs/openItems"}
+  },
+  "$defs": {
+    "profile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "story_position", "activity_participation", "individual_definition", "story_responsibility", "goals", "values", "boundaries", "capabilities", "authorities", "information_limits", "pressure_behavior", "agency_choices", "non_delegable_choices", "relationship_levers", "arc_direction", "forbidden_portrayals"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "name": {"type": "string", "minLength": 1},
+        "story_position": {"$ref": "#/$defs/storyPosition"},
+        "activity_participation": {"$ref": "#/$defs/activityParticipation"},
+        "individual_definition": {"$ref": "#/$defs/individualDefinition"},
+        "story_responsibility": {"type": "string", "minLength": 1},
+        "goals": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "values": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "boundaries": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "capabilities": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "authorities": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "information_limits": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "pressure_behavior": {"type": "string", "minLength": 1},
+        "agency_choices": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "non_delegable_choices": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "relationship_levers": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "arc_direction": {"type": "string", "minLength": 1},
+        "forbidden_portrayals": {"$ref": "canonical-common.schema.json#/$defs/strings"}
+      }
+    },
+    "storyPosition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["narrative_level", "entry_function", "ongoing_function", "ending_function"],
+      "properties": {
+        "narrative_level": {"enum": ["core", "support", "context"]},
+        "entry_function": {"type": "string", "minLength": 1},
+        "ongoing_function": {"type": "string", "minLength": 1},
+        "ending_function": {"type": "string", "minLength": 1}
+      }
+    },
+    "activityParticipation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["storyline_ids", "event_ids", "environment_ids", "activity_summary", "causal_contribution"],
+      "properties": {
+        "storyline_ids": {"type": "array", "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "event_ids": {"type": "array", "items": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "environment_ids": {"type": "array", "items": {"type": "string", "pattern": "^ENV-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "activity_summary": {"type": "string", "minLength": 1},
+        "causal_contribution": {"type": "string", "minLength": 1}
+      }
+    },
+    "individualDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["appearance", "personality", "life_background", "occupation_and_daily_life", "social_circle", "embodied_or_interface_constraints"],
+      "properties": {
+        "appearance": {"type": "string", "minLength": 1},
+        "personality": {"type": "string", "minLength": 1},
+        "life_background": {"type": "string", "minLength": 1},
+        "occupation_and_daily_life": {"type": "string", "minLength": 1},
+        "social_circle": {"type": "string", "minLength": 1},
+        "embodied_or_interface_constraints": {"type": "string", "minLength": 1}
+      }
+    },
+    "slotResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "character_id", "demand_ids", "event_ids", "rationale"],
+      "properties": {
+        "slot_id": {"type": "string", "pattern": "^SLOT-[A-Za-z0-9._-]+$"},
+        "character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "demand_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "agencyAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "character_id", "event_ids", "available_choices", "chosen_action", "cost"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AGY-[A-Za-z0-9._-]+$"},
+        "character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "available_choices": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "chosen_action": {"type": "string", "minLength": 1},
+        "cost": {"type": "string", "minLength": 1}
+      }
+    },
+    "informationState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "character_id", "knows", "does_not_know", "misreads", "change_event_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^INFO-[A-Za-z0-9._-]+$"},
+        "character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "knows": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "does_not_know": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "misreads": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "change_event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "characterArc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "character_id", "start_state", "pressure_event_ids", "choice_event_ids", "end_state", "theme_effect"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ARC-[A-Za-z0-9._-]+$"},
+        "character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "start_state": {"type": "string", "minLength": 1},
+        "pressure_event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "choice_event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "end_state": {"type": "string", "minLength": 1},
+        "theme_effect": {"type": "string", "minLength": 1}
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from_character_id", "to_character_id", "function", "start_state", "change_event_ids", "end_state", "boundaries"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^REL-[A-Za-z0-9._-]+$"},
+        "from_character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "to_character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "function": {"type": "string", "minLength": 1},
+        "start_state": {"type": "string", "minLength": 1},
+        "change_event_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "end_state": {"type": "string", "minLength": 1},
+        "boundaries": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "threeLayerNetwork": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "core_character_id",
+        "layer_1_direct",
+        "layer_2_institutional",
+        "layer_3_contextual",
+        "relationship_ids",
+        "story_function"
+      ],
+      "properties": {
+        "core_character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "layer_1_direct": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "layer_2_institutional": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "layer_3_contextual": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "relationship_ids": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"type": "string", "pattern": "^REL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "story_function": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

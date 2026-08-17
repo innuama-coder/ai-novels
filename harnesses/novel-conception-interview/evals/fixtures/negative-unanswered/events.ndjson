@@ -1,0 +1,4 @@
+{"seq":1,"type":"plan_presented","plan_revision":1,"announced_question_budget":2,"announced_minutes":5,"text":"本次共 2 个问题，预计 5 分钟。"}
+{"seq":2,"type":"question","question_id":"I1-Q1","group_id":"conflict","plan_revision":1,"text":"核心冲突是什么？"}
+{"seq":3,"type":"author_answer","question_id":"I1-Q1","text":"保护与真相冲突。"}
+{"seq":4,"type":"question","question_id":"I1-Q2","group_id":"conflict","plan_revision":1,"text":"代价是什么？"}

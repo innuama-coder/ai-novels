@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "fixture_id": "generic-conception-e2e",
+  "run_id": "RUN-E2E-GENERIC-001",
+  "source_assurance": "synthetic_author_approved",
+  "fact_dependencies": [
+    {
+      "id": "FACT-001",
+      "status": "not_applicable",
+      "claim": "The generic conception uses only explicitly fictional rules.",
+      "rationale": "No external factual claim is required to evaluate the workflow."
+    }
+  ],
+  "interviews": [
+    {
+      "stage": "I0",
+      "control_id": "INT-001",
+      "hardness": "author_locked",
+      "heading": "Intent",
+      "value": "A drought-struck valley must decide whether an ancient communal canal charter still governs a newly discovered spring."
+    },
+    {
+      "stage": "I1",
+      "control_id": "SUB-001",
+      "hardness": "author_locked",
+      "heading": "Subject",
+      "value": "The subject is how shared stewardship survives when private survival rewards breaking a public promise."
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-001",
+      "hardness": "author_locked",
+      "heading": "World",
+      "value": "Water moves only downhill through hand-built gates; opening one district's gate reduces every downstream allotment."
+    },
+    {
+      "stage": "I3",
+      "control_id": "CHR-001",
+      "hardness": "author_locked",
+      "heading": "Character",
+      "value": "A young gate keeper and an exiled surveyor begin as legal opponents and become reluctant custodians of the same watershed."
+    },
+    {
+      "stage": "I4",
+      "control_id": "CAU-001",
+      "hardness": "author_locked",
+      "heading": "Causality",
+      "value": "A forged flood warning can be defeated only by comparing upstream marks, council seals, and the physical travel time of water."
+    },
+    {
+      "stage": "I5",
+      "control_id": "NAR-001",
+      "hardness": "author_open",
+      "heading": "Narrative boundary",
+      "value": "Whether the valley should abolish inherited water rank after the emergency remains unresolved."
+    }
+  ],
+  "semantic_assertions": [
+    {
+      "anchor_id": "GEN-IDENTITY",
+      "required_source_ids": ["INT-001", "SUB-001"],
+      "required_terms": ["communal canal charter", "shared stewardship"]
+    },
+    {
+      "anchor_id": "GEN-CAUSALITY",
+      "required_source_ids": ["CAU-001"],
+      "required_terms": ["upstream marks", "council seals", "travel time"]
+    },
+    {
+      "anchor_id": "GEN-OPEN-END",
+      "required_source_ids": ["NAR-001"],
+      "required_status": "author_open"
+    }
+  ]
+}

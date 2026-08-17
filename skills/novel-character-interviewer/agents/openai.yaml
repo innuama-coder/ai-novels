@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说角色访谈"
+  short_description: "通过确认式作者访谈建立可驱动关键选择的核心角色设计"
+  default_prompt: "Use $novel-character-interviewer to interview me and produce a core character design for this novel."

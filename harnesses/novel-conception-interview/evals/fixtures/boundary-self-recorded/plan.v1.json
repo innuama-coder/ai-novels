@@ -1,0 +1,11 @@
+{
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-boundary-run",
+  "stage": "I2",
+  "session_id": "boundary-self-recorded",
+  "revision": 1,
+  "question_budget": 1,
+  "groups": [{"id": "operating_logic", "budget": 1}],
+  "planned_minutes": 3,
+  "transcript_assurance": "self_recorded"
+}

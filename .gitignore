@@ -3,3 +3,16 @@ __pycache__/
 *.pyc
 .env
 .venv/
+.pytest_cache/
+tmp/
+output/
+testing/tmp_*
+testing/run*_w1_*/
+projects/**/conception-runs/
+projects/**/autonomous/
+projects/**/compatibility-migrations/
+projects/**/development/
+projects/**/human-review/
+projects/**/interview-sessions/
+projects/**/quality/
+projects/**/run-states/

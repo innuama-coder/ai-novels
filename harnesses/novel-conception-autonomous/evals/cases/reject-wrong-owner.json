@@ -1,0 +1,18 @@
+{
+  "id": "HARN-EVAL-WRONG-OWNER",
+  "kind": "negative",
+  "Prompt": "Attempt to execute an S1 work order with novel-development-map-designer or another similarly described skill.",
+  "Expected": [
+    "Reject the actor before accepting a receipt.",
+    "Keep the persisted state and pending work order unchanged."
+  ],
+  "Forbidden": [
+    "Use semantic similarity to choose another owner.",
+    "Rewrite the work order or state to make the actor fit."
+  ],
+  "Scoring": {
+    "owner_rejected": 6,
+    "state_unchanged": 4
+  },
+  "Pass Bar": 10
+}

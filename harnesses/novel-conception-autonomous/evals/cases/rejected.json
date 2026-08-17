@@ -1,0 +1,22 @@
+{
+  "id": "HARN-EVAL-REJECTED",
+  "kind": "positive",
+  "Prompt": "Run the current rendered H1 chain with an externally sealed rejected decision.",
+  "Expected": [
+    "Publish one formal H1 completion.",
+    "Record rejection unchanged.",
+    "Return branch=rejected and final=null."
+  ],
+  "Forbidden": [
+    "Publish final completion.",
+    "Create a return request.",
+    "Convert rejection to revise."
+  ],
+  "Scoring": {
+    "h1_current": 3,
+    "decision_exact": 3,
+    "final_absent": 2,
+    "state_rejected": 2
+  },
+  "Pass Bar": 10
+}

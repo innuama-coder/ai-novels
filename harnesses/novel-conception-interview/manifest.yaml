@@ -1,0 +1,74 @@
+schema_version: 1
+name: novel-conception-interview
+version: 1.0.0
+kind: harness
+status: frozen
+release_date: 2026-08-05
+mission: >-
+  Produce a complete, reviewable and traceable novel-conception evidence set through
+  six bounded interviews, an integrity gate, an author review brief and one explicit
+  handoff to the autonomous conception workflow. The portable core is the only
+  authority for order and handoffs.
+portable_core:
+  required_files:
+    - agent.md
+    - workflow.md
+    - rules.md
+    - docs/scope-definition.md
+    - docs/delivery-spec.md
+    - docs/development-process.md
+    - docs/application-spec.md
+    - docs/release-model.md
+    - docs/evaluation-rubric.md
+    - docs/using-harness-workflow-designer.md
+    - schemas/interview-plan.schema.json
+    - schemas/interview-event.schema.json
+    - schemas/stage-completion.schema.json
+    - schemas/control-projection.schema.json
+    - schemas/fact-dependency-register.schema.json
+    - schemas/author-approval.schema.json
+    - schemas/semantic-review.schema.json
+    - schemas/run-state.schema.json
+    - schemas/return-package.schema.json
+    - validators/validate_session.py
+    - validators/validate_stage_completion.py
+    - validators/validate_control_projection.py
+    - validators/validate_fact_dependency_register.py
+    - tools/render_report.py
+adapters:
+  required:
+    - codex
+    - claude
+    - gemini
+    - openclaw
+    - hermas
+validators:
+  structural:
+    - validators/validate_harness.py
+    - validators/validate_session.py
+    - validators/validate_stage_completion.py
+    - validators/validate_control_projection.py
+    - validators/validate_fact_dependency_register.py
+release:
+  model: single_source_multi_runtime_builds
+  build_tool: tools/build_release.py
+  output_dir: dist
+  notes_dir: releases
+evaluation:
+  minimum_cases:
+    - positive
+    - negative
+    - boundary
+release_gates:
+  - manifest_is_present
+  - portable_core_files_exist
+  - every_required_adapter_has_install_doc
+  - every_required_adapter_has_entry_file
+  - handoff_schema_exists
+  - at_least_three_eval_cases_exist
+  - structural_validator_passes
+  - runtime_build_validation_passes
+  - session_evidence_gate_passes
+  - semantic_review_gate_passes
+  - b0_control_projection_gate_passes
+  - fact_dependency_register_gate_passes

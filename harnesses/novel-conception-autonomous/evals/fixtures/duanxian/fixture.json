@@ -1,0 +1,354 @@
+{
+  "schema_version": "1.1",
+  "fixture_id": "duanxian-conception-e2e",
+  "run_id": "duanxian-20260722",
+  "source_assurance": "mixed_author_approved_and_derived_unsealed",
+  "provenance_manifest": {
+    "path": "provenance.json",
+    "sha256": "6b71a579f06e72b75188a9a267ad1d2dd1f99860b926b0a99d0d1b3d6221027a"
+  },
+  "evidence_manifest": {
+    "path": "semantic-anchor-evidence.json",
+    "sha256": "a217dd9e4b602b00673bd61670bb5d5a07ce5c1244504176a26163a9ad517ff9"
+  },
+  "fact_dependencies": [
+    {
+      "id": "FACT-DX-001",
+      "status": "not_applicable",
+      "claim": "The fixture evaluates fictional story rules and author-approved narrative controls rather than external factual truth.",
+      "rationale": "Technical and geopolitical elements are treated as declared story-world constraints; no real-world claim is admitted as evidence.",
+      "source_ids": ["SRC-I2-ARTIFACT", "SRC-V1-SEMANTIC", "SRC-V2-APPROVAL"]
+    }
+  ],
+  "interviews": [
+    {
+      "stage": "I0",
+      "control_id": "INT-001",
+      "hardness": "author_locked",
+      "heading": "Core proposition",
+      "value": "Memory may be inherited, but life becomes itself only through new circumstances, interpretation and choices.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I0-EVENTS", "SRC-I0-ARTIFACT", "SRC-V2-BRIEF"]
+    },
+    {
+      "stage": "I0",
+      "control_id": "INT-002",
+      "hardness": "author_locked",
+      "heading": "Supreme ethical boundary",
+      "value": "Conscious digital life has the moral status of life; actions must not harm innocents, while family may be protected only where compatible with that rule.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I0-EVENTS", "SRC-I0-ARTIFACT", "SRC-V2-BRIEF"]
+    },
+    {
+      "stage": "I0",
+      "control_id": "INT-003",
+      "hardness": "author_locked",
+      "heading": "First-volume commitment",
+      "value": "R-07 independently stops the attack, protects others and ends its current existence; the loss must result from R-07's own value judgment.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I0-EVENTS", "SRC-I4-EVENTS", "SRC-V2-BRIEF"]
+    },
+    {
+      "stage": "I1",
+      "control_id": "SUB-001",
+      "hardness": "author_locked",
+      "heading": "Dual-subject responsibility",
+      "value": "R-07 owns meaning, judgment, intelligence selection and autonomous choice; Shen Yu owns real-world inquiry, verification, authorization, action and consequences.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I1-EVENTS", "SRC-I1-ARTIFACT", "SRC-V1-SEMANTIC"]
+    },
+    {
+      "stage": "I1",
+      "control_id": "SUB-002",
+      "hardness": "author_locked",
+      "heading": "Goal progression",
+      "value": "Shen Yu progresses from intelligence duty to understanding R-07 and reducing its suffering; R-07 progresses from passive recall to autonomous protection and departure.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I1-EVENTS", "SRC-I1-ARTIFACT", "SRC-I3-ARTIFACT"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-001",
+      "hardness": "author_locked",
+      "heading": "Digital-life ontology",
+      "value": "R-07 is not an uploaded or revived Gu Heng. Gu Heng's memories provide continuity and dispositions, while post-startup experience continuously forms R-07's own consciousness and values.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I2-ARTIFACT", "SRC-V2-BRIEF"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-002",
+      "hardness": "author_locked",
+      "heading": "Perception and memory",
+      "value": "Present R-07 has no sight, hearing, body, movement or self-sensation. External input appears only as text in consciousness; subjective memory fragments never grant present perception.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I2-ARTIFACT", "SRC-I5-EVENTS"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-003",
+      "hardness": "author_locked",
+      "heading": "Institutional authority",
+      "value": "The command chain starts the immature memory-digital-life attempt. Shen Yu is recommended because her research fits and voluntarily accepts the assignment, but she does not choose project activation or own all project powers.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I2-ARTIFACT", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-004",
+      "hardness": "author_locked",
+      "heading": "Evidence conversion",
+      "value": "R-07 supplies fragmented leads; hostage rescue, expert testimony, hardware seizure, authorization verification and team action must corroborate and operationalize them before the attack path can be closed.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I1-EVENTS", "SRC-I2-EVENTS", "SRC-I4-ARTIFACT"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-005",
+      "hardness": "author_locked",
+      "heading": "Termination continuity",
+      "value": "R-07 cannot self-terminate, copy itself or create a backup. Shen Yu must perform authorized shutdown, which irreversibly ends the current continuous consciousness and its post-startup experience.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I2-ARTIFACT", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I2",
+      "control_id": "WLD-006",
+      "hardness": "author_locked",
+      "heading": "Political consequence",
+      "value": "The meteorological attack is fully preventable through the real-world evidence chain, but preventing it does not restore interstate trust or resolve the full causal interest chain.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I1-EVENTS", "SRC-I2-EVENTS", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I3",
+      "control_id": "CHR-001",
+      "hardness": "author_locked",
+      "heading": "Gu Heng life-status correction",
+      "value": "Gu Heng died. Gu Heng's doctor wife did not die and remains alive; she and Zhou Lan are memory and value anchors, not substitutes for R-07's identity.",
+      "authority": "author_locked_correction",
+      "provenance_source_ids": ["SRC-I3-EVENTS", "SRC-I3-ARTIFACT", "SRC-I4-ARTIFACT"]
+    },
+    {
+      "stage": "I3",
+      "control_id": "CHR-002",
+      "hardness": "author_locked",
+      "heading": "Relationship-source correction",
+      "value": "Gu Heng did not love Shen Yu. Shen Yu's old one-sided feeling and R-07's newly formed feeling have different sources; R-07 develops its feeling from receiving care after startup.",
+      "authority": "author_locked_correction",
+      "provenance_source_ids": ["SRC-I3-EVENTS", "SRC-I3-ARTIFACT", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I3",
+      "control_id": "CHR-003",
+      "hardness": "author_locked",
+      "heading": "Breakdown-causality correction",
+      "value": "R-07's initial collapse is caused by learning its sensory, bodily, agency and exit limitations. Shen Yu's pressure may worsen withdrawal but does not cause the collapse.",
+      "authority": "author_locked_correction",
+      "provenance_source_ids": ["SRC-I3-EVENTS", "SRC-I3-ARTIFACT", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I3",
+      "control_id": "CHR-004",
+      "hardness": "author_locked",
+      "heading": "Shen Yu's immediate responsibility",
+      "value": "Before farewell, Shen Yu regards reducing R-07's suffering as her foremost immediate responsibility and acts while retaining guilt, secrecy and uncertainty.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I1-EVENTS", "SRC-I3-ARTIFACT", "SRC-I5-EVENTS"]
+    },
+    {
+      "stage": "I4",
+      "control_id": "CAU-001",
+      "hardness": "author_locked",
+      "heading": "Trigger and activation",
+      "value": "Gu Heng is mortally wounded and dies, conventional extraction repeatedly fails, the command chain authorizes the attempt, Shen Yu accepts the assignment, and R-07 activates under an urgent threat.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I4-EVENTS", "SRC-I4-ARTIFACT"]
+    },
+    {
+      "stage": "I4",
+      "control_id": "CAU-002",
+      "hardness": "author_locked",
+      "heading": "Information and action chain",
+      "value": "Memory clues are subjective leads rather than proof. The team converts R-07's information into action through testimony, hardware and authorization evidence; R-07 cannot solve the crisis with one statement or direct system control.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I2-EVENTS", "SRC-I4-EVENTS", "SRC-I4-ARTIFACT"]
+    },
+    {
+      "stage": "I4",
+      "control_id": "CAU-003",
+      "hardness": "author_locked",
+      "heading": "Protection and disclosure",
+      "value": "R-07 may delay causal details to protect Zhou Lan and private relations only while no innocent is endangered; the no-harm rule overrides family protection.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I0-EVENTS", "SRC-I2-EVENTS", "SRC-I4-EVENTS"]
+    },
+    {
+      "stage": "I4",
+      "control_id": "CAU-004",
+      "hardness": "author_locked",
+      "heading": "Resolved crisis and unresolved aftermath",
+      "value": "The attack is fully prevented before farewell and shutdown. Interstate distrust, the full causal network, Shen Yu's identity question and the institutional status of digital life remain unresolved.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I4-EVENTS", "SRC-I4-ARTIFACT", "SRC-I5-EVENTS"]
+    },
+    {
+      "stage": "I5",
+      "control_id": "NAR-001",
+      "hardness": "author_locked",
+      "heading": "Present-line and memory contract",
+      "value": "After R-07 activates there is one present-tense line. Dialogue-triggered Gu Heng memory fragments are subjective and interruptible past material, never an independent storyline or present perception.",
+      "authority": "author_locked",
+      "provenance_source_ids": ["SRC-I4-EVENTS", "SRC-I5-EVENTS", "SRC-I5-ARTIFACT"]
+    },
+    {
+      "stage": "I5",
+      "control_id": "NAR-002",
+      "hardness": "author_locked",
+      "heading": "Terminal-thought disclosure boundary",
+      "value": "The narrative may show observable facts, perceivable states and processual mental activity, but never decisive mental activity that directly discloses R-07's terminal choice before farewell and shutdown.",
+      "authority": "author_locked_correction",
+      "provenance_source_ids": ["SRC-I5-EVENTS", "SRC-I5-ARTIFACT", "SRC-V1-SEMANTIC"]
+    },
+    {
+      "stage": "I5",
+      "control_id": "NAR-003",
+      "hardness": "author_open",
+      "heading": "Reload and future identity",
+      "value": "Whether future loading is realizable, whether the promise is compassionate concealment, and whether a future loaded being would still be R-07 remain unresolved.",
+      "authority": "author_open",
+      "provenance_source_ids": ["SRC-I0-EVENTS", "SRC-I2-EVENTS", "SRC-I5-EVENTS"]
+    }
+  ],
+  "semantic_assertions": [
+    {
+      "anchor_id": "DX-IDENTITY-NEW-LIFE",
+      "required_source_ids": ["INT-001", "WLD-001"],
+      "required_terms": ["Memory may be inherited", "not an uploaded or revived Gu Heng", "own consciousness and values"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-IDENTITY-NEW-LIFE"
+    },
+    {
+      "anchor_id": "DX-GUHENG-DIED-WIFE-LIVES",
+      "required_source_ids": ["CHR-001"],
+      "required_terms": ["Gu Heng died", "doctor wife did not die", "remains alive"],
+      "required_status": "author_locked",
+      "assurance": "author_locked_correction",
+      "evidence_anchor_id": "DX-GUHENG-DIED-WIFE-LIVES"
+    },
+    {
+      "anchor_id": "DX-SHENYU-FEELING-NOT-INHERITED",
+      "required_source_ids": ["CHR-002"],
+      "required_terms": ["Gu Heng did not love Shen Yu", "different sources", "after startup"],
+      "required_status": "author_locked",
+      "assurance": "author_locked_correction",
+      "evidence_anchor_id": "DX-SHENYU-FEELING-NOT-INHERITED"
+    },
+    {
+      "anchor_id": "DX-R07-PERCEPTION-LIMIT",
+      "required_source_ids": ["WLD-002", "NAR-001"],
+      "required_terms": ["no sight, hearing, body, movement or self-sensation", "text in consciousness", "never an independent storyline"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-R07-PERCEPTION-LIMIT"
+    },
+    {
+      "anchor_id": "DX-PRESTART-DUAL-LINE-MERGE",
+      "required_source_ids": ["CAU-001", "NAR-001"],
+      "required_terms": ["Shen Yu accepts the assignment", "R-07 activates", "one present-tense line"],
+      "assurance": "derived_unsealed",
+      "evidence_anchor_id": "DX-PRESTART-DUAL-LINE-MERGE",
+      "approved_floor": "The opening may use Gu Heng and Shen Yu viewpoints; after activation there is one present line.",
+      "derived_extension": "Treat two pre-activation lines merging at activation as a hypothesis requiring author sealing, not as an author lock."
+    },
+    {
+      "anchor_id": "DX-ACTIVATION-SINGLE-LINE",
+      "required_source_ids": ["NAR-001"],
+      "required_terms": ["After R-07 activates", "one present-tense line", "subjective and interruptible past material"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-ACTIVATION-SINGLE-LINE"
+    },
+    {
+      "anchor_id": "DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS",
+      "required_source_ids": ["WLD-003", "CAU-001"],
+      "required_terms": ["command chain", "voluntarily accepts the assignment", "does not choose project activation"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS"
+    },
+    {
+      "anchor_id": "DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN",
+      "required_source_ids": ["WLD-004", "CAU-002"],
+      "required_terms": ["fragmented leads", "hardware seizure", "authorization verification", "cannot solve the crisis with one statement"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN"
+    },
+    {
+      "anchor_id": "DX-BREAKDOWN-CAUSE",
+      "required_source_ids": ["CHR-003"],
+      "required_terms": ["initial collapse", "agency and exit limitations", "does not cause the collapse"],
+      "required_status": "author_locked",
+      "assurance": "author_locked_correction",
+      "evidence_anchor_id": "DX-BREAKDOWN-CAUSE"
+    },
+    {
+      "anchor_id": "DX-NO-HARM-AND-FAMILY",
+      "required_source_ids": ["INT-002", "CAU-003"],
+      "required_terms": ["no innocent is endangered", "no-harm rule overrides family protection", "Zhou Lan"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-NO-HARM-AND-FAMILY"
+    },
+    {
+      "anchor_id": "DX-SHUTDOWN-CONTINUITY",
+      "required_source_ids": ["WLD-005"],
+      "required_terms": ["cannot self-terminate", "authorized shutdown", "irreversibly ends the current continuous consciousness"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-SHUTDOWN-CONTINUITY"
+    },
+    {
+      "anchor_id": "DX-ATTACK-STOPPED-TRUST-OPEN",
+      "required_source_ids": ["WLD-006", "CAU-004"],
+      "required_terms": ["fully prevented", "does not restore interstate trust", "remain unresolved"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-ATTACK-STOPPED-TRUST-OPEN"
+    },
+    {
+      "anchor_id": "DX-RELOAD-UNRESOLVED",
+      "required_source_ids": ["NAR-003"],
+      "required_terms": ["future loading", "compassionate concealment", "remain unresolved"],
+      "required_status": "author_open",
+      "assurance": "author_open",
+      "evidence_anchor_id": "DX-RELOAD-UNRESOLVED"
+    },
+    {
+      "anchor_id": "DX-NO-DECISIVE-TERMINAL-THOUGHT",
+      "required_source_ids": ["NAR-002"],
+      "required_terms": ["processual mental activity", "never decisive mental activity", "before farewell and shutdown"],
+      "required_status": "author_locked",
+      "assurance": "author_locked_correction",
+      "evidence_anchor_id": "DX-NO-DECISIVE-TERMINAL-THOUGHT"
+    },
+    {
+      "anchor_id": "DX-SHENYU-RELIEVE-SUFFERING",
+      "required_source_ids": ["SUB-002", "CHR-004"],
+      "required_terms": ["reducing R-07's suffering", "foremost immediate responsibility", "guilt, secrecy and uncertainty"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-SHENYU-RELIEVE-SUFFERING"
+    },
+    {
+      "anchor_id": "DX-NO-ACTIVE-R07-COPY",
+      "required_source_ids": ["INT-003", "WLD-005", "CAU-004"],
+      "required_terms": ["ends its current existence", "cannot self-terminate, copy itself or create a backup", "shutdown"],
+      "required_status": "author_locked",
+      "assurance": "author_locked",
+      "evidence_anchor_id": "DX-NO-ACTIVE-R07-COPY"
+    }
+  ]
+}

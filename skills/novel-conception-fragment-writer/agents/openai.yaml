@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说构思评审片段编写"
+  short_description: "按固定评审文风编写并硬验收可验证构思设计的小说场景片段"
+  default_prompt: "使用 $novel-conception-fragment-writer 根据当前 P1 和 H1 plan 编写受来源约束的评审片段。"

@@ -1,0 +1,90 @@
+{
+  "schema_version": "2.1",
+  "workflow": "novel-conception-autonomous-v2",
+  "production_skill": "novel-conception-autonomous",
+  "forbidden_skill_names": [
+    "novel-development-map-designer"
+  ],
+  "quality_gate_dependencies": [
+    {
+      "gate": "H1-A-presentation-fidelity",
+      "skill": "novel-conception-presentation-fidelity-reviewer",
+      "path": "skills/novel-conception-presentation-fidelity-reviewer",
+      "contract_schema": "docs/ai-novel-workflow/contracts/autonomous-v2/presentation-fidelity-review.schema.json",
+      "consumer_stage": "H1-A",
+      "consumer_api": "run_assemble"
+    }
+  ],
+  "stage_owners": [
+    {
+      "stage": "S1",
+      "skill": "novel-storyline-architecture-designer",
+      "path": "skills/novel-storyline-architecture-designer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_s1_session", "submit_s1_phase", "run_s1"]
+    },
+    {
+      "stage": "W1",
+      "skill": "novel-world-model-designer",
+      "path": "skills/novel-world-model-designer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_w1_session", "submit_w1_phase", "run_w1"]
+    },
+    {
+      "stage": "E1",
+      "skill": "novel-environment-system-designer",
+      "path": "skills/novel-environment-system-designer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_e1_session", "submit_e1_phase", "run_e1"]
+    },
+    {
+      "stage": "T1",
+      "skill": "novel-event-timeline-designer",
+      "path": "skills/novel-event-timeline-designer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_t1_session", "submit_t1_phase", "run_t1"]
+    },
+    {
+      "stage": "C1",
+      "skill": "novel-character-system-designer",
+      "path": "skills/novel-character-system-designer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_c1_session", "submit_c1_phase", "run_c1"]
+    },
+    {
+      "stage": "Q1",
+      "skill": "novel-conception-reviewer",
+      "path": "skills/novel-conception-reviewer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_q1_controller", "start_semantic_review", "submit_semantic_phase", "start_handoff_review", "submit_final_review", "run_q1"]
+    },
+    {
+      "stage": "P1",
+      "skill": "novel-conception-deliverable-assembler",
+      "path": "skills/novel-conception-deliverable-assembler",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["run_p1"]
+    },
+    {
+      "stage": "H1-A",
+      "skill": "novel-conception-human-review-assembler",
+      "path": "skills/novel-conception-human-review-assembler",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["run_plan", "run_assemble"]
+    },
+    {
+      "stage": "H1-B",
+      "skill": "novel-conception-fragment-writer",
+      "path": "skills/novel-conception-fragment-writer",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["start_fragment_session", "submit_fragment_phase", "finalize_fragment_package"]
+    },
+    {
+      "stage": "H1-C",
+      "skill": "novel-conception-review-html-generator",
+      "path": "skills/novel-conception-review-html-generator",
+      "runtime": "scripts/run_v2.py",
+      "apis": ["run"]
+    }
+  ]
+}

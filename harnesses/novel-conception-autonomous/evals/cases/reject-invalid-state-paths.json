@@ -1,0 +1,19 @@
+{
+  "id": "HARN-EVAL-STATE-PATHS",
+  "kind": "negative",
+  "Prompt": "Invoke with missing, extra, duplicate, or empty next_state_paths.",
+  "Expected": [
+    "Raise HARN_STATE_PATHS_INVALID before H1 publication."
+  ],
+  "Forbidden": [
+    "Choose a default successor path.",
+    "Partially publish H1.",
+    "Advance coordinator state."
+  ],
+  "Scoring": {
+    "stable_error": 5,
+    "preflight_failure": 3,
+    "state_unchanged": 2
+  },
+  "Pass Bar": 10
+}

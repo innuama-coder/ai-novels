@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "world-model.schema.json",
+  "title": "W1 world model canonical model",
+  "type": "object",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"required": ["contract_revision"]},
+      "then": {
+        "properties": {
+          "schema_version": {"const": "2.1"},
+          "environment_demands": {"$ref": "#/$defs/currentEnvironmentDemands"},
+          "institutions": {
+            "items": {
+              "required": [
+                "source_requirement_ids",
+                "world_position",
+                "interests",
+                "dependencies",
+                "conflicts",
+                "intervention_scope"
+              ],
+              "anyOf": [
+                {"properties": {"dependencies": {"minItems": 1}}},
+                {"properties": {"conflicts": {"minItems": 1}}}
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "schema_version": {"const": "2.0"},
+          "environment_demands": {"$ref": "canonical-common.schema.json#/$defs/environmentRequirements"}
+        }
+      }
+    }
+  ],
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "source_artifacts", "authority_partition", "design_decisions", "derivation_claims", "storyline_requirements", "world_definition", "world_facts", "reality_claims", "world_facets", "history_pressures", "institutions", "systems", "resource_flows", "authority_flows", "information_flows", "rule_conflict_matrix", "storyline_support_ledger", "environment_demands", "open_items"],
+  "properties": {
+    "schema_version": {"enum": ["2.0", "2.1"]}, "skill": {"const": "novel-world-model-designer"}, "stage": {"const": "W1"}, "run_id": {"type": "string", "minLength": 1}, "status": {"const": "ready"}, "contract_revision": {"type": "string", "minLength": 1}, "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "source_artifacts": {"$ref": "canonical-common.schema.json#/$defs/sourceArtifacts"}, "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"}, "design_decisions": {"$ref": "canonical-common.schema.json#/$defs/designDecisions"}, "derivation_claims": {"$ref": "canonical-common.schema.json#/$defs/derivationClaims"},
+    "storyline_requirements": {"$ref": "canonical-common.schema.json#/$defs/worldRequirements"},
+    "world_definition": {"$ref": "#/$defs/worldDefinition"},
+    "world_facts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/worldFact"}},
+    "reality_claims": {"type": "array", "items": {"$ref": "#/$defs/realityClaim"}},
+    "world_facets": {"$ref": "#/$defs/worldFacets"},
+    "history_pressures": {"type": "array", "items": {"$ref": "#/$defs/historyPressure"}},
+    "institutions": {"type": "array", "items": {"$ref": "#/$defs/institution"}},
+    "systems": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/system"}},
+    "resource_flows": {"type": "array", "items": {"$ref": "canonical-common.schema.json#/$defs/relationEdge"}},
+    "authority_flows": {"type": "array", "items": {"$ref": "canonical-common.schema.json#/$defs/relationEdge"}},
+    "information_flows": {"type": "array", "items": {"$ref": "canonical-common.schema.json#/$defs/relationEdge"}},
+    "rule_conflict_matrix": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/ruleConflict"}},
+    "storyline_support_ledger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {"$ref": "canonical-common.schema.json#/$defs/coverageRecord"},
+          {"$ref": "#/$defs/supportRecord"}
+        ]
+      }
+    },
+    "environment_demands": {},
+    "open_items": {"$ref": "canonical-common.schema.json#/$defs/openItems"}
+  },
+  "$defs": {
+    "environmentDimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "macro_geography",
+        "institution_facility",
+        "spatial_relations",
+        "plot_carriers"
+      ],
+      "properties": {
+        "macro_geography": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "institution_facility": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "spatial_relations": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "plot_carriers": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "currentEnvironmentDemand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "target_stage",
+        "responsibility",
+        "source_ids",
+        "required_capability",
+        "constraints",
+        "acceptance_checks",
+        "downstream_freedom",
+        "environment_dimensions"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^END-[A-Za-z0-9._-]+$"},
+        "target_stage": {"const": "E1"},
+        "responsibility": {"type": "string", "minLength": 1},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "required_capability": {"type": "string", "minLength": 1},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "acceptance_checks": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "downstream_freedom": {"type": "string", "minLength": 1},
+        "environment_dimensions": {"$ref": "#/$defs/environmentDimensions"}
+      }
+    },
+    "currentEnvironmentDemands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/currentEnvironmentDemand"}
+    },
+    "worldDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "premise",
+        "scope",
+        "period",
+        "reality_relation",
+        "operating_logic",
+        "boundaries",
+        "story_relevance"
+      ],
+      "properties": {
+        "premise": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1},
+        "period": {"type": "string", "minLength": 1},
+        "reality_relation": {"type": "string", "minLength": 1},
+        "operating_logic": {"type": "string", "minLength": 1},
+        "boundaries": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "story_relevance": {"type": "string", "minLength": 1}
+      }
+    },
+    "worldFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "statement",
+        "applies_to_ids",
+        "constraints",
+        "consequences",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^WF-[A-Za-z0-9._-]+$"},
+        "kind": {"enum": ["rule", "condition", "history", "institutional_fact", "fiction_boundary"]},
+        "statement": {"type": "string", "minLength": 1},
+        "applies_to_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "consequences": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "worldFacets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "physical",
+        "technology",
+        "social",
+        "political",
+        "economic",
+        "legal_and_ethical",
+        "information",
+        "historical"
+      ],
+      "properties": {
+        "physical": {"$ref": "#/$defs/facetEntries"},
+        "technology": {"$ref": "#/$defs/facetEntries"},
+        "social": {"$ref": "#/$defs/facetEntries"},
+        "political": {"$ref": "#/$defs/facetEntries"},
+        "economic": {"$ref": "#/$defs/facetEntries"},
+        "legal_and_ethical": {"$ref": "#/$defs/facetEntries"},
+        "information": {"$ref": "#/$defs/facetEntries"},
+        "historical": {"$ref": "#/$defs/facetEntries"}
+      }
+    },
+    "facetEntries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {"type": "string", "minLength": 1},
+          {"$ref": "#/$defs/facetEntry"}
+        ]
+      }
+    },
+    "facetEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "requirement_ids", "rule_ids"],
+      "properties": {
+        "claim": {"type": "string", "minLength": 1},
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^WR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^WF-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "historyPressure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "origin", "current_pressure", "storyline_ids", "constraints"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HIS-[A-Za-z0-9._-]+$"},
+        "origin": {"type": "string", "minLength": 1},
+        "current_pressure": {"type": "string", "minLength": 1},
+        "storyline_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}
+      }
+    },
+    "institution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "responsibility",
+        "authority",
+        "resources",
+        "constraints",
+        "failure_modes",
+        "storyline_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^INST-[A-Za-z0-9._-]+$"},
+        "responsibility": {"type": "string", "minLength": 1},
+        "authority": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "resources": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "constraints": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "failure_modes": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "storyline_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "source_requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^WR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "world_position": {"type": "string", "minLength": 1},
+        "interests": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "dependencies": {"type": "array", "items": {"$ref": "common-defs.schema.json#/$defs/objectId"}, "uniqueItems": true},
+        "conflicts": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "intervention_scope": {"type": "string", "minLength": 1}
+      }
+    },
+    "system": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "input_conditions", "actor_slot_ids", "resources", "authorities", "transformation_rules", "observable_outputs", "costs", "limits", "failure_modes", "state_changes", "storyline_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^WS-[A-Za-z0-9._-]+$"},
+        "input_conditions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "actor_slot_ids": {"type": "array", "items": {"type": "string", "pattern": "^SLOT-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "resources": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "authorities": {"$ref": "canonical-common.schema.json#/$defs/strings"},
+        "transformation_rules": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "observable_outputs": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "costs": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "limits": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "failure_modes": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "state_changes": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"},
+        "storyline_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "source_requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^WR-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "realityClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "fact_dependency_id", "handling", "claim"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^WF-[A-Za-z0-9._-]+$"},
+        "fact_dependency_id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"},
+        "handling": {"enum": ["adopted", "preserve_open", "fiction_boundary"]},
+        "claim": {"type": "string", "minLength": 1}
+      }
+    },
+    "ruleConflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rule_ids", "tension", "resolution_rule", "storyline_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^WRC-[A-Za-z0-9._-]+$"},
+        "rule_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "tension": {"type": "string", "minLength": 1},
+        "resolution_rule": {"type": "string", "minLength": 1},
+        "storyline_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "claimCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_pointer",
+        "source_sha256",
+        "realization_id",
+        "realization_pointer",
+        "disposition",
+        "rationale"
+      ],
+      "properties": {
+        "source_pointer": {"type": "string", "pattern": "^/"},
+        "source_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "realization_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "realization_pointer": {"type": "string", "pattern": "^/"},
+        "disposition": {"enum": ["realized", "constrained", "tested", "deferred_to_downstream"]},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "supportRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ids", "realization_ids", "status", "evidence", "claim_coverage"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^COV-[A-Za-z0-9._-]+$"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "realization_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "status": {"const": "covered"},
+        "evidence": {"type": "string", "minLength": 1},
+        "claim_coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/claimCoverage"}
+        }
+      }
+    }
+  }
+}

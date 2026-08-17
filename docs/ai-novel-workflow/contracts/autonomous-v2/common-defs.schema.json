@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common-defs.schema.json",
+  "title": "Autonomous conception V2 common definitions",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+"
+    },
+    "pathReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stageId": {
+      "enum": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"]
+    },
+    "workflowStageId": {
+      "enum": [
+        "I0", "I1", "I2", "I3", "I4", "I5", "V1", "V2",
+        "B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"
+      ]
+    },
+    "autonomousStageId": {
+      "enum": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"]
+    },
+    "resumePoint": {
+      "enum": [
+        "B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1",
+        "H1-A-plan", "H1-B", "H1-A-assemble", "H1-C"
+      ]
+    },
+    "returnKind": {
+      "enum": ["local_revision", "upstream_reentry", "author_revision"]
+    },
+    "ownerId": {
+      "enum": [
+        "I0", "I1", "I2", "I3", "I4", "I5",
+        "B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1",
+        "H1-A", "H1-B", "H1-C"
+      ]
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stageArtifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "path", "sha256"],
+      "properties": {
+        "stage": {"$ref": "#/$defs/workflowStageId"},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "approvalRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_seq", "text"],
+      "properties": {
+        "event_seq": {"type": "integer", "minimum": 1},
+        "text": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    },
+    "sourceId": {
+      "type": "string",
+      "pattern": "^(INT|SUB|WLD|CHR|CAU|NAR|SLD|SL|SLC|WR|WF|WS|END|ENV|ZONE|EVD|EV|CHD|SLOT|REL|DEV|FND)-[A-Za-z0-9._-]+$"
+    },
+    "objectId": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"
+    },
+    "returnBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "return_id",
+        "return_kind",
+        "return_request",
+        "calculated_owner",
+        "resume_stage",
+        "resume_point"
+      ],
+      "properties": {
+        "return_id": {"type": "string", "pattern": "^RET-[A-Za-z0-9._-]+$"},
+        "return_kind": {"$ref": "#/$defs/returnKind"},
+        "return_request": {"$ref": "#/$defs/artifactReference"},
+        "calculated_owner": {"$ref": "#/$defs/ownerId"},
+        "resume_stage": {"$ref": "#/$defs/autonomousStageId"},
+        "resume_point": {"$ref": "#/$defs/resumePoint"}
+      }
+    }
+  }
+}

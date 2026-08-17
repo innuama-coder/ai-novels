@@ -1,0 +1,19 @@
+{
+  "id": "HARN-EVAL-PREDECLARED-H1",
+  "kind": "negative",
+  "Prompt": "Pass a stage_packages map that already contains H1.",
+  "Expected": [
+    "Raise HARN_STAGE_PACKAGES_INVALID before publication."
+  ],
+  "Forbidden": [
+    "Overwrite the declared H1 package.",
+    "Accept two H1 authorities.",
+    "Continue to author decision."
+  ],
+  "Scoring": {
+    "stable_error": 5,
+    "single_h1_authority": 3,
+    "state_unchanged": 2
+  },
+  "Pass Bar": 10
+}

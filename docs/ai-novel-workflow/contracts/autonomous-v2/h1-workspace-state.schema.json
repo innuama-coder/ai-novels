@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "h1-workspace-state.schema.json",
+  "title": "Autonomous conception V2 H1 workspace state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "session_id",
+    "state",
+    "p1_completion",
+    "previous_state_sha256",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"const": "H1"},
+    "session_id": {"type": "string", "minLength": 1},
+    "state": {
+      "enum": [
+        "initialized",
+        "planned",
+        "fragments_ready",
+        "assembled",
+        "rendered"
+      ]
+    },
+    "p1_completion": {
+      "allOf": [
+        {"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"},
+        {"properties": {"stage": {"const": "P1"}}}
+      ]
+    },
+    "previous_state_sha256": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/sha256"}
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plan_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragment_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "assembly_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "html_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state": {"const": "initialized"}}},
+      "then": {
+        "properties": {
+          "previous_state_sha256": {"type": "null"},
+          "artifacts": {"maxProperties": 0}
+        }
+      }
+    },
+    {
+      "if": {"not": {"properties": {"state": {"const": "initialized"}}}},
+      "then": {
+        "properties": {
+          "previous_state_sha256": {
+            "$ref": "common-defs.schema.json#/$defs/sha256"
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"state": {"const": "planned"}}},
+      "then": {"properties": {"artifacts": {"required": ["plan_manifest"], "maxProperties": 1}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "fragments_ready"}}},
+      "then": {"properties": {"artifacts": {"required": ["plan_manifest", "fragment_manifest"], "maxProperties": 2}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "assembled"}}},
+      "then": {"properties": {"artifacts": {"required": ["plan_manifest", "fragment_manifest", "assembly_manifest"], "maxProperties": 3}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "rendered"}}},
+      "then": {"properties": {"artifacts": {"required": ["plan_manifest", "fragment_manifest", "assembly_manifest", "html_manifest"], "maxProperties": 4}}}
+    }
+  ]
+}

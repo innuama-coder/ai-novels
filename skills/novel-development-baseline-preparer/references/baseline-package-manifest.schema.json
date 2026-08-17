@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "baseline-package-manifest.schema.json",
+  "title": "Development baseline package manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "status", "run_id", "baseline_version", "files", "artifact_roles"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "skill": {"const": "novel-development-baseline-preparer"},
+    "status": {"const": "ready"},
+    "run_id": {"type": "string", "minLength": 1},
+    "baseline_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "files": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/artifactReference"}
+    },
+    "artifact_roles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical", "human_projection", "validation"],
+      "properties": {
+        "canonical": {"$ref": "#/$defs/artifactReference"},
+        "human_projection": {"$ref": "#/$defs/artifactReference"},
+        "validation": {"$ref": "#/$defs/artifactReference"}
+      }
+    }
+  },
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"enum": ["development-baseline.json", "development-baseline.md", "baseline-validation.json"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

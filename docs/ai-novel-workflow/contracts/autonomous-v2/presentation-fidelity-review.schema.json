@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "presentation-fidelity-review.schema.json",
+  "title": "H1 presentation fidelity semantic review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "skill", "run_id", "h1_session_id", "reviewer",
+    "inputs", "dimensions", "element_reviews", "blockers", "verdict"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-conception-presentation-fidelity-reviewer"},
+    "run_id": {"type": "string", "minLength": 1},
+    "h1_session_id": {"type": "string", "minLength": 1},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "thread_id", "independence_basis"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "thread_id": {"type": "string", "minLength": 1},
+        "independence_basis": {"const": "separate-task-no-producer-context"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p1_completion", "plan_manifest", "fragment_manifest", "report_sha256"],
+      "properties": {
+        "p1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "plan_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "fragment_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "report_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "author_control_fidelity"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "world_story_character_fidelity"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "omission_and_emphasis_fidelity"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "fragment_authority_boundary"}}},
+        {"$ref": "#/$defs/dimension", "properties": {"id": {"const": "review_decision_integrity"}}}
+      ],
+      "items": false
+    },
+    "element_reviews": {
+      "type": "array",
+      "minItems": 0,
+      "items": {"$ref": "#/$defs/elementReview"}
+    },
+    "blockers": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 4}
+    },
+    "verdict": {"enum": ["pass", "revise", "blocked"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"verdict": {"const": "pass"}}, "required": ["verdict"]},
+      "then": {"properties": {"blockers": {"maxItems": 0}}}
+    }
+  ],
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "verdict", "evidence_element_ids", "finding"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "verdict": {"enum": ["pass", "revise", "blocked"]},
+        "evidence_element_ids": {
+          "type": "array", "minItems": 0, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^(MOD|VIS|FRAG|PROMPT)-[A-Za-z0-9._-]+$"}
+        },
+        "finding": {"type": "string", "minLength": 12}
+      }
+    },
+    "elementReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "element_id", "content_sha256", "source_anchor_ids", "verdict",
+        "semantic_assertion", "evidence_quotes", "no_material_omission",
+        "no_contradiction", "no_authority_escalation"
+      ],
+      "properties": {
+        "element_id": {"type": "string", "pattern": "^(MOD|VIS|FRAG|PROMPT)-[A-Za-z0-9._-]+$"},
+        "content_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "source_anchor_ids": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"}
+        },
+        "verdict": {"enum": ["faithful", "non_authoritative_sample", "revise", "blocked"]},
+        "semantic_assertion": {"type": "string", "minLength": 12},
+        "evidence_quotes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 4}
+        },
+        "no_material_omission": {"type": "boolean"},
+        "no_contradiction": {"type": "boolean"},
+        "no_authority_escalation": {"type": "boolean"}
+      }
+    }
+  }
+}

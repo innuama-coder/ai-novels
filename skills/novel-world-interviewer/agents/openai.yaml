@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说世界访谈"
+  short_description: "通过作者访谈建立可运行且自洽的故事世界运行契约"
+  default_prompt: "Use $novel-world-interviewer to interview me and create a story-world operating contract."

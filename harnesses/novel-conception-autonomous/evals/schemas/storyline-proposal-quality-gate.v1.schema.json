@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "storyline-proposal-quality-gate.v1.schema.json",
+  "title": "Evaluation-only storyline proposal quality gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "gate_id",
+    "ownership",
+    "subject",
+    "producer",
+    "reviewer",
+    "checks",
+    "findings",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "storyline-proposal-quality-gate"},
+    "gate_id": {
+      "type": "string",
+      "pattern": "^SPQG-[A-Za-z0-9._-]+$"
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "authority", "artifact_role"],
+      "properties": {
+        "owner": {"const": "eval_harness"},
+        "authority": {"const": "non_authoritative_quality_evidence"},
+        "artifact_role": {"const": "not_completion"}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_id",
+        "fixture",
+        "storyline_plan",
+        "storyline_plan_schema",
+        "fixture_id",
+        "run_id",
+        "plan_id",
+        "structural_validation_sha256"
+      ],
+      "properties": {
+        "manifest_id": {
+          "type": "string",
+          "pattern": "^ECASE-[A-Za-z0-9._-]+$"
+        },
+        "fixture": {"$ref": "#/$defs/artifactReference"},
+        "storyline_plan": {"$ref": "#/$defs/artifactReference"},
+        "storyline_plan_schema": {
+          "$ref": "#/$defs/artifactReference"
+        },
+        "fixture_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "plan_id": {
+          "type": "string",
+          "pattern": "^SPLAN-[A-Za-z0-9._-]+$"
+        },
+        "structural_validation_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producer": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {
+          "properties": {
+            "role": {"const": "proposal_producer"}
+          }
+        }
+      ]
+    },
+    "reviewer": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {
+          "properties": {
+            "role": {"const": "independent_proposal_reviewer"}
+          }
+        }
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {"$ref": "#/$defs/check"},
+      "uniqueItems": true
+    },
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"},
+      "uniqueItems": true
+    },
+    "verdict": {"enum": ["ready", "revise"]}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9._/-]+$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "thread_id", "role"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "thread_id": {"type": "string", "minLength": 1},
+        "role": {
+          "enum": [
+            "proposal_producer",
+            "independent_proposal_reviewer"
+          ]
+        }
+      }
+    },
+    "targetId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]+$"
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "target_ids",
+        "evidence",
+        "failure_condition"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "authority_preservation",
+            "main_arc_completeness",
+            "causal_topology",
+            "role_clustering",
+            "open_preservation",
+            "optional_non_load_bearing",
+            "non_placeholder_evidence",
+            "downstream_usefulness"
+          ]
+        },
+        "status": {"const": "pass"},
+        "target_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/targetId"},
+          "uniqueItems": true
+        },
+        "evidence": {"type": "string", "minLength": 24},
+        "failure_condition": {"type": "string", "minLength": 24}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "check_id",
+        "target_ids",
+        "problem",
+        "required_revision"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^SPQF-[A-Za-z0-9._-]+$"
+        },
+        "check_id": {
+          "enum": [
+            "authority_preservation",
+            "main_arc_completeness",
+            "causal_topology",
+            "role_clustering",
+            "open_preservation",
+            "optional_non_load_bearing",
+            "non_placeholder_evidence",
+            "downstream_usefulness"
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/targetId"},
+          "uniqueItems": true
+        },
+        "problem": {"type": "string", "minLength": 1},
+        "required_revision": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

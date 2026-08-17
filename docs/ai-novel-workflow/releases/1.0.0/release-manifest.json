@@ -1,0 +1,76 @@
+{
+  "artifacts": [
+    {
+      "path": "RELEASE-NOTES.md",
+      "sha256": "2ba470706c5aa3d25632e2555f20520340e50a9863b1a7135d61600fda515d29",
+      "size": 1889
+    },
+    {
+      "path": "components/autonomous/novel-conception-autonomous-1.0.0-codex.zip",
+      "sha256": "ec8ce19e76dbe9d21c2ecfb5a5bb178a6efdcaccc194980ba335a39b1e516d47",
+      "size": 935537
+    },
+    {
+      "path": "components/autonomous/novel-conception-autonomous-1.0.0-source.zip",
+      "sha256": "ec8ce19e76dbe9d21c2ecfb5a5bb178a6efdcaccc194980ba335a39b1e516d47",
+      "size": 935537
+    },
+    {
+      "path": "components/autonomous/release-manifest.json",
+      "sha256": "3742064bc811e6faa75ce5c98bff46f3be6f7d55d42f5716ed5e2aac444146d6",
+      "size": 17984
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-claude.zip",
+      "sha256": "ed198da31b8293d4196f5a1ebae629eda1718685a91eaf42b202cbefbb601795",
+      "size": 129342
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-codex.zip",
+      "sha256": "c562120a0a5bd03cd7753962d4a77b8005ae56a69b9ecf07477aee4823573061",
+      "size": 129624
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-gemini.zip",
+      "sha256": "0bb6a5231151c956ff62dacb74b4e5e54139fe5ed456fcaead270c1443432258",
+      "size": 129272
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-hermas.zip",
+      "sha256": "88ce0e4f5ca88a132565b238e0195f316053d1f50114111bb2414cbcf22ff688",
+      "size": 129253
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-openclaw.zip",
+      "sha256": "40fd8e979240c127341f8084ec4adb557459c9f6525e5b5defe4b8dc70bfdffb",
+      "size": 129282
+    },
+    {
+      "path": "components/interview/novel-conception-interview-1.0.0-source.zip",
+      "sha256": "294b1a48dcb1496fad1e96216ca7a4f69af53f244c7953f150c1d317877bab71",
+      "size": 84835
+    },
+    {
+      "path": "components/interview/release-manifest.yaml",
+      "sha256": "669342bc20047dc121cfb03b532eb54b4618d2bc18de5e034e507ae24285ea14",
+      "size": 1566
+    },
+    {
+      "path": "novel-conception-stage-1.0.0-source.zip",
+      "sha256": "992a03962ef17cc93a4015a67d764b5dadbc81f9a809083a8bdc949204eff726",
+      "size": 1084648
+    }
+  ],
+  "name": "novel-conception-stage",
+  "release_date": "2026-08-05",
+  "schema_version": "1.0",
+  "status": "frozen",
+  "validation": {
+    "checksums": "pass",
+    "component_release_builds": "pass",
+    "source_archive_revalidation": "pass",
+    "source_tree": "pass",
+    "version_coherence": "pass"
+  },
+  "version": "1.0.0"
+}

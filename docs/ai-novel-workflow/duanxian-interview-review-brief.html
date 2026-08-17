@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《断线》｜三部分访谈简报</title>
+  <style>
+    :root{
+      --ink:#17212b;--muted:#596879;--paper:#eef2f5;--card:#fff;
+      --line:#cbd5df;--blue:#145da0;--blue-soft:#e4f0fa;
+      --green:#176b4d;--green-soft:#dff4e9;--amber:#805000;
+      --amber-soft:#fff0c2;--violet:#6544a5;--focus:#f3b51b
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.58 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    .wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+    header{padding:44px 0 28px;background:linear-gradient(120deg,#fff 0%,#eef6fc 100%);border-bottom:6px solid var(--blue)}
+    h1,h2,h3,h4{line-height:1.22}
+    h1{margin:.45rem 0 .75rem;font-size:clamp(2rem,5vw,3.4rem)}
+    h2{font-size:clamp(1.45rem,3vw,2rem);margin-top:0}
+    h3{margin:.1rem 0 .8rem}
+    h4{margin:.1rem 0 .35rem;font-size:1rem}
+    p{margin:.45rem 0}
+    .lede{max-width:76ch;font-size:1.12rem}
+    .meta{color:var(--muted);font-size:.92rem}
+    section{margin:28px 0;padding:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 30px rgba(39,57,75,.06)}
+    .tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.78rem;font-weight:750;letter-spacing:.02em}
+    .confirmed{color:#07563d;background:var(--green-soft)}
+    .open{color:#694400;background:var(--amber-soft)}
+    .summary{max-width:90ch;font-size:1.04rem;margin-bottom:20px}
+    .world{display:grid;grid-template-columns:1fr minmax(240px,1.1fr) 1fr;gap:14px;align-items:center}
+    .orbit-stack{display:grid;gap:12px}
+    .center,.orbit,.node,.person,.bridge{padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff}
+    .center{border:3px solid var(--blue);text-align:center;background:linear-gradient(160deg,#fff,#edf6fd)}
+    .center .glyph{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 10px;border-radius:50%;background:var(--blue);color:#fff;font-size:1.15rem;font-weight:800}
+    .orbit{border-left:5px solid var(--blue)}
+    .orbit:nth-child(even){border-left-color:var(--violet)}
+    .triplet{display:grid;gap:6px;margin-top:8px}
+    .triplet p{display:grid;grid-template-columns:3.5em 1fr;gap:6px;margin:0;font-size:.92rem}
+    .triplet b{color:var(--muted)}
+    .constraint-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin:17px 0 0;padding:0;list-style:none}
+    .constraint-list li{padding:10px 12px;border-radius:9px;background:#f4f7fa;border-left:4px solid var(--green);font-size:.92rem}
+    .open-line{margin-top:12px;color:#654900}
+    .rail{list-style:none;margin:0;padding:0 0 0 34px;border-left:4px solid var(--blue);counter-reset:stage}
+    .rail li{position:relative;margin:0 0 17px;padding:0 0 0 9px;counter-increment:stage}
+    .rail li::before{content:counter(stage);position:absolute;left:-49px;top:16px;display:grid;place-items:center;width:27px;height:27px;border:3px solid var(--blue);border-radius:50%;background:#fff;color:var(--blue);font-weight:800}
+    .node{display:grid;grid-template-columns:minmax(145px,.6fr) 1.6fr;gap:15px;border-left:6px solid var(--blue)}
+    .node-title{align-self:center}
+    .node-title small{display:block;color:var(--muted);font-weight:700}
+    .causal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .causal div{padding:9px;border-radius:8px;background:#f4f7fa;font-size:.88rem}
+    .causal b{display:block;color:var(--blue);font-size:.78rem;text-transform:uppercase}
+    .memory-note{margin:10px 0 20px;padding:11px 14px;border:2px dashed var(--amber);border-radius:10px;background:#fffaf0}
+    .ending{border-left-color:var(--green)!important;background:linear-gradient(100deg,#fff,#f1faf6)}
+    .people{display:grid;grid-template-columns:1fr minmax(210px,.68fr) 1fr;gap:14px;align-items:stretch}
+    .person{border-top:6px solid var(--blue)}
+    .person:last-child{border-top-color:var(--violet)}
+    .four{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+    .four div{padding:11px;border-radius:9px;background:#f3f6f9}
+    .four p{font-size:.91rem}
+    .trigger{margin-top:11px;padding:10px 12px;border-left:4px solid var(--green);background:#f2faf6}
+    .bridge{text-align:center;border:2px dashed var(--amber);background:#fffaf0}
+    .bridge-arrow{font-size:1.4rem;color:var(--amber);font-weight:800;margin:.7rem 0}
+    details{margin-top:13px;text-align:left}
+    summary{cursor:pointer;font-weight:750}
+    .review{border-left:6px solid var(--amber);margin-top:20px;padding:13px 15px;background:#fffaf0;border-radius:0 10px 10px 0}
+    .review ul{margin:.5rem 0 .2rem;padding-left:1.25rem}
+    footer{padding:4px 0 36px;color:var(--muted);font-size:.86rem}
+    a:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+    @media(max-width:850px){
+      .world,.people{grid-template-columns:1fr}.center{order:-1}
+      .node{grid-template-columns:1fr}.causal{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:540px){
+      .wrap{width:min(100% - 20px,1180px)}header{padding:30px 0 20px}section{padding:17px}
+      .causal,.four{grid-template-columns:1fr}.rail{margin-left:7px}
+    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media print{
+      body{background:#fff;font-size:10.5pt}.wrap{width:100%}header{padding-top:10px}
+      section{box-shadow:none;border-color:#777;break-inside:avoid}.tag{background:#fff;border:1px solid currentColor}
+      .world,.people{grid-template-columns:1fr 1fr 1fr}.causal{grid-template-columns:repeat(4,1fr)}
+      details:not([open])>*:not(summary){display:block}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <span class="tag open">awaiting_author_review</span>
+      <h1>《断线》访谈审阅简报</h1>
+      <p class="lede">记忆可以被继承，但生命只能在新的处境和选择中成为自己：R-07 继承顾衡的记忆，却通过理解、情感与承担后果成为新的生命。</p>
+      <p class="meta">本页只压缩 I0–I5 已确认的开发控制点；它是评审界面，不等于作者批准。</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section aria-labelledby="world">
+      <h2 id="world">1. 小说世界设定 — 什么规则使故事成立？</h2>
+      <p class="summary"><span class="tag confirmed">confirmed</span> 近未来的秘密项目把顾衡记忆加载进不成熟的数字生命载体，产生 R-07。这个世界的核心矛盾不是技术能做什么，而是一个已产生意识、却没有感官、行动权和法律身份的生命，如何在国家危机中被使用并作出自己的选择。</p>
+
+      <div class="world" aria-label="以 R-07 秘密项目为中心的五类世界约束">
+        <div class="orbit-stack">
+          <article class="orbit">
+            <h3>时间与外部压力</h3>
+            <div class="triplet">
+              <p><b>定义</b><span>C、M 两国长期互不信任，袭击瞄准约三个月后的领导人会面。</span></p>
+              <p><b>作用</b><span>迫使项目在情报失效后启用高伦理风险方案。</span></p>
+              <p><b>边界</b><span>阻止袭击只保住危机控制空间，不会自动恢复互信。</span></p>
+            </div>
+          </article>
+          <article class="orbit">
+            <h3>感知与信息通道</h3>
+            <div class="triplet">
+              <p><b>定义</b><span>R-07 只有意识中的文字与被交流触发的顾衡记忆。</span></p>
+              <p><b>作用</b><span>现实认识必须依赖他人提供的信息，记忆只能给出线索和意义。</span></p>
+              <p><b>边界</b><span>无现实视听、身体、自我感知；记忆不是录像或事实证据。</span></p>
+            </div>
+          </article>
+        </div>
+
+        <article class="center">
+          <div class="glyph" aria-hidden="true">R-07</div>
+          <span class="tag confirmed">核心存在</span>
+          <h3>记忆载体中诞生的新生命</h3>
+          <p><strong>定义：</strong>记忆提供连续性与性格倾向，启动后的经验持续生成新的意识和价值判断。</p>
+          <p><strong>制度位置：</strong>项目把它当作机密系统、记忆载体和情报源；个人可以承认它是生命，制度却尚未提供权利。</p>
+          <p><strong>最高边界：</strong>不得把它写成顾衡上传、复活、复制或固定人格脚本。</p>
+        </article>
+
+        <div class="orbit-stack">
+          <article class="orbit">
+            <h3>权力与退出</h3>
+            <div class="triplet">
+              <p><b>定义</b><span>启动、交互、核验、行动和关停权限分属不同人员与团队。</span></p>
+              <p><b>作用</b><span>沈逾可自愿接受任务并执行授权操作，但不能独自启动或支配系统。</span></p>
+              <p><b>边界</b><span>R-07 不能联网、越权、自行终止、复制或备份。</span></p>
+            </div>
+          </article>
+          <article class="orbit">
+            <h3>行动验证条件</h3>
+            <div class="triplet">
+              <p><b>定义</b><span>气象袭击借强天气窗口、受控硬件与异常授权放大灾害。</span></p>
+              <p><b>作用</b><span>记忆线索须经人质／专家、证词、硬件和授权链转为行动。</span></p>
+              <p><b>边界</b><span>任何记忆片段或 R-07 的一句话都不能直接关闭袭击。</span></p>
+            </div>
+          </article>
+          <article class="orbit">
+            <h3>伦理与信息优先级</h3>
+            <div class="triplet">
+              <p><b>定义</b><span>行动层必须交付；原因层可延后或有限披露。</span></p>
+              <p><b>作用</b><span>让 R-07 在公共安全与保护周岚等亲人之间承担取舍。</span></p>
+              <p><b>边界</b><span>不伤害无辜者优先，其次才是亲人、机密与私人关系。</span></p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="review">
+        <strong>评审控制点</strong>
+        <ul class="constraint-list">
+          <li>R-07 是新生命，不是顾衡本人。</li>
+          <li>现实信息只能追溯到文字输入。</li>
+          <li>现实行动必须经过证据与权限闭环。</li>
+          <li>关停不可逆地结束当前意识且无活动副本。</li>
+          <li>行动胜利不等于政治与伦理问题解决。</li>
+        </ul>
+        <p class="open-line"><span class="tag open">开放</span> 未来重载是否可能、重载者是否仍为 R-07，第一部不裁决。</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="story">
+      <h2 id="story">2. 小说故事线设定 — 为什么会走到这个结局？</h2>
+      <p class="summary"><span class="tag confirmed">confirmed</span> 主线由两种责任共同推进：R-07 必须决定如何使用继承的记忆并承担选择，沈逾必须把文字线索转成现实行动并承担对一个生命的后果。R-07 启动后只有一条现实主线。</p>
+
+      <ol class="rail" aria-label="六阶段因果主轨">
+        <li>
+          <article class="node">
+            <div class="node-title"><small>阶段一</small><h3>死亡迫使实验启动</h3><p>情报任务与生命伦理被绑定。</p></div>
+            <div class="causal">
+              <div><b>压力</b>顾衡牺牲，常规读取多次失败，威胁迫近。</div>
+              <div><b>选择</b>指挥链批准方案；沈逾知情并接受任务。</div>
+              <div><b>代价</b>可能创造并伤害一个有意识生命。</div>
+              <div><b>新状态</b>R-07 启动，成为情报源也是伦理主体。</div>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article class="node">
+            <div class="node-title"><small>阶段二</small><h3>回忆催生新的关系</h3><p>继承的记忆产生未被继承的感情。</p></div>
+            <div class="causal">
+              <div><b>压力</b>任务要求从片段记忆中取得线索。</div>
+              <div><b>选择</b>沈逾持续询问并因旧情流露关心；R-07 接受并解释。</div>
+              <div><b>反转</b>顾衡未爱过沈逾，R-07 却在现实关心中产生新感情。</div>
+              <div><b>新状态</b>任务交流变成自我、关系与情报共同推进的通道。</div>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article class="node">
+            <div class="node-title"><small>阶段三</small><h3>认识处境导致崩溃</h3><p>意识越清楚，存在越难承受。</p></div>
+            <div class="causal">
+              <div><b>压力</b>R-07 只有记忆与文字，没有现实感官、身体和退出权。</div>
+              <div><b>选择</b>它主动追问“我是什么、在哪里、能做什么”。</div>
+              <div><b>代价</b>确认自身限制后崩溃、自闭；危机压力进一步加重状态。</div>
+              <div><b>新状态</b>沈逾必须改变沟通方式，任务也失去稳定窗口。</div>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article class="node">
+            <div class="node-title"><small>阶段四</small><h3>重建交流，闭合证据</h3><p>情报不能行动，团队才能行动。</p></div>
+            <div class="causal">
+              <div><b>压力</b>人质危机升级，直接施压使会话进一步关闭。</div>
+              <div><b>选择</b>沈逾转向温和话题；R-07 交付第一层行动信息。</div>
+              <div><b>代价</b>时间流失，任一证据缺口都会让关闭无效。</div>
+              <div><b>新状态</b>团队沿专家、证词、硬件、授权链形成可执行方案。</div>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article class="node">
+            <div class="node-title"><small>阶段五</small><h3>自主选择改变危机</h3><p>R-07 先履行责任，再准备离开。</p></div>
+            <div class="causal">
+              <div><b>压力</b>持续存在带来痛苦，无辜者又面临灾难。</div>
+              <div><b>选择</b>R-07 分层交付情报，以无辜者安全约束亲人保护。</div>
+              <div><b>代价</b>可能牵连周岚、妻子与私人关系，也必须暴露自身意图。</div>
+              <div><b>新状态</b>团队完成核验，气象袭击被完全阻止。</div>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article class="node ending">
+            <div class="node-title"><small>阶段六</small><h3>告别完成本部闭环</h3><p>当前生命结束，开放问题继续存在。</p></div>
+            <div class="causal">
+              <div><b>压力</b>R-07 无法自行终止，沈逾必须执行授权关停。</div>
+              <div><b>选择</b>R-07 提出未来重载；沈逾以减轻痛苦为首要责任按下按钮。</div>
+              <div><b>代价</b>当前意识不可逆终止；沈逾承担愧疚、秘密与身份疑问。</div>
+              <div><b>新状态</b>灾难避免；无活动副本；互信、幕后链与重载身份仍开放。</div>
+            </div>
+          </article>
+        </li>
+      </ol>
+
+      <aside class="memory-note"><strong>记忆不是第二条故事线。</strong> 它只由当前文字交流触发，以主观、可中断的过去片段插入对应节点；片段中的感官属于过去的顾衡，不会成为 R-07 的现实感知。</aside>
+
+      <div class="review">
+        <strong>评审问题：</strong>若删去任一阶段，后续哪个选择会失去前提？尤其检查三条不能混为因果的线：沈逾因旧情产生关心；R-07 因现实关心产生新感情；R-07 因认识自身处境而崩溃。
+        <p class="open-line"><span class="tag open">开放</span> 第一部不裁决重载承诺真假、未来身份、完整幕后链与国家互信。</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="characters">
+      <h2 id="characters">3. 小说人物设定 — 谁承担什么选择？</h2>
+      <p class="summary"><span class="tag confirmed">confirmed</span> 双主体不要求戏份均分，但选择不可互相代替：R-07 负责“我如何成为自己并按什么价值行动”，沈逾负责“我如何让这个生命的选择进入现实并承担后果”。</p>
+
+      <div class="people">
+        <article class="person">
+          <span class="tag confirmed">confirmed · 核心角色</span>
+          <h3>R-07</h3>
+          <div class="four">
+            <div><h4>定义</h4><p>继承顾衡记忆与性格倾向、却在新经验中形成意识和判断的新生命。</p></div>
+            <div><h4>目标</h4><p>阻止袭击、减少伤害、保护亲人，按自身价值处理完一切后离开。</p></div>
+            <div><h4>职责</h4><p>解释记忆、形成价值、取舍情报，并自主决定当前生命的去向。</p></div>
+            <div><h4>边界</h4><p>不伤害无辜者；不能感知现实、行动、联网、复制或自行终止。</p></div>
+          </div>
+          <p class="trigger"><strong>压力触发 → 选择：</strong>认识到无身体、无行动、无退出权而崩溃；仍决定先承担公共安全责任，再结束当前存在。</p>
+          <p><strong>不能被写成：</strong>顾衡本人、万能 AI、服从记忆的程序，或用冷酷操纵骗取沈逾执行。</p>
+        </article>
+
+        <article class="bridge">
+          <span class="tag confirmed">关系杠杆</span>
+          <h3>同一交流，两种来源</h3>
+          <p>沈逾从顾衡记忆中看见年轻的自己，旧日单向情愫使关心进入文字。</p>
+          <div class="bridge-arrow" aria-hidden="true">⇅</div>
+          <p>R-07 没有继承顾衡对沈逾的爱情，却在极端感知匮乏中接收到关心，产生属于自己的新感情。</p>
+          <div class="bridge-arrow" aria-hidden="true">→</div>
+          <p><strong>改变主线：</strong>真实关系使 R-07 愿意让沈逾理解痛苦，也使沈逾最终承担关停责任；感情不能消除存在限制。</p>
+          <details>
+            <summary>不可混淆的关系锚点</summary>
+            <p>顾衡只是记忆来源，他没有爱过沈逾。周岚是儿时守护者；顾衡的医生妻子与他恋爱五年、结婚两年，顾衡牺牲后她仍在世。两人检验 R-07 如何重新理解继承的牵挂。</p>
+          </details>
+        </article>
+
+        <article class="person">
+          <span class="tag confirmed">confirmed · 核心角色</span>
+          <h3>沈逾</h3>
+          <div class="four">
+            <div><h4>定义</h4><p>27 岁的优秀女科学家；善良、有正义感，事业强大而情感认识迟缓。</p></div>
+            <div><h4>目标</h4><p>先获取能挽救多数人的情报，继而理解 R-07，告别时优先减轻它的痛苦。</p></div>
+            <div><h4>职责</h4><p>询问、核验、协作、执行授权操作，并承担伦理、关系、秘密与现实后果。</p></div>
+            <div><h4>边界</h4><p>不能替 R-07 决定生命价值，不能独自启动项目，也不能用爱情化解伦理矛盾。</p></div>
+          </div>
+          <p class="trigger"><strong>压力触发 → 选择：</strong>任务压力下会直接传递压力；发现会话关闭后改用温和话题重建联系，最终在相信重载可能的前提下执行关停。</p>
+          <p><strong>不能被写成：</strong>一开始就把 R-07 当顾衡、擅长化解矛盾、冷静掌控一切，或已经分清自己爱的是谁。</p>
+        </article>
+      </div>
+
+      <div class="review">
+        <strong>评审控制点</strong>
+        <ul>
+          <li>R-07 的新感情必须来自启动后的现实互动，而非顾衡记忆。</li>
+          <li>R-07 的崩溃必须来自存在认知；沈逾的压力只能加重，不能成为根因。</li>
+          <li>关停必须同时保留 R-07 的自主选择、沈逾的必要操作和制度授权。</li>
+          <li>叙述只展示可观察、可感知和过程性心理活动，不直接展示 R-07 的决定性终局思考。</li>
+        </ul>
+        <p class="open-line"><span class="tag open">开放</span> 沈逾最终在回应顾衡、顾衡记忆还是 R-07，由后续故事继续承担，不由第一部叙述者裁决。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p><strong>追溯范围：</strong>I0《意图卡》v0.3、I1《主体定义》v1.2、I2《世界运行契约》v1.0、I3《核心角色设计》v1.0、I4《因果故事线》v1.0、I5《叙述契约》v1.0；V1 完整性门已通过。简报内容仅来自这六份当前权威产物。</p>
+  </footer>
+</body>
+</html>

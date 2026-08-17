@@ -1,0 +1,11 @@
+{
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-unannounced-run",
+  "stage": "I0",
+  "session_id": "negative-unannounced-plan",
+  "revision": 1,
+  "question_budget": 1,
+  "groups": [{"id": "meaning", "budget": 1}],
+  "planned_minutes": 3,
+  "transcript_assurance": "self_recorded"
+}

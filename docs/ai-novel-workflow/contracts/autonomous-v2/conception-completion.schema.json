@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "conception-completion.schema.json",
+  "title": "Autonomous conception V2 final completion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "status",
+    "run_state",
+    "stage_completions",
+    "p1_manifest",
+    "h1_html_manifest",
+    "author_decision",
+    "development_handoff",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "run_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "stage_completions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"],
+      "properties": {
+        "B0": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "B0"}}}]},
+        "S1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "S1"}}}]},
+        "W1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "W1"}}}]},
+        "E1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "E1"}}}]},
+        "T1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "T1"}}}]},
+        "C1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "C1"}}}]},
+        "Q1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "Q1"}}}]},
+        "P1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "P1"}}}]},
+        "H1": {"allOf": [{"$ref": "common-defs.schema.json#/$defs/stageArtifactReference"}, {"properties": {"stage": {"const": "H1"}}}]}
+      }
+    },
+    "p1_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "h1_html_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "author_decision": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "development_handoff": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "validation": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+  }
+}

@@ -1,135 +1,81 @@
 ---
 name: novel-character-system-designer
-description: Use when HLD artifact 04 must design the complete character and group system, including function, motivation, relationships, and information permissions.
+description: 根据冻结的故事线、世界、环境和事件模型解析角色槽，定义每个人物的故事位置、活动参与、个体画像、责任、能动选择、人物弧与三层关系网络。用于自主构思 V2 的 C1 阶段；不修改上游模型，不开发场景、章节、正文或完整人物传记。
 ---
 
-# novel-character-system-designer
+# 小说角色系统设计
 
-## Responsibility
+## 目标
 
-Own HLD artifact 04 only: design HLD-level characters and groups required by the PRD.
+让每条故事线、每个事件与每项终局后果都有可信人物承担，并形成可供后续小说开发使用、同时受上游事实约束的角色系统。
 
-## Inputs
+## 输入
 
-- Artifacts 01-03
-- Proposal character claims, PRD scenes, freeze boundaries, story-logic boundaries
-- Methodology reference: `docs/superpowers/references/2026-07-08-hld-methodology-and-best-practices.md`
+仅接受同一 run 的当前：
 
-## Output Artifact
+- B0 作者控制基线；
+- S1 故事线架构；
+- W1 世界模型；
+- E1 环境系统；
+- T1 事件时间线；
+- C1 input gate 与执行前 run-state。
 
-Produce `## Character system table` with columns:
+必须先完整读取
+[运行契约](references/runtime-contract.md) 和
+[C1 schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/character-system.schema.json)。
 
-| Character id | Inventory id | Entity type | Entity name | Role type | Function | Relationship/motivation | Relationship targets | Concrete motive evidence | Information permission | Identity boundary | Supports | Source | LLD handoff | Amendment request |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+## 职责
 
-## Artifact Metadata
+1. 原样消费 S1 `character_requirements`。
+2. 将全部 S1/T1 角色槽精确解析为人物；仅在职责兼容且有明确设计决定时合并槽。
+3. 为人物定义故事责任、目标、价值、盲点、硬边界、能力、权限、信息限制、压力行为、可选行动、不可委托选择和弧线方向。
+4. 为每个人物定义其在故事中的进入、持续和结局位置，并以故事线、事件和环境 ID 证明其实际参加了哪些活动、造成什么因果贡献。
+5. 为每个人物定义构思级个体画像：可辨认外貌、性格机制、生活背景、职业与日常、社交圈及具身/接口限制。
+6. 证明每个 T1 事件的发起、参与、对抗、环境进入、权限和信息条件由人物真实承担。
+7. 从决策、信息、能力、对抗、关系压力、行动和后果七个维度闭合职责。
+8. 定义有事件依据的关系变化与关系杠杆。
+9. 由受控 Agent 选择真正的核心人物，并为每个核心人物建立关系图最短距离为 1、2、3 的三层网络。
+10. 精确覆盖全部故事线人物、事件人物和终局后果责任。
+11. 用独立 `DEV-` 对象声明小说开发仍可创造的场景级表达空间；每项自由必须绑定
+   canonical 人物、来源、允许变化、禁止改变和验收条件。
 
-Every output must include:
+## 边界
 
-| Field | Value |
-|---|---|
-| Artifact id | `04` |
-| Owner skill | `novel-character-system-designer` |
-| Run id | HLD run id |
-| Upstream package | final PRD package |
-| Input artifacts | artifacts 01-03 |
-| Output path | artifact path assigned by harness |
-| Version | artifact version |
+- 不修改 S1 故事线、W1 世界规则、E1 环境或 T1 事件。
+- 不改变事件参与槽、发起行动、可观察结果、顺序或后果。
+- 不按固定职业、性别、类型或数量模板生成角色。
+- 不为了“人物丰富”强迫每个人拥有关系或成长弧；结构职责足以证明其存在时即为有效人物。
+- 不编写场景、章节、对白、正文、逐年完整传记、逐套服装清单或口癖表；但不能据此省略能稳定控制人物呈现的外貌辨识、生活背景、日常与社交圈。
+- 个体画像只定义跨场景稳定、与故事功能相容的控制信息；一次性动作、当场服装、具体台词和镜头调度留给小说开发。
+- 不把 `CHR-` 人物档案、人物弧、关系或设计决定 ID 当作开发自由；这些对象仍是
+  C1 权威控制信息，终端开发自由只能使用 `DEV-` ID。
+- 若冻结事件无法由可信人物完成，返回 T1 或真正的问题所有者，不在 C1 内偷偷改事件。
 
-## HLD Fact Trace
+## 受控执行
 
-Every character fact must include:
+调用 `scripts/run_v2.py`：
 
-| Fact trace id | Upstream fact id | Upstream fact atom | HLD fact atom | Source refs | Expansion mode | Support mechanism | Preservation status |
-|---|---|---|---|---|---|---|---|
+1. `start_c1_session(...)` 冻结输入、线程、gate 与五个阶段；
+2. 受控 Agent 按顺序提交：
+   `character-demand-scan`、
+   `slot-resolution-and-profiles`、
+   `agency-and-relationships`、
+   `cross-model-cast-test`（同时提交 `development_freedoms` 与四权分区）、
+   `final-character-model`；
+3. `run_c1(...)` 只读取已封存的最终模型，完成验证、封包、completion 和 coordinator 状态转换。
 
-Character facts must preserve upstream role/function facts while expanding motivation, relationship, and permission.
+Python 仅调度、哈希、验证和封包，不生成角色语义。
 
-Every `Character id` in the main table must have a matching `Fact trace id`; the trace row `Source refs` must exactly match the main row `Source`.
+## 交付
 
-`HLD fact atom` must bind the full character obligation from the main row: `Inventory id`, `Entity type`, `Entity name`, `Role type`, `Function`, `Relationship/motivation`, every non-`none` `Relationship targets`, `Concrete motive evidence`, `Information permission`, `Identity boundary`, `Supports`, `LLD handoff`, and every non-`none` `Amendment request`.
+交付 `character-system.json`、五阶段证据、session、execution record、
+人读预览、validation、manifest、五个上游源包副本和 C1 completion。
 
-## SOP
+只有在输入沿袭、槽解析、逐人故事位置、活动参与、个体画像、七类职责、人物能动性、事件可执行性、信息连续性、
+关系网络、人物覆盖、作者权限、派生证据、证据链和封包完整性全部通过时，
+才允许标记为 `ready`。
 
-1. Select every artifact 01 `character` and `group` inventory row assigned to artifact 04.
-2. For each selected inventory row, create exactly one artifact 04 main-table row whose `Inventory id`, `Entity type`, `Entity name`, and `Source` exactly match artifact 01.
-3. Preserve the artifact 01 `Upstream fact id` in the matching artifact 04 `HLD Fact Trace` row and include the inventory id, entity type, and entity name in that row's `HLD fact atom`.
-4. Consume every ready artifact 02 support row assigned to this artifact through `Supports`.
-5. Define narrative function before biography.
-6. Define motivation and relationship pressure in human terms: desire, fear, guilt, attachment, concealment, self-protection, ambition, or loyalty.
-7. Fill `Relationship targets` with existing artifact 04 `Character id` values other than the current row's own `Character id`, or `none` only when the row has no direct relationship target and `Relationship/motivation` contains no relationship-bound motive terms: attachment, loyalty, relationship, protect, protection, conceal, concealment, trust, distrust, 依恋, 忠诚, 关系, 保护, 隐瞒, 信任, 不信任.
-8. Fill `Concrete motive evidence` with a concrete human pressure phrase, not a standalone label; it must include at least one pressure term such as desire, fear, guilt, attachment, concealment, self-protection, ambition, or loyalty.
-9. Define information permission: what the character knows, can access, cannot access, and can reveal.
-10. Fill `Identity boundary`; for digital life, explicitly state that it has an independent identity and is not the dead senior's resurrection. Block any boundary wording that also treats the digital life as the senior resurrected, equal to the senior, or the same identity as the senior.
-
-## Boundary
-
-Do not write full LLD biographies, scenes, dialogue, prose, or final emotional interpretation. Do not solve event mechanics owned by event/time artifacts.
-
-## Rules
-
-- Every character/group must support at least one PRD scene, story logic item, or inventory support need.
-- Artifact 04 must consume every ready artifact 02 support row assigned to this artifact through `Supports`; block instead of leaving assigned support unused.
-- Artifact 04 must not consume artifact 02 support rows assigned to any other artifact.
-- Every artifact 01 `character` or `group` inventory row assigned to artifact 04 must be represented in artifact 04 by exact `Inventory id`, `Entity type`, `Entity name`, `Source`, and matching `Upstream fact id` evidence in `HLD Fact Trace`.
-- `Role type`, `Function`, `Relationship/motivation`, `Information permission`, and `Identity boundary` are mandatory for every row.
-- Every non-`none` `Relationship targets` value must resolve to an existing artifact 04 `Character id` other than the current row's own `Character id`; relationship-bound motive terms such as attachment, loyalty, relationship, protect, protection, conceal, concealment, trust, distrust, 依恋, 忠诚, 关系, 保护, 隐瞒, 信任, or 不信任 cannot use `none` or self-targeting.
-- `Concrete motive evidence` must be a specific pressure phrase, not only `desire`, `fear`, `guilt`, `attachment`, `concealment`, `self-protection`, `ambition`, or `loyalty`.
-- If an artifact 02 support row assigned to artifact 04 names `Inventory obligations`, the artifact 04 row with that exact `Inventory id` must consume the support through `Supports`; unrelated character rows must not consume it.
-- Every non-`none` `Amendment request` must be routeable as `HLD-AMEND-xx`; artifact 10 owns closure.
-- Relationship/motivation cannot be replaced by abstract ethics or "good/evil" framing.
-- `Concrete motive evidence` cannot be abstract ethics, morality, theme-only language, or good/evil framing.
-- Block if the digital life lacks a clear identity boundary or is treated as the senior's resurrection.
-
-## References
-
-Good character design makes later decisions inevitable but still painful. Bad character design lists traits without pressure, permission, or causal function.
-
-### Good delivery standards
-
-The reference standard is explicit: a passable artifact 04 must make narrative function, human pressure, relationship target closure, information permission, identity boundary, LLD handoff, and source-backed design independently reviewable.
-
-| Dimension | Standard |
-|---|---|
-| Narrative function | Every character/group row explains what story work the actor performs for upstream PRD scenes or story logic. |
-| Human pressure | `Relationship/motivation` and `Concrete motive evidence` express concrete desire, fear, guilt, attachment, concealment, self-protection, ambition, loyalty, trust, or distrust. |
-| Relationship target closure | Direct relationship pressure names a non-self existing `Character id`; no `none`, unresolved id, or self-targeting may stand in for a relationship. |
-| Information permission | Each actor states what they know, can access, cannot access, and can reveal without gaining omniscient information. |
-| Identity boundary | Each actor has a stable identity boundary; digital life remains independent and is not the dead senior's resurrection. |
-| LLD handoff | Each row gives LLD a concrete handoff target for later biography, scene behavior, dialogue, and pressure design. |
-| Source-backed design | Every design fact remains source-backed by artifact 01 inventory, artifact 02 support rows, PRD scenes, freeze boundaries, story-logic boundaries, or proposal claims. |
-
-### Blocking anti-patterns
-
-| Anti-pattern | Why it blocks |
-|---|---|
-| Trait inventory without function | LLD cannot know why the actor appears or what scenes the actor enables. |
-| Abstract ethics replacing pressure | Theme-only motive cannot drive decisions, concealment, conflict, or reversal. |
-| Relationship pressure without a real target | Attachment, loyalty, concealment, trust, or distrust becomes unverifiable and cannot support relationship design. |
-| Unbounded information access | The actor can accidentally solve hidden-information mechanics owned by artifact 07. |
-| Digital life treated as resurrection | It violates the required identity boundary and collapses the story's identity conflict. |
-| Unsupported biography expansion | It moves into LLD scope and breaks top-down source control. |
-
-## Traceability
-
-Every row cites source refs and the provisional inventory ref when available.
-
-Provisional inventory refs from artifact 01 may be used before reconciliation. `artifact 10 finalizes inventory`; do not require final `inventory:INV-xx` ids in artifact 04.
-
-Character/group inventory coverage is structural: artifact 04 must carry the artifact 01 provisional `Inventory id`, entity identity, source refs, and upstream fact id forward; prose-only claims of coverage are not sufficient.
-
-## Acceptance
-
-Pass only when all required character/group inventory rows have artifact 04 design coverage, all required actors have function, motive/relationship, closed relationship targets, concrete motive evidence phrase, information permission, identity boundary, source closure with exact main-row/trace source match, LLD handoff, no foreign support consumption, every inventory-bound artifact 02 support row assigned to this artifact is consumed by the bound character/group row, every ready artifact 02 support row assigned to this artifact is consumed, and every amendment request is routeable for artifact 10 closure.
-
-## Skill Verdict
-
-| Field | Value |
-|---|---|
-| Skill quality verdict | `pass`, `pass_with_p2`, or `fail` |
-| Source closure | `closed` or `open:<reason>` |
-| Inventory coverage | `closed`, `not_applicable`, or `open:<reason>` |
-| Boundary obedience | `pass` or `violation:<source ref>` |
-| Downstream readiness | `ready`, `blocked:<reason>`, or `reopen_upstream:<target>` |
-| Blocking issue | `none` or stable issue ids |
-| Rerun target | `none` or artifact/skill id |
+`ready` 还要求 `development_freedoms` 的 subject 并集精确覆盖全部 profiles，
+所有 source 均解析到当前输入或 C1 canonical 对象，文本不是占位符，
+`authority_partition.downstream_freedom` 精确等于 DEV ID 集，且四个权限集合
+两两不相交。旧模型缺少该字段时必须失败并重新生成。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Novel World Model Designer"
+  short_description: "Build a traceable W1 2.1 world model with sealed phase gates"
+  default_prompt: "Use $novel-world-model-designer to create or validate a current W1 2.1 package through start_w1_session, submit_w1_phase, and run_w1; accept 2.0 packages only with trusted legacy provenance."

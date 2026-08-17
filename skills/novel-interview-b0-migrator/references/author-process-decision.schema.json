@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "migration_id",
+    "source_run_id",
+    "candidate_manifest_sha256",
+    "decision",
+    "author_role",
+    "human_review_scope",
+    "statement"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "interview-b0-migration-author-process-decision"},
+    "migration_id": {"type": "string", "minLength": 1},
+    "source_run_id": {"type": "string", "minLength": 1},
+    "candidate_manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "decision": {"const": "delegate_internal_compatibility_conversion"},
+    "author_role": {"const": "author"},
+    "human_review_scope": {
+      "const": ["world", "story", "characters", "fragments"]
+    },
+    "statement": {"type": "string", "minLength": 1}
+  }
+}

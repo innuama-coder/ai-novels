@@ -1,0 +1,12 @@
+{
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-positive-run",
+  "stage": "I0",
+  "session_id": "positive-i0",
+  "revision": 1,
+  "question_budget": 2,
+  "groups": [{"id": "meaning", "budget": 1}, {"id": "boundary", "budget": 1}],
+  "planned_minutes": 5,
+  "transcript_assurance": "self_recorded",
+  "output_artifact": "intent-card.md"
+}

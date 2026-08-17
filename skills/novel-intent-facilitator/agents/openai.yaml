@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说意图访谈"
+  short_description: "以确认式访谈收拢小说意图、范围与硬约束，形成可交接意图卡。"
+  default_prompt: "Use $novel-intent-facilitator to discuss and confirm a novel idea."

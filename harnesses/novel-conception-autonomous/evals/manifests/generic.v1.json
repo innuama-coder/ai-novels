@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "kind": "novel-conception-eval-case",
+  "manifest_id": "ECASE-GENERIC-STORYLINE-V1",
+  "fixture": {
+    "path": "fixtures/generic/fixture.json",
+    "sha256": "0867a1a2d56bfa72ebccc840d2de835c7e247a9b15e1896b3ca7ac54bdce0f28"
+  },
+  "storyline_plan": {
+    "path": "fixtures/generic/storyline-plan.v1.json",
+    "sha256": "263b44ee0692bf22a72ac48b9e91cecda6475b0d332a10d506dcd28e1bd1959c"
+  },
+  "storyline_plan_schema": {
+    "path": "schemas/storyline-plan.v1.schema.json",
+    "sha256": "737982217abc975f9a0dac5cb36b41bdff24d13d1af06956c19ceedc653d0983"
+  },
+  "storyline_quality_gate": {
+    "path": "fixtures/generic/storyline-proposal-quality-gate.v1.json",
+    "sha256": "05b431b94f058ba5111e8ca668b729cefb6d8d55f066f6583ce2bfe0e396c313"
+  },
+  "storyline_quality_gate_schema": {
+    "path": "schemas/storyline-proposal-quality-gate.v1.schema.json",
+    "sha256": "56fe7cdcfe33945ab4778d01f972d6e5efaf55991640ae1e3bdb3594323072de"
+  }
+}

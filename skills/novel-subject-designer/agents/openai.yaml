@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说主体设计"
+  short_description: "确认核心主体、关系与世界压力，形成可交接的主体定义。"
+  default_prompt: "Use $novel-subject-designer to define and confirm a novel's core subjects, relationships, and pressures."

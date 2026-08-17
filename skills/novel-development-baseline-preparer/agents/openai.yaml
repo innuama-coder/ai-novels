@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说开发基线准备"
+  short_description: "硬准入并生成可追溯、可复验的 HLD 开发基线"
+  default_prompt: "Use $novel-development-baseline-preparer to gate an approved conception run and generate or validate its deterministic HLD-ready baseline package."

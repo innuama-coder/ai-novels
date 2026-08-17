@@ -1,0 +1,755 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "h1-review-plan.schema.json",
+  "title": "H1 human review plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill",
+    "run_id",
+    "h1_session_id",
+    "p1_completion",
+    "work_identity",
+    "reading_budget_minutes",
+    "reading_profile",
+    "review_scope_contract",
+    "decision_controls",
+    "review_requirements",
+    "risk_register",
+    "review_path",
+    "sections",
+    "visual_models",
+    "fragment_briefs",
+    "assembly_projection",
+    "presentation_bindings",
+    "decision_prompts",
+    "budget_items",
+    "control_coverage"
+    ,"reduction_ledger"
+    ,"drilldown_index"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-conception-human-review-assembler"},
+    "run_id": {"type": "string", "minLength": 1},
+    "h1_session_id": {"type": "string", "minLength": 1},
+    "p1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "work_identity": {"$ref": "#/$defs/workIdentity"},
+    "reading_budget_minutes": {"const": 10},
+    "reading_profile": {"const": "review-reading-baseline-v1"},
+    "review_scope_contract": {"$ref": "#/$defs/reviewScopeContract"},
+    "decision_controls": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/decisionControl"},
+      "uniqueItems": true
+    },
+    "review_requirements": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "risk_register": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/risk"},
+      "uniqueItems": true
+    },
+    "review_path": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/pathStep"}, {"properties": {"kind": {"const": "world"}}}]},
+        {"allOf": [{"$ref": "#/$defs/pathStep"}, {"properties": {"kind": {"const": "storylines"}}}]},
+        {"allOf": [{"$ref": "#/$defs/pathStep"}, {"properties": {"kind": {"const": "characters"}}}]},
+        {"allOf": [{"$ref": "#/$defs/pathStep"}, {"properties": {"kind": {"const": "fragments"}}}]},
+        {"allOf": [{"$ref": "#/$defs/pathStep"}, {"properties": {"kind": {"const": "decision"}}}]}
+      ],
+      "items": false,
+      "uniqueItems": true
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/section"},
+      "uniqueItems": true
+    },
+    "visual_models": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/visualModel"},
+      "uniqueItems": true
+    },
+    "fragment_briefs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/fragmentBrief"},
+      "uniqueItems": true
+    },
+    "assembly_projection": {"$ref": "#/$defs/assemblyProjection"},
+    "presentation_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/presentationBinding"},
+      "uniqueItems": true
+    },
+    "decision_prompts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/decisionPrompt"},
+      "uniqueItems": true
+    },
+    "budget_items": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/budgetItem"},
+      "uniqueItems": true
+    },
+    "control_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/coverage"},
+      "uniqueItems": true
+    },
+    "reduction_ledger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/reductionEntry"},
+      "uniqueItems": true
+    },
+    "drilldown_index": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/drilldownEntry"},
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "reviewScopeContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_id", "default_path_scope", "full_evidence_mode", "semantic_disclaimer"],
+      "properties": {
+        "contract_id": {"const": "bounded-decision-controls-v1"},
+        "default_path_scope": {"const": "complete-decision-control-surface"},
+        "full_evidence_mode": {"const": "expandable-lossless-p1"},
+        "semantic_disclaimer": {"type": "string", "minLength": 1}
+      }
+    },
+    "decisionControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "domain", "priority", "statement", "must_hold", "must_not_imply", "default_element_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DCTRL-[A-Za-z0-9._-]+$"},
+        "domain": {"enum": ["world", "storylines", "characters", "fragments"]},
+        "priority": {"enum": ["critical", "structural", "supporting"]},
+        "statement": {"type": "string", "minLength": 1},
+        "must_hold": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "must_not_imply": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "default_element_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^(MOD|VIS|FRAG|PROMPT)-[A-Za-z0-9._-]+$"}, "uniqueItems": true}
+      }
+    },
+    "reductionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_anchor_id", "decision_control_ids", "relation", "review_priority", "exposure", "rationale"],
+      "properties": {
+        "source_anchor_id": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"},
+        "decision_control_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^DCTRL-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "relation": {"enum": ["supports", "refines", "constraint", "exception"]},
+        "review_priority": {"enum": ["critical", "structural", "supporting"]},
+        "exposure": {"enum": ["default-and-drilldown", "drilldown-only"]},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "drilldownEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_anchor_id", "stage", "source_id", "json_pointer", "value_sha256", "label"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^EVID-[A-Za-z0-9._-]+$"},
+        "source_anchor_id": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"},
+        "stage": {"enum": ["B0", "S1", "W1", "E1", "T1", "C1"]},
+        "source_id": {"type": "string", "minLength": 1},
+        "json_pointer": {"type": "string", "minLength": 1},
+        "value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "label": {"type": "string", "minLength": 1}
+      }
+    },
+    "nullableText": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "minLength": 1}
+      ]
+    },
+    "workIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metadata_kind",
+        "work_title",
+        "report_title",
+        "input_gate"
+      ],
+      "properties": {
+        "metadata_kind": {"const": "project_display_metadata"},
+        "work_title": {"type": "string", "minLength": 1, "maxLength": 200},
+        "report_title": {"type": "string", "minLength": 1, "maxLength": 240},
+        "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    },
+    "anchorIds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"},
+      "uniqueItems": true
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "risk", "mitigation", "source_anchor_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^RISK-[A-Za-z0-9._-]+$"},
+        "risk": {"type": "string", "minLength": 1},
+        "mitigation": {"type": "string", "minLength": 1},
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"}
+      }
+    },
+    "pathStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "kind",
+        "title",
+        "review_question",
+        "estimated_seconds",
+        "visible_element_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^PATH-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "kind": {"enum": ["world", "storylines", "characters", "fragments", "decision"]},
+        "title": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1},
+        "estimated_seconds": {"type": "integer", "minimum": 1, "maximum": 600},
+        "visible_element_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^(MOD|VIS|FRAG|PROMPT)-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "display_kind",
+        "definition",
+        "responsibility",
+        "must_hold",
+        "must_not_imply",
+        "source_anchor_ids",
+        "default_visible"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "display_kind": {"enum": ["text", "cards", "matrix", "timeline", "network", "flow", "map"]},
+        "definition": {"type": "string", "minLength": 1},
+        "responsibility": {"type": "string", "minLength": 1},
+        "must_hold": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "must_not_imply": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"},
+        "default_visible": {"const": true}
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "review_goal", "modules"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SEC-[A-Za-z0-9._-]+$"},
+        "kind": {"enum": ["world", "storylines", "characters"]},
+        "title": {"type": "string", "minLength": 1},
+        "review_goal": {"type": "string", "minLength": 1},
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/module"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "visualModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "semantic_role",
+        "section_id",
+        "visual_kind",
+        "title",
+        "review_purpose",
+        "groups",
+        "nodes",
+        "edges",
+        "text_equivalents",
+        "source_anchor_ids",
+        "text_equivalent_module_id"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^VIS-[A-Za-z0-9._-]+$"},
+        "semantic_role": {
+          "enum": [
+            "control_logic_chain",
+            "world_environment_map",
+            "storyline_architecture",
+            "major_event_timeline",
+            "character_relationship_network"
+          ]
+        },
+        "section_id": {"type": "string", "pattern": "^SEC-[A-Za-z0-9._-]+$"},
+        "visual_kind": {"enum": ["matrix", "timeline", "network", "flow", "map"]},
+        "title": {"type": "string", "minLength": 1},
+        "review_purpose": {"type": "string", "minLength": 1},
+        "groups": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/visualGroup"},
+          "uniqueItems": true
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/visualNode"},
+          "uniqueItems": true
+        },
+        "edges": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/visualEdge"},
+          "uniqueItems": true
+        },
+        "text_equivalents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/textEquivalent"},
+          "uniqueItems": true
+        },
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"},
+        "text_equivalent_module_id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"}
+      }
+    },
+    "visualGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "label",
+        "summary",
+        "kind",
+        "lane",
+        "tier",
+        "temporal_label",
+        "source_anchor_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^GRP-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "label": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "lane": {"$ref": "#/$defs/nullableText"},
+        "tier": {"$ref": "#/$defs/nullableText"},
+        "temporal_label": {"$ref": "#/$defs/nullableText"},
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"}
+      }
+    },
+    "visualNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "group_id",
+        "label",
+        "summary",
+        "kind",
+        "lane",
+        "tier",
+        "temporal_label",
+        "source_anchor_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^NODE-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "group_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^GRP-[A-Za-z0-9._-]+$"}
+          ]
+        },
+        "label": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "lane": {"$ref": "#/$defs/nullableText"},
+        "tier": {"$ref": "#/$defs/nullableText"},
+        "temporal_label": {"$ref": "#/$defs/nullableText"},
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"}
+      }
+    },
+    "visualEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "group_id",
+        "from_node_id",
+        "to_node_id",
+        "direction",
+        "relation_label",
+        "summary",
+        "kind",
+        "lane",
+        "tier",
+        "temporal_label",
+        "source_anchor_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^EDGE-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "group_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^GRP-[A-Za-z0-9._-]+$"}
+          ]
+        },
+        "from_node_id": {"type": "string", "pattern": "^NODE-[A-Za-z0-9._-]+$"},
+        "to_node_id": {"type": "string", "pattern": "^NODE-[A-Za-z0-9._-]+$"},
+        "direction": {"enum": ["directed", "bidirectional", "undirected"]},
+        "relation_label": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "lane": {"$ref": "#/$defs/nullableText"},
+        "tier": {"$ref": "#/$defs/nullableText"},
+        "temporal_label": {"$ref": "#/$defs/nullableText"},
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"}
+      }
+    },
+    "textEquivalent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "element_ids",
+        "text",
+        "source_anchor_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TXT-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "element_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^(GRP|NODE|EDGE)-[A-Za-z0-9._-]+$"
+          },
+          "uniqueItems": true
+        },
+        "text": {"type": "string", "minLength": 1},
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"}
+      }
+    },
+    "fragmentBrief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "slot_id",
+        "title",
+        "review_purpose",
+        "pov_character_id",
+        "language_contract_id",
+        "style_contract_id",
+        "depth_contract_id",
+        "pov_mode",
+        "information_limits",
+        "allowed_perception_channels",
+        "scene_contract",
+        "decisive_interiority_policy",
+        "surface_detail_policy",
+        "decision_control_ids",
+        "source_anchor_ids",
+        "required_demonstrations",
+        "forbidden_additions",
+        "target_words_min",
+        "target_words_max"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^BRIEF-[A-Za-z0-9._-]+$"},
+        "slot_id": {"type": "string", "pattern": "^FRAG-[A-Za-z0-9._-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "review_purpose": {"type": "string", "minLength": 1},
+        "pov_character_id": {"type": "string", "pattern": "^CHR-[A-Za-z0-9._-]+$"},
+        "language_contract_id": {"const": "zh-Hans-review-v1"},
+        "style_contract_id": {"const": "restrained-concrete-scene-v1"},
+        "depth_contract_id": {"const": "character-grounded-scene-v1"},
+        "pov_mode": {"const": "third_person_limited"},
+        "information_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["may_present", "must_not_present_as_known"],
+          "properties": {
+            "may_present": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1},
+              "uniqueItems": true
+            },
+            "must_not_present_as_known": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1},
+              "uniqueItems": true
+            }
+          }
+        },
+        "allowed_perception_channels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "scene_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "before_state",
+            "immediate_goal",
+            "pressure",
+            "obstacle",
+            "required_choice",
+            "direct_consequence",
+            "after_state"
+          ],
+          "properties": {
+            "before_state": {"type": "string", "minLength": 1},
+            "immediate_goal": {"type": "string", "minLength": 1},
+            "pressure": {"type": "string", "minLength": 1},
+            "obstacle": {"type": "string", "minLength": 1},
+            "required_choice": {"type": "string", "minLength": 1},
+            "direct_consequence": {"type": "string", "minLength": 1},
+            "after_state": {"type": "string", "minLength": 1}
+          }
+        },
+        "decisive_interiority_policy": {"const": "process-only-no-unresolved-decision-disclosure"},
+        "surface_detail_policy": {"const": "fragment-local-non-authoritative-v1"},
+        "decision_control_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^DCTRL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_anchor_ids": {"$ref": "#/$defs/anchorIds"},
+        "required_demonstrations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "forbidden_additions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "target_words_min": {"type": "integer", "minimum": 320},
+        "target_words_max": {"type": "integer", "minimum": 380, "maximum": 1200}
+      }
+    },
+    "moduleIds": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+      "uniqueItems": true
+    },
+    "nonEmptyModuleIds": {
+      "allOf": [
+        {"$ref": "#/$defs/moduleIds"},
+        {"minItems": 1}
+      ]
+    },
+    "assemblyProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world", "storylines", "characters"],
+      "properties": {
+        "world": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "definition_module_id",
+            "operating_logic_module_id",
+            "system_module_ids",
+            "environment_module_ids",
+            "event_condition_module_ids",
+            "constraint_module_ids",
+            "boundary_module_ids"
+          ],
+          "properties": {
+            "definition_module_id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+            "operating_logic_module_id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+            "system_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "environment_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "event_condition_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "constraint_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "boundary_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"}
+          }
+        },
+        "storylines": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "story_subject_module_id",
+            "line_module_ids",
+            "connection_module_ids",
+            "major_event_module_ids",
+            "suspense_conflict_rhythm_module_id",
+            "constraint_module_ids"
+          ],
+          "properties": {
+            "story_subject_module_id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+            "line_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "connection_module_ids": {"$ref": "#/$defs/moduleIds"},
+            "major_event_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "suspense_conflict_rhythm_module_id": {"type": "string", "pattern": "^MOD-[A-Za-z0-9._-]+$"},
+            "constraint_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"}
+          }
+        },
+        "characters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "core_character_module_ids",
+            "supporting_character_module_ids",
+            "relationship_network_module_ids",
+            "role_coverage_module_ids",
+            "constraint_module_ids"
+          ],
+          "properties": {
+            "core_character_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "supporting_character_module_ids": {"$ref": "#/$defs/moduleIds"},
+            "relationship_network_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "role_coverage_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"},
+            "constraint_module_ids": {"$ref": "#/$defs/nonEmptyModuleIds"}
+          }
+        }
+      }
+    },
+    "presentationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "element_id",
+        "content_sha256",
+        "source_values",
+        "must_not_imply",
+        "challenge_result",
+        "challenge_notes"
+      ],
+      "properties": {
+        "element_id": {"type": "string", "pattern": "^(MOD|VIS|BRIEF|PROMPT)-[A-Za-z0-9._-]+$"},
+        "content_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "source_values": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_anchor_id", "value_sha256"],
+            "properties": {
+              "source_anchor_id": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"},
+              "value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+            }
+          },
+          "uniqueItems": true
+        },
+        "must_not_imply": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "challenge_result": {"const": "passed"},
+        "challenge_notes": {"type": "string", "minLength": 1}
+      }
+    },
+    "decisionPrompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "affected_source_anchor_ids", "allowed_decisions", "preselected"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^PROMPT-[A-Za-z0-9._-]+$"},
+        "question": {"type": "string", "minLength": 1},
+        "affected_source_anchor_ids": {"$ref": "#/$defs/anchorIds"},
+        "allowed_decisions": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            {"const": "approved"},
+            {"const": "revise"},
+            {"const": "rejected"}
+          ]
+        },
+        "preselected": {"const": false}
+      }
+    },
+    "budgetItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["element_id", "estimated_seconds"],
+      "properties": {
+        "element_id": {"type": "string", "pattern": "^PATH-[A-Za-z0-9._-]+$"},
+        "estimated_seconds": {"type": "integer", "minimum": 1, "maximum": 600}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_anchor_id", "visible_element_ids"],
+      "properties": {
+        "source_anchor_id": {"type": "string", "pattern": "^SRC-[A-Za-z0-9._-]+$"},
+        "visible_element_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^(MOD|VIS|FRAG|PROMPT|EVID)-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

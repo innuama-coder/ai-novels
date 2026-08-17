@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interview B0 Migrator"
+  short_description: "Migrate legacy interviews with fresh author review"
+  default_prompt: "Use $novel-interview-b0-migrator to build a hash-bound compatibility candidate and finalize it only after a new exhaustive author decision."

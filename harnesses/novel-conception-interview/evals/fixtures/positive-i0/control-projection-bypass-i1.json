@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "harness": "novel-conception-interview",
+  "run_id": "fixture-positive-run",
+  "stage": "I1",
+  "session_id": "bypass-i1",
+  "status": "ready",
+  "source_artifact": {
+    "path": "intent-card.md",
+    "sha256": "a93c75d4519e06b3aee80dbd02972d92f10e2521c8f746d567fdb4f4df9f8f19"
+  },
+  "controls": [
+    {
+      "id": "SUB-EVAL-001",
+      "hardness": "author_locked",
+      "heading": "Fixture intent",
+      "value": "The fixture preserves a story meaning and a stated expression boundary."
+    }
+  ],
+  "evidence_bindings": [
+    {
+      "control_id": "SUB-EVAL-001",
+      "ranges": [
+        {
+          "start_line": 3,
+          "end_line": 5,
+          "text_sha256": "60733415b6f5b409f59f383b5e4cd5aaea0d089239b4b96b90610bda4f67ff45"
+        }
+      ]
+    }
+  ]
+}

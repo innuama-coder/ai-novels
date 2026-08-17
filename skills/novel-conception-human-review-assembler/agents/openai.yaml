@@ -1,0 +1,5 @@
+interface:
+  display_name: "小说构思人审报告设计与组装"
+  short_description: "将技术构思设计并组装成可在十分钟内完成判断的人审报告内容"
+  brand_color: "#3B5CCC"
+  default_prompt: "使用 $novel-conception-human-review-assembler 从当前 P1 包设计并组装十分钟 H1 人审内容，并严格通过 scripts/run_v2.py 的 run_plan → 正式 H1-B → run_assemble 唯一生产路径交付。"

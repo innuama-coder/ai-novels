@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说叙述契约"
+  short_description: "通过确认式访谈锁定 POV、读者信息与可执行表达边界"
+  default_prompt: "Use $novel-narrative-contract-designer to discuss and confirm the narrative contract for this novel."

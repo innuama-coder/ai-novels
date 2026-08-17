@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说构思机器交付组装"
+  short_description: "无损组装可供 AI 开发的完整构思包"
+  default_prompt: "使用 $novel-conception-deliverable-assembler 按自主构思 V2 契约完成 P1 机器交付。"

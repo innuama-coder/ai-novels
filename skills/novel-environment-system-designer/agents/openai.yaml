@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说具体环境设计"
+  short_description: "定义承载事件的环境、功能区与转场条件"
+  default_prompt: "使用 $novel-environment-system-designer 按自主构思 V2 契约完成 E1，并严格通过 scripts/run_v2.py 的 start_e1_session → submit_e1_phase → run_e1 唯一生产路径交付。"

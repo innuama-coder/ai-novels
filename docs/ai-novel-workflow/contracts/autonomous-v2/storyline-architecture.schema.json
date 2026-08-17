@@ -1,0 +1,703 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "storyline-architecture.schema.json",
+  "title": "S1 storyline architecture canonical model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "source_artifacts", "authority_partition", "design_decisions", "derivation_claims", "storyline_demands", "storylines", "line_claim_authority", "connections", "architecture", "temporal_architecture", "story_claim_units", "story_claim_atoms", "story_obligation_register", "story_obligation_coverage", "cross_line_consistency", "world_requirements", "environment_requirements", "event_requirements", "character_requirements", "coverage_ledger", "open_items"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "skill": {"const": "novel-storyline-architecture-designer"},
+    "stage": {"const": "S1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "source_artifacts": {"$ref": "canonical-common.schema.json#/$defs/sourceArtifacts"},
+    "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"},
+    "design_decisions": {"$ref": "canonical-common.schema.json#/$defs/designDecisions"},
+    "derivation_claims": {"$ref": "canonical-common.schema.json#/$defs/derivationClaims"},
+    "storyline_demands": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/demand"}},
+    "storylines": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/storyline"}},
+    "line_claim_authority": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lineClaimAuthority"}, "uniqueItems": true},
+    "source_sequence_realizations": {"type": "array", "items": {"$ref": "#/$defs/sourceSequenceRealization"}, "uniqueItems": true},
+    "connections": {"$ref": "#/$defs/topologyPhasePayload/properties/connections"},
+    "architecture": {"$ref": "#/$defs/topologyPhasePayload/properties/architecture"},
+    "temporal_architecture": {"$ref": "#/$defs/topologyPhasePayload/properties/temporal_architecture"},
+    "story_claim_units": {"$ref": "#/$defs/topologyPhasePayload/properties/story_claim_units"},
+    "story_claim_atoms": {"$ref": "#/$defs/topologyPhasePayload/properties/story_claim_atoms"},
+    "story_obligation_register": {"$ref": "#/$defs/topologyPhasePayload/properties/story_obligation_register"},
+    "story_obligation_coverage": {"$ref": "#/$defs/topologyPhasePayload/properties/story_obligation_coverage"},
+    "cross_line_consistency": {"$ref": "#/$defs/topologyPhasePayload/properties/cross_line_consistency"},
+    "world_requirements": {"$ref": "canonical-common.schema.json#/$defs/worldRequirements"},
+    "environment_requirements": {"$ref": "canonical-common.schema.json#/$defs/environmentRequirements"},
+    "event_requirements": {"$ref": "canonical-common.schema.json#/$defs/eventRequirements"},
+    "character_requirements": {"$ref": "canonical-common.schema.json#/$defs/characterRequirements"},
+    "coverage_ledger": {"$ref": "canonical-common.schema.json#/$defs/coverageRecords"},
+    "open_items": {"$ref": "canonical-common.schema.json#/$defs/openItems"}
+  },
+  "$defs": {
+    "demand": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source_ids", "obligation", "disposition"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLD-[A-Za-z0-9._-]+$"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "obligation": {"type": "string", "minLength": 1},
+        "disposition": {"enum": ["independent_line", "merged", "background_pressure", "optional_melody", "not_applicable"]}
+      }
+    },
+    "storyline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "responsibility", "actor_slot_ids", "goal", "pressure", "start_state", "state_changes", "end_state", "connection_ids", "source_decision_ids", "downstream_freedom"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "type": {"enum": ["precursor", "main", "supporting", "background", "optional_melody"]},
+        "responsibility": {"type": "string", "minLength": 1},
+        "actor_slot_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^SLOT-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "goal": {"type": "string", "minLength": 1},
+        "pressure": {"type": "string", "minLength": 1},
+        "start_state": {"type": "string", "minLength": 1},
+        "state_changes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "end_state": {"type": "string", "minLength": 1},
+        "connection_ids": {"type": "array", "items": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "closure_mode": {"type": ["string", "null"], "enum": ["converges_to_main", "terminal_consequence", null]},
+        "terminal_source_anchor": {"oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]},
+        "terminal_entry_connection_id": {"type": ["string", "null"], "pattern": "^SLC-[A-Za-z0-9._-]+$"},
+        "source_decision_ids": {"type": "array", "items": {"type": "string", "pattern": "^DEC-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "downstream_freedom": {"type": "string", "minLength": 1}
+      }
+    },
+    "lineClaimAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "pointer", "start_offset", "end_offset", "text", "text_sha256", "disposition", "source_control_ids", "decision_ids", "target_stage", "target_requirement_id", "open_item_id"],
+      "properties": {
+        "claim_id": {"type": "string", "pattern": "^LCA-[0-9a-f]{20}$"},
+        "pointer": {"type": "string", "pattern": "^/(design_decisions|storylines)/[0-9]+/[A-Za-z0-9_]+(?:/[0-9]+)?$"},
+        "start_offset": {"type": "integer", "minimum": 0},
+        "end_offset": {"type": "integer", "minimum": 1},
+        "text": {"type": "string", "minLength": 1},
+        "text_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "disposition": {"enum": ["source_bound", "s1_structural_derivation", "downstream_requirement", "open_item"]},
+        "source_control_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
+        "decision_ids": {"type": "array", "items": {"type": "string", "pattern": "^DEC-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "target_stage": {"type": ["string", "null"], "enum": ["W1", "E1", "T1", "C1", null]},
+        "target_requirement_id": {"type": ["string", "null"], "pattern": "^(WR|END|EVD|CHD)-[A-Za-z0-9._-]+$"},
+        "open_item_id": {"type": ["string", "null"], "pattern": "^OPEN-[A-Za-z0-9._-]+$"}
+      }
+    },
+    "sourceSequenceRealization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_unit_id", "from_anchor", "to_anchor", "realization_scope", "reserved_connection_id", "phase3_fulfillment_kind", "expected_witness_type", "rationale"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SSR-[A-Za-z0-9._-]+$"},
+        "source_unit_id": {"type": "string", "pattern": "^SCU-[A-Za-z0-9._-]+$"},
+        "from_anchor": {
+          "oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]
+        },
+        "to_anchor": {
+          "oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]
+        },
+        "boundary_from_anchor": {
+          "oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]
+        },
+        "boundary_to_anchor": {
+          "oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]
+        },
+        "realization_scope": {"enum": ["within_line", "cross_line", "semantic_constraint", "non_relational_candidate"]},
+        "reserved_connection_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"}
+          ]
+        },
+        "phase3_fulfillment_kind": {
+          "oneOf": [
+            {"type": "null"},
+            {"enum": ["obligation", "marker", "consistency"]}
+          ]
+        },
+        "expected_witness_type": {
+          "oneOf": [
+            {"type": "null"},
+            {"enum": ["story_obligation", "narrative_marker", "consistency_check"]}
+          ]
+        },
+        "consistency_dimension": {
+          "type": ["string", "null"],
+          "enum": ["time", "causality", "information", "authority", "state", "theme", null]
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"realization_scope": {"const": "semantic_constraint"}}},
+          "then": {
+            "properties": {
+              "from_anchor": {"type": "null"},
+              "to_anchor": {"type": "null"},
+              "boundary_from_anchor": {"type": "null"},
+              "boundary_to_anchor": {"type": "null"},
+              "reserved_connection_id": {"type": "null"},
+              "phase3_fulfillment_kind": {"enum": ["obligation", "marker", "consistency"]},
+              "expected_witness_type": {"enum": ["story_obligation", "narrative_marker", "consistency_check"]}
+            }
+          },
+          "else": {
+            "properties": {
+              "from_anchor": {"oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]},
+              "to_anchor": {"oneOf": [{"$ref": "#/$defs/lineStateRef"}, {"type": "null"}]},
+              "phase3_fulfillment_kind": {"type": "null"},
+              "expected_witness_type": {"type": "null"},
+              "consistency_dimension": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"realization_scope": {"const": "non_relational_candidate"}}},
+          "then": {
+            "properties": {
+              "from_anchor": {"type": "null"},
+              "to_anchor": {"type": "null"},
+              "boundary_from_anchor": {"type": "null"},
+              "boundary_to_anchor": {"type": "null"},
+              "reserved_connection_id": {"type": "null"},
+              "phase3_fulfillment_kind": {"type": "null"},
+              "expected_witness_type": {"type": "null"},
+              "consistency_dimension": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"realization_scope": {"const": "within_line"}}},
+          "then": {
+            "properties": {
+              "boundary_from_anchor": {"type": "null"},
+              "boundary_to_anchor": {"type": "null"},
+              "reserved_connection_id": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"realization_scope": {"const": "cross_line"}}},
+          "then": {
+            "properties": {
+              "boundary_from_anchor": {"$ref": "#/$defs/lineStateRef"},
+              "boundary_to_anchor": {"$ref": "#/$defs/lineStateRef"},
+              "reserved_connection_id": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"phase3_fulfillment_kind": {"const": "obligation"}}},
+          "then": {"properties": {"expected_witness_type": {"const": "story_obligation"}}}
+        },
+        {
+          "if": {"properties": {"phase3_fulfillment_kind": {"const": "marker"}}},
+          "then": {"properties": {"expected_witness_type": {"const": "narrative_marker"}}}
+        },
+        {
+          "if": {"properties": {"phase3_fulfillment_kind": {"const": "consistency"}}},
+          "then": {
+            "properties": {
+              "expected_witness_type": {"const": "consistency_check"},
+              "consistency_dimension": {"enum": ["time", "causality", "information", "authority", "state", "theme"]}
+            }
+          },
+          "else": {"properties": {"consistency_dimension": {"type": "null"}}}
+        }
+      ]
+    },
+    "upstreamPhasePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storyline_demands",
+        "design_decisions",
+        "storylines",
+        "line_claim_authority",
+        "connections",
+        "architecture",
+        "temporal_architecture",
+        "story_claim_units",
+        "story_claim_atoms",
+        "story_obligation_register",
+        "story_obligation_coverage",
+        "cross_line_consistency"
+      ],
+      "properties": {
+        "storyline_demands": {"$ref": "#/properties/storyline_demands"},
+        "design_decisions": {"$ref": "#/properties/design_decisions"},
+        "storylines": {"$ref": "#/properties/storylines"},
+        "line_claim_authority": {"$ref": "#/properties/line_claim_authority"},
+        "source_sequence_realizations": {"$ref": "#/properties/source_sequence_realizations"},
+        "connections": {"$ref": "#/$defs/topologyPhasePayload/properties/connections"},
+        "architecture": {"$ref": "#/$defs/topologyPhasePayload/properties/architecture"},
+        "temporal_architecture": {"$ref": "#/$defs/topologyPhasePayload/properties/temporal_architecture"},
+        "story_claim_units": {"$ref": "#/$defs/topologyPhasePayload/properties/story_claim_units"},
+        "story_claim_atoms": {"$ref": "#/$defs/topologyPhasePayload/properties/story_claim_atoms"},
+        "story_obligation_register": {"$ref": "#/$defs/topologyPhasePayload/properties/story_obligation_register"},
+        "story_obligation_coverage": {"$ref": "#/$defs/topologyPhasePayload/properties/story_obligation_coverage"},
+        "cross_line_consistency": {"$ref": "#/$defs/topologyPhasePayload/properties/cross_line_consistency"}
+      }
+    },
+    "topologyPhasePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "connections",
+        "architecture",
+        "temporal_architecture",
+        "story_claim_units",
+        "story_claim_atoms",
+        "story_obligation_register",
+        "story_obligation_coverage",
+        "cross_line_consistency"
+      ],
+      "properties": {
+        "connections": {"type": "array", "items": {"$ref": "#/$defs/connection"}},
+        "architecture": {"$ref": "#/$defs/architecture"},
+        "temporal_architecture": {"$ref": "#/$defs/temporalArchitecture"},
+        "story_claim_units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/storyClaimUnit"},
+          "uniqueItems": true
+        },
+        "story_claim_atoms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/storyClaimAtom"},
+          "uniqueItems": true
+        },
+        "story_obligation_register": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/storyObligation"},
+          "uniqueItems": true
+        },
+        "story_obligation_coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/storyObligationCoverage"},
+          "uniqueItems": true
+        },
+        "cross_line_consistency": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/consistencyCheck"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "connection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "relation", "from_storyline_id", "to_storyline_id", "from_state", "from_state_index", "to_state", "to_state_index"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"},
+        "type": {"enum": ["merge", "split", "handoff", "collision", "reveal", "synchronization"]},
+        "relation": {"enum": ["causal", "associative"]},
+        "from_storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "to_storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "from_state": {"type": "string", "minLength": 1},
+        "from_state_index": {"type": "integer", "minimum": 0},
+        "to_state": {"type": "string", "minLength": 1},
+        "to_state_index": {"type": "integer", "minimum": 0}
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject",
+        "opening_condition",
+        "development_logic",
+        "turning_logic",
+        "resolution_condition",
+        "theme_test",
+        "line_order"
+      ],
+      "properties": {
+        "subject": {"type": "string", "minLength": 1},
+        "opening_condition": {"type": "string", "minLength": 1},
+        "development_logic": {"type": "string", "minLength": 1},
+        "turning_logic": {"type": "string", "minLength": 1},
+        "resolution_condition": {"type": "string", "minLength": 1},
+        "theme_test": {"type": "string", "minLength": 1},
+        "line_order": {
+          "description": "Presentation order only. Contains every storyline exactly once; it is not a causal or temporal topological order.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "temporalArchitecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["progression_logic", "phases", "milestones", "markers"],
+      "properties": {
+        "progression_logic": {"type": "string", "minLength": 1},
+        "phases": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/temporalPhase"},
+          "uniqueItems": true
+        },
+        "milestones": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/milestone"},
+          "uniqueItems": true
+        },
+        "markers": {
+          "type": "array",
+          "minItems": 5,
+          "items": {"$ref": "#/$defs/narrativeMarker"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "temporalPhase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "order", "temporal_label", "title", "responsibility", "active_storyline_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TPH-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "temporal_label": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "responsibility": {"type": "string", "minLength": 1},
+        "active_storyline_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "order", "phase_id", "temporal_label", "title", "storyline_ids", "state_refs", "development", "outcome", "connection_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^MS-[A-Za-z0-9._-]+$"},
+        "order": {"type": "integer", "minimum": 1},
+        "phase_id": {"type": "string", "pattern": "^TPH-[A-Za-z0-9._-]+$"},
+        "temporal_label": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "storyline_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "state_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/lineStateRef"},
+          "uniqueItems": true
+        },
+        "development": {"type": "string", "minLength": 1},
+        "outcome": {"type": "string", "minLength": 1},
+        "connection_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SLC-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "lineStateRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storyline_id", "state_index", "state"],
+      "properties": {
+        "storyline_id": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+        "state_index": {"type": "integer", "minimum": 0},
+        "state": {"type": "string", "minLength": 1}
+      }
+    },
+    "controlLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["control_id", "artifact", "selector", "value_sha256"],
+      "properties": {
+        "control_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+        "artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "selector": {"type": "string", "pattern": "^control:[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+        "value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+      }
+    },
+    "storyClaimUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "control_id", "source_locator", "source_pointer", "start_offset", "end_offset", "kind", "relation_mode", "ordinal", "text", "text_sha256"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SCU-[A-Za-z0-9._-]+$"},
+        "control_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+        "source_locator": {"$ref": "#/$defs/controlLocator"},
+        "source_pointer": {"type": "string", "pattern": "^(?:|/(?:[^/~]|~[01])*)?(?:/(?:[^/~]|~[01])*)*$"},
+        "start_offset": {"type": "integer", "minimum": 0},
+        "end_offset": {"type": "integer", "minimum": 0},
+        "kind": {"enum": ["arrow_link", "ordered_link", "numbered_step", "table_row", "sentence", "structured_leaf"]},
+        "relation_mode": {"enum": ["required", "candidate", "none"]},
+        "ordinal": {"type": "integer", "minimum": 1},
+        "text": {"type": "string", "minLength": 1},
+        "text_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+      }
+    },
+    "storyClaimAtom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_unit_id", "control_id", "source_locator", "claim", "atom_kind", "obligation_ids", "rationale", "review_required"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SCA-[A-Za-z0-9._-]+$"},
+        "source_unit_id": {"type": "string", "pattern": "^SCU-[A-Za-z0-9._-]+$"},
+        "control_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+        "source_locator": {"$ref": "#/$defs/controlLocator"},
+        "claim": {"type": "string", "minLength": 1},
+        "atom_kind": {"enum": ["causal_relation", "temporal_relation", "all_prerequisites", "information_window", "consistency_constraint", "non_relational", "author_open"]},
+        "consistency_dimensions": {
+          "type": "array",
+          "items": {"enum": ["time", "causality", "information", "authority", "state", "theme"]},
+          "uniqueItems": true
+        },
+        "obligation_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SOB-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "review_required": {"type": "boolean"},
+        "co_realization_group": {"type": "string", "pattern": "^CO-[A-Za-z0-9._-]+$"},
+        "co_realization_justification": {"type": "string", "minLength": 1},
+        "co_realization_witness_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "storyObligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source_claim_atom_ids", "source_control_ids", "source_locators", "antecedent_anchors", "consequent_anchor", "proposition_id", "audience", "rationale", "acceptance_check"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SOB-[A-Za-z0-9._-]+$"},
+        "kind": {"enum": ["causes", "strict_before", "not_before", "requires_all", "first_disclosure", "must_remain_unknown"]},
+        "source_claim_atom_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SCA-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_control_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_locators": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/controlLocator"},
+          "uniqueItems": true
+        },
+        "antecedent_anchors": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/lineStateRef"},
+          "uniqueItems": true
+        },
+        "consequent_anchor": {"$ref": "#/$defs/lineStateRef"},
+        "proposition_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^PROP-[A-Za-z0-9._-]+$"}
+          ]
+        },
+        "audience": {
+          "oneOf": [
+            {"type": "null"},
+            {"enum": ["reader", "characters", "both"]}
+          ]
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "acceptance_check": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"enum": ["causes", "strict_before", "not_before"]}}},
+          "then": {
+            "properties": {
+              "antecedent_anchors": {"minItems": 1, "maxItems": 1},
+              "proposition_id": {"type": "null"},
+              "audience": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "requires_all"}}},
+          "then": {
+            "properties": {
+              "antecedent_anchors": {"minItems": 2},
+              "proposition_id": {"type": "null"},
+              "audience": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "first_disclosure"}}},
+          "then": {
+            "properties": {
+              "antecedent_anchors": {"minItems": 1},
+              "proposition_id": {"type": "string", "pattern": "^PROP-[A-Za-z0-9._-]+$"},
+              "audience": {"enum": ["reader", "characters", "both"]}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "must_remain_unknown"}}},
+          "then": {
+            "properties": {
+              "antecedent_anchors": {"maxItems": 0},
+              "proposition_id": {"type": "string", "pattern": "^PROP-[A-Za-z0-9._-]+$"},
+              "audience": {"enum": ["reader", "characters", "both"]}
+            }
+          }
+        }
+      ]
+    },
+    "storyObligationCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "control_id", "source_locator", "disposition", "claim_atom_ids", "obligation_ids", "rationale", "review_required"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SOC-[A-Za-z0-9._-]+$"},
+        "control_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+        "source_locator": {"$ref": "#/$defs/controlLocator"},
+        "disposition": {"enum": ["obligated", "mixed", "no_relational_obligation", "author_open"]},
+        "claim_atom_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SCA-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "obligation_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SOB-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "review_required": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"disposition": {"const": "mixed"}}},
+          "then": {
+            "properties": {
+              "obligation_ids": {"minItems": 1}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"disposition": {"const": "obligated"}}},
+          "then": {
+            "properties": {
+              "obligation_ids": {"minItems": 1},
+              "review_required": {"const": false}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"disposition": {"const": "no_relational_obligation"}}},
+          "then": {
+            "properties": {
+              "obligation_ids": {"maxItems": 0}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"disposition": {"const": "author_open"}}},
+          "then": {
+            "properties": {
+              "obligation_ids": {"maxItems": 0},
+              "review_required": {"const": false}
+            }
+          }
+        }
+      ]
+    },
+    "narrativeMarker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "milestone_id", "storyline_ids", "label", "function", "reader_question", "observable_signal", "reference_marker_ids", "resolution"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^NM-[A-Za-z0-9._-]+$"},
+        "kind": {"enum": ["opening", "setup", "probe", "turning_point", "reveal", "climax", "payoff", "aftermath"]},
+        "milestone_id": {"type": "string", "pattern": "^MS-[A-Za-z0-9._-]+$"},
+        "storyline_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^SL-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "label": {"type": "string", "minLength": 1},
+        "function": {"type": "string", "minLength": 1},
+        "reader_question": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1}
+          ]
+        },
+        "observable_signal": {"type": "string", "minLength": 1},
+        "reference_marker_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^NM-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_claim_atom_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SCA-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_control_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "resolution": {"enum": ["opened", "advanced", "resolved", "intentionally_open"]}
+      }
+    },
+    "consistencyCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "dimension", "witness_ids", "claim", "failure_condition"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SLCHECK-[A-Za-z0-9._-]+$"},
+        "dimension": {
+          "enum": ["time", "causality", "information", "authority", "state", "theme"]
+        },
+        "witness_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_claim_atom_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SCA-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "source_control_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "claim": {"type": "string", "minLength": 1},
+        "failure_condition": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

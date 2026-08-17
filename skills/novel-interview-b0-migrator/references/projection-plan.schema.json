@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "migration_id", "run_id", "inputs", "stage_projections", "fact_candidates"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "migration_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "inputs": {
+      "type": "object", "additionalProperties": false,
+      "required": ["I0", "I1", "I2", "I3", "I4", "I5", "V1", "V2", "approval"],
+      "properties": {
+        "I0": {"type": "string", "minLength": 1}, "I1": {"type": "string", "minLength": 1},
+        "I2": {"type": "string", "minLength": 1}, "I3": {"type": "string", "minLength": 1},
+        "I4": {"type": "string", "minLength": 1}, "I5": {"type": "string", "minLength": 1},
+        "V1": {"type": "string", "minLength": 1}, "V2": {"type": "string", "minLength": 1},
+        "approval": {"type": "string", "minLength": 1}
+      }
+    },
+    "stage_projections": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["stage", "sections"],
+        "properties": {
+          "stage": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]},
+          "sections": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": false, "required": ["control_id", "hardness", "heading"],
+            "properties": {
+              "control_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9._-]+$"},
+              "hardness": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]},
+              "heading": {"type": "string", "minLength": 1}
+            }
+          }}
+        }
+      }
+    },
+    "fact_candidates": {"type": "array", "minItems": 1, "items": {"oneOf": [
+      {"$ref": "#/$defs/notApplicable"}, {"$ref": "#/$defs/open"}, {"$ref": "#/$defs/adopted"}
+    ]}}
+  },
+  "$defs": {
+    "base": {"type": "object", "properties": {
+      "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"},
+      "claim": {"type": "string", "minLength": 1}
+    }},
+    "notApplicable": {"type": "object", "additionalProperties": false, "required": ["id", "proposed_status", "claim", "rationale"], "properties": {
+      "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"}, "proposed_status": {"const": "not_applicable"}, "claim": {"type": "string", "minLength": 1}, "rationale": {"type": "string", "minLength": 1}
+    }},
+    "open": {"type": "object", "additionalProperties": false, "required": ["id", "proposed_status", "claim", "blocking", "allowed_handling", "rationale"], "properties": {
+      "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"}, "proposed_status": {"const": "open"}, "claim": {"type": "string", "minLength": 1}, "blocking": {"const": false}, "allowed_handling": {"const": "preserve_open"}, "rationale": {"type": "string", "minLength": 1}
+    }},
+    "adopted": {"type": "object", "additionalProperties": false, "required": ["id", "proposed_status", "claim", "research_package", "adoption_record", "allowed_use", "fiction_boundary"], "properties": {
+      "id": {"type": "string", "pattern": "^FACT-[A-Za-z0-9._-]+$"}, "proposed_status": {"const": "adopted"}, "claim": {"type": "string", "minLength": 1}, "research_package": {"type": "string", "minLength": 1}, "adoption_record": {"type": "string", "minLength": 1}, "allowed_use": {"type": "string", "minLength": 1}, "fiction_boundary": {"type": "string", "minLength": 1}
+    }}
+  }
+}

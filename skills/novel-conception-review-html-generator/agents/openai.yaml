@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说构思人审 HTML 生成"
+  short_description: "将已验收构思报告确定性渲染为十分钟可访问单页 HTML"
+  default_prompt: "使用 $novel-conception-review-html-generator 将 V2 H1 内容模型确定性渲染为离线 HTML。"

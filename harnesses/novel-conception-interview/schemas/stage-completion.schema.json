@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Novel conception stage completion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["harness", "run_id", "stage", "session_id", "status", "design_artifact", "design_artifact_sha256", "validation", "input_completions", "run_state"],
+  "properties": {
+    "contract_version": {"const": "2.0"},
+    "harness": {"const": "novel-conception-interview"},
+    "run_id": {"type": "string", "minLength": 1},
+    "stage": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5", "V1", "V2"]},
+    "session_id": {"type": "string"},
+    "status": {"enum": ["ready", "blocked", "superseded"]},
+    "design_artifact": {"type": "string"},
+    "design_artifact_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "report": {"$ref": "#/$defs/artifactReference"},
+    "validation": {"$ref": "#/$defs/validationReference"},
+    "input_completions": {"type": "array", "items": {"$ref": "#/$defs/artifactReference"}},
+    "author_approval": {"$ref": "#/$defs/artifactReference"},
+    "semantic_review": {"$ref": "#/$defs/artifactReference"},
+    "control_projection": {"$ref": "#/$defs/artifactReference"},
+    "fact_dependency_register": {"$ref": "#/$defs/artifactReference"},
+    "run_state": {"$ref": "#/$defs/artifactReference"},
+    "return_resolution": {"$ref": "#/$defs/artifactReference"},
+    "uncertainty_register": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"stage": {"const": "V1"}}, "required": ["stage"]},
+      "then": {"required": ["contract_version", "semantic_review", "fact_dependency_register"]},
+      "else": {"not": {"required": ["fact_dependency_register"]}}
+    },
+    {
+      "if": {"properties": {"stage": {"enum": ["I0", "I1", "I2", "I3", "I4", "I5"]}}, "required": ["stage"]},
+      "then": {"required": ["contract_version", "report", "control_projection"]},
+      "else": {"allOf": [
+        {"not": {"required": ["control_projection"]}},
+        {"not": {"required": ["report"]}}
+      ]}
+    }
+  ],
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "validationReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "verdict", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "verdict": {"enum": ["ready", "blocked"]},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"harness": "novel-conception-interview", "run_id": "fixture-positive-run", "status": "active", "origin_stage": "V1", "target_stage": "I0", "defect": "intent must be clarified", "evidence": ["semantic finding"], "requested_decision": "Clarify the authoritative intent boundary.", "affected_artifacts": ["intent-card.md"]}

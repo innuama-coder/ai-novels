@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说故事线架构设计"
+  short_description: "设计多线故事架构与后续阶段需求"
+  default_prompt: "使用 $novel-storyline-architecture-designer 按自主构思 V2 契约完成 S1，并严格通过 scripts/run_v2.py 的 start_s1_session → submit_s1_phase → run_s1 唯一生产路径交付。"

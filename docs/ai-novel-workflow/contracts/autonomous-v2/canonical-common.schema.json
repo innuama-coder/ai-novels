@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "canonical-common.schema.json",
+  "title": "Autonomous conception V2 canonical model definitions",
+  "$defs": {
+    "sourceArtifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+      "uniqueItems": true
+    },
+    "authorityPartition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author_locked",
+        "autonomous_owned",
+        "downstream_freedom",
+        "author_open"
+      ],
+      "properties": {
+        "author_locked": {"$ref": "#/$defs/idSet"},
+        "autonomous_owned": {"$ref": "#/$defs/idSet"},
+        "downstream_freedom": {"$ref": "#/$defs/idSet"},
+        "author_open": {"$ref": "#/$defs/idSet"}
+      }
+    },
+    "idSet": {
+      "type": "array",
+      "items": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+      "uniqueItems": true
+    },
+    "nonEmptyIdSet": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+      "uniqueItems": true
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "strings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "developmentFreedom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_ids",
+        "scope",
+        "allowed_variations",
+        "forbidden_changes",
+        "acceptance_checks",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DEV-[A-Za-z0-9._-]+$"},
+        "subject_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "scope": {"type": "string", "minLength": 1},
+        "allowed_variations": {"$ref": "#/$defs/nonEmptyStrings"},
+        "forbidden_changes": {"$ref": "#/$defs/nonEmptyStrings"},
+        "acceptance_checks": {"$ref": "#/$defs/nonEmptyStrings"},
+        "source_ids": {"$ref": "#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "developmentFreedoms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/developmentFreedom"},
+      "uniqueItems": true
+    },
+    "idObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"}
+      }
+    },
+    "idObjects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/idObject"},
+      "uniqueItems": true
+    },
+    "handoffRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "target_stage",
+        "responsibility",
+        "source_ids",
+        "required_capability",
+        "constraints",
+        "acceptance_checks",
+        "downstream_freedom"
+      ],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "target_stage": {"enum": ["W1", "E1", "T1", "C1"]},
+        "responsibility": {"type": "string", "minLength": 1},
+        "source_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "required_capability": {"type": "string", "minLength": 1},
+        "constraints": {"$ref": "#/$defs/nonEmptyStrings"},
+        "acceptance_checks": {"$ref": "#/$defs/nonEmptyStrings"},
+        "downstream_freedom": {"type": "string", "minLength": 1}
+      }
+    },
+    "worldRequirement": {
+      "allOf": [
+        {"$ref": "#/$defs/handoffRequirement"},
+        {
+          "properties": {
+            "id": {"type": "string", "pattern": "^WR-[A-Za-z0-9._-]+$"},
+            "target_stage": {"const": "W1"}
+          }
+        }
+      ]
+    },
+    "environmentRequirement": {
+      "allOf": [
+        {"$ref": "#/$defs/handoffRequirement"},
+        {
+          "properties": {
+            "id": {"type": "string", "pattern": "^END-[A-Za-z0-9._-]+$"},
+            "target_stage": {"const": "E1"}
+          }
+        }
+      ]
+    },
+    "eventRequirement": {
+      "allOf": [
+        {"$ref": "#/$defs/handoffRequirement"},
+        {
+          "properties": {
+            "id": {"type": "string", "pattern": "^EVD-[A-Za-z0-9._-]+$"},
+            "target_stage": {"const": "T1"}
+          }
+        }
+      ]
+    },
+    "characterRequirement": {
+      "allOf": [
+        {"$ref": "#/$defs/handoffRequirement"},
+        {
+          "properties": {
+            "id": {"type": "string", "pattern": "^CHD-[A-Za-z0-9._-]+$"},
+            "target_stage": {"const": "C1"}
+          }
+        }
+      ]
+    },
+    "worldRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/worldRequirement"}
+    },
+    "environmentRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/environmentRequirement"}
+    },
+    "eventRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/eventRequirement"}
+    },
+    "characterRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/characterRequirement"}
+    },
+    "coverageRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ids", "realization_ids", "status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^COV-[A-Za-z0-9._-]+$"},
+        "source_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "realization_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "status": {"const": "covered"},
+        "evidence": {"type": "string", "minLength": 1}
+      }
+    },
+    "coverageRecords": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/coverageRecord"}
+    },
+    "relationEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from_id", "to_id", "relation", "mechanism", "constraints"],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "from_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "to_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "relation": {"type": "string", "minLength": 1},
+        "mechanism": {"type": "string", "minLength": 1},
+        "constraints": {"$ref": "#/$defs/nonEmptyStrings"}
+      }
+    },
+    "stateTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "from_state",
+        "trigger_ids",
+        "to_state",
+        "allowed_by_ids",
+        "consequence"
+      ],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "subject_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "from_state": {"type": "string", "minLength": 1},
+        "trigger_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "to_state": {"type": "string", "minLength": 1},
+        "allowed_by_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "consequence": {"type": "string", "minLength": 1}
+      }
+    },
+    "informationChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "before",
+        "after",
+        "event_ids",
+        "visibility_ids"
+      ],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "subject_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "before": {"type": "string", "minLength": 1},
+        "after": {"type": "string", "minLength": 1},
+        "event_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "visibility_ids": {"$ref": "#/$defs/nonEmptyIdSet"}
+      }
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject_id", "responsibility", "evidence_ids", "constraints"],
+      "properties": {
+        "id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "subject_id": {"$ref": "common-defs.schema.json#/$defs/objectId"},
+        "responsibility": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "#/$defs/nonEmptyIdSet"},
+        "constraints": {"$ref": "#/$defs/nonEmptyStrings"}
+      }
+    },
+    "designDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "gap",
+        "options",
+        "selection",
+        "owner",
+        "authority_basis",
+        "compatibility",
+        "impact_ids",
+        "cost",
+        "reversibility",
+        "downstream_freedom",
+        "projection_ids"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DEC-[A-Za-z0-9._-]+$"},
+        "gap": {"type": "string", "minLength": 1},
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "single_option_exclusion_evidence": {"type": "string", "minLength": 1},
+        "selection": {"type": "string", "minLength": 1},
+        "owner": {"$ref": "common-defs.schema.json#/$defs/ownerId"},
+        "authority_basis": {"type": "string", "minLength": 1},
+        "compatibility": {"type": "string", "minLength": 1},
+        "impact_ids": {"$ref": "#/$defs/idSet"},
+        "cost": {"type": "string", "minLength": 1},
+        "reversibility": {"enum": ["reversible", "costly", "locked_by_downstream"]},
+        "downstream_freedom": {"type": "string", "minLength": 1},
+        "projection_ids": {"$ref": "#/$defs/idSet"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"options": {"maxItems": 1}},
+            "required": ["options"]
+          },
+          "then": {"required": ["single_option_exclusion_evidence"]}
+        }
+      ]
+    },
+    "designDecisions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/designDecision"}
+    },
+    "derivationClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "value_sha256", "source_ids", "decision_ids", "projection_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DRV-[A-Za-z0-9._-]+$"},
+        "value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+        "source_ids": {"$ref": "#/$defs/idSet"},
+        "decision_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^DEC-[A-Za-z0-9._-]+$"},
+          "uniqueItems": true
+        },
+        "projection_ids": {"$ref": "#/$defs/idSet"}
+      }
+    },
+    "derivationClaims": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/derivationClaim"}
+    },
+    "openItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "source_ids", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^OPEN-[A-Za-z0-9._-]+$"},
+        "question": {"type": "string", "minLength": 1},
+        "source_ids": {"$ref": "#/$defs/idSet"},
+        "status": {"const": "author_open"}
+      }
+    },
+    "openItems": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/openItem"}
+    },
+    "modelMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate"],
+      "properties": {
+        "schema_version": {"const": "2.0"},
+        "skill": {"type": "string", "minLength": 1},
+        "stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
+        "run_id": {"type": "string", "minLength": 1},
+        "status": {"const": "ready"},
+        "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    }
+  }
+}

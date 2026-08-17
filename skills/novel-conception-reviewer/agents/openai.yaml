@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说构思独立审查"
+  short_description: "独立审查五域构思并计算 ready、revise 或 blocked"
+  default_prompt: "使用 $novel-conception-reviewer 按自主构思 V2 的 Q1 契约独立审查 B0 与 S1–C1。"

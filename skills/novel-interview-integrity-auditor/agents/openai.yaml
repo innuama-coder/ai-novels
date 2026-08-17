@@ -1,0 +1,4 @@
+interface:
+  display_name: "访谈完整性审计"
+  short_description: "审计六份构思访谈材料是否完整、一致且可交接开发"
+  default_prompt: "Use $novel-interview-integrity-auditor to audit my completed novel interviews before author review."

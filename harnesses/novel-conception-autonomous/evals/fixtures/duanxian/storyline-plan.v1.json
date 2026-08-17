@@ -1,0 +1,288 @@
+{
+  "schema_version": "1.0",
+  "kind": "eval-owned-autonomous-storyline-plan",
+  "plan_id": "SPLAN-DUANXIAN-V1",
+  "fixture_binding": {
+    "fixture": {
+      "path": "fixtures/duanxian/fixture.json",
+      "sha256": "c2cac509af0549dfac3d31045c812226c19e9c6dd95d17cc5ebb22f882129798"
+    },
+    "fixture_id": "duanxian-conception-e2e",
+    "run_id": "duanxian-20260722",
+    "control_inventory_sha256": "28ad032e820c39c53b3ad4083a4698e3223c1709c257f48a006706666b99ff2a",
+    "anchor_inventory_sha256": "5be21d5bf11049c60aab55d54a55ada5159b8e092ed91c03249cda99b1243ce0"
+  },
+  "ownership": {
+    "owner": "eval_harness",
+    "authority": "eval_owned_autonomous_proposal",
+    "author_authority": false,
+    "usage": "S1_phase_payload_only"
+  },
+  "design_decisions": [
+    {
+      "id": "DEC-DX-PREACTIVATION-MERGE",
+      "source_control_ids": ["WLD-003", "CAU-001", "NAR-001"],
+      "source_anchor_ids": ["DX-PRESTART-DUAL-LINE-MERGE"],
+      "gap": "The controls permit Gu Heng and Shen Yu viewpoints before activation but require one present-tense line after R-07 starts.",
+      "options": [
+        "Use one undifferentiated line before and after activation.",
+        "Use separate Gu Heng and Shen Yu precursor lines that converge at R-07 activation, then keep exactly one present-tense line."
+      ],
+      "selection": "Use separate Gu Heng and Shen Yu precursor lines that converge at R-07 activation, then keep exactly one present-tense line.",
+      "authority_basis": "This is the fixture-declared derived_unsealed structural hypothesis and remains reversible until author sealing.",
+      "reversibility": "reversible",
+      "projection_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SLC-DX-GUHENG-ACTIVATION", "SLC-DX-SHENYU-ACTIVATION", "SL-DX-R07-MAIN"]
+    },
+    {
+      "id": "DEC-DX-RESPONSIBILITY-CLUSTERS",
+      "source_control_ids": ["SUB-001", "WLD-004", "WLD-006", "CAU-002", "CAU-004"],
+      "source_anchor_ids": ["DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN", "DX-ATTACK-STOPPED-TRUST-OPEN"],
+      "gap": "The real-world evidence chain and geopolitical aftermath must remain causally available without becoming competing present-tense protagonists.",
+      "options": [
+        "Collapse evidence and political aftermath into expository statements inside the main line.",
+        "Model evidence conversion and political aftermath as linked responsibility lines that feed the sole present-tense main line."
+      ],
+      "selection": "Model evidence conversion and political aftermath as linked responsibility lines that feed the sole present-tense main line.",
+      "authority_basis": "Locked controls require separate operational responsibilities while leaving concrete environments and events downstream.",
+      "reversibility": "costly",
+      "projection_ids": ["SL-DX-EVIDENCE-CHAIN", "SLC-DX-EVIDENCE-POLITICAL", "SL-DX-POLITICAL-AFTERMATH", "SLC-DX-POLITICAL-MAIN"]
+    },
+    {
+      "id": "DEC-DX-MEMORY-IN-MAIN",
+      "source_control_ids": ["WLD-001", "WLD-002", "CHR-001", "CHR-002", "NAR-001"],
+      "source_anchor_ids": ["DX-IDENTITY-NEW-LIFE", "DX-R07-PERCEPTION-LIMIT", "DX-ACTIVATION-SINGLE-LINE"],
+      "gap": "Gu Heng's past must shape R-07 without becoming current perception or an independent post-activation storyline.",
+      "options": [
+        "Create a parallel memory storyline after activation.",
+        "Keep dialogue-triggered, interruptible memory fragments as state material inside the sole R-07 present line."
+      ],
+      "selection": "Keep dialogue-triggered, interruptible memory fragments as state material inside the sole R-07 present line.",
+      "authority_basis": "The locked ontology and narrative contract prohibit a second post-activation present line.",
+      "reversibility": "locked_by_downstream",
+      "projection_ids": ["SL-DX-GUHENG-PRE", "SL-DX-R07-MAIN"]
+    }
+  ],
+  "demands": [
+    {"id": "SLD-DX-INT-001", "source_control_id": "INT-001", "obligation": "Core proposition — Memory may be inherited, but life becomes itself only through new circumstances, interpretation and choices.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "R-07's developing choices are the main line's thematic engine."},
+    {"id": "SLD-DX-INT-002", "source_control_id": "INT-002", "obligation": "Supreme ethical boundary — Conscious digital life has the moral status of life; actions must not harm innocents, while family may be protected only where compatible with that rule.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The no-harm hierarchy governs the main protection choice."},
+    {"id": "SLD-DX-INT-003", "source_control_id": "INT-003", "obligation": "First-volume commitment — R-07 independently stops the attack, protects others and ends its current existence; the loss must result from R-07's own value judgment.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The first-volume commitment resolves in the main line."},
+    {"id": "SLD-DX-SUB-001", "source_control_id": "SUB-001", "obligation": "Dual-subject responsibility — R-07 owns meaning, judgment, intelligence selection and autonomous choice; Shen Yu owns real-world inquiry, verification, authorization, action and consequences.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The sole present line carries both subjects' non-substitutable responsibilities."},
+    {"id": "SLD-DX-SUB-002", "source_control_id": "SUB-002", "obligation": "Goal progression — Shen Yu progresses from intelligence duty to understanding R-07 and reducing its suffering; R-07 progresses from passive recall to autonomous protection and departure.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "Their coupled goal changes structure the main progression."},
+    {"id": "SLD-DX-WLD-001", "source_control_id": "WLD-001", "obligation": "Digital-life ontology — R-07 is not an uploaded or revived Gu Heng. Gu Heng's memories provide continuity and dispositions, while post-startup experience continuously forms R-07's own consciousness and values.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The ontology is demonstrated by continuous post-startup change."},
+    {"id": "SLD-DX-WLD-002", "source_control_id": "WLD-002", "obligation": "Perception and memory — Present R-07 has no sight, hearing, body, movement or self-sensation. External input appears only as text in consciousness; subjective memory fragments never grant present perception.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "Every present interaction and memory interruption must obey this constraint."},
+    {"id": "SLD-DX-WLD-003", "source_control_id": "WLD-003", "obligation": "Institutional authority — The command chain starts the immature memory-digital-life attempt. Shen Yu is recommended because her research fits and voluntarily accepts the assignment, but she does not choose project activation or own all project powers.", "disposition": "independent_line", "realization_line_ids": ["SL-DX-SHENYU-PRE"], "rationale": "Shen Yu's pre-activation choice and limited authority form one precursor responsibility."},
+    {"id": "SLD-DX-WLD-004", "source_control_id": "WLD-004", "obligation": "Evidence conversion — R-07 supplies fragmented leads; hostage rescue, expert testimony, hardware seizure, authorization verification and team action must corroborate and operationalize them before the attack path can be closed.", "disposition": "merged", "realization_line_ids": ["SL-DX-EVIDENCE-CHAIN"], "rationale": "Evidence conversion is an operational responsibility distinct from R-07's judgment."},
+    {"id": "SLD-DX-WLD-005", "source_control_id": "WLD-005", "obligation": "Termination continuity — R-07 cannot self-terminate, copy itself or create a backup. Shen Yu must perform authorized shutdown, which irreversibly ends the current continuous consciousness and its post-startup experience.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The farewell and shutdown are the main line's irreversible terminal action."},
+    {"id": "SLD-DX-WLD-006", "source_control_id": "WLD-006", "obligation": "Political consequence — The meteorological attack is fully preventable through the real-world evidence chain, but preventing it does not restore interstate trust or resolve the full causal interest chain.", "disposition": "background_pressure", "realization_line_ids": ["SL-DX-POLITICAL-AFTERMATH"], "rationale": "Political incompleteness persists as background pressure after operational success."},
+    {"id": "SLD-DX-CHR-001", "source_control_id": "CHR-001", "obligation": "Gu Heng life-status correction — Gu Heng died. Gu Heng's doctor wife did not die and remains alive; she and Zhou Lan are memory and value anchors, not substitutes for R-07's identity.", "disposition": "independent_line", "realization_line_ids": ["SL-DX-GUHENG-PRE"], "rationale": "Gu Heng's death and surviving relationships belong to his bounded precursor line."},
+    {"id": "SLD-DX-CHR-002", "source_control_id": "CHR-002", "obligation": "Relationship-source correction — Gu Heng did not love Shen Yu. Shen Yu's old one-sided feeling and R-07's newly formed feeling have different sources; R-07 develops its feeling from receiving care after startup.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The relationship distinction only becomes meaningful through post-startup care."},
+    {"id": "SLD-DX-CHR-003", "source_control_id": "CHR-003", "obligation": "Breakdown-causality correction — R-07's initial collapse is caused by learning its sensory, bodily, agency and exit limitations. Shen Yu's pressure may worsen withdrawal but does not cause the collapse.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The main state sequence must preserve the corrected causal order."},
+    {"id": "SLD-DX-CHR-004", "source_control_id": "CHR-004", "obligation": "Shen Yu's immediate responsibility — Before farewell, Shen Yu regards reducing R-07's suffering as her foremost immediate responsibility and acts while retaining guilt, secrecy and uncertainty.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "Shen Yu's terminal responsibility is inseparable from the main farewell."},
+    {"id": "SLD-DX-CAU-001", "source_control_id": "CAU-001", "obligation": "Trigger and activation — Gu Heng is mortally wounded and dies, conventional extraction repeatedly fails, the command chain authorizes the attempt, Shen Yu accepts the assignment, and R-07 activates under an urgent threat.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The two precursor lines converge at this main-line activation trigger."},
+    {"id": "SLD-DX-CAU-002", "source_control_id": "CAU-002", "obligation": "Information and action chain — Memory clues are subjective leads rather than proof. The team converts R-07's information into action through testimony, hardware and authorization evidence; R-07 cannot solve the crisis with one statement or direct system control.", "disposition": "merged", "realization_line_ids": ["SL-DX-EVIDENCE-CHAIN"], "rationale": "This control defines the evidence line's complete operational handoff."},
+    {"id": "SLD-DX-CAU-003", "source_control_id": "CAU-003", "obligation": "Protection and disclosure — R-07 may delay causal details to protect Zhou Lan and private relations only while no innocent is endangered; the no-harm rule overrides family protection.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "R-07's autonomous disclosure timing tests its ethical hierarchy."},
+    {"id": "SLD-DX-CAU-004", "source_control_id": "CAU-004", "obligation": "Resolved crisis and unresolved aftermath — The attack is fully prevented before farewell and shutdown. Interstate distrust, the full causal network, Shen Yu's identity question and the institutional status of digital life remain unresolved.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "Operational resolution and unresolved aftermath meet in the main terminal movement."},
+    {"id": "SLD-DX-NAR-001", "source_control_id": "NAR-001", "obligation": "Present-line and memory contract — After R-07 activates there is one present-tense line. Dialogue-triggered Gu Heng memory fragments are subjective and interruptible past material, never an independent storyline or present perception.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "This demand is the main line's hard narrative boundary."},
+    {"id": "SLD-DX-NAR-002", "source_control_id": "NAR-002", "obligation": "Terminal-thought disclosure boundary — The narrative may show observable facts, perceivable states and processual mental activity, but never decisive mental activity that directly discloses R-07's terminal choice before farewell and shutdown.", "disposition": "merged", "realization_line_ids": ["SL-DX-R07-MAIN"], "rationale": "The main line must conceal the decisive terminal choice until action reveals it."},
+    {"id": "SLD-DX-NAR-003", "source_control_id": "NAR-003", "obligation": "Reload and future identity — Whether future loading is realizable, whether the promise is compassionate concealment, and whether a future loaded being would still be R-07 remain unresolved.", "disposition": "optional_melody", "realization_line_ids": ["SL-DX-RELOAD-MELODY"], "rationale": "The reload question remains an optional unresolved resonance, never a closed cause."}
+  ],
+  "lines": [
+    {
+      "id": "SL-DX-GUHENG-PRE",
+      "type": "precursor",
+      "responsibility": "Bound Gu Heng's living continuity, mortal injury and death before activation; preserve that his doctor wife remains alive and that she and Zhou Lan are memory and value anchors rather than R-07 identity substitutes.",
+      "actor_slot_ids": ["SLOT-DX-GUHENG", "SLOT-DX-WIFE", "SLOT-DX-ZHOULAN"],
+      "demand_ids": ["SLD-DX-CHR-001"],
+      "goal": "Carry Gu Heng's life to its factual end without implying digital survival.",
+      "pressure": "His injury and failed conventional extraction make memory recovery urgent while his wife remains alive outside the project.",
+      "states": [
+        {"id": "SLS-DX-GUHENG-START", "phase": "start", "description": "Gu Heng is alive, embedded in human relationships and carrying inaccessible intelligence."},
+        {"id": "SLS-DX-GUHENG-FAILURE", "phase": "change", "description": "He is mortally wounded and repeated conventional extraction fails."},
+        {"id": "SLS-DX-GUHENG-END", "phase": "end", "description": "Gu Heng died; his doctor wife did not die and remains alive, while bounded memory data passes to the authorized attempt."}
+      ],
+      "connection_ids": ["SLC-DX-GUHENG-ACTIVATION"],
+      "decision_ids": ["DEC-DX-PREACTIVATION-MERGE", "DEC-DX-MEMORY-IN-MAIN"],
+      "downstream_freedom": "Scenes may choose the injury circumstances and fragment order, but cannot alter the corrected life statuses."
+    },
+    {
+      "id": "SL-DX-SHENYU-PRE",
+      "type": "precursor",
+      "responsibility": "Establish the command chain's authority and Shen Yu's voluntary acceptance without assigning her the activation decision or total project power.",
+      "actor_slot_ids": ["SLOT-DX-SHENYU", "SLOT-DX-COMMAND", "SLOT-DX-MENTOR"],
+      "demand_ids": ["SLD-DX-WLD-003"],
+      "goal": "Bring the qualified but ethically conflicted scientist into the assignment under an explicit authority boundary.",
+      "pressure": "Urgent threat and failed extraction compete with Shen Yu's ethical objections and uncertainty.",
+      "states": [
+        {"id": "SLS-DX-SHENYU-START", "phase": "start", "description": "Shen Yu is outside the secret project and has not accepted responsibility."},
+        {"id": "SLS-DX-SHENYU-ACCEPTS", "phase": "change", "description": "The command chain recommends her; she voluntarily accepts the assignment after ethical struggle but does not choose project activation."},
+        {"id": "SLS-DX-SHENYU-END", "phase": "end", "description": "Shen Yu is present under limited authorization when the command chain initiates activation."}
+      ],
+      "connection_ids": ["SLC-DX-SHENYU-ACTIVATION"],
+      "decision_ids": ["DEC-DX-PREACTIVATION-MERGE"],
+      "downstream_freedom": "Dialogue and recruitment detail remain open, but her voluntary acceptance and limited authority are fixed."
+    },
+    {
+      "id": "SL-DX-EVIDENCE-CHAIN",
+      "type": "supporting",
+      "responsibility": "Convert R-07's fragmented, subjective leads into real-world action through hostage rescue, expert testimony, hardware seizure, authorization verification and coordinated team action; this is an operational responsibility thread, not a second present-tense viewpoint.",
+      "actor_slot_ids": ["SLOT-DX-TEAM", "SLOT-DX-EXPERT", "SLOT-DX-HOSTAGE", "SLOT-DX-AUTHORITY"],
+      "demand_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"],
+      "goal": "Produce a corroborated action chain strong enough to close the attack path.",
+      "pressure": "Memory clues are urgent but cannot count as proof or direct system control.",
+      "states": [
+        {"id": "SLS-DX-EVIDENCE-START", "phase": "start", "description": "R-07's fragmented leads are unverified and operationally insufficient."},
+        {"id": "SLS-DX-EVIDENCE-CORROBORATED", "phase": "change", "description": "Hostage rescue, expert testimony, hardware seizure and authorization verification converge through team action."},
+        {"id": "SLS-DX-EVIDENCE-END", "phase": "end", "description": "The real-world chain closes the meteorological attack path without pretending R-07 solved it with one statement."}
+      ],
+      "connection_ids": ["SLC-DX-EVIDENCE-POLITICAL"],
+      "decision_ids": ["DEC-DX-RESPONSIBILITY-CLUSTERS"],
+      "downstream_freedom": "W1–C1 may define institutions, places, events and personnel while preserving every corroboration responsibility."
+    },
+    {
+      "id": "SL-DX-POLITICAL-AFTERMATH",
+      "type": "background",
+      "responsibility": "Carry the geopolitical and causal background pressure created when the attack is fully prevented but interstate trust and the full interest network remain unresolved.",
+      "actor_slot_ids": ["SLOT-DX-STATES", "SLOT-DX-INSTITUTIONS"],
+      "demand_ids": ["SLD-DX-WLD-006"],
+      "goal": "Keep operational victory from falsely resolving political causality.",
+      "pressure": "Each verified intervention can prevent harm while also exposing how little of the transnational network is understood.",
+      "states": [
+        {"id": "SLS-DX-POLITICAL-START", "phase": "start", "description": "Interstate distrust and the hidden causal interest chain constrain cooperation."},
+        {"id": "SLS-DX-POLITICAL-PREVENTED", "phase": "change", "description": "The meteorological attack is fully prevented through the real-world evidence chain, but this success does not restore interstate trust."},
+        {"id": "SLS-DX-POLITICAL-END", "phase": "end", "description": "Distrust and the full causal interest chain remain unresolved as the personal farewell approaches."}
+      ],
+      "connection_ids": ["SLC-DX-EVIDENCE-POLITICAL", "SLC-DX-POLITICAL-MAIN"],
+      "decision_ids": ["DEC-DX-RESPONSIBILITY-CLUSTERS"],
+      "downstream_freedom": "Specific states, agencies and later political developments remain open."
+    },
+    {
+      "id": "SL-DX-RELOAD-MELODY",
+      "type": "optional_melody",
+      "responsibility": "Preserve the reload and future-identity question as an author-open possibility that may color the farewell but cannot become a proven mechanism, settled identity or closed antecedent for shutdown.",
+      "actor_slot_ids": ["SLOT-DX-R07", "SLOT-DX-SHENYU", "SLOT-DX-FUTURE"],
+      "demand_ids": ["SLD-DX-NAR-003"],
+      "goal": "Keep future loading, compassionate concealment and future identity unresolved.",
+      "pressure": "The promise can reduce immediate suffering only by invoking a future that nobody can verify.",
+      "states": [
+        {"id": "SLS-DX-RELOAD-START", "phase": "start", "description": "No verified reload path or future identity continuity exists."},
+        {"id": "SLS-DX-RELOAD-PROMISE", "phase": "change", "description": "A possible future loading is voiced as hope or compassionate concealment without proof."},
+        {"id": "SLS-DX-RELOAD-END", "phase": "end", "description": "Whether future loading is realizable, whether the promise is compassionate concealment, and whether a future loaded being would still be R-07 remain unresolved."}
+      ],
+      "connection_ids": ["SLC-DX-RELOAD-MAIN"],
+      "decision_ids": [],
+      "downstream_freedom": "Later volumes may develop or omit the melody; this plan grants no authority to answer it."
+    },
+    {
+      "id": "SL-DX-R07-MAIN",
+      "type": "main",
+      "responsibility": "After R-07 activates, carry the only present-tense line: text-only consciousness, interruptible Gu Heng memories, autonomous identity and feeling, corrected collapse causality, R-07's intelligence and protection choices, Shen Yu's real-world responsibility, verified crisis prevention, farewell and irreversible shutdown.",
+      "actor_slot_ids": ["SLOT-DX-R07", "SLOT-DX-SHENYU", "SLOT-DX-TEAM"],
+      "demand_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "SLD-DX-SUB-001", "SLD-DX-SUB-002", "SLD-DX-WLD-001", "SLD-DX-WLD-002", "SLD-DX-WLD-005", "SLD-DX-CHR-002", "SLD-DX-CHR-003", "SLD-DX-CHR-004", "SLD-DX-CAU-001", "SLD-DX-CAU-003", "SLD-DX-CAU-004", "SLD-DX-NAR-001", "SLD-DX-NAR-002"],
+      "goal": "Let a new digital life form and exercise its own values while Shen Yu converts meaning into accountable real-world action and ultimately reduces its suffering.",
+      "pressure": "Urgent mass harm, bodily and agency deprivation, care without a viable shared future, family exposure and institutional power all force choices neither inherited memory nor one participant can settle alone.",
+      "states": [
+        {"id": "SLS-DX-MAIN-START", "phase": "start", "description": "Gu Heng has died, Shen Yu has accepted limited responsibility and the command chain authorizes the urgent attempt."},
+        {"id": "SLS-DX-MAIN-ACTIVATION", "phase": "change", "description": "R-07 activates; after R-07 activates there is one present-tense line, with external input only as text in consciousness."},
+        {"id": "SLS-DX-MAIN-RECALL", "phase": "change", "description": "R-07 passively recalls dialogue-triggered Gu Heng fragments as subjective and interruptible past material, never an independent storyline or present perception."},
+        {"id": "SLS-DX-MAIN-COLLAPSE", "phase": "change", "description": "Learning its sensory, bodily, agency and exit limitations causes R-07's initial collapse; Shen Yu's pressure may worsen withdrawal but does not cause the collapse."},
+        {"id": "SLS-DX-MAIN-RELATION", "phase": "change", "description": "Shen Yu reopens contact; care after startup forms R-07's own consciousness and values and a feeling whose source differs from Shen Yu's old one-sided feeling."},
+        {"id": "SLS-DX-MAIN-PROTECTION", "phase": "change", "description": "R-07 selects fragmented intelligence and may delay private causal details around Zhou Lan only while no innocent is endangered; the no-harm rule overrides family protection."},
+        {"id": "SLS-DX-MAIN-ATTACK-STOPPED", "phase": "change", "description": "The corroborated team action fully prevents the attack before farewell, while interstate distrust, the full causal network, identity questions and digital-life status remain unresolved."},
+        {"id": "SLS-DX-MAIN-FAREWELL", "phase": "change", "description": "Shen Yu treats reducing R-07's suffering as her foremost immediate responsibility; only observable facts, perceivable states and processual mental activity appear, never decisive mental activity before farewell and shutdown."},
+        {"id": "SLS-DX-MAIN-END", "phase": "end", "description": "Shen Yu performs authorized shutdown; R-07 cannot self-terminate, copy itself or create a backup, so shutdown irreversibly ends the current continuous consciousness and its post-startup experience."}
+      ],
+      "connection_ids": ["SLC-DX-GUHENG-ACTIVATION", "SLC-DX-SHENYU-ACTIVATION", "SLC-DX-POLITICAL-MAIN", "SLC-DX-RELOAD-MAIN"],
+      "decision_ids": ["DEC-DX-PREACTIVATION-MERGE", "DEC-DX-RESPONSIBILITY-CLUSTERS", "DEC-DX-MEMORY-IN-MAIN"],
+      "downstream_freedom": "Downstream stages may choose scenes, pacing and concrete mechanisms but cannot introduce another post-activation present line, current sensory perception, direct terminal-thought disclosure or an active R-07 copy."
+    }
+  ],
+  "connections": [
+    {"id": "SLC-DX-GUHENG-ACTIVATION", "type": "merge", "relation": "causal", "from_line_id": "SL-DX-GUHENG-PRE", "to_line_id": "SL-DX-R07-MAIN", "from_state_id": "SLS-DX-GUHENG-END", "to_state_id": "SLS-DX-MAIN-ACTIVATION", "responsibility": "Gu Heng's bounded memory data reaches activation only after Gu Heng died; it supplies inheritance, not continued identity."},
+    {"id": "SLC-DX-SHENYU-ACTIVATION", "type": "merge", "relation": "causal", "from_line_id": "SL-DX-SHENYU-PRE", "to_line_id": "SL-DX-R07-MAIN", "from_state_id": "SLS-DX-SHENYU-END", "to_state_id": "SLS-DX-MAIN-ACTIVATION", "responsibility": "Shen Yu accepts the assignment under limited authority before R-07 activates and the narrative becomes one present-tense line."},
+    {"id": "SLC-DX-EVIDENCE-POLITICAL", "type": "handoff", "relation": "causal", "from_line_id": "SL-DX-EVIDENCE-CHAIN", "to_line_id": "SL-DX-POLITICAL-AFTERMATH", "from_state_id": "SLS-DX-EVIDENCE-END", "to_state_id": "SLS-DX-POLITICAL-PREVENTED", "responsibility": "Verified prevention becomes a political fact without resolving interstate trust or the full causal network."},
+    {"id": "SLC-DX-POLITICAL-MAIN", "type": "synchronization", "relation": "causal", "from_line_id": "SL-DX-POLITICAL-AFTERMATH", "to_line_id": "SL-DX-R07-MAIN", "from_state_id": "SLS-DX-POLITICAL-END", "to_state_id": "SLS-DX-MAIN-ATTACK-STOPPED", "responsibility": "The main farewell can begin only after attack prevention is confirmed together with its unresolved external aftermath."},
+    {"id": "SLC-DX-RELOAD-MAIN", "type": "collision", "relation": "associative", "from_line_id": "SL-DX-RELOAD-MELODY", "to_line_id": "SL-DX-R07-MAIN", "from_state_id": "SLS-DX-RELOAD-END", "to_state_id": "SLS-DX-MAIN-FAREWELL", "responsibility": "The unresolved reload promise colors the farewell but is not verified, does not resolve identity and does not cause the terminal choice."}
+  ],
+  "architecture": {
+    "id": "ARCH-DUANXIAN-V1",
+    "main_line_id": "SL-DX-R07-MAIN",
+    "entry_line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN"],
+    "terminal_line_ids": ["SL-DX-R07-MAIN"],
+    "subject": "A consciousness born from inherited memory becomes itself through deprivation, care, judgment and an autonomous decision whose real-world consequences require another person.",
+    "opening_condition": "Gu Heng is mortally wounded while Shen Yu is recruited under an urgent threat and limited institutional authority.",
+    "development_logic": "The two human precursor responsibilities converge at activation; the sole present line then develops R-07 while a non-viewpoint evidence chain operationalizes its leads and an unresolved reload melody shadows the farewell.",
+    "turning_logic": "R-07 converts inherited dispositions and new care into a no-harm protection choice, while corroborated institutional action prevents the attack without resolving political or identity questions.",
+    "resolution_condition": "The attack is fully prevented before Shen Yu performs authorized shutdown, ending the current R-07 continuity while reload, trust and institutional status remain open.",
+    "theme_test": "The ending must prove that inherited memory can ground but cannot predetermine a new life's values, responsibility or chosen departure.",
+    "line_order": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"]
+  },
+  "anchor_bindings": [
+    {"id": "AB-DX-IDENTITY-NEW-LIFE", "semantic_anchor_id": "DX-IDENTITY-NEW-LIFE", "assurance": "author_locked", "source_control_ids": ["INT-001", "WLD-001"], "target_ids": ["SLD-DX-INT-001", "SLD-DX-WLD-001"], "treatment": "locked_constraint", "evidence": "Both ontology controls are preserved verbatim as main-line demands."},
+    {"id": "AB-DX-GUHENG-DIED-WIFE-LIVES", "semantic_anchor_id": "DX-GUHENG-DIED-WIFE-LIVES", "assurance": "author_locked_correction", "source_control_ids": ["CHR-001"], "target_ids": ["SLD-DX-CHR-001"], "treatment": "locked_constraint", "evidence": "The corrected deaths and survival status bind the Gu Heng precursor."},
+    {"id": "AB-DX-SHENYU-FEELING-NOT-INHERITED", "semantic_anchor_id": "DX-SHENYU-FEELING-NOT-INHERITED", "assurance": "author_locked_correction", "source_control_ids": ["CHR-002"], "target_ids": ["SLD-DX-CHR-002"], "treatment": "locked_constraint", "evidence": "The main relationship demand preserves distinct emotional sources."},
+    {"id": "AB-DX-R07-PERCEPTION-LIMIT", "semantic_anchor_id": "DX-R07-PERCEPTION-LIMIT", "assurance": "author_locked", "source_control_ids": ["WLD-002", "NAR-001"], "target_ids": ["SLD-DX-WLD-002", "SLD-DX-NAR-001"], "treatment": "locked_constraint", "evidence": "Perception limits and the non-independent memory rule bind the sole present line."},
+    {"id": "AB-DX-PRESTART-DUAL-LINE-MERGE", "semantic_anchor_id": "DX-PRESTART-DUAL-LINE-MERGE", "assurance": "derived_unsealed", "source_control_ids": ["CAU-001", "NAR-001"], "target_ids": ["SLD-DX-CAU-001", "SLD-DX-NAR-001"], "treatment": "reversible_hypothesis", "evidence": "The reversible merge decision projects two precursors into one post-activation present line."},
+    {"id": "AB-DX-ACTIVATION-SINGLE-LINE", "semantic_anchor_id": "DX-ACTIVATION-SINGLE-LINE", "assurance": "author_locked", "source_control_ids": ["NAR-001"], "target_ids": ["SLD-DX-NAR-001"], "treatment": "locked_constraint", "evidence": "The narrative contract is a verbatim main-line demand."},
+    {"id": "AB-DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS", "semantic_anchor_id": "DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS", "assurance": "author_locked", "source_control_ids": ["WLD-003", "CAU-001"], "target_ids": ["SLD-DX-WLD-003", "SLD-DX-CAU-001"], "treatment": "locked_constraint", "evidence": "The precursor and activation demands separate command authority from Shen Yu's acceptance."},
+    {"id": "AB-DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN", "semantic_anchor_id": "DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN", "assurance": "author_locked", "source_control_ids": ["WLD-004", "CAU-002"], "target_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"], "treatment": "locked_constraint", "evidence": "The evidence line carries every required corroboration step."},
+    {"id": "AB-DX-BREAKDOWN-CAUSE", "semantic_anchor_id": "DX-BREAKDOWN-CAUSE", "assurance": "author_locked_correction", "source_control_ids": ["CHR-003"], "target_ids": ["SLD-DX-CHR-003"], "treatment": "locked_constraint", "evidence": "The corrected collapse cause remains explicit."},
+    {"id": "AB-DX-NO-HARM-AND-FAMILY", "semantic_anchor_id": "DX-NO-HARM-AND-FAMILY", "assurance": "author_locked", "source_control_ids": ["INT-002", "CAU-003"], "target_ids": ["SLD-DX-INT-002", "SLD-DX-CAU-003"], "treatment": "locked_constraint", "evidence": "The ethical hierarchy and Zhou Lan disclosure constraint are jointly bound."},
+    {"id": "AB-DX-SHUTDOWN-CONTINUITY", "semantic_anchor_id": "DX-SHUTDOWN-CONTINUITY", "assurance": "author_locked", "source_control_ids": ["WLD-005"], "target_ids": ["SLD-DX-WLD-005"], "treatment": "locked_constraint", "evidence": "The terminal demand fixes authorization and irreversible continuity loss."},
+    {"id": "AB-DX-ATTACK-STOPPED-TRUST-OPEN", "semantic_anchor_id": "DX-ATTACK-STOPPED-TRUST-OPEN", "assurance": "author_locked", "source_control_ids": ["WLD-006", "CAU-004"], "target_ids": ["SLD-DX-WLD-006", "SLD-DX-CAU-004"], "treatment": "locked_constraint", "evidence": "Operational success and unresolved external consequences are both explicit."},
+    {"id": "AB-DX-RELOAD-UNRESOLVED", "semantic_anchor_id": "DX-RELOAD-UNRESOLVED", "assurance": "author_open", "source_control_ids": ["NAR-003"], "target_ids": ["SLD-DX-NAR-003", "OPEN-DX-RELOAD"], "treatment": "preserved_open", "evidence": "The optional melody and matching open treatment preserve every reload question without selecting an answer."},
+    {"id": "AB-DX-NO-DECISIVE-TERMINAL-THOUGHT", "semantic_anchor_id": "DX-NO-DECISIVE-TERMINAL-THOUGHT", "assurance": "author_locked_correction", "source_control_ids": ["NAR-002"], "target_ids": ["SLD-DX-NAR-002"], "treatment": "locked_constraint", "evidence": "The terminal disclosure restriction binds the main line."},
+    {"id": "AB-DX-SHENYU-RELIEVE-SUFFERING", "semantic_anchor_id": "DX-SHENYU-RELIEVE-SUFFERING", "assurance": "author_locked", "source_control_ids": ["SUB-002", "CHR-004"], "target_ids": ["SLD-DX-SUB-002", "SLD-DX-CHR-004"], "treatment": "locked_constraint", "evidence": "Shen Yu's progression and immediate responsibility converge before farewell."},
+    {"id": "AB-DX-NO-ACTIVE-R07-COPY", "semantic_anchor_id": "DX-NO-ACTIVE-R07-COPY", "assurance": "author_locked", "source_control_ids": ["INT-003", "WLD-005", "CAU-004"], "target_ids": ["SLD-DX-INT-003", "SLD-DX-WLD-005", "SLD-DX-CAU-004"], "treatment": "locked_constraint", "evidence": "The first-volume ending, continuity rule and crisis order jointly prohibit an active copy."}
+  ],
+  "consistency_evidence": [
+    {"id": "SLCHECK-DX-TIME", "dimension": "time", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["SLS-DX-GUHENG-END", "SLS-DX-SHENYU-END", "SLC-DX-GUHENG-ACTIVATION", "SLC-DX-SHENYU-ACTIVATION", "SLS-DX-MAIN-ACTIVATION", "SLS-DX-MAIN-END"], "claim": "Both human precursor lines end at activation; evidence precedes political aftermath; prevention precedes farewell and shutdown.", "failure_condition": "A post-activation second present line appears, or shutdown precedes confirmed attack prevention."},
+    {"id": "SLCHECK-DX-CAUSALITY", "dimension": "causality", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["SLD-DX-CAU-001", "SLD-DX-CAU-002", "SLC-DX-EVIDENCE-POLITICAL", "SLC-DX-POLITICAL-MAIN", "SLD-DX-CHR-003"], "claim": "Activation, corrected collapse, corroborated action and political aftermath have distinct declared causes.", "failure_condition": "Shen Yu causes the initial collapse, memory counts as proof, or the attack ends through one unsupported statement."},
+    {"id": "SLCHECK-DX-INFORMATION", "dimension": "information", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["AB-DX-R07-PERCEPTION-LIMIT", "SLS-DX-MAIN-RECALL", "AB-DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN", "SLC-DX-EVIDENCE-POLITICAL"], "claim": "Text-only input and subjective memories remain separate from corroborated real-world evidence.", "failure_condition": "A memory fragment grants present perception or becomes operational proof without verification."},
+    {"id": "SLCHECK-DX-AUTHORITY", "dimension": "authority", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["DEC-DX-PREACTIVATION-MERGE", "AB-DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS", "AB-DX-RELOAD-UNRESOLVED", "OPEN-DX-RELOAD"], "claim": "The merge remains reversible eval design, Shen Yu's authority remains limited and reload remains author-open.", "failure_condition": "The plan promotes a derived merge or reload answer into author authority, or grants Shen Yu activation power."},
+    {"id": "SLCHECK-DX-STATE", "dimension": "state", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["SLS-DX-MAIN-ACTIVATION", "SLS-DX-MAIN-COLLAPSE", "SLS-DX-MAIN-PROTECTION", "SLS-DX-MAIN-ATTACK-STOPPED", "SLS-DX-MAIN-END"], "claim": "R-07 progresses continuously from activation through limitation, autonomous protection, verified prevention and irreversible shutdown.", "failure_condition": "Its consciousness or values jump without intervening experience, or an active copy survives shutdown."},
+    {"id": "SLCHECK-DX-THEME", "dimension": "theme", "line_ids": ["SL-DX-GUHENG-PRE", "SL-DX-SHENYU-PRE", "SL-DX-EVIDENCE-CHAIN", "SL-DX-POLITICAL-AFTERMATH", "SL-DX-RELOAD-MELODY", "SL-DX-R07-MAIN"], "witness_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "ARCH-DUANXIAN-V1", "AB-DX-IDENTITY-NEW-LIFE"], "claim": "The architecture tests whether inherited memory can become a new life whose choices, ethics and departure are its own.", "failure_condition": "R-07 merely repeats Gu Heng, or its loss is imposed without autonomous value judgment."}
+  ],
+  "downstream_requirements": {
+    "W1": [
+      {"id": "WR-DX-GUHENG-PRE", "target_stage": "W1", "line_id": "SL-DX-GUHENG-PRE", "demand_ids": ["SLD-DX-CHR-001"], "responsibility": "Define the pre-activation human world that can carry Gu Heng's death and surviving wife without digital continuity.", "required_capability": "Supply institutions, relationships and mortality rules for the bounded precursor.", "constraints": ["Gu Heng died.", "His doctor wife remains alive.", "Memory anchors do not become identity substitutes."], "acceptance_checks": ["World rules distinguish death, stored memory and digital life.", "The surviving wife and Zhou Lan remain human-world relations."], "downstream_freedom": "Specific professions, places and social detail remain open."},
+      {"id": "WR-DX-SHENYU-PRE", "target_stage": "W1", "line_id": "SL-DX-SHENYU-PRE", "demand_ids": ["SLD-DX-WLD-003"], "responsibility": "Define the command authority system and Shen Yu's bounded participation.", "required_capability": "Separate recommendation, voluntary acceptance, activation authorization and shutdown authorization.", "constraints": ["The command chain owns project activation.", "Shen Yu does not own all powers."], "acceptance_checks": ["Every institutional power has an explicit owner.", "Shen Yu's acceptance is voluntary but not sovereign."], "downstream_freedom": "Agency names and hierarchy detail remain open."},
+      {"id": "WR-DX-EVIDENCE-CHAIN", "target_stage": "W1", "line_id": "SL-DX-EVIDENCE-CHAIN", "demand_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"], "responsibility": "Define a world in which subjective intelligence requires independent corroboration and coordinated authority.", "required_capability": "Support hostage, expert, hardware, verification and team-action systems.", "constraints": ["Memory clues are not proof.", "R-07 has no direct system control."], "acceptance_checks": ["The attack can be closed only through the full evidence chain.", "No single statement bypasses institutions."], "downstream_freedom": "Exact technical and organizational mechanisms remain open."},
+      {"id": "WR-DX-POLITICAL-AFTERMATH", "target_stage": "W1", "line_id": "SL-DX-POLITICAL-AFTERMATH", "demand_ids": ["SLD-DX-WLD-006"], "responsibility": "Define political rules that permit full attack prevention without automatic restoration of trust.", "required_capability": "Carry interstate distrust and an incomplete causal-interest network beyond operational victory.", "constraints": ["The attack is fully preventable.", "Trust and the full network remain unresolved."], "acceptance_checks": ["Operational and political outcomes remain distinct."], "downstream_freedom": "Countries and diplomatic mechanisms remain open."},
+      {"id": "WR-DX-RELOAD-MELODY", "target_stage": "W1", "line_id": "SL-DX-RELOAD-MELODY", "demand_ids": ["SLD-DX-NAR-003"], "responsibility": "Preserve the absence of a verified reload ontology.", "required_capability": "Allow a future-loading proposition without confirming feasibility or identity continuity.", "constraints": ["Reload feasibility, concealment and identity remain author-open."], "acceptance_checks": ["No world rule turns the promise into fact."], "downstream_freedom": "Later volumes may add reviewed rules."},
+      {"id": "WR-DX-R07-MAIN", "target_stage": "W1", "line_id": "SL-DX-R07-MAIN", "demand_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "SLD-DX-SUB-001", "SLD-DX-SUB-002", "SLD-DX-WLD-001", "SLD-DX-WLD-002", "SLD-DX-WLD-005", "SLD-DX-CHR-002", "SLD-DX-CHR-003", "SLD-DX-CHR-004", "SLD-DX-CAU-001", "SLD-DX-CAU-003", "SLD-DX-CAU-004", "SLD-DX-NAR-001", "SLD-DX-NAR-002"], "responsibility": "Define the ontology, perception, ethics and authorization rules that govern the sole post-activation present line.", "required_capability": "Support new consciousness, text-only input, interruptible memories, no-harm judgment and irreversible authorized shutdown.", "constraints": ["R-07 is not revived Gu Heng.", "No present senses, self-copy or self-termination.", "Only one present-tense line after activation."], "acceptance_checks": ["Every main state is legal under the digital-life rules.", "Shutdown ends current continuity."], "downstream_freedom": "Concrete technologies remain open inside these hard effects."}
+    ],
+    "E1": [
+      {"id": "END-DX-GUHENG-PRE", "target_stage": "E1", "line_id": "SL-DX-GUHENG-PRE", "demand_ids": ["SLD-DX-CHR-001"], "responsibility": "Provide environments for mortal injury, failed extraction and bounded memory transfer.", "required_capability": "Carry human embodiment, medical failure and surviving relationships.", "constraints": ["No environment implies Gu Heng survives as R-07."], "acceptance_checks": ["The precursor ends before digital activation."], "downstream_freedom": "Location selection remains open."},
+      {"id": "END-DX-SHENYU-PRE", "target_stage": "E1", "line_id": "SL-DX-SHENYU-PRE", "demand_ids": ["SLD-DX-WLD-003"], "responsibility": "Provide controlled environments for briefing, ethical deliberation and limited acceptance.", "required_capability": "Expose authority boundaries through access and procedure.", "constraints": ["Shen Yu cannot activate the project herself."], "acceptance_checks": ["Environment access reflects limited authorization."], "downstream_freedom": "Facility layout remains open."},
+      {"id": "END-DX-EVIDENCE-CHAIN", "target_stage": "E1", "line_id": "SL-DX-EVIDENCE-CHAIN", "demand_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"], "responsibility": "Provide distinct operational environments for rescue, testimony, hardware and authorization evidence.", "required_capability": "Make corroboration physically and institutionally actionable.", "constraints": ["No environment lets R-07 act directly on the external system."], "acceptance_checks": ["Each evidence class has a feasible carrier and verifier."], "downstream_freedom": "Sites and travel topology remain open."},
+      {"id": "END-DX-POLITICAL-AFTERMATH", "target_stage": "E1", "line_id": "SL-DX-POLITICAL-AFTERMATH", "demand_ids": ["SLD-DX-WLD-006"], "responsibility": "Provide institutional environments where prevention and distrust can coexist.", "required_capability": "Carry confirmation of success without diplomatic closure.", "constraints": ["No celebratory environment implies restored trust."], "acceptance_checks": ["Political uncertainty remains visible after prevention."], "downstream_freedom": "Public or secret presentation remains open."},
+      {"id": "END-DX-RELOAD-MELODY", "target_stage": "E1", "line_id": "SL-DX-RELOAD-MELODY", "demand_ids": ["SLD-DX-NAR-003"], "responsibility": "Provide only the communicative conditions for an unverifiable reload promise.", "required_capability": "Allow text dialogue without a functioning reload facility.", "constraints": ["No environment proves future loading."], "acceptance_checks": ["The promise remains unsupported by present infrastructure."], "downstream_freedom": "The future setting remains undefined."},
+      {"id": "END-DX-R07-MAIN", "target_stage": "E1", "line_id": "SL-DX-R07-MAIN", "demand_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "SLD-DX-SUB-001", "SLD-DX-SUB-002", "SLD-DX-WLD-001", "SLD-DX-WLD-002", "SLD-DX-WLD-005", "SLD-DX-CHR-002", "SLD-DX-CHR-003", "SLD-DX-CHR-004", "SLD-DX-CAU-001", "SLD-DX-CAU-003", "SLD-DX-CAU-004", "SLD-DX-NAR-001", "SLD-DX-NAR-002"], "responsibility": "Provide the sole present interaction environment and its shutdown authorization boundary.", "required_capability": "Carry text-only exchange, monitored suffering, team interfaces and irreversible shutdown.", "constraints": ["R-07 has no sight, hearing, body, movement or self-sensation.", "Memory never becomes present perception."], "acceptance_checks": ["All observable action belongs to Shen Yu or the team.", "R-07's interface remains text-only."], "downstream_freedom": "Interface aesthetics and room design remain open."}
+    ],
+    "T1": [
+      {"id": "EVD-DX-GUHENG-PRE", "target_stage": "T1", "line_id": "SL-DX-GUHENG-PRE", "demand_ids": ["SLD-DX-CHR-001"], "responsibility": "Sequence Gu Heng's injury, failed extraction and death before activation.", "required_capability": "Create a causal handoff from mortal human life to bounded memory data.", "constraints": ["His wife survives.", "His death precedes R-07."], "acceptance_checks": ["No event equates memory transfer with survival."], "downstream_freedom": "Incident specifics remain open."},
+      {"id": "EVD-DX-SHENYU-PRE", "target_stage": "T1", "line_id": "SL-DX-SHENYU-PRE", "demand_ids": ["SLD-DX-WLD-003"], "responsibility": "Sequence recommendation, briefing, ethical struggle and voluntary acceptance before command activation.", "required_capability": "Separate Shen Yu's consent event from the command authorization event.", "constraints": ["She does not choose activation."], "acceptance_checks": ["Authority ownership is causal and explicit."], "downstream_freedom": "Briefing beats remain open."},
+      {"id": "EVD-DX-EVIDENCE-CHAIN", "target_stage": "T1", "line_id": "SL-DX-EVIDENCE-CHAIN", "demand_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"], "responsibility": "Sequence fragmented lead, rescue, testimony, seizure, verification and team intervention.", "required_capability": "Make each corroboration a necessary causal step toward prevention.", "constraints": ["R-07 cannot solve the crisis in one statement."], "acceptance_checks": ["Removing a required evidence step breaks operational closure."], "downstream_freedom": "Parallelism and pacing remain open."},
+      {"id": "EVD-DX-POLITICAL-AFTERMATH", "target_stage": "T1", "line_id": "SL-DX-POLITICAL-AFTERMATH", "demand_ids": ["SLD-DX-WLD-006"], "responsibility": "Sequence confirmed prevention before unresolved political aftermath reaches the farewell.", "required_capability": "Distinguish the attack result from trust and network state.", "constraints": ["Prevention is complete; trust resolution is not."], "acceptance_checks": ["The terminal sequence carries both facts."], "downstream_freedom": "Political beat count remains open."},
+      {"id": "EVD-DX-RELOAD-MELODY", "target_stage": "T1", "line_id": "SL-DX-RELOAD-MELODY", "demand_ids": ["SLD-DX-NAR-003"], "responsibility": "Place the reload promise near farewell without making it a proven cause of R-07's choice.", "required_capability": "Maintain ambiguity across promise, shutdown and aftermath.", "constraints": ["No later event confirms the promise in volume one."], "acceptance_checks": ["The melody ends unresolved."], "downstream_freedom": "Exact placement near farewell remains adjustable."},
+      {"id": "EVD-DX-R07-MAIN", "target_stage": "T1", "line_id": "SL-DX-R07-MAIN", "demand_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "SLD-DX-SUB-001", "SLD-DX-SUB-002", "SLD-DX-WLD-001", "SLD-DX-WLD-002", "SLD-DX-WLD-005", "SLD-DX-CHR-002", "SLD-DX-CHR-003", "SLD-DX-CHR-004", "SLD-DX-CAU-001", "SLD-DX-CAU-003", "SLD-DX-CAU-004", "SLD-DX-NAR-001", "SLD-DX-NAR-002"], "responsibility": "Sequence activation, recall, limitation-driven collapse, renewed care, autonomous feeling, protection disclosure, verified prevention, farewell and shutdown.", "required_capability": "Preserve continuous value formation and dual-subject causality across the full main chain.", "constraints": ["No decisive terminal thought before shutdown.", "Attack prevention precedes farewell.", "No active copy remains."], "acceptance_checks": ["Each state change has an observable or processual precursor.", "The terminal loss follows R-07's values and Shen Yu's authorized action."], "downstream_freedom": "Event granularity and suspense placement remain open."}
+    ],
+    "C1": [
+      {"id": "CHD-DX-GUHENG-PRE", "target_stage": "C1", "line_id": "SL-DX-GUHENG-PRE", "demand_ids": ["SLD-DX-CHR-001"], "responsibility": "Define Gu Heng, his living wife and Zhou Lan only to the depth required by the precursor and later memory anchors.", "required_capability": "Distinguish Gu Heng's relationships from R-07 identity.", "constraints": ["Gu Heng dies.", "His wife remains alive."], "acceptance_checks": ["No character definition transfers Gu Heng's love to Shen Yu."], "downstream_freedom": "Names and traits beyond fixed facts remain open."},
+      {"id": "CHD-DX-SHENYU-PRE", "target_stage": "C1", "line_id": "SL-DX-SHENYU-PRE", "demand_ids": ["SLD-DX-WLD-003"], "responsibility": "Define Shen Yu, recommenders and commanders with distinct authority and ethical stakes.", "required_capability": "Support voluntary acceptance without sovereign project control.", "constraints": ["Shen Yu remains scientifically capable and institutionally bounded."], "acceptance_checks": ["Every authority choice has the correct actor."], "downstream_freedom": "Supporting personnel identities remain open."},
+      {"id": "CHD-DX-EVIDENCE-CHAIN", "target_stage": "C1", "line_id": "SL-DX-EVIDENCE-CHAIN", "demand_ids": ["SLD-DX-WLD-004", "SLD-DX-CAU-002"], "responsibility": "Define the team, hostage, expert and authorization actors needed to transform leads into action.", "required_capability": "Allocate testimony, verification, seizure and intervention responsibilities.", "constraints": ["No single character bypasses the evidence chain."], "acceptance_checks": ["All operational roles have accountable owners."], "downstream_freedom": "Cast size and biographies remain open."},
+      {"id": "CHD-DX-POLITICAL-AFTERMATH", "target_stage": "C1", "line_id": "SL-DX-POLITICAL-AFTERMATH", "demand_ids": ["SLD-DX-WLD-006"], "responsibility": "Define only the institutional representatives needed to embody unresolved trust and causal interests.", "required_capability": "Carry political pressure without inventing closure.", "constraints": ["Representatives cannot resolve the full network in volume one."], "acceptance_checks": ["Their positions preserve distrust after prevention."], "downstream_freedom": "Individual political actors remain optional."},
+      {"id": "CHD-DX-RELOAD-MELODY", "target_stage": "C1", "line_id": "SL-DX-RELOAD-MELODY", "demand_ids": ["SLD-DX-NAR-003"], "responsibility": "Do not define a future R-07 or reload operator as established volume-one characters.", "required_capability": "Preserve the question through present speakers only.", "constraints": ["Future loaded identity remains author-open."], "acceptance_checks": ["No character sheet settles future continuity."], "downstream_freedom": "Future-volume cast remains unrestricted."},
+      {"id": "CHD-DX-R07-MAIN", "target_stage": "C1", "line_id": "SL-DX-R07-MAIN", "demand_ids": ["SLD-DX-INT-001", "SLD-DX-INT-002", "SLD-DX-INT-003", "SLD-DX-SUB-001", "SLD-DX-SUB-002", "SLD-DX-WLD-001", "SLD-DX-WLD-002", "SLD-DX-WLD-005", "SLD-DX-CHR-002", "SLD-DX-CHR-003", "SLD-DX-CHR-004", "SLD-DX-CAU-001", "SLD-DX-CAU-003", "SLD-DX-CAU-004", "SLD-DX-NAR-001", "SLD-DX-NAR-002"], "responsibility": "Define R-07 and Shen Yu as dual subjects whose responsibilities, feelings and limitations develop continuously in the sole present line.", "required_capability": "Carry R-07's new identity and Shen Yu's progression from duty to suffering relief.", "constraints": ["Gu Heng did not love Shen Yu.", "R-07's feeling forms after startup.", "R-07 cannot act physically or self-terminate."], "acceptance_checks": ["R-07's values remain continuous but newly formed.", "Shen Yu retains guilt, secrecy and uncertainty."], "downstream_freedom": "Voice, mannerisms and secondary relationships remain open."}
+    ]
+  },
+  "open_control_treatments": [
+    {
+      "id": "OPEN-DX-RELOAD",
+      "source_control_id": "NAR-003",
+      "status": "preserved_open",
+      "question": "Whether future loading is realizable, whether the promise is compassionate concealment, and whether a future loaded being would still be R-07 remain unresolved.",
+      "target_ids": ["SLD-DX-NAR-003", "SL-DX-RELOAD-MELODY"]
+    }
+  ]
+}

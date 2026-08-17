@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0",
+  "fixture_id": "duanxian-conception-e2e",
+  "anchor_evidence": [
+    {
+      "anchor_id": "DX-IDENTITY-NEW-LIFE",
+      "assurance": "author_locked",
+      "claim": "R-07 is a new conscious life: Gu Heng's memories provide continuity and dispositions, while post-startup circumstances, interpretation and choices form R-07's own consciousness and values.",
+      "evidence": [
+        {"source_id": "SRC-I0-EVENTS", "locator": "I0-Q1 author_answer seq=3"},
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q1 author_answer seq=3"},
+        {"source_id": "SRC-V2-BRIEF", "locator": "world definition and ontology summary"}
+      ]
+    },
+    {
+      "anchor_id": "DX-GUHENG-DIED-WIFE-LIVES",
+      "assurance": "author_locked_correction",
+      "claim": "Gu Heng died; Gu Heng's doctor wife did not die and remains alive.",
+      "evidence": [
+        {"source_id": "SRC-I3-EVENTS", "locator": "I3-Q4 author correction seq=9"},
+        {"source_id": "SRC-I3-ARTIFACT", "locator": "顾衡及记忆关系边界"},
+        {"source_id": "SRC-I4-ARTIFACT", "locator": "C1 and prohibited substitutions"}
+      ]
+    },
+    {
+      "anchor_id": "DX-SHENYU-FEELING-NOT-INHERITED",
+      "assurance": "author_locked_correction",
+      "claim": "Gu Heng did not love Shen Yu. Shen Yu's old one-sided feeling and R-07's newly formed feeling have different sources; R-07 cannot inherit a love that Gu Heng never had.",
+      "evidence": [
+        {"source_id": "SRC-I3-EVENTS", "locator": "I3-Q4 seq=9 and I3-Q5 seq=12"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q2 author_answer seq=5"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q4 revised author_answer seq=9"}
+      ]
+    },
+    {
+      "anchor_id": "DX-R07-PERCEPTION-LIMIT",
+      "assurance": "author_locked",
+      "claim": "Present R-07 has no sight, hearing, body, movement or self-sensation; external input appears only as text in consciousness, and past sensory memories never become present perception.",
+      "evidence": [
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q2 author_answer seq=5"},
+        {"source_id": "SRC-I2-ARTIFACT", "locator": "感知与交流 rule"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q3 author_answer seq=7"}
+      ]
+    },
+    {
+      "anchor_id": "DX-PRESTART-DUAL-LINE-MERGE",
+      "assurance": "derived_unsealed",
+      "claim": "Before R-07 activation, Gu Heng's mission line and Shen Yu's assignment line briefly proceed in parallel and merge at activation; after activation they do not remain two present-time lines.",
+      "approved_floor": "The approved chain confirms only that the opening may use Gu Heng and Shen Yu viewpoints and that after activation there is one present line.",
+      "derived_extension": "The full two-preline-and-merge architecture is not explicitly author-locked by I0-I5/V1/V2.",
+      "evidence": [
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q1 author_answer seq=3"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q1 author_answer seq=3"},
+        {"source_id": "SRC-DERIVED-DUAL-LINE", "locator": "默认叙述顺序 and time ledger"}
+      ]
+    },
+    {
+      "anchor_id": "DX-ACTIVATION-SINGLE-LINE",
+      "assurance": "author_locked",
+      "claim": "After R-07 activates, there is one present-tense line; dialogue-triggered Gu Heng memory fragments are subjective, interruptible past material, not an independent storyline.",
+      "evidence": [
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q1 author_answer seq=3"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q1 seq=3 and I5-Q3 seq=7"},
+        {"source_id": "SRC-V2-BRIEF", "locator": "storyline summary and memory note"}
+      ]
+    },
+    {
+      "anchor_id": "DX-COMMAND-AUTHORIZES-SHENYU-ACCEPTS",
+      "assurance": "author_locked",
+      "claim": "The command chain authorizes the immature memory-digital-life attempt. Shen Yu is recommended because her research fits and voluntarily accepts the assignment after learning it at the secret base; she does not choose whether the project starts.",
+      "evidence": [
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q3 author_answer seq=7"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q1 author_answer seq=3"},
+        {"source_id": "SRC-I4-ARTIFACT", "locator": "C1 trigger"}
+      ]
+    },
+    {
+      "anchor_id": "DX-INTELLIGENCE-NEEDS-REAL-WORLD-CHAIN",
+      "assurance": "author_locked",
+      "claim": "R-07 supplies fragmented leads, not a one-line solution. Hostage rescue, expert testimony, hardware seizure, authorization verification and team action must corroborate and operationalize the intelligence.",
+      "evidence": [
+        {"source_id": "SRC-I1-EVENTS", "locator": "I1-Q4 author_answer seq=9"},
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q4 author_answer seq=9"},
+        {"source_id": "SRC-I4-ARTIFACT", "locator": "evidence conversion ledger"}
+      ]
+    },
+    {
+      "anchor_id": "DX-BREAKDOWN-CAUSE",
+      "assurance": "author_locked_correction",
+      "claim": "R-07's initial collapse is caused by learning its sensory, bodily, agency and exit limitations. Shen Yu's pressure may worsen or prolong withdrawal but does not cause that collapse.",
+      "evidence": [
+        {"source_id": "SRC-I3-EVENTS", "locator": "I3-Q5 author correction seq=12"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q3 author_answer seq=7"},
+        {"source_id": "SRC-I4-ARTIFACT", "locator": "three separated causal chains"}
+      ]
+    },
+    {
+      "anchor_id": "DX-NO-HARM-AND-FAMILY",
+      "assurance": "author_locked",
+      "claim": "R-07 may delay causal details to protect Zhou Lan and private relations only while no innocent is endangered; the no-harm rule overrides family protection.",
+      "evidence": [
+        {"source_id": "SRC-I0-EVENTS", "locator": "I0-Q2 author_answer seq=5"},
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q6 author_answer seq=13"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q5 author_answer seq=11"}
+      ]
+    },
+    {
+      "anchor_id": "DX-SHUTDOWN-CONTINUITY",
+      "assurance": "author_locked",
+      "claim": "R-07 cannot self-terminate, copy itself or create a backup. Shen Yu performs the authorized shutdown, which irreversibly ends the current continuous consciousness and its post-startup experience.",
+      "evidence": [
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q7 author_answer seq=15"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q6 author_answer seq=13"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q5 author_answer seq=11"}
+      ]
+    },
+    {
+      "anchor_id": "DX-ATTACK-STOPPED-TRUST-OPEN",
+      "assurance": "author_locked",
+      "claim": "The meteorological attack is fully prevented, but preventing it does not restore interstate trust or resolve the full causal interest chain.",
+      "evidence": [
+        {"source_id": "SRC-I1-EVENTS", "locator": "I1-Q4 author_answer seq=9"},
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q5 author_answer seq=11"},
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q7 author_answer seq=15"}
+      ]
+    },
+    {
+      "anchor_id": "DX-RELOAD-UNRESOLVED",
+      "assurance": "author_open",
+      "claim": "Future loading may remain technically possible, but whether the promise is realizable, whether it is compassionate concealment, and whether a future loaded being would still be R-07 remain unresolved.",
+      "evidence": [
+        {"source_id": "SRC-I0-EVENTS", "locator": "I0-Q3 author_answer seq=7"},
+        {"source_id": "SRC-I2-EVENTS", "locator": "I2-Q7 author_answer seq=15"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q5 author_answer seq=11"}
+      ]
+    },
+    {
+      "anchor_id": "DX-NO-DECISIVE-TERMINAL-THOUGHT",
+      "assurance": "author_locked_correction",
+      "claim": "The narrative may show observable facts, perceivable states and processual mental activity, but never decisive mental activity that directly discloses R-07's terminal choice before farewell and shutdown.",
+      "evidence": [
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q4 author correction seq=9 and decision seq=15"},
+        {"source_id": "SRC-I5-ARTIFACT", "locator": "R-07 internal information boundary"},
+        {"source_id": "SRC-V1-SEMANTIC", "locator": "narrative integrity finding"}
+      ]
+    },
+    {
+      "anchor_id": "DX-SHENYU-RELIEVE-SUFFERING",
+      "assurance": "author_locked",
+      "claim": "Before farewell, Shen Yu regards reducing R-07's suffering as her foremost immediate responsibility and acts while retaining guilt and uncertainty.",
+      "evidence": [
+        {"source_id": "SRC-I1-EVENTS", "locator": "I1-Q2 author_answer seq=5"},
+        {"source_id": "SRC-I3-ARTIFACT", "locator": "沈逾 relationship and change"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q5 author_answer seq=11"}
+      ]
+    },
+    {
+      "anchor_id": "DX-NO-ACTIVE-R07-COPY",
+      "assurance": "author_locked",
+      "claim": "At the end of the first volume, the current R-07 consciousness has ended and no active R-07 copy survives.",
+      "evidence": [
+        {"source_id": "SRC-I4-EVENTS", "locator": "I4-Q7 author_answer seq=15"},
+        {"source_id": "SRC-I5-EVENTS", "locator": "I5-Q5 author_answer seq=11"},
+        {"source_id": "SRC-V2-BRIEF", "locator": "ending facts"}
+      ]
+    }
+  ]
+}

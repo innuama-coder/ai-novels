@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "h1-fragment-briefs.schema.json",
+  "title": "H1 fragment input package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "h1_session_id",
+    "p1_completion",
+    "review_plan",
+    "briefs"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "h1_session_id": {"type": "string", "minLength": 1},
+    "p1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "review_plan": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "briefs": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "h1-review-plan.schema.json#/$defs/fragmentBrief"},
+      "uniqueItems": true
+    }
+  }
+}

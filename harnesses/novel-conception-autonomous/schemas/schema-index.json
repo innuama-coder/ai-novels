@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "authority": "../../../docs/ai-novel-workflow/contracts/autonomous-v2",
+  "release_policy": "copy-all-json-schemas",
+  "required": [
+    "autonomous-run-state.schema.json",
+    "author-decision.schema.json",
+    "conception-completion.schema.json",
+    "development-handoff.schema.json",
+    "h1-workspace-state.schema.json",
+    "input-gate.schema.json",
+    "package-manifest.schema.json",
+    "presentation-fidelity-review.schema.json",
+    "return-request.schema.json",
+    "stage-completion.schema.json"
+  ],
+  "legacy_profiles_forbidden": ["D1", "R1"]
+}
