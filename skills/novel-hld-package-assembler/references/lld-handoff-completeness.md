@@ -11,3 +11,11 @@ HP1 rejects missing time bands, missing background-story carriers, extra storyli
 or any mismatch between HS1 unit placement and HK1 storyline references. HQ2 tests
 against this complete inventory, including preserved-open identities, rather than
 reconstructing the expected set from the possibly incomplete work units themselves.
+
+The handoff also carries one `chapter_designs[]` entry for every HA1 chapter
+shell. Each entry preserves the shell ID, the independent HS1 design ID, chapter
+number and work-unit binding, a readable working title, the chapter's core
+content, its chapter-end change, and the primary/supporting/background/open
+storyline roles. HP1 rejects missing, duplicate, reordered, cross-unit, or
+storyline-inconsistent chapter designs. LLD may design scenes and prose inside
+these boundaries; it may not invent what the chapter is for.

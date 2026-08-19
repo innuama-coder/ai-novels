@@ -32,7 +32,7 @@ Each fidelity dimension records `verdict`, claims, adversarial challenges, HP1 l
 
 Retrieval codes are exactly `architecture_progression`, `mandatory_storyline_connections`, `core_arc_choices`, `pov_knowledge_boundaries`, `continuity_constraints`, `key_functions_and_climax`, and `open_items_and_lld_boundary`. Every pass answer is derived only from the report and returns non-empty report-element IDs, source IDs, and locators.
 
-`reading_budget_validation` independently recounts author-visible CJK characters, Latin words, and HVG count using the HH1-A fixed formula. It records declared and recomputed values and passes only when they match and remain `<=18`.
+`reading_budget_validation` independently recounts author-visible CJK characters, Latin words, and HVG count using the HH1-A fixed formula. It records declared and recomputed values and passes only when they match and remain `<=24`.
 
 ## Verdict algebra
 

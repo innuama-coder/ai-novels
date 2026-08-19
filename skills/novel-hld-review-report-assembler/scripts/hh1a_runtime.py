@@ -161,6 +161,10 @@ def _definition_visible_values(item:Mapping[str,Any])->list[str]:
         for key in ("defining_features","author_open_details","city_stories","route_stories","ordinary_people_stories","season_story"):
             collect(item.get(key))
         return values
+    elif item.get("element_kind")=="chapter_design":
+        values=[str(item[key]) for key in ("chapter_title","core_content","chapter_end_change")]
+        values.extend(str(storyline["name"]) for storyline in item["storylines"])
+        return values
     else:
         keys=("conclusion","visual_role","review_question")
     return [str(item[key]) for key in keys if key in item]
@@ -169,7 +173,7 @@ def _author_visible_values(report:Mapping[str,Any])->list[tuple[str,str]]:
     values=[]
     for section in DOMAIN_SECTIONS:
         for item in report.get(section,[]):
-            if item.get("element_kind") in {"character_definition","environment_definition","world_environment_definition"}:
+            if item.get("element_kind") in {"character_definition","environment_definition","world_environment_definition","chapter_design"}:
                 item_values=_definition_visible_values(item)
             else:
                 item_values=[str(item[key]) for key in ("visual_role","conclusion") if key in item]
@@ -267,6 +271,34 @@ def _validate_definition_sections(report:Mapping[str,Any],admitted:Mapping[str,A
     by_scope={item["environment_scope"]:item for item in world_items};city_names={city["city_name"] for city in by_scope["city_and_region"]["city_network"]["cities"]};portrait_cities={portrait["city"] for portrait in by_scope["local_people_and_daily_life"]["ordinary_people_portraits"]}
     if portrait_cities!=city_names:raise InternalCondition("revise","HH1A_CITY_RESIDENT_COVERAGE_DRIFT","ordinary-person portraits must cover every and only defined city",sorted(city_names-portrait_cities))
 
+def _validate_chapter_designs(report:Mapping[str,Any],admitted:Mapping[str,Any])->None:
+    hs1=admitted["models"]["hld_model_hs1"]
+    chapters=hs1.get("chapter_storyline_plan")
+    if not isinstance(chapters,list) or not chapters:
+        raise InternalCondition("blocked","HH1A_CHAPTER_DESIGN_MISSING","HS1 does not contain chapter-level design",["HS1"])
+    reader_names={item["source_storyline_id"]:item["reader_name"] for item in hs1["semantic_storyline_register"]}
+    cards=[item for item in report["storyline_choreography"] if item.get("element_kind")=="chapter_design"]
+    if len(cards)!=len(chapters):
+        raise InternalCondition("revise","HH1A_CHAPTER_CARD_COVERAGE_DRIFT","the reader report needs exactly one chapter card for every chapter design",[item["id"] for item in chapters])
+    chapter_locators={f"canonical-models/storyline-choreography.json#/chapter_storyline_plan/{index}" for index in range(len(chapters))}
+    other_locators={locator for item in report["storyline_choreography"] if item.get("element_kind")!="chapter_design" for locator in item["locators"]}
+    if chapter_locators & other_locators:
+        raise InternalCondition("revise","HH1A_CHAPTER_CARD_BINDING_AMBIGUOUS","chapter design locators must appear only on chapter cards")
+    for index,(chapter,card) in enumerate(zip(chapters,cards),1):
+        locator=f"canonical-models/storyline-choreography.json#/chapter_storyline_plan/{index-1}"
+        if card["source_ids"]!=[chapter["id"]] or card["locators"]!=[locator]:
+            raise InternalCondition("revise","HH1A_CHAPTER_CARD_BINDING_DRIFT",f"chapter {index} is not bound to its exact HS1 design",[chapter["id"]])
+        expected_storylines=[
+            {"name":reader_names[chapter["primary_storyline_id"]],"role":"primary"},
+            *({"name":reader_names[value],"role":"supporting"} for value in chapter["supporting_storyline_ids"]),
+            *({"name":reader_names[value],"role":"background"} for value in chapter["background_storyline_ids"]),
+            *({"name":reader_names[value],"role":"preserved_open"} for value in chapter["preserved_open_storyline_ids"]),
+        ]
+        expected=(index,chapter["working_title"],chapter["core_content"],chapter["chapter_end_change"],expected_storylines,f"第{index}章　{chapter['working_title']}")
+        actual=(card["chapter_number"],card["chapter_title"],card["core_content"],card["chapter_end_change"],card["storylines"],card["visual_role"])
+        if actual!=expected:
+            raise InternalCondition("revise","HH1A_CHAPTER_CARD_CONTENT_DRIFT",f"chapter {index} does not faithfully present its title, core content, ending change, and storylines",[chapter["id"]])
+
 def _validate_pairs(item:Mapping[str,Any],binding_index:Mapping[tuple[str,str],Any],label:str)->list[tuple[str,str]]:
     sources=item["source_ids"];locators=item["locators"]
     if len(sources)!=len(locators):raise InternalCondition("revise","HH1A_UNPAIRED_EVIDENCE",f"{label} source_ids/locators lengths differ",[label])
@@ -290,7 +322,7 @@ def _budget(report:Mapping[str,Any])->dict[str,Any]:
 def _validate_budget(report:Mapping[str,Any],elements:list[dict[str,Any]])->None:
     budget=_budget(report)
     if report["review_budget"]!=budget:raise InternalCondition("revise","HH1A_BUDGET_DRIFT","declared reading budget differs from deterministic visible-surface recount")
-    if budget["estimated_read_minutes"]>18:raise InternalCondition("revise","HH1A_BUDGET_EXCEEDED",f"estimated {budget['estimated_read_minutes']} minutes exceeds 18")
+    if budget["estimated_read_minutes"]>24:raise InternalCondition("revise","HH1A_BUDGET_EXCEEDED",f"estimated {budget['estimated_read_minutes']} minutes exceeds 24")
 
 def validate_draft(context:Context,draft:Path,admitted:Mapping[str,Any])->tuple[dict[str,Any],dict[str,Any],dict[str,Any]]:
     expected={"canonical.json","generation-session.json","generation-evidence"}
@@ -303,7 +335,7 @@ def validate_draft(context:Context,draft:Path,admitted:Mapping[str,Any])->tuple[
     if report["hp1_content_binding"]!={"package_sha256":sha256(context.roles["novel_hld_package"]),"completion_sha256":sha256(context.roles["hp1_completion"])} or report["hq2_gate_binding"]!={"acceptance_sha256":sha256(context.roles["lld_handoff_acceptance"]),"bound_hp1_package_sha256":sha256(context.roles["novel_hld_package"])}:raise InternalCondition("revise","HH1A_REPORT_BINDING","report HP1/HQ2 binding mismatch")
     declared=context.work_order["file_allowlist"]
     if session["actual_read_refs"]!=declared or session["task_id"]!=context.work_order["task_id"] or session["hld_run_id"]!=context.work_order["hld_run_id"]:raise InternalCondition("revise","HH1A_SESSION_READ_DRIFT","generation session must exactly equal ordered allowlist and task identity")
-    elements=_all_elements(report);ids=[item["id"] for item in elements];_validate_definition_sections(report,admitted);_validate_author_language(report)
+    elements=_all_elements(report);ids=[item["id"] for item in elements];_validate_definition_sections(report,admitted);_validate_chapter_designs(report,admitted);_validate_author_language(report)
     if len(ids)!=len(set(ids)) or any("HUI-" in json.dumps(item,ensure_ascii=False) for item in elements):raise InternalCondition("revise","HH1A_ELEMENT_ID_INVALID","duplicate or renderer-owned report ID")
     expected_list=[]
     for item in elements:

@@ -16,7 +16,7 @@ HH1-A report 与 HH1-B review 的 consumer revision 必须等于当前 HH1 work 
 
 ## report 契约
 
-输入必须通过 [HH1-A 权威 report schema](../../novel-hld-review-report-assembler/references/hld-human-review-report.schema.json)。作品名来源于 `title_and_decision_scope`；评审范围、版本、状态、来源定位和内部分类只属于机器数据，不得出现在默认可见页面。十个内容域中的每个展示元素使用 `HRE-`，visual models 使用 `HVG-`。五张世界环境卡、角色定义与具体地点定义必须分别显示为独立结构卡，但结构卡不能显示成字段表。城市、跨城路线、普通人和季节必须分别使用 `city_stories / route_stories / ordinary_people_stories / season_story` 的自然叙述；对应的 `city_network / ordinary_people_portraits / season_profile` 只用于精确验证和 DOM 追踪，不得逐字段抄到作者页面。其余元素使用公共字段 `id / element_kind / conclusion / source_ids / locators / visual_role / review_question`。Renderer 不接受 `element_id` 同义字段。
+输入必须通过 [HH1-A 权威 report schema](../../novel-hld-review-report-assembler/references/hld-human-review-report.schema.json)。作品名来源于 `title_and_decision_scope`；评审范围、版本、状态、来源定位和内部分类只属于机器数据，不得出现在默认可见页面。十个内容域中的每个展示元素使用 `HRE-`，visual models 使用 `HVG-`。五张世界环境卡、角色定义与具体地点定义必须分别显示为独立结构卡，但结构卡不能显示成字段表。城市、跨城路线、普通人和季节必须分别使用 `city_stories / route_stories / ordinary_people_stories / season_story` 的自然叙述；对应的 `city_network / ordinary_people_portraits / season_profile` 只用于精确验证和 DOM 追踪，不得逐字段抄到作者页面。章节设计卡按章显示自然章名、“这一章要讲清什么”、命名故事线及其自然角色、“本章结束时发生的变化”；不得显示 `HCH/HCD`、章节壳、放置关系或审计解释。其余元素使用公共字段 `id / element_kind / conclusion / source_ids / locators / visual_role / review_question`。Renderer 不接受 `element_id` 同义字段。
 
 ## 渲染契约
 
@@ -25,6 +25,7 @@ HH1-A report 与 HH1-B review 的 consumer revision 必须等于当前 HH1 work 
 - `model_kind` 只作为机器数据；默认可见图形类型必须经闭合中文映射呈现，未知值在输出前失败，不能把英文枚举暴露给作者。
 - HUI ID 固定为 `HUI-<report_element_id>-<render_role>-0`；当前 profile 每元素只渲染一次，因此 ordinal 固定从 0 开始且集合中唯一。
 - `visual_role` 作为自然中文标题，`conclusion` 作为正文；只有 `open_items_constraints_and_lld_boundary` 的 `review_question` 可显示为“请你判断”。其他 review question、source IDs、locator、element kind、model kind 和内部 ID 都不得进入默认可见文本。
+- 每个章节卡只显示作者真正需要判断的四件事：章名、核心内容、对应故事线、章末变化。故事线角色翻译为“主要推进/同时推进/形成背景压力/继续悬而未决”；不得把机器枚举或过程说明交给作者。
 - 作者可见正文必须按普通人的阅读方式组织：先说谁或哪里，再说发生什么，最后说明为什么重要。不得出现工作流、审计、schema、控制链、输入输出、职责标签或 Agent 备忘录句法。跨标签拆开的违规词、密集分号和重复段落也必须在输出前拒绝。
 - HVG 使用内联 SVG，必须含 `role=img`、`aria-labelledby`、首子元素 `<title>` 和 `<desc>`，并提供自然中文的可见文本替代；不得显示绑定清单或审计说明。
 - HTML 必须有 `lang`、准确 `<title>`、skip link、header/nav/main/footer landmark、唯一 h1、顺序 heading、可键盘访问的 fragment links。

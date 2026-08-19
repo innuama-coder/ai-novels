@@ -271,8 +271,17 @@ def stage_model(stage: str, input_gate_ref: dict, actual_reads: list[dict]) -> d
         model["world_setting_architecture"]["intercity_routes"].append({"route_id":"HST-ROUTE-CAPITAL-M","from_city_id":"HST-CITY-C-CAPITAL","to_city_id":"HST-CITY-M-NORTH","travel_time":"several hours by direct flight","physical_route":"delegations and technical liaisons travel under separate authority","information_route":"the meeting channel confirms permission without exposing the experiment","custody_rule":"each country retains original records and exchanges authenticated conclusions","story_function":"political permission and local physical action remain separate"})
     elif stage == "HS1":
         model.update({
-            "semantic_storyline_register": [element("HTS-REG-001", source_storyline_id="SL-MAIN-001", line_type="main", driver="goal", goal="result", conflict="obstacle", turn="EV-001", payoff="END-001")],
+            "semantic_storyline_register": [element("HTS-REG-001", source_storyline_id="SL-MAIN-001", reader_name="The main conflict", line_type="main", driver="goal", goal="result", conflict="obstacle", turn="EV-001", payoff="END-001")],
             "storyline_segments": [element("HTS-SEG-001", source_storyline_id="SL-MAIN-001", unit_ids=["HNU-001"], chapter_shell_ids=["HCH-001"], entry_state_ref="STATE-0", exit_state_ref="STATE-1")],
+            "chapter_storyline_plan": [element(
+                "HCD-001", chapter_id="HCH-001", chapter_number=1, parent_unit_id="HNU-001",
+                working_title="The first commitment", core_content="The authorized conflict becomes unavoidable.",
+                chapter_end_change="The protagonist can no longer return to the initial state.",
+                primary_storyline_id="SL-MAIN-001", supporting_storyline_ids=[],
+                background_storyline_ids=[], preserved_open_storyline_ids=[],
+                content_obligations=["establish the authorized conflict and its consequence"],
+                prohibitions=["do not invent a new event"],
+            )],
             "unit_storyline_matrix": [element("HTS-MAT-001", unit_id="HNU-001", segment_ids=["HTS-SEG-001"])],
             "storyline_connections": [element("HTC-001", connection_type="causal", from_segment_id="HTS-SEG-001", to_segment_id="HTS-SEG-001", function="event changes line")],
             "convergence_and_split_points": [element("HTC-POINT-001", connection_ids=["HTC-001"], unit_id="HNU-001", point_type="convergence")],

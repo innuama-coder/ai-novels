@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -41,6 +42,22 @@ class HH1APublicRuntimeTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         return fx.build_a(Path(self.temp.name))
+
+    def test_complete_report_budget_accepts_twenty_four_minutes_not_more(self):
+        _, _, _, _, _, report = self.build()
+        within = {**report["review_budget"], "estimated_read_minutes": 21.224}
+        report["review_budget"] = within
+        A._catalog().validate(report, "hld-human-review-report.schema.json")
+        with patch.object(A, "_budget", return_value=within):
+            A._validate_budget(report, [])
+
+        over = {**within, "estimated_read_minutes": 24.0001}
+        report["review_budget"] = over
+        with self.assertRaises(Exception):
+            A._catalog().validate(report, "hld-human-review-report.schema.json")
+        with patch.object(A, "_budget", return_value=over), self.assertRaises(A.InternalCondition) as failure:
+            A._validate_budget(report, [])
+        self.assertEqual(failure.exception.code, "HH1A_BUDGET_EXCEEDED")
 
     def test_ready_public_profile_and_envelope(self):
         fixture, work, order, _, draft, _ = self.build()
@@ -132,9 +149,19 @@ class HH1APublicRuntimeTests(unittest.TestCase):
         self.assertEqual((code, result["result"]), (2, "revise"))
         self.assertFalse((fixture.workspace / order["output_directory"] / A.SPEC.canonical_name).exists())
 
+    def test_chapter_cards_exactly_present_core_content_and_storylines(self):
+        fixture,work,order,_,draft,report=self.build()
+        cards=[item for item in report["storyline_choreography"] if item["element_kind"]=="chapter_design"]
+        self.assertEqual([(item["chapter_number"],item["chapter_title"],item["storylines"][0]["role"]) for item in cards],[(1,"Chapter 1","primary")])
+        cards[0]["storylines"][0]["name"]="A different line"
+        report["review_budget"]=A._budget(report);write(draft/"canonical.json",report)
+        code,result=A.execute(work,draft)
+        self.assertEqual((code,result["result"]),(2,"revise"))
+        self.assertEqual(json.loads((fixture.workspace/order["output_directory"]/"revision-report.json").read_text(encoding="utf-8"))["code"],"HH1A_CHAPTER_CARD_CONTENT_DRIFT")
+
     def test_author_language_rejects_machine_logic_before_canonical_output(self):
         fixture,work,order,_,draft,report=self.build()
-        report["storyline_choreography"][0]["conclusion"]="顾衡线负责留下证据入口，现实调查线负责闭合行动链。"
+        next(item for item in report["storyline_choreography"] if item["element_kind"]!="chapter_design")["conclusion"]="顾衡线负责留下证据入口，现实调查线负责闭合行动链。"
         report["review_budget"]=A._budget(report);write(draft/"canonical.json",report)
         code,result=A.execute(work,draft)
         self.assertEqual((code,result["result"]),(2,"revise"))
@@ -143,7 +170,7 @@ class HH1APublicRuntimeTests(unittest.TestCase):
 
     def test_author_language_rejects_ai_memo_vocabulary(self):
         fixture,work,order,_,draft,report=self.build()
-        report["storyline_choreography"][0]["conclusion"]="把人物关系投影到叙事链路，并与后续工作流对齐。"
+        next(item for item in report["storyline_choreography"] if item["element_kind"]!="chapter_design")["conclusion"]="把人物关系投影到叙事链路，并与后续工作流对齐。"
         report["review_budget"]=A._budget(report);write(draft/"canonical.json",report)
         code,result=A.execute(work,draft)
         self.assertEqual((code,result["result"]),(2,"revise"))
@@ -152,7 +179,7 @@ class HH1APublicRuntimeTests(unittest.TestCase):
     def test_author_language_rejects_repeated_substantive_copy(self):
         fixture,work,order,_,draft,report=self.build()
         repeated="沈逾必须亲自决定是否继续与眼前这个生命交谈。"
-        report["storyline_choreography"][0]["conclusion"]=repeated
+        next(item for item in report["storyline_choreography"] if item["element_kind"]!="chapter_design")["conclusion"]=repeated
         report["character_arc_placement"][0]["conclusion"]=repeated
         report["review_budget"]=A._budget(report);write(draft/"canonical.json",report)
         code,result=A.execute(work,draft)

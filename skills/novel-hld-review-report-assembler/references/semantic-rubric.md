@@ -17,7 +17,7 @@ Scripts do not decide story quality or semantic fidelity. A reviewer records pas
 
 ## Revise anchors
 
-Return locally when meaning is intact but conclusions are buried, sections are misordered, visuals are redundant, bindings are malformed, questions are vague, author-facing prose sounds like a machine or process memo, or the budget exceeds eighteen minutes.
+Return locally when meaning is intact but conclusions are buried, sections are misordered, visuals are redundant, bindings are malformed, questions are vague, author-facing prose sounds like a machine or process memo, or the budget exceeds twenty-four minutes.
 
 ## Block anchors
 

@@ -25,6 +25,12 @@ decorative leftovers.
    subject, causality, emotional meaning, or theme is unchanged, the line is
    probably redundant or misclassified. If all lines are read together, they
    must reconstruct one story rather than adjacent novellas.
+7. **Chapter responsibility** — cover every HA1 chapter shell exactly once.
+   Give it a natural working title, state the core content the chapter must
+   communicate, name one primary line and any supporting/background/open lines,
+   and state what has changed by the chapter ending. These are HLD obligations
+   for LLD, not a scene list: do not prescribe dialogue, blocking, sensory
+   detail, paragraph order, or viewpoint execution.
 
 ## Semantic anchors
 
@@ -37,6 +43,8 @@ decorative leftovers.
 - Event placements preserve existing event facts and causal order.
 - Optional lines are activated only when their contribution justifies cost.
 - HC1 can identify participation duties without rebuilding the line network.
+- LLD can tell what each chapter is for and which lines it carries without
+  inventing a chapter function or resolving an open line.
 
 ### Revise
 
@@ -56,3 +64,5 @@ author-owned question must be answered before legal placement exists.
 - Padding an optional melody line until it competes with the trunk.
 - Letting a line vanish after setup or return only as an unexplained payoff.
 - Designing POV alternation or scene content in a storyline artifact.
+- Leaving chapter shells as opaque IDs, or using a chapter plan to smuggle in
+  scene beats and finished prose.

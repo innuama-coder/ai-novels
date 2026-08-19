@@ -350,6 +350,36 @@ def _consumer_storyline_ids(handoff: Mapping[str, Any], units: list[Mapping[str,
     return story_ids
 
 
+def _consumer_chapter_ids(handoff: Mapping[str, Any], units: list[Mapping[str, Any]], story_ids: set[str]) -> set[str]:
+    chapters = handoff.get("chapter_designs")
+    if not isinstance(chapters, list) or not chapters:
+        raise CandidateError("consumer handoff lacks chapter-level design")
+    chapter_ids = [item.get("id") for item in chapters]
+    if None in chapter_ids or len(chapter_ids) != len(set(chapter_ids)):
+        raise CandidateError("consumer chapter design IDs are not unique")
+    if [item.get("chapter_number") for item in chapters] != list(range(1, len(chapters) + 1)):
+        raise CandidateError("consumer chapter order is incomplete or discontinuous")
+    units_by_id = {item["id"]: item for item in units}
+    expected_shells = {value for item in units for value in item["chapter_shell_ids"]}
+    if set(chapter_ids) != expected_shells:
+        raise CandidateError("consumer chapter designs do not exactly cover work-unit chapter shells")
+    for item in chapters:
+        unit = units_by_id.get(item["work_unit_id"])
+        if unit is None or item["id"] not in unit["chapter_shell_ids"]:
+            raise CandidateError(f"consumer chapter {item['id']} is not bound to its declared work unit")
+        active_lines = {
+            item["primary_storyline_id"],
+            *item["supporting_storyline_ids"],
+            *item["background_storyline_ids"],
+        }
+        all_lines = active_lines | set(item["preserved_open_storyline_ids"])
+        if not all_lines.issubset(story_ids) or not active_lines.issubset(set(unit["storyline_ids"])):
+            raise CandidateError(f"consumer chapter {item['id']} has a storyline/work-unit mismatch")
+        if not item["core_content"].strip() or not item["chapter_end_change"].strip() or not item["content_obligations"]:
+            raise CandidateError(f"consumer chapter {item['id']} still requires downstream guesswork")
+    return set(chapter_ids)
+
+
 def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     handoff = read_json(context.roles["lld_handoff"])
     context.catalog.validate(handoff, "lld-handoff.schema.json")
@@ -357,6 +387,7 @@ def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
         raise CandidateError("consumer handoff run identity is stale")
     units = handoff["work_units"]; unit_ids = {item["id"] for item in units}
     story_ids = _consumer_storyline_ids(handoff, units, unit_ids)
+    chapter_ids = _consumer_chapter_ids(handoff, units, story_ids)
     character_ids = {value for item in units for value in item["character_ids"]}
     key_ids = unit_ids | {value for item in units for value in item["hkf_ids"]}
     if set(model["reconstruction_results"]["lld_work_order"]) != unit_ids:
@@ -374,7 +405,7 @@ def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     primary_evidence = {evidence["object_id"] for test in primary for evidence in test["evidence"] if evidence["role"] == "lld_handoff"}
     if primary_evidence != unit_ids:
         raise CandidateError("consumer first-order evidence does not cover every handoff work unit")
-    known = unit_ids | story_ids | character_ids | key_ids
+    known = unit_ids | story_ids | chapter_ids | character_ids | key_ids
     _validate_dimensions(model, known)
     findings = [*model["missing_guesswork"],*model["findings"]]
     _verdict(model, primary, findings)
@@ -416,6 +447,8 @@ def _validate_fidelity(context: Context, model: dict[str, Any]) -> None:
     if handoff_package != context.roles["novel_hld_package"]:
         raise CandidateError("handoff does not bind the current machine package")
     units = handoff["work_units"]; unit_ids = {item["id"] for item in units}; source_lwrs = {item["source_lwr_id"] for item in units}
+    storyline_ids = _consumer_storyline_ids(handoff, units, unit_ids)
+    chapter_ids = _consumer_chapter_ids(handoff, units, storyline_ids)
     trace_lwrs = {value for record in trace["records"] for value in record["lwr_ids"]}; trace_lwks = {value for record in trace["records"] for value in record["lwk_ids"]}
     if source_lwrs != trace_lwrs or unit_ids != trace_lwks:
         raise CandidateError("HP1 traceability and handoff LWR/LWK sets differ")
@@ -430,7 +463,7 @@ def _validate_fidelity(context: Context, model: dict[str, Any]) -> None:
     trace_evidence = {ev["object_id"] for test in primary for ev in test["evidence"] if ev["role"] == "traceability"}
     if unit_evidence != unit_ids or trace_evidence != {item["id"] for item in trace["records"]}:
         raise CandidateError("fidelity first-order proof coverage is partial")
-    _validate_dimensions(model, unit_ids | source_lwrs | obligation_ids | {item["id"] for item in trace["records"]})
+    _validate_dimensions(model, unit_ids | source_lwrs | storyline_ids | chapter_ids | obligation_ids | {item["id"] for item in trace["records"]})
     _verdict(model, primary, model["omission_enhancement_weakening_findings"])
     if sealed["task_id"] == context.work_order["task_id"]:
         raise CandidateError("fidelity and consumer task identities are not isolated")

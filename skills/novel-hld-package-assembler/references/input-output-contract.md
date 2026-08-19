@@ -42,12 +42,23 @@ Canonical models are byte-for-byte copies. `novel-hld-package.json` contains has
 
 HK1 must provide complete `lld_work_requirements` whose IDs are `LWR-*`. HP1 produces exactly one `LWK-*` per LWR using the identical suffix, records `source_lwr_id`, copies every required field without conversion, and stores `source_value_sha256`. Missing, duplicate, colliding or input `LWK-*` IDs block delivery.
 
+## Chapter design projection
+
+`lld-handoff.json.chapter_designs[]` covers every HA1 `HCH-*` chapter shell
+exactly once and in order. HP1 binds each shell to one HS1 `HCD-*` design and
+one LLD work unit, then copies the natural chapter title, core content,
+chapter-end change, storyline roles, obligations, prohibitions, and exact source
+hash without reinterpretation. Missing shells, duplicate designs, cross-unit
+placement, inactive storylines, or role drift block delivery. These records say
+what each chapter must accomplish; detailed design still owns scenes, dialogue,
+sensory execution, viewpoint realization, and prose.
+
 ## Blocked package
 
 Exactly `gate-data.json`, `blocked-report.json`, `validation.json`, `result-manifest.json`, plus package-external blocked `stage-result.json`. No ready artifact or completion may coexist.
 
 ## Acceptance
 
-Ready requires schema validity, exact package profile, manifest closure excluding the acyclic completion file, completion-to-manifest/validation/artifact binding, byte reproduction, eight-current-upstream admission, source and decision trace resolution, stable-ID uniqueness, authority equality, HQ1 pass/empty findings and LWR↔LWK bijection.
+Ready requires schema validity, exact package profile, manifest closure excluding the acyclic completion file, completion-to-manifest/validation/artifact binding, byte reproduction, eight-current-upstream admission, source and decision trace resolution, stable-ID uniqueness, authority equality, HQ1 pass/empty findings, LWR↔LWK bijection, and complete chapter-design projection.
 
 Character and environment coverage is defined by typed entity collections in the sealed HB0 source index, not by a whole semantic domain. Production conception inputs use exactly the object entries at `P1/canonical-models/character-system.json#/profiles/{index}` and `P1/canonical-models/environment-system.json#/environments/{index}`. A generic non-conception fixture is accepted only when the source-index entry is the single typed object at `/value` with the exact `characters-definition` or `environments-definition` discriminator. Relationship records, character demands, development freedoms, functional zones and other domain controls remain trace obligations; they must never be reclassified as character or environment entities. Every canonical character requires an HC1 disposition, and every non-context character plus every canonical environment must be placed in at least one LWK.

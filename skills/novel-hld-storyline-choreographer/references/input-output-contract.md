@@ -33,6 +33,14 @@ chat, old HLD, or presentation documents.
   cannot masquerade as placed segments;
 - every segment refers to valid HA1 units/chapter shells and explicit entry and
   exit states;
+- `chapter_storyline_plan[]` covers every HA1 chapter shell exactly once, in
+  chapter order, with an independent `HCD-` design identity bound to the exact
+  `HCH-` shell identity;
+- each chapter has a natural working title, core content, end-state change,
+  exactly one primary storyline, and explicit supporting/background/open roles;
+  those roles exactly match the sealed segment placements and dispositions;
+- chapter obligations and prohibitions stay at HLD responsibility level and
+  never contain scene actions, dialogue, sensory execution, or prose;
 - every `HTC-` connection names existing endpoints and a typed causal,
   information, emotional, or thematic function;
 - the subject reconstruction test cites object evidence and passes;
@@ -57,6 +65,11 @@ must keep source IDs in the routing field and HLD obligation IDs in its
 evidence field; it may not borrow an unrelated projected `must_ask` ID.
 Candidate or boundary defects publish revise/local_candidate. The skill never
 writes the next stage, owner, return route, or run-state.
+
+The ready canonical model therefore contains both the whole-story network and
+the complete chapter responsibility plan. Downstream stages may refine how a
+chapter is written, but may not guess its purpose, move its primary storyline,
+or silently close a preserved-open line.
 
 ## Closed semantic bindings
 

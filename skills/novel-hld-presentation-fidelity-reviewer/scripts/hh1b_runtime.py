@@ -139,11 +139,16 @@ def _budget(report:Mapping[str,Any])->dict[str,Any]:
                     for child in value.values():collect(child)
             for key in ("defining_features","author_open_details","city_stories","route_stories","ordinary_people_stories","season_story"):collect(item.get(key))
             return result
+        elif item.get("element_kind")=="chapter_design":
+            return [
+                str(item["chapter_title"]), str(item["core_content"]), str(item["chapter_end_change"]),
+                *(str(storyline["name"]) for storyline in item["storylines"]),
+            ]
         else:keys=("conclusion","visual_role","review_question")
         return [str(item[key]) for key in keys if key in item]
     for section in (*DOMAIN_SECTIONS,"visual_models"):
         for item in report.get(section,[]):
-            if item.get("element_kind") in {"character_definition","environment_definition","world_environment_definition"}:values.extend(visible(item))
+            if item.get("element_kind") in {"character_definition","environment_definition","world_environment_definition","chapter_design"}:values.extend(visible(item))
             elif section=="visual_models":
                 values.extend(str(item[key]) for key in ("visual_role","conclusion","text_alternative") if key in item)
                 values.extend(str(node["label"]) for node in item.get("nodes",[]));values.extend(str(edge["label"]) for edge in item.get("edges",[]))
@@ -176,7 +181,7 @@ def validate_draft(context:Context,draft:Path,machine:Mapping[str,Any],models:Ma
         expected_ids={entry["id"] for entry in report[QUESTION_SECTIONS[item["question_code"]]]};expected_sources,expected_locators=_evidence_for(report,binding_index,expected_ids)
         if set(item["report_element_ids"])!=expected_ids or set(item["source_ids"])!=expected_sources or set(item["locators"])!=expected_locators:raise InternalCondition("revise","HH1B_RETRIEVAL_EVIDENCE_NOT_EXACT",item["question_code"],[item["question_code"]])
     recomputed=_budget(report);declared={key:report["review_budget"][key] for key in ("cjk_characters","latin_words","visual_count","estimated_read_minutes")};budget=review["reading_budget_validation"]
-    if budget["declared"]!=declared or budget["recomputed"]!=recomputed or (budget["verdict"]=="pass")!=(declared==recomputed and recomputed["estimated_read_minutes"]<=18):raise InternalCondition("revise","HH1B_BUDGET_EVIDENCE_DRIFT","reading budget evidence/algebra mismatch")
+    if budget["declared"]!=declared or budget["recomputed"]!=recomputed or (budget["verdict"]=="pass")!=(declared==recomputed and recomputed["estimated_read_minutes"]<=24):raise InternalCondition("revise","HH1B_BUDGET_EVIDENCE_DRIFT","reading budget evidence/algebra mismatch")
     failed_retrieval={item["question_code"] for item in review["decision_retrieval_tests"] if item["verdict"]=="fail"}
     if review["cognitive_overload_findings"] and not failed_retrieval and budget["verdict"]=="pass":raise InternalCondition("revise","HH1B_PREFERENCE_AS_FAILURE","cognitive/style preference cannot be a hard failure without retrieval or budget impact")
     all_pass=not runtime_missing and all(review[name]["verdict"]=="pass" for name in DIMENSIONS) and not review["material_drift_findings"] and not review["cognitive_overload_findings"] and not failed_retrieval and budget["verdict"]=="pass"

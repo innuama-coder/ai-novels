@@ -598,6 +598,7 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
             raise AssemblyBlocked("HP1_LWR_UNIT_LINEAGE_GAP", lwk_id, list(projected["hkf_ids"]))
     hs1 = admitted["HS1"]["main"]
     register_ids = [item.get("source_storyline_id") for item in hs1.get("semantic_storyline_register", [])]
+    register_by_id = {item.get("source_storyline_id"): item for item in hs1.get("semantic_storyline_register", [])}
     disposition_items = hs1.get("activation_disposition", [])
     dispositions_by_id = {item.get("source_storyline_id"): item.get("disposition") for item in disposition_items}
     if None in register_ids or len(register_ids) != len(set(register_ids)) or set(dispositions_by_id) != set(register_ids):
@@ -624,6 +625,7 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
             raise AssemblyBlocked("HP1_STORYLINE_WORK_UNIT_GAP", storyline_id, [storyline_id])
         storyline_dispositions.append({
             "storyline_id": storyline_id,
+            "reader_name": register_by_id[storyline_id]["reader_name"],
             "disposition": disposition,
             "work_unit_ids": work_unit_ids,
             "absence_reason": None if work_unit_ids else "该故事线保持未激活或开放，不得由详细设计擅自兑现。",
@@ -631,6 +633,48 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
     for lwk in lwks:
         if set(lwk["storyline_ids"]) != expected_by_lwk[lwk["id"]]:
             raise AssemblyBlocked("HP1_STORYLINE_HKF_DRIFT", lwk["id"], sorted(set(lwk["storyline_ids"]) ^ expected_by_lwk[lwk["id"]]))
+    shell_ids = [item.get("id") for item in chapter_shells]
+    if None in shell_ids or len(shell_ids) != len(set(shell_ids)):
+        raise AssemblyBlocked("HP1_CHAPTER_SHELL_IDENTITY_INVALID", "HA1 chapter shell identity mismatch")
+    chapter_plans = hs1.get("chapter_storyline_plan")
+    if not isinstance(chapter_plans, list) or [item.get("chapter_id") for item in chapter_plans] != shell_ids:
+        raise AssemblyBlocked("HP1_CHAPTER_DESIGN_COVERAGE_GAP", "HS1 must design every HA1 chapter shell in exact order", [str(value) for value in shell_ids])
+    shell_by_id = {item["id"]: item for item in chapter_shells}
+    lwk_by_shell: dict[str, dict[str, Any]] = {}
+    for lwk in lwks:
+        for shell_id in lwk["chapter_shell_ids"]:
+            if shell_id in lwk_by_shell:
+                raise AssemblyBlocked("HP1_CHAPTER_WORK_UNIT_COLLISION", shell_id, [shell_id])
+            lwk_by_shell[shell_id] = lwk
+    if set(lwk_by_shell) != set(shell_ids):
+        raise AssemblyBlocked("HP1_CHAPTER_WORK_UNIT_GAP", "each chapter must belong to exactly one LLD work unit", sorted(set(shell_ids) ^ set(lwk_by_shell)))
+    chapter_designs = []
+    for index, chapter in enumerate(chapter_plans, 1):
+        chapter_id = chapter["chapter_id"]
+        shell = shell_by_id[chapter_id]
+        if chapter.get("chapter_number") != index or chapter.get("parent_unit_id") != shell.get("parent_unit_id"):
+            raise AssemblyBlocked("HP1_CHAPTER_DESIGN_LINEAGE_DRIFT", chapter["id"], [chapter["id"], chapter_id])
+        lwk = lwk_by_shell[chapter_id]
+        chapter_lines = {
+            chapter["primary_storyline_id"],
+            *chapter["supporting_storyline_ids"],
+            *chapter["background_storyline_ids"],
+        }
+        if not chapter_lines.issubset(set(lwk["storyline_ids"])):
+            raise AssemblyBlocked("HP1_CHAPTER_STORYLINE_WORK_UNIT_DRIFT", chapter["id"], sorted(chapter_lines - set(lwk["storyline_ids"])))
+        chapter_designs.append({
+            "id": chapter_id, "source_design_id": chapter["id"], "chapter_number": index,
+            "working_title": chapter["working_title"], "source_unit_id": chapter["parent_unit_id"],
+            "work_unit_id": lwk["id"], "core_content": chapter["core_content"],
+            "chapter_end_change": chapter["chapter_end_change"],
+            "primary_storyline_id": chapter["primary_storyline_id"],
+            "supporting_storyline_ids": list(chapter["supporting_storyline_ids"]),
+            "background_storyline_ids": list(chapter["background_storyline_ids"]),
+            "preserved_open_storyline_ids": list(chapter["preserved_open_storyline_ids"]),
+            "content_obligations": list(chapter["content_obligations"]),
+            "prohibitions": list(chapter["prohibitions"]),
+            "source_value_sha256": value_hash(chapter),
+        })
     duration_by_unit = {item.get("unit_id"): item for item in admitted["HR1"]["main"].get("unit_duration_density", [])}
     work_unit_time_windows = []
     for lwk in lwks:
@@ -753,7 +797,7 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
         "schema_version": "1.0", "skill": SKILL, "stage": STAGE,
         "hld_run_id": admitted["HB0"]["completion"]["hld_run_id"], "status": "ready",
         "next_stage": "novel-lld", "current_hld_package": dict(package_ref),
-        "work_units": lwks, "storyline_dispositions":storyline_dispositions,
+        "work_units": lwks, "chapter_designs": chapter_designs, "storyline_dispositions":storyline_dispositions,
         "work_unit_time_windows":work_unit_time_windows, "character_dispositions":dispositions,
         "environment_coverage":{"required_ids":sorted(expected_environments),"placed_ids":sorted(placed_environments)},
         "world_setting":world,"space_transition_map":space_transitions,
@@ -811,6 +855,9 @@ def _markdown_spec(machine: Mapping[str, Any], handoff: Mapping[str, Any]) -> st
     lines.extend(["", "## LLD work handoff", ""])
     for item in handoff["work_units"]:
         lines.append(f"- `{item['source_lwr_id']}` → `{item['id']}`; HKF: {', '.join(item['hkf_ids'])}")
+    lines.extend(["", "## Chapter design handoff", ""])
+    for item in handoff["chapter_designs"]:
+        lines.append(f"- Chapter {item['chapter_number']} `{item['id']}` / `{item['source_design_id']}`: {item['working_title']}; primary `{item['primary_storyline_id']}`; work unit `{item['work_unit_id']}`")
     lines.extend(["", "## Unresolved dependency status", ""])
     for item in machine["unresolved_dependency_summary"]:
         lines.append(f"- `{item['source_id']}`: `{item['aggregate_disposition']}`")
@@ -838,6 +885,9 @@ def _clean_markdown_spec(machine: Mapping[str, Any], handoff: Mapping[str, Any])
     lines.extend(["", "## LLD work handoff", ""])
     for item in handoff["work_units"]:
         lines.append(f"- `{item['source_lwr_id']}` -> `{item['id']}`; HKF: {', '.join(item['hkf_ids'])}")
+    lines.extend(["", "## Chapter design handoff", ""])
+    for item in handoff["chapter_designs"]:
+        lines.append(f"- Chapter {item['chapter_number']} `{item['id']}` / `{item['source_design_id']}`: {item['working_title']}; primary `{item['primary_storyline_id']}`; work unit `{item['work_unit_id']}`")
     lines.extend(["", "## Unresolved dependency status", ""])
     for item in machine["unresolved_dependency_summary"]:
         lines.append(f"- `{item['source_id']}`: `{item['aggregate_disposition']}`")
@@ -950,7 +1000,7 @@ def write_ready(context: Context, admitted: Mapping[str, Any], destination: Path
         "status": "pass", "checks": [
             "eight-upstream-current-ready", "canonical-byte-copy", "authority-partition-equality",
             "hq1-pass-empty-findings", "hdd-aggregate-deterministic", "stable-id-index-unique",
-            "trace-source-decision-lwk", "lwr-lwk-bijection", "markdown-deterministic", "ready-profile-closed",
+            "trace-source-decision-lwk", "lwr-lwk-bijection", "chapter-design-exact-coverage", "chapter-storyline-role-projection", "markdown-deterministic", "ready-profile-closed",
         ], "errors": [],
     }
     _schema_validate(context.catalog, validation, "hp1-validation.schema.json")
@@ -972,7 +1022,7 @@ def write_ready(context: Context, admitted: Mapping[str, Any], destination: Path
         )],
         "owner_implementation": {"skill": SKILL, "version": VERSION, "sha256": implementation_sha256()},
         "return_binding": context.work_order["return_binding"],
-        "ready_capabilities": ["machine_hld_sealed", "canonical_models_lossless", "traceability_indexed", "lld_handoff_projected"],
+        "ready_capabilities": ["machine_hld_sealed", "canonical_models_lossless", "traceability_indexed", "lld_handoff_projected", "chapter_designs_projected"],
         "next_allowed_stage": "HQ2",
     }
     _schema_validate(context.catalog, completion, "stage-completion.schema.json")

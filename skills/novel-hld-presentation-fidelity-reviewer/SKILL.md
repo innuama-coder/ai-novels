@@ -1,6 +1,6 @@
 ---
 name: novel-hld-presentation-fidelity-reviewer
-description: Independently review a sealed HH1-A human-review report against its bound HP1 HLD package for omission, weakening, enhancement, misattribution, visual-data drift, eighteen-minute budget, and fixed decision retrieval. Use only from an HH1-B work order with a different task identity from the assembler. This skill never edits the report, judges story quality, reads HTML, or certifies rendering accessibility.
+description: Independently review a sealed HH1-A human-review report against its bound HP1 HLD package for omission, weakening, enhancement, misattribution, visual-data drift, twenty-four-minute budget, and fixed decision retrieval. Use only from an HH1-B work order with a different task identity from the assembler. This skill never edits the report, judges story quality, reads HTML, or certifies rendering accessibility.
 ---
 
 # Novel HLD Presentation Fidelity Reviewer
@@ -34,4 +34,4 @@ Read [input-output-contract.md](references/input-output-contract.md), [runtime-c
 
 ## Done
 
-Pass requires bidirectional material coverage; exactly five macro world-environment scopes covering every sealed author-locked world source; a connected network of at least four concrete cities, ordinary-person portraits covering every city, and a concrete season profile; exact one-card-per-source character and concrete-place definition coverage; zero material-drift and cognitive-overload findings; valid visual data; deterministic budget at or below eighteen minutes; and ten report-only retrieval tests with resolvable HRE/HVG/source locators. Otherwise emit the correct internal non-ready result and evidence.
+Pass requires bidirectional material coverage; exactly five macro world-environment scopes covering every sealed author-locked world source; a connected network of at least four concrete cities, ordinary-person portraits covering every city, and a concrete season profile; exact one-card-per-source character and concrete-place definition coverage; exact one-card-per-chapter design coverage; zero material-drift and cognitive-overload findings; valid visual data; deterministic budget at or below twenty-four minutes; and ten report-only retrieval tests with resolvable HRE/HVG/source locators. Otherwise emit the correct internal non-ready result and evidence.

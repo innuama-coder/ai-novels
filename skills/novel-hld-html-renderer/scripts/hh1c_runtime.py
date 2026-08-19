@@ -90,6 +90,19 @@ def render_hre(item:Mapping[str,Any],*,heading_level:int=3,featured:bool=False,s
     question=f'<div class="review-question"><h4>最后，请决定这一点</h4>{prose_html(item["review_question"])}</div>' if show_question else ""
     body=f'<article class="{classes}" data-render-target-id="{esc(record["id"])}" data-report-element-id="{esc(item["id"])}" aria-labelledby="{esc(heading)}"><{tag} id="{esc(heading)}">{esc(item["visual_role"])}</{tag}>{prose_html(item["conclusion"])}{question}</article>'
     return body,record
+def render_chapter_design(item:Mapping[str,Any])->tuple[str,dict[str,Any]]:
+    record=target(item,"report_element");heading=f"{record['id']}-heading"
+    labels={"primary":"主要推进","supporting":"同时推进","background":"形成背景压力","preserved_open":"继续悬而未决"}
+    grouped={role:[] for role in labels}
+    for storyline in item["storylines"]:grouped[storyline["role"]].append(storyline["name"])
+    storylines="".join(f'<li><strong>{esc(labels[role])}：</strong>{esc("、".join(names))}</li>' for role,names in grouped.items() if names)
+    body=(f'<article class="report-element chapter-card" data-render-target-id="{esc(record["id"])}" '
+          f'data-report-element-id="{esc(item["id"])}" aria-labelledby="{esc(heading)}">'
+          f'<h3 id="{esc(heading)}">{esc(item["visual_role"])}</h3>'
+          f'<h4>这一章要讲清什么</h4>{prose_html(item["core_content"])}'
+          f'<h4>这一章推进哪些故事</h4><ul class="chapter-storylines">{storylines}</ul>'
+          f'<h4>本章结束时发生的变化</h4>{prose_html(item["chapter_end_change"])}</article>')
+    return body,record
 def render_definition(item:Mapping[str,Any])->tuple[str,dict[str,Any]]:
     record=target(item,"report_element");heading=f"{record['id']}-heading";extra=""
     if item["element_kind"]=="character_definition":
@@ -136,7 +149,10 @@ def render_document(report:Mapping[str,Any],review:Mapping[str,Any])->tuple[str,
         body.append(f'<section id="{name}" aria-labelledby="{name}-heading"><h2 id="{name}-heading">{label}</h2>')
         for item in report[name]:
             if item["id"]==first_story["id"]:continue
-            rendered,record=render_definition(item) if name in {"world_environment_definitions","character_definitions","environment_definitions"} else render_hre(item,show_question=name=="open_items_constraints_and_lld_boundary");body.append(rendered);targets.append(record)
+            if item.get("element_kind")=="chapter_design":rendered,record=render_chapter_design(item)
+            elif name in {"world_environment_definitions","character_definitions","environment_definitions"}:rendered,record=render_definition(item)
+            else:rendered,record=render_hre(item,show_question=name=="open_items_constraints_and_lld_boundary")
+            body.append(rendered);targets.append(record)
         body.append("</section>")
     if report["visual_models"]:
         body.append('<section id="visual_models" aria-labelledby="visual_models-heading"><h2 id="visual_models-heading">一眼看懂人物与事件</h2>')

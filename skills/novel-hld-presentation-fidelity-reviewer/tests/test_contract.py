@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "skills/novel-hld-review-report-assembler/tests"))
@@ -56,6 +57,28 @@ class HH1BPublicRuntimeTests(unittest.TestCase):
     def build(self, verdict: str = "pass"):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         return fx.build_b(Path(self.temp.name), verdict)
+
+    def test_independent_budget_accepts_twenty_four_minutes_not_more(self):
+        fixture, work, _, _, draft, _ = self.build()
+        context = B.load_context(work, B.SPEC, B.impl_hash(), B._catalog())
+        machine, models, report, producer = B.admit(context)
+        review_path = draft / "canonical.json"
+        review = json.loads(review_path.read_text(encoding="utf-8"))
+
+        within = {"cjk_characters": 10368, "latin_words": 122, "visual_count": 0, "estimated_read_minutes": 21.224}
+        report["review_budget"].update(within)
+        review["reading_budget_validation"] = {"formula": "CJK/500 + Latin/250 + visuals*0.25", "declared": within, "recomputed": within, "verdict": "pass"}
+        write(review_path, review)
+        with patch.object(B, "_budget", return_value=within):
+            B.validate_draft(context, draft, machine, models, report, producer)
+
+        over = {**within, "estimated_read_minutes": 24.0001}
+        report["review_budget"].update(over)
+        review["reading_budget_validation"] = {"formula": "CJK/500 + Latin/250 + visuals*0.25", "declared": over, "recomputed": over, "verdict": "pass"}
+        write(review_path, review)
+        with patch.object(B, "_budget", return_value=over), self.assertRaises(B.InternalCondition) as failure:
+            B.validate_draft(context, draft, machine, models, report, producer)
+        self.assertEqual(failure.exception.code, "HH1B_BUDGET_EVIDENCE_DRIFT")
 
     def test_world_environment_budget_recount_is_executable(self):
         fixture, _, _, _, _, _ = self.build()

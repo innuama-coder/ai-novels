@@ -1,6 +1,6 @@
 ---
 name: novel-hld-review-report-assembler
-description: Assemble the HH1-A human-review report JSON from a sealed HP1 HLD package after HQ2 passes. Use when an author needs a conclusion-first, fully source-bound HLD review path within eighteen minutes. This thinking-dominant skill may organize and compress HP1 conclusions, but must not add, repair, weaken, or reinterpret HLD content, judge story quality, prove its own fidelity, or render HTML.
+description: Assemble the HH1-A human-review report JSON from a sealed HP1 HLD package after HQ2 passes. Use when an author needs a conclusion-first, fully source-bound HLD review path within twenty-four minutes. This thinking-dominant skill may organize and compress HP1 conclusions, but must not add, repair, weaken, or reinterpret HLD content, judge story quality, prove its own fidelity, or render HTML.
 ---
 
 # Novel HLD Review Report Assembler
@@ -35,4 +35,4 @@ Read [input-output-contract.md](references/input-output-contract.md), [runtime-c
 
 ## Done
 
-Ready requires all ten HLD content domains; exactly five source-bound world-environment cards including a connected four-city narrative network and city-wide resident coverage; complete one-card-per-source character and concrete-place definitions; exact HRE/HVG bindings; no HUI IDs; a recomputed budget at or below eighteen minutes; exact internal package closure; and six evaluation dimensions at 2/2 for P01/N01/B01. Semantic fidelity remains subject to HH1-B.
+Ready requires all ten HLD content domains; exactly five source-bound world-environment cards including a connected four-city narrative network and city-wide resident coverage; complete one-card-per-source character and concrete-place definitions; exact one-card-per-chapter design coverage; exact HRE/HVG bindings; no HUI IDs; a recomputed budget at or below twenty-four minutes; exact internal package closure; and six evaluation dimensions at 2/2 for P01/N01/B01. Semantic fidelity remains subject to HH1-B.

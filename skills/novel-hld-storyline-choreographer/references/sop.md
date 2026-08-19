@@ -40,7 +40,12 @@ cost, orientation, causality, emotional contrast, theme, and ending payoff.
 
 Publish the register, segments, unit matrix, typed connections,
 convergence/split points, existing-event placement, and one disposition per
-line. Use only stable IDs.
+line. Then cover every HA1 chapter shell exactly once with a chapter design:
+give it a natural title, the core content it must express, the change reached
+at its ending, and explicit primary/supporting/background/open storyline roles.
+Verify those roles against the selected segment placements. Do not write scenes,
+beats, dialogue, sensory detail, viewpoint execution, or prose. Use only stable
+IDs in the canonical model; reserve natural names for reader-facing fields.
 
 ## 7. Reconstruct and attack
 

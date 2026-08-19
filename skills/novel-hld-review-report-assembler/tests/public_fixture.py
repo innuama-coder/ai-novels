@@ -69,12 +69,22 @@ def report_draft(ws:Path,order:dict,draft:Path):
     by_scope["local_people_and_daily_life"]["ordinary_people_stories"]=[{"portrait_name":portrait["portrait_name"],"city":portrait["city"],"story":f"{portrait['who_they_are']} {portrait['daily_routine']} {portrait['crisis_exposure']}"} for portrait in authority["ordinary_people_portraits"]]
     by_scope["climate_and_physical_environment"]["season_profile"]=authority["season_profile"]
     by_scope["climate_and_physical_environment"]["season_story"]=f"The story unfolds in {authority['season_profile']['season']} {authority['season_profile']['temperature_and_weather']} {authority['season_profile']['plot_effect']}"
+    hs1=models["hld_model_hs1"];reader_names={item["source_storyline_id"]:item["reader_name"] for item in hs1["semantic_storyline_register"]}
+    chapter_by_locator={f"canonical-models/storyline-choreography.json#/chapter_storyline_plan/{index}":item for index,item in enumerate(hs1["chapter_storyline_plan"])}
     for locator,section in sorted(material.items()):
         source=by_locator[locator]["id"]
         if section=="world_environment_definitions":
             continue
         elif section=="character_definitions":element={"id":f"HRE-{counter:03d}","element_kind":"character_definition","name":f"Character {counter}","conclusion":"A distinct person with a necessary part in the story.","story_position":"The character enters, acts, and leaves a defined consequence.","personality_and_motivation":"A specific temperament produces a specific goal.","capabilities_and_limits":"The character can act only within known personal and institutional limits.","relationships_and_change":"Relationships alter the character without transferring another person's choices.","source_ids":[source],"locators":[locator],"visual_role":"character definition","review_question":"Is this character definition clear and faithful?"}
         elif section=="environment_definitions":element={"id":f"HRE-{counter:03d}","element_kind":"environment_definition","name":f"Environment {counter}","conclusion":"A distinct place with a necessary dramatic purpose.","story_function":"This place carries a bounded part of the story.","physical_character":"Its rooms, objects, and atmosphere make it recognisable.","access_and_limits":"Entry, authority, and impossible actions are explicit.","dramatic_use":"Scenes here create pressure without replacing character choice.","source_ids":[source],"locators":[locator],"visual_role":"environment definition","review_question":"Is this environment definition clear and faithful?"}
+        elif locator in chapter_by_locator:
+            chapter=chapter_by_locator[locator];storylines=[
+                {"name":reader_names[chapter["primary_storyline_id"]],"role":"primary"},
+                *({"name":reader_names[value],"role":"supporting"} for value in chapter["supporting_storyline_ids"]),
+                *({"name":reader_names[value],"role":"background"} for value in chapter["background_storyline_ids"]),
+                *({"name":reader_names[value],"role":"preserved_open"} for value in chapter["preserved_open_storyline_ids"]),
+            ]
+            element={"id":f"HRE-{counter:03d}","element_kind":"chapter_design","chapter_number":chapter["chapter_number"],"chapter_title":chapter["working_title"],"core_content":chapter["core_content"],"chapter_end_change":chapter["chapter_end_change"],"storylines":storylines,"source_ids":[source],"locators":[locator],"visual_role":f"第{chapter['chapter_number']}章　{chapter['working_title']}","review_question":"这一章的内容和故事线安排是否正确？"}
         else:element={"id":f"HRE-{counter:03d}","element_kind":"control","conclusion":f"The HLD fixes the control bound at {locator}.","source_ids":[source],"locators":[locator],"visual_role":"decision summary","review_question":"Is this control the intended development boundary?"}
         sections[section].append(element);counter+=1
     first,second=cross["entries"][:2];first_locator=f"{first['model_path']}#{first['locator']}";second_locator=f"{second['model_path']}#{second['locator']}"

@@ -6,7 +6,7 @@
 - Every report element resolves to current HP1 and states no more, less, or different than its sources.
 - Every material HP1 control is represented and remains in the correct authority/open/LLD category.
 - Visual nodes, edges, ordering, values, and labels agree with HP1 and the visual's textual conclusion.
-- The independent author-visible budget matches the declared budget and is no more than eighteen minutes.
+- The independent author-visible budget matches the declared budget and is no more than twenty-four minutes.
 - All nine report-only retrieval questions are accurately answered with HRE/HVG/source locators.
 - Character and environment definitions are complete, source-faithful, mutually distinguishable, and understandable without consulting the conception package.
 - Material drift and cognitive overload arrays are empty.

@@ -31,7 +31,7 @@
 15. Assign stable unique HRE/HVG IDs. Forbid `element_id` aliases.
 16. Expand each element's source arrays into `source_bindings`; require exact set equality and valid HP1 locators.
 17. Count CJK characters and Latin words in decision-layer fields; count HVG elements; calculate `CJK/500 + Latin/250 + visuals*0.25` to four decimals.
-18. If over eighteen minutes, compress repetition and restructure. Do not omit material facts or collapse macro world definitions into concrete-place cards.
+18. If over twenty-four minutes, compress repetition and restructure. Do not omit material facts or collapse macro world or chapter definitions into other cards.
 19. Read only the author-visible projection once from beginning to end. Reject any sentence that requires the reader to understand workflow, audit, schema, control, or Agent vocabulary.
 
 ## F. Reverse challenge and emit

@@ -27,6 +27,7 @@
   "model_required": [
     "semantic_storyline_register",
     "storyline_segments",
+    "chapter_storyline_plan",
     "unit_storyline_matrix",
     "storyline_connections",
     "convergence_and_split_points",
@@ -41,6 +42,7 @@
     "semantic_storyline_register": "HTS-",
     "storyline_connections": "HTC-",
     "storyline_segments": "HTS-",
+    "chapter_storyline_plan": "HCD-",
     "unit_storyline_matrix": "HTS-",
     "activation_disposition": "HTS-"
   },
@@ -49,6 +51,7 @@
   "ready_capabilities": [
     "complete_storyline_disposition",
     "unit_level_storyline_placement",
+    "chapter_level_storyline_design",
     "typed_storyline_connections",
     "subject_reconstruction_evidence"
   ],

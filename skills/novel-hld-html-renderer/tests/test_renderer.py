@@ -88,6 +88,18 @@ class HH1CRuntimeTests(unittest.TestCase):
         self.assertNotIn(network["intercity_links"][0]["information_route"],document)
         self.assertEqual(validate_render_model(document,report,{"targets":targets}),[])
 
+    def test_chapter_design_is_a_human_readable_storyline_card(self):
+        fixture,work,_,_,_,_=self.build();context=C.load_context(work,C.SPEC,C.impl_hash(),C._catalog());admitted=C.admit(context);report=admitted["report"];document,targets=C.render_document(report,admitted["review"])
+        chapter=next(item for item in report["storyline_choreography"] if item["element_kind"]=="chapter_design")
+        for text in (chapter["visual_role"],"这一章要讲清什么",chapter["core_content"],"这一章推进哪些故事","本章结束时发生的变化",chapter["chapter_end_change"]):
+            self.assertIn(text,document)
+        role_labels={"primary":"主要推进","supporting":"同时推进","background":"形成背景压力","preserved_open":"继续悬而未决"}
+        for storyline in chapter["storylines"]:
+            self.assertIn(role_labels[storyline["role"]],document);self.assertIn(storyline["name"],document)
+        for source_id in chapter["source_ids"]:
+            self.assertNotIn(source_id,document)
+        self.assertNotIn("chapter_storyline_plan",document);self.assertNotIn("章节壳",document);self.assertEqual(validate_render_model(document,report,{"targets":targets}),[])
+
     def test_visible_language_gate_rejects_split_machine_phrase_and_duplicates(self):
         fixture,work,_,_,_,_=self.build();context=C.load_context(work,C.SPEC,C.impl_hash(),C._catalog());admitted=C.admit(context);report=admitted["report"];document,targets=C.render_document(report,admitted["review"]);registry={"targets":targets}
         split=document.replace("</main>","<p>顾衡线负责留下证据<em>入口</em>。</p></main>")

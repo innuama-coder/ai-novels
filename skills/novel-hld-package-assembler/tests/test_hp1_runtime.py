@@ -59,10 +59,20 @@ def canonical_entity_source_index(character_ids: list[str], environment_ids: lis
 
 
 def add_handoff_story_and_time_controls(admitted: dict, *, storyline_id: str = "SL-001", unit_id: str = "HNU-001") -> None:
+    shells = admitted["HA1"]["main"]["chapter_shells"]
     admitted["HS1"] = {"main": {
-        "semantic_storyline_register": [{"source_storyline_id": storyline_id}],
+        "semantic_storyline_register": [{"source_storyline_id": storyline_id, "reader_name": "The main conflict"}],
         "activation_disposition": [{"source_storyline_id": storyline_id, "disposition": "placed"}],
         "storyline_segments": [{"source_storyline_id": storyline_id, "unit_ids": [unit_id]}],
+        "chapter_storyline_plan": [{
+            "id": f"HCD-{index:03d}", "chapter_id": shell["id"], "chapter_number": index,
+            "parent_unit_id": shell["parent_unit_id"], "working_title": f"Chapter {index}",
+            "core_content": "Advance the authorized conflict.",
+            "chapter_end_change": "The story state changes.",
+            "primary_storyline_id": storyline_id, "supporting_storyline_ids": [],
+            "background_storyline_ids": [], "preserved_open_storyline_ids": [],
+            "content_obligations": ["advance the authorized storyline"], "prohibitions": [],
+        } for index, shell in enumerate(shells, 1)],
     }}
     admitted.setdefault("HR1", {"main": {}})["main"].setdefault("space_transition_map", [])
     admitted["HR1"]["main"]["unit_duration_density"] = [{
@@ -124,9 +134,10 @@ def build_design_package(workspace: Path, stage: str, authority: dict, *, lwr_pr
             return {"route_id":f"HST-ROUTE-{index}","from_city_id":source,"to_city_id":target,"travel_time":"several hours","physical_route":"lawful physical transfer","information_route":"authenticated limited copy","custody_rule":"originals remain with the competent jurisdiction until lawful release","story_function":"the route changes who can verify the next step"}
         model["world_setting_architecture"]={"id":"HST-WORLD-001","narrative_distribution":"Four cities separate neutral handoff, experiment, national decision, and physical intervention.","story_window":"six weeks in early autumn","season_profile":{"season":"early autumn storm season","temperature_and_weather":"coastal rain, inland dry air, and northern fog","daylight_and_air":"shortening days and different maritime air","daily_effects":"weather delays commuting and public services","plot_effect":"weather constrains action but never makes choices"},"cities":cities,"intercity_routes":[route("01","HST-CITY-NEUTRAL","HST-CITY-C-COAST"),route("02","HST-CITY-C-COAST","HST-CITY-C-CAPITAL"),route("03","HST-CITY-C-COAST","HST-CITY-M-NORTH"),route("04","HST-CITY-C-CAPITAL","HST-CITY-M-NORTH")],"threat_mechanism":{"target_system":"weather intervention network","physical_target_city_id":"HST-CITY-M-NORTH","political_pressure_city_id":"HST-CITY-C-CAPITAL","natural_hazard":"natural coastal storm","physical_actuators":["flood gate"],"scientific_limit":"the attack cannot create weather","access_path":"compromised maintenance credentials","actuator_chain":["false observation","unsafe command"],"observable_evidence":["log mismatch","physical trace"],"shutdown_condition":"revoke access and safe hardware"}}
     elif stage == "HS1":
-        model["semantic_storyline_register"]=[{"source_storyline_id":"SL-001"}]
+        model["semantic_storyline_register"]=[{"source_storyline_id":"SL-001","reader_name":"The main conflict"}]
         model["activation_disposition"]=[{"source_storyline_id":"SL-001","disposition":"placed"}]
         model["storyline_segments"]=[{"source_storyline_id":"SL-001","unit_ids":["HNU-001"]}]
+        model["chapter_storyline_plan"]=[{"id":"HCD-001","chapter_id":"HCH-001","chapter_number":1,"parent_unit_id":"HNU-001","working_title":"Chapter 1","core_content":"Advance the authorized conflict.","chapter_end_change":"The story state changes.","primary_storyline_id":"SL-001","supporting_storyline_ids":[],"background_storyline_ids":[],"preserved_open_storyline_ids":[],"content_obligations":["advance the authorized storyline"],"prohibitions":[]}]
     elif stage == "HC1":
         model["character_participation_register"]=[{"character_id":"CHR-001","importance":"core","absence_reason":None}]
     elif stage == "HR1":
@@ -242,7 +253,6 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             ]}, "source_index": canonical_entity_source_index(["CHR-001", "CHR-002"], ["ENV-001"])},
             "HA1": {"main": {"chapter_shells": [
                 {"id": "HCH-001", "parent_unit_id": "HNU-001"},
-                {"id": "HCH-OTHER", "parent_unit_id": "HNU-OTHER"},
             ], "world_setting_architecture": {"cities":[{"city_id":"HST-CITY-001"}],"intercity_routes":[]}}},
             "HC1": {"main": {"character_participation_register": [
                 {"character_id": "CHR-001", "importance": "core", "absence_reason": None},
@@ -309,7 +319,17 @@ class HP1DependencyProjectionTests(unittest.TestCase):
         ])
         self.assertEqual(handoff["environment_coverage"], {"required_ids":["ENV-001"],"placed_ids":["ENV-001"]})
         self.assertEqual(handoff["storyline_dispositions"], [{
-            "storyline_id": "SL-001", "disposition": "placed", "work_unit_ids": ["LWK-001"], "absence_reason": None,
+            "storyline_id": "SL-001", "reader_name": "The main conflict", "disposition": "placed", "work_unit_ids": ["LWK-001"], "absence_reason": None,
+        }])
+        self.assertEqual(handoff["chapter_designs"], [{
+            "id": "HCH-001", "source_design_id": "HCD-001", "chapter_number": 1, "working_title": "Chapter 1",
+            "source_unit_id": "HNU-001", "work_unit_id": "LWK-001",
+            "core_content": "Advance the authorized conflict.",
+            "chapter_end_change": "The story state changes.",
+            "primary_storyline_id": "SL-001", "supporting_storyline_ids": [],
+            "background_storyline_ids": [], "preserved_open_storyline_ids": [],
+            "content_obligations": ["advance the authorized storyline"], "prohibitions": [],
+            "source_value_sha256": hp1.value_hash(admitted["HS1"]["main"]["chapter_storyline_plan"][0]),
         }])
         self.assertEqual(handoff["work_unit_time_windows"], [{
             "work_unit_id": "LWK-001", "source_unit_ids": ["HNU-001"],

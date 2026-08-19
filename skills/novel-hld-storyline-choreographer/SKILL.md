@@ -9,7 +9,9 @@ description: Build HS1's complete multi-storyline choreography from current HB0 
 
 Turn all authoritative story strands into one connected narrative network in
 HA1's coordinate system. Preserve the identity and role of each line while
-making its contribution, connection, and disposition explicit.
+making its contribution, connection, and disposition explicit. Complete the
+HLD chapter design by assigning every HA1 chapter shell a readable chapter
+title, its core content, its storyline roles, and the change reached at the end.
 
 ## Required reading
 
@@ -24,9 +26,12 @@ Use [references/sources.md](references/sources.md) only for provenance audits.
 ## Hard boundary
 
 Own the semantic storyline register, segments, unit matrix, connections,
-convergence/split points, event placement, activation disposition, and subject
-reconstruction test. Do not create a new storyline fact or event; do not decide
-inner character change, POV, reveal timing, pacing, scene action, or prose.
+convergence/split points, event placement, activation disposition, chapter-level
+story responsibility, and subject reconstruction test. Chapter-level design
+means what the chapter must express and which lines it advances; it does not
+mean scenes, beats, dialogue, sensory detail, POV execution, or prose. Do not
+create a new storyline fact or event; do not decide inner character change,
+POV, reveal timing, pacing, scene action, or prose.
 
 Inventory rows are navigation, not storyline count. Derive actual storylines
 from authoritative object types and values. A melody line may remain optional;
@@ -58,5 +63,7 @@ the adversarial self-review and HQ1 must do that with object evidence.
 Every authoritative line has exactly one authorized disposition. Every placed
 line has segments, every connection resolves, the main trunk is continuous,
 and mandatory lines have establishment, development, turn, and payoff or a
-legitimate open state. Candidate faults produce a revise package; author needs
+legitimate open state. Every HA1 chapter shell has exactly one HS1 chapter
+design, and its primary/supporting/background/open roles agree with the sealed
+segment placements. Candidate faults produce a revise package; author needs
 produce a blocked package without completion.
