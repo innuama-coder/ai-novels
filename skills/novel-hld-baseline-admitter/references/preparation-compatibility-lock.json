@@ -9,6 +9,6 @@
     "baseline_validation_schema": "85880e26c3fe3d8f3ceecff857fead9be992dc8cc09c49a26a8f3a0e022495e9",
     "baseline_manifest_schema": "b86b9086a81fcfc44ce631e348d2edae2c446351cf1fe9e564e054fb5789c9fa",
     "preparation_request_schema": "fc8f3d3339e963a84b8ec57eeb4faee308287e4b5d886715e68c6b86c4e81559",
-    "upstream_release_lock": "ea6347bef0189112d5986ff783519f8d6d988839aba2f1bc650c6a5f248a3ffd"
+    "upstream_release_lock": "208c4955303457e41499d2cb12f415de3624652132f02b7d46edfabc08eb83de"
   }
 }

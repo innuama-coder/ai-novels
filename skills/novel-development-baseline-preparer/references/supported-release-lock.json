@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "name": "novel-conception-stage",
   "version": "1.0.0",
-  "descriptor_sha256": "30d2d3b1089992a480e48b9d6a4ba6d8240b246198ac2939e3dba724dd97feee",
-  "contract_catalog_sha256": "6ef14dcf0307185e2c6f0f90e49e468b3f994aa86e23c584713d7072ff4866b1",
-  "finalizer_sha256": "a5fa048ac6372e37eae7a0e06c4c63e32457539134fab49723f2377efdb1bdb5"
+  "descriptor_sha256": "d46901728cd18e1bb021df47edba0e84f5f12596545eb5f014bb668a2770d640",
+  "contract_catalog_sha256": "742ba362db68610005f37e6b5481f3400baf3306bd19273b461adf52d03039fa",
+  "finalizer_sha256": "a35cec33ab8504ef339297b1a0d1c1f915d4013b69ada9d4dfdc08529f2eb435"
 }
