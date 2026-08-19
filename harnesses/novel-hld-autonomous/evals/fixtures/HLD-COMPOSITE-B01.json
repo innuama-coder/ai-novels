@@ -1,0 +1,1 @@
+{"case_id":"HLD-COMPOSITE-B01","fixture_status":"executable-test-backed","single_defect":"first-internal-task-blocked","sealed_before_execution":true,"test":"tests/test_composite_publisher.py::test_hq2_first_nonready_is_byte_copied_and_mapped"}

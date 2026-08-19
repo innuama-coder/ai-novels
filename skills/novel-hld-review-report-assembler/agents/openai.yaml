@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Review Report Assembler"
+  short_description: "Organize a sealed HP1 HLD into a ten-minute source-bound review JSON."
+  default_prompt: "Use the sealed HH1-A work order to assemble a conclusion-first human-review report JSON from HP1 only; preserve every material control and do not render HTML."
+policy:
+  allow_implicit_invocation: true

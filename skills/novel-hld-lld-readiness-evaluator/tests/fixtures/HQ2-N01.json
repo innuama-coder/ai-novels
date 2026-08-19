@@ -1,0 +1,1 @@
+{"case_id":"HQ2-N01","defect":"handoff_requires_guesswork","expected":{"blocker_class":"upstream_defect","result":"blocked","result_scope":"composite_internal"}}

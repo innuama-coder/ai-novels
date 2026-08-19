@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"assembly-execution.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","work_order_id","implementation_sha256","input_hashes","output_hashes","deterministic"],
+  "properties":{"schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-package-assembler"},"stage":{"const":"HP1"},"hld_run_id":{"type":"string","minLength":1},"work_order_id":{"type":"string","minLength":1},"implementation_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"input_hashes":{"type":"object","additionalProperties":{"type":"string","pattern":"^[0-9a-f]{64}$"}},"output_hashes":{"type":"object","additionalProperties":{"type":"string","pattern":"^[0-9a-f]{64}$"}},"deterministic":{"const":true}}
+}

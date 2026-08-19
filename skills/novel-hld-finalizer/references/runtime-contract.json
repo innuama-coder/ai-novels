@@ -1,0 +1,25 @@
+{
+  "contract_schema_version":"1.0",
+  "skill":"novel-hld-finalizer",
+  "stage":"HF1",
+  "owner_version":"1.0.0",
+  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HQ2","HH1"],
+  "result_scope":"top_level",
+  "task_kinds":["HF1"],
+  "public_entrypoint":{"path":"skills/novel-hld-finalizer/scripts/validate_package.py","runtime":"python","arguments":["mode","work_order","input_gate","workspace"]},
+  "implementation_closure":{
+    "algorithm":"sha256-relative-path-nul-content-nul-v1",
+    "ordered_files":[
+      "skills/novel-hld-finalizer/scripts/validate_package.py",
+      "skills/novel-hld-finalizer/scripts/run_skill.py",
+      "skills/novel-hld-finalizer/references/runtime-contract.json",
+      "skills/novel-hld-finalizer/schemas/hf1-runtime-contract.schema.json",
+      "skills/novel-hld-finalizer/references/hld-completion.schema.json",
+      "skills/novel-hld-finalizer/references/final-validation.schema.json",
+      "skills/novel-hld-finalizer/references/author-decision.schema.json"
+    ]
+  },
+  "required_roles":["run_state","author_decision","hp1_package","hp1_manifest","lld_handoff","hld_cross_index","hq2_acceptance","hh1_manifest","hh1_html","render_target_registry"],
+  "completion_profile":["hld-completion.json","final-validation.json","finalizer-execution.json","package-manifest.json"],
+  "next_stage":"novel-lld"
+}

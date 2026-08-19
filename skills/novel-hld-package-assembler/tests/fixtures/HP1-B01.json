@@ -1,0 +1,1 @@
+{"case_id":"HP1-B01","expected_exit":1,"expected_result":"runtime_failure","fixture":"non-empty unresolved projection before semantic reads"}

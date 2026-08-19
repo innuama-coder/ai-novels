@@ -1,0 +1,1 @@
+{"case_id":"HQ1-B01","fixture_version":"2.1","sealed_before_execution":true,"single_defect_injection":"upstream_causal_defect","scenario":"an exact canonical causal defect produces upstream_defect blocked with affected IDs only","public_fixture":{"expected_result":"blocked","blocker_class":"upstream_defect","final_routing_forbidden":true}}

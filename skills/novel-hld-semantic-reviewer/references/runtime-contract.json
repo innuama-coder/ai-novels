@@ -1,0 +1,55 @@
+{
+  "artifact_role":"semantic_review",
+  "contract_schema_version":"1.0",
+  "public_entrypoint":{"path":"skills/novel-hld-semantic-reviewer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "canonical_file":"hld-semantic-review.json",
+  "canonical_schema":"hq1-semantic-review.schema.json",
+  "additional_schema_paths":[
+    "skills/novel-hld-narrative-architect/schemas/ha1-canonical.schema.json",
+    "skills/novel-hld-storyline-choreographer/schemas/hs1-canonical.schema.json",
+    "skills/novel-hld-character-arc-placer/schemas/hc1-canonical.schema.json",
+    "skills/novel-hld-information-architect/schemas/hi1-canonical.schema.json",
+    "skills/novel-hld-rhythm-continuity-architect/schemas/hr1-canonical.schema.json",
+    "skills/novel-hld-key-scene-function-planner/schemas/hk1-canonical.schema.json"
+  ],
+  "additional_implementation_paths":["harnesses/novel-hld-autonomous/runtime/review_stage_runtime.py"],
+  "implementation_closure":{
+    "algorithm":"sha256-basename-nul-content-nul-v1",
+    "ordered_files":[
+      "harnesses/novel-hld-autonomous/runtime/design_stage_runtime.py",
+      "skills/novel-hld-semantic-reviewer/scripts/run_skill.py",
+      "skills/novel-hld-semantic-reviewer/references/runtime-contract.json",
+      "skills/novel-hld-semantic-reviewer/schemas/hq1-semantic-review.schema.json",
+      "skills/novel-hld-narrative-architect/schemas/ha1-canonical.schema.json",
+      "skills/novel-hld-storyline-choreographer/schemas/hs1-canonical.schema.json",
+      "skills/novel-hld-character-arc-placer/schemas/hc1-canonical.schema.json",
+      "skills/novel-hld-information-architect/schemas/hi1-canonical.schema.json",
+      "skills/novel-hld-rhythm-continuity-architect/schemas/hr1-canonical.schema.json",
+      "skills/novel-hld-key-scene-function-planner/schemas/hk1-canonical.schema.json",
+      "harnesses/novel-hld-autonomous/runtime/review_stage_runtime.py"
+    ]
+  },
+  "decision_prefix":"HFN-",
+  "deterministic_checks":[
+    "public work-order/input-gate identity and exact HB0-HK1 topology",
+    "all upstream package profiles manifests completions canonical and validations reverified",
+    "semantic actual reads equal the isolated verdict allowlist",
+    "source locator and value hash reverified",
+    "closed review evidence binds exact canonical object values",
+    "quality HDD projection and resolution lifecycle complete before verdict",
+    "all canonical HLD objects covered across eight adversarial dimensions",
+    "verdict finding origin and non-routing boundary are consistent",
+    "atomic public ready revise or blocked envelope"
+  ],
+  "display_name":"Novel HLD Semantic Reviewer",
+  "forbidden_keys":["owner","owner_stage","target_skill","target_stage","return_stage","reopen_from","resume_stage","invalidated_suffix","replacement_story","recommended_plot"],
+  "model_required":["domain_reviews","cross_domain_checks","authority_and_open_item_review","decision_dependencies","decision_dependency_review","causal_and_reality_challenges","boundary_review","findings","verdict","pass_claims","coverage_summary"],
+  "next_stage":"HP1",
+  "object_arrays":{},
+  "preview_file":"unused.md",
+  "ready_capabilities":["independent_semantic_review_passed","all_hld_objects_covered","no_actionable_findings"],
+  "runtime_version":"1.0.0",
+  "skill":"novel-hld-semantic-reviewer",
+  "stage":"HQ1",
+  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1"]
+}

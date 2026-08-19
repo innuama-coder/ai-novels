@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld-human-review-report.schema.json",
+  "$defs": {
+    "sourceId": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "hre": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "element_kind", "conclusion", "source_ids", "locators", "visual_role", "review_question"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HRE-[A-Za-z0-9._-]+$"},
+        "element_kind": {"type": "string", "minLength": 1},
+        "conclusion": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "visual_role": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1}
+      }
+    },
+    "characterDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "element_kind", "name", "conclusion", "story_position", "personality_and_motivation", "capabilities_and_limits", "relationships_and_change", "source_ids", "locators", "visual_role", "review_question"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HRE-[A-Za-z0-9._-]+$"},
+        "element_kind": {"const": "character_definition"},
+        "name": {"type": "string", "minLength": 1},
+        "conclusion": {"type": "string", "minLength": 1},
+        "story_position": {"type": "string", "minLength": 1},
+        "personality_and_motivation": {"type": "string", "minLength": 1},
+        "capabilities_and_limits": {"type": "string", "minLength": 1},
+        "relationships_and_change": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "visual_role": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1}
+      }
+    },
+    "environmentDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "element_kind", "name", "conclusion", "story_function", "physical_character", "access_and_limits", "dramatic_use", "source_ids", "locators", "visual_role", "review_question"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HRE-[A-Za-z0-9._-]+$"},
+        "element_kind": {"const": "environment_definition"},
+        "name": {"type": "string", "minLength": 1},
+        "conclusion": {"type": "string", "minLength": 1},
+        "story_function": {"type": "string", "minLength": 1},
+        "physical_character": {"type": "string", "minLength": 1},
+        "access_and_limits": {"type": "string", "minLength": 1},
+        "dramatic_use": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "visual_role": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1}
+      }
+    },
+    "worldEnvironmentDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "element_kind", "environment_scope", "name", "definition", "defining_features", "people_and_daily_life", "story_pressure_and_limits", "author_open_details", "source_ids", "locators", "visual_role", "review_question"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HRE-[A-Za-z0-9._-]+$"},
+        "element_kind": {"const": "world_environment_definition"},
+        "environment_scope": {"enum": ["city_and_region", "local_people_and_daily_life", "social_order_and_public_atmosphere", "technology_and_infrastructure", "climate_and_physical_environment"]},
+        "name": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "defining_features": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "people_and_daily_life": {"type": "string", "minLength": 1},
+        "story_pressure_and_limits": {"type": "string", "minLength": 1},
+        "author_open_details": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "city_network": {"$ref": "#/$defs/cityNetwork"},
+        "city_stories": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/cityStory"}},
+        "route_stories": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/routeStory"}},
+        "ordinary_people_portraits": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/ordinaryPersonPortrait"}},
+        "ordinary_people_stories": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/ordinaryPersonStory"}},
+        "season_profile": {"$ref": "#/$defs/seasonProfile"},
+        "season_story": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "visual_role": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {"if": {"properties": {"environment_scope": {"const": "city_and_region"}}}, "then": {"required": ["city_network", "city_stories", "route_stories"]}},
+        {"if": {"properties": {"environment_scope": {"const": "local_people_and_daily_life"}}}, "then": {"required": ["ordinary_people_portraits", "ordinary_people_stories"]}},
+        {"if": {"properties": {"environment_scope": {"const": "climate_and_physical_environment"}}}, "then": {"required": ["season_profile", "season_story"]}}
+      ]
+    },
+    "cityStory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["city_name", "story"],
+      "properties": {
+        "city_name": {"type": "string", "minLength": 2},
+        "story": {"type": "string", "minLength": 1}
+      }
+    },
+    "routeStory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from_city", "to_city", "story"],
+      "properties": {
+        "from_city": {"type": "string", "minLength": 2},
+        "to_city": {"type": "string", "minLength": 2},
+        "story": {"type": "string", "minLength": 1}
+      }
+    },
+    "cityDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["city_name", "country", "jurisdiction", "story_function", "city_scale", "urban_structure", "street_and_architecture", "transport_and_daily_rhythm", "seasonal_expression", "key_story_events"],
+      "properties": {
+        "city_name": {"type": "string", "minLength": 2},
+        "country": {"type": "string", "minLength": 1},
+        "jurisdiction": {"type": "string", "minLength": 1},
+        "story_function": {"type": "string", "minLength": 1},
+        "city_scale": {"type": "string", "minLength": 1},
+        "urban_structure": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "street_and_architecture": {"type": "string", "minLength": 1},
+        "transport_and_daily_rhythm": {"type": "string", "minLength": 1},
+        "seasonal_expression": {"type": "string", "minLength": 1},
+        "key_story_events": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "intercityLink": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from_city", "to_city", "travel_time", "physical_route", "information_route", "custody_rule", "story_function"],
+      "properties": {
+        "from_city": {"type": "string", "minLength": 2},
+        "to_city": {"type": "string", "minLength": 2},
+        "travel_time": {"type": "string", "minLength": 1},
+        "physical_route": {"type": "string", "minLength": 1},
+        "information_route": {"type": "string", "minLength": 1},
+        "custody_rule": {"type": "string", "minLength": 1},
+        "story_function": {"type": "string", "minLength": 1}
+      }
+    },
+    "cityNetwork": {
+      "type": "object", "additionalProperties": false,
+      "required": ["narrative_distribution", "cities", "intercity_links"],
+      "properties": {
+        "narrative_distribution": {"type": "string", "minLength": 1},
+        "cities": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/cityDefinition"}},
+        "intercity_links": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/intercityLink"}}
+      }
+    },
+    "ordinaryPersonPortrait": {
+      "type": "object", "additionalProperties": false,
+      "required": ["portrait_name", "city", "who_they_are", "daily_routine", "material_details", "crisis_exposure", "knowledge_boundary"],
+      "properties": {
+        "portrait_name": {"type": "string", "minLength": 1},
+        "city": {"type": "string", "minLength": 2},
+        "who_they_are": {"type": "string", "minLength": 1},
+        "daily_routine": {"type": "string", "minLength": 1},
+        "material_details": {"type": "string", "minLength": 1},
+        "crisis_exposure": {"type": "string", "minLength": 1},
+        "knowledge_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "ordinaryPersonStory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["portrait_name", "city", "story"],
+      "properties": {
+        "portrait_name": {"type": "string", "minLength": 1},
+        "city": {"type": "string", "minLength": 2},
+        "story": {"type": "string", "minLength": 1}
+      }
+    },
+    "seasonProfile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["season", "story_window", "temperature_and_weather", "daylight_and_air", "daily_effects", "plot_effect"],
+      "properties": {
+        "season": {"type": "string", "minLength": 1},
+        "story_window": {"type": "string", "minLength": 1},
+        "temperature_and_weather": {"type": "string", "minLength": 1},
+        "daylight_and_air": {"type": "string", "minLength": 1},
+        "daily_effects": {"type": "string", "minLength": 1},
+        "plot_effect": {"type": "string", "minLength": 1}
+      }
+    },
+    "hvg": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "element_kind", "conclusion", "source_ids", "locators", "visual_role", "review_question", "model_kind", "nodes", "edges", "text_alternative"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HVG-[A-Za-z0-9._-]+$"},
+        "element_kind": {"const": "visual_model"},
+        "conclusion": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "visual_role": {"type": "string", "minLength": 1},
+        "review_question": {"type": "string", "minLength": 1},
+        "model_kind": {"enum": ["architecture", "storyline_convergence", "character_arc", "information_chain", "time_space_path", "pacing_tension", "key_scene_function"]},
+        "nodes": {"type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["id", "label", "source_ids", "locators"], "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}, "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}}, "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}}}}},
+        "edges": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["from", "to", "label", "source_ids", "locators"], "properties": {"from": {"type": "string", "minLength": 1}, "to": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}, "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}}, "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}}}}},
+        "text_alternative": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "revision", "status", "hp1_content_binding", "hq2_gate_binding", "title_and_decision_scope", "overall_narrative_architecture", "world_environment_definitions", "character_definitions", "environment_definitions", "storyline_choreography", "character_arc_placement", "pov_information_suspense", "time_space_pacing_tension", "key_scene_functions", "open_items_constraints_and_lld_boundary", "visual_models", "source_bindings", "review_budget"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "skill": {"const": "novel-hld-review-report-assembler"}, "stage": {"const": "HH1"},
+    "hld_run_id": {"type": "string", "minLength": 1}, "revision": {"type": "integer", "minimum": 0}, "status": {"const": "ready"},
+    "hp1_content_binding": {"type": "object", "additionalProperties": false, "required": ["package_sha256", "completion_sha256"], "properties": {"package_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "completion_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "hq2_gate_binding": {"type": "object", "additionalProperties": false, "required": ["acceptance_sha256", "bound_hp1_package_sha256"], "properties": {"acceptance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "bound_hp1_package_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "title_and_decision_scope": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "overall_narrative_architecture": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "world_environment_definitions": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "#/$defs/worldEnvironmentDefinition"}},
+    "character_definitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/characterDefinition"}},
+    "environment_definitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/environmentDefinition"}},
+    "storyline_choreography": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "character_arc_placement": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "pov_information_suspense": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "time_space_pacing_tension": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "key_scene_functions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "open_items_constraints_and_lld_boundary": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "visual_models": {"type": "array", "items": {"$ref": "#/$defs/hvg"}},
+    "source_bindings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["report_element_id", "source_id", "locator"], "properties": {"report_element_id": {"type": "string", "pattern": "^H(RE|VG)-[A-Za-z0-9._-]+$"}, "source_id": {"$ref": "#/$defs/sourceId"}, "locator": {"$ref": "#/$defs/locator"}}}},
+    "review_budget": {"type": "object", "additionalProperties": false, "required": ["cjk_characters", "latin_words", "visual_count", "formula", "estimated_read_minutes"], "properties": {"cjk_characters": {"type": "integer", "minimum": 0}, "latin_words": {"type": "integer", "minimum": 0}, "visual_count": {"type": "integer", "minimum": 0}, "formula": {"const": "CJK/500 + Latin/250 + visuals*0.25"}, "estimated_read_minutes": {"type": "number", "minimum": 0, "maximum": 18}}}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"qualification-attestation.schema.json",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","harness","harness_version","qualification_run_id","controller_id","key_id","algorithm","acceptance_payload_sha256","claims","signed_at","signature_hex"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "harness":{"const":"novel-hld-autonomous"},
+    "harness_version":{"$ref":"common.schema.json#/$defs/semver"},
+    "qualification_run_id":{"type":"string","minLength":1},
+    "controller_id":{"type":"string","minLength":1},
+    "key_id":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "algorithm":{"const":"rsa-pkcs1v15-sha256"},
+    "acceptance_payload_sha256":{"$ref":"common.schema.json#/$defs/sha256"},
+    "claims":{
+      "type":"object",
+      "additionalProperties":false,
+      "required":["runtime_task_receipts_verified","fresh_contexts_verified","sealed_allowlists_verified","transcripts_verified","reference_artifacts_schema_validated"],
+      "properties":{
+        "runtime_task_receipts_verified":{"const":true},
+        "fresh_contexts_verified":{"const":true},
+        "sealed_allowlists_verified":{"const":true},
+        "transcripts_verified":{"const":true},
+        "reference_artifacts_schema_validated":{"const":true}
+      }
+    },
+    "signed_at":{"type":"string","format":"date-time"},
+    "signature_hex":{"type":"string","pattern":"^[0-9a-f]+$","minLength":512}
+  }
+}

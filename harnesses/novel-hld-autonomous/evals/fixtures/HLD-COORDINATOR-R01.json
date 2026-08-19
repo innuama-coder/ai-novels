@@ -1,0 +1,1 @@
+{"case_id":"HLD-COORDINATOR-R01","sealed_before_execution":true,"scenario":"multi-target-immutable-revision-plan","executable_test":"test_revision_groups_resolve_in_topology_order_and_count_only_on_completion"}

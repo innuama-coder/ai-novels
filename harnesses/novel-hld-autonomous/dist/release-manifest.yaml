@@ -1,0 +1,18 @@
+schema_version: '1.0'
+name: novel-hld-autonomous
+version: 0.1.0
+status: implementation-candidate
+agentic_qualification: not-run
+bundle_layout: repository-root
+registered_skill_count: 14
+post_install_validation: pass
+validation: pass
+artifacts:
+  - target: source
+    path: novel-hld-autonomous-0.1.0-source.zip
+    sha256: 1547faf85d00922dd495c11b3403a63e96ecdab407d770a5b68d08959201d4e2
+    size: 685843
+  - target: codex
+    path: novel-hld-autonomous-0.1.0-codex.zip
+    sha256: 40723df7010d07d65f7c1126aeabbdaff9271e18439da0c20c303fde243c3d59
+    size: 541576

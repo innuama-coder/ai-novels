@@ -1,0 +1,34 @@
+{
+  "artifact_role": "key_scene_function_map",
+  "canonical_file": "key-scene-function-map.json",
+  "canonical_schema": "hk1-canonical.schema.json",
+  "decision_prefix": "HDDES-HK1-",
+  "deterministic_checks": [
+    "public work-order/input-gate identity and ordered HB0-HR1 topology",
+    "exact allowlist reads and stage-scoped HDD coverage before candidate",
+    "obligation-to-HKF coverage and unique primary function",
+    "total HKF-to-LWR grouping with HK1-owned LWR identifiers",
+    "exact public ready/revise/blocked profiles and external result envelope"
+  ],
+  "display_name": "Novel HLD Key Scene Function Planner",
+  "forbidden_keys": ["action_order", "dialogue", "imagery", "sensory_detail", "props", "memory_text", "beats", "prose", "new_event", "new_character", "new_environment", "new_relationship", "pov_assignment", "timing_repair"],
+  "model_required": ["key_scene_functions", "structural_coverage_matrix", "storyline_coverage_matrix", "arc_coverage_matrix", "information_coverage_matrix", "climax_and_payoff_coverage", "lld_work_requirements", "lld_freedoms"],
+  "next_stage": "HQ1",
+  "object_arrays": {
+    "key_scene_functions": "HKF-",
+    "structural_coverage_matrix": "HKF-",
+    "storyline_coverage_matrix": "HKF-",
+    "arc_coverage_matrix": "HKF-",
+    "information_coverage_matrix": "HKF-",
+    "lld_work_requirements": "LWR-",
+    "lld_freedoms": "LWR-"
+  },
+  "object_fields": {"climax_and_payoff_coverage": "HKF-"},
+  "preview_file": "key-scene-function-map.md",
+  "ready_capabilities": ["minimum_sufficient_key_scene_functions", "total_obligation_coverage", "authoritative_lwr_grouping_for_hp1"],
+  "public_entrypoint": {"path":"skills/novel-hld-key-scene-function-planner/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-key-scene-function-planner",
+  "stage": "HK1",
+  "upstream_stages": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1"]
+}

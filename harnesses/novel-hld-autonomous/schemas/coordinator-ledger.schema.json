@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"coordinator-ledger.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","harness","hld_run_id","ledger_revision","event_sequence","current_state_ref","active_work_order_ref","active_task_kind","accepted_result_refs","composite_state_ref","consumed_author_event_ids","fingerprint_completion_counts","terminal_status"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"hld_run_id":{"type":"string","minLength":1},
+    "ledger_revision":{"type":"integer","minimum":0},"event_sequence":{"type":"integer","minimum":0},
+    "current_state_ref":{"$ref":"common.schema.json#/$defs/fileReference"},
+    "active_work_order_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},
+    "active_task_kind":{"oneOf":[{"type":"null"},{"type":"string","minLength":1}]},
+    "accepted_result_refs":{"type":"array","items":{"$ref":"common.schema.json#/$defs/fileReference"}},
+    "composite_state_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},
+    "consumed_author_event_ids":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
+    "fingerprint_completion_counts":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+    "terminal_status":{"oneOf":[{"type":"null"},{"enum":["lld_ready","reality_reentry","conception_reentry","author_rejected","runtime_stopped","exhausted"]}]}
+  }
+}

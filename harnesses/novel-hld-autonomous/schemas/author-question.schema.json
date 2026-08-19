@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "author-question.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "hld_run_id", "revision", "question_id", "question_kind", "owner_stage", "question_text", "allowed_answer_scope", "resume_stage", "source_control_id", "hdd_ref", "affected_ids", "revision_plan_ref", "revision_plan_state_ref", "group_id", "original_target", "lineage_change", "allowed_new_target_ids", "request_meaning_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "question_id": {"type": "string", "pattern": "^HAQ-[A-Za-z0-9._-]+$"},
+    "question_kind": {"enum": ["source_resolution", "revision_retarget"]},
+    "owner_stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "question_text": {"type": "string", "minLength": 1},
+    "allowed_answer_scope": {"type": "string", "minLength": 1},
+    "resume_stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "source_control_id": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/sourceId"}]},
+    "hdd_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "affected_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "revision_plan_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_plan_state_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "group_id": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^HRG-"}]},
+    "original_target": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+    "lineage_change": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+    "allowed_new_target_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "request_meaning_hash": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/sha256"}]}
+  }
+}

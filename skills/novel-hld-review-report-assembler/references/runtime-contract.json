@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "skill": "novel-hld-review-report-assembler",
+  "owner_version": "1.0.0",
+  "stage": "HH1",
+  "task_profile": "HH1.A",
+  "public_entrypoint": {"argv": ["python", "scripts/run_skill.py", "<work-order.json>", "<draft-directory>"], "success_exit": 0, "nonready_exit": 2, "runtime_error_exit": 1},
+  "required_allowlist_roles_ordered": ["hb0_completion", "hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "hp1_validation", "novel_hld_package", "hld_cross_index", "hld_traceability_matrix", "hld_spec", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "hq2_completion", "hq2_manifest", "hq2_validation", "lld_handoff_acceptance"],
+  "forbidden_input_classes": ["raw_conception", "chat", "prior_report", "sample_chapter", "novel_prose", "html", "svg", "css", "dom_registry"],
+  "draft_profile": ["canonical.json", "generation-session.json", "generation-evidence/00-material-inventory.json", "generation-evidence/01-organization.json", "generation-evidence/02-adversarial-review.json"],
+  "ready_package_profile": ["hld-human-review-report.json", "generation-session.json", "generation-evidence/00-material-inventory.json", "generation-evidence/01-organization.json", "generation-evidence/02-adversarial-review.json", "report-assembly-execution.json", "validation.json", "package-manifest.json"],
+  "result_contract": {"result_scope": "composite_internal", "completion_ref": null, "stage_result_location": "package-parent/stage-result.json", "canonical_on_nonready": false},
+  "implementation_digest": {
+    "algorithm": "sha256",
+    "ordering": "resolved-path lexical order",
+    "record": "UTF-8 basename + NUL + exact file bytes + NUL",
+    "closure": [
+      "skills/novel-hld-review-report-assembler/scripts/hh1a_runtime.py",
+      "skills/novel-hld-review-report-assembler/scripts/run_skill.py",
+      "skills/novel-hld-review-report-assembler/references/runtime-contract.json",
+      "harnesses/novel-hld-autonomous/runtime/composite_internal_runtime.py",
+      "harnesses/novel-hld-autonomous/runtime/canonical.py",
+      "harnesses/novel-hld-autonomous/runtime/package_envelope.py",
+      "harnesses/novel-hld-autonomous/runtime/schema_catalog.py",
+      "harnesses/novel-hld-autonomous/schemas/*.schema.json (lexically expanded)",
+      "skills/novel-hld-review-report-assembler/references/hld-human-review-report.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-generation-session.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-material-inventory.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-organization.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-adversarial-review.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-execution.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hh1-a-validation.schema.json",
+      "skills/novel-hld-package-assembler/references/novel-hld-package.schema.json",
+      "skills/novel-hld-package-assembler/references/hld-cross-index.schema.json"
+    ]
+  }
+}

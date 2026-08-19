@@ -1,0 +1,1 @@
+{"content_package_files":["gate-data.json","blocked-report.json","validation.json","result-manifest.json"],"external_stage_result":{"result_scope":"top_level","result":"blocked","blocker_class":"upstream_defect","affected_ids":["HNU-004","HIN-SECRET"]},"forbidden_files":["narrative-information-architecture.json","stage-completion.json","stage-result.json-inside-package"]}

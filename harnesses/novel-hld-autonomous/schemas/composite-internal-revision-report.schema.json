@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"composite-internal-revision-report.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","status","revision_class","code","evidence","affected_ids","required_action"],
+  "properties":{"schema_version":{"const":"1.0"},"skill":{"type":"string","minLength":1},"stage":{"enum":["HQ2","HH1"]},"hld_run_id":{"type":"string","minLength":1},"status":{"const":"revise"},"revision_class":{"const":"local_candidate"},"code":{"type":"string","pattern":"^[A-Z][A-Z0-9_]+$"},"evidence":{"type":"string","minLength":1},"affected_ids":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},"required_action":{"type":"string","minLength":1}}
+}

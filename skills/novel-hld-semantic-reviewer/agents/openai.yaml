@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说 HLD 独立语义审查"
+  short_description: "以对象级证据审查小说 HLD 的完整性、一致性与可开发性"
+  default_prompt: "使用 $novel-hld-semantic-reviewer 独立审查当前小说 HLD，只输出可追溯的语义结论，不修改上游设计。"

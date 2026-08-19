@@ -1,0 +1,1 @@
+{"case_id":"HQ1-N03","fixture_version":"2.1","sealed_before_execution":true,"single_defect_injection":"pass_claim_evidence_resealed_tamper","scenario":"a pass claim is resealed with valid but non-identical evidence","expected_result":"revise"}

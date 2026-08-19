@@ -1,0 +1,6 @@
+interface:
+  display_name: "HLD Baseline Admitter"
+  short_description: "Hard-gate a frozen novel baseline"
+  default_prompt: "Use $novel-hld-baseline-admitter to revalidate and admit this sealed development baseline for HB0."
+policy:
+  allow_implicit_invocation: false

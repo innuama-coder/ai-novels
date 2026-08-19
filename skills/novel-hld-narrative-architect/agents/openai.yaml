@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Narrative Architect"
+  short_description: "Build the novel's macro narrative coordinate system"
+  default_prompt: "Use $novel-hld-narrative-architect to execute an HA1 work order and publish a contract-valid narrative architecture."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ha1-canonical.schema.json",
+  "$defs": {
+    "sourceRefs": {"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/sourceId"}},
+    "authorityRef": {
+      "type":"object","additionalProperties":false,
+      "required":["source_id","classification","open_item","authority_class","value_sha256"],
+      "properties":{
+        "source_id":{"$ref":"common.schema.json#/$defs/sourceId"},
+        "classification":{"enum":["mandatory","freedom","must_ask","open"]},
+        "open_item":{"type":"boolean"},
+        "authority_class":{"enum":["author_locked","autonomous_owned","downstream_freedom","author_open"]},
+        "value_sha256":{"$ref":"common.schema.json#/$defs/sha256"}
+      }
+    },
+    "authorityRefs":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/authorityRef"}},
+    "ownership":{"enum":["source_projection","hld_owned","preserved_open","lld_freedom"]},
+    "architectureChoice": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","form","rationale"],
+      "properties":{"id":{"type":"string","pattern":"^HST-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"form":{"type":"string","minLength":1},"rationale":{"type":"string","minLength":1}}
+    },
+    "phase": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","order","purpose","entry_state_ref","exit_state_ref"],
+      "properties":{"id":{"type":"string","pattern":"^HST-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"order":{"type":"integer","minimum":0},"purpose":{"type":"string","minLength":1},"entry_state_ref":{"type":"string","minLength":1},"exit_state_ref":{"type":"string","minLength":1}}
+    },
+    "unit": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","parent_phase_id","order","purpose","entry_state_ref","required_change","exit_state_ref","source_anchors"],
+      "properties":{"id":{"type":"string","pattern":"^HNU-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"parent_phase_id":{"type":"string","pattern":"^HST-"},"order":{"type":"integer","minimum":0},"purpose":{"type":"string","minLength":1},"entry_state_ref":{"type":"string","minLength":1},"required_change":{"type":"string","minLength":1},"exit_state_ref":{"type":"string","minLength":1},"source_anchors":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/stableId"}}}
+    },
+    "shell": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","parent_unit_id","order","purpose"],
+      "properties":{"id":{"type":"string","pattern":"^HCH-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"parent_unit_id":{"type":"string","pattern":"^HNU-"},"order":{"type":"integer","minimum":0},"purpose":{"type":"string","minLength":1}}
+    },
+    "anchor": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","unit_id","kind","event_refs"],
+      "properties":{"id":{"type":"string","pattern":"^HST-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"unit_id":{"type":"string","pattern":"^HNU-"},"kind":{"type":"string","minLength":1},"event_refs":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/stableId"}}}
+    },
+    "stateContract": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","unit_id","entry_state_ref","exit_state_ref"],
+      "properties":{"id":{"type":"string","pattern":"^HST-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"unit_id":{"type":"string","pattern":"^HNU-"},"entry_state_ref":{"type":"string","minLength":1},"exit_state_ref":{"type":"string","minLength":1}}
+    },
+    "city": {
+      "type":"object","additionalProperties":false,
+      "required":["city_id","name","country","jurisdiction","story_function","city_scale","urban_structure","street_and_architecture","transport_and_daily_rhythm","seasonal_expression","ordinary_people","key_story_events"],
+      "properties":{
+        "city_id":{"type":"string","pattern":"^HST-CITY-[A-Za-z0-9._-]+$"},"name":{"type":"string","minLength":2},"country":{"type":"string","minLength":1},"jurisdiction":{"type":"string","minLength":1},"story_function":{"type":"string","minLength":1},"city_scale":{"type":"string","minLength":1},"urban_structure":{"type":"array","minItems":2,"uniqueItems":true,"items":{"type":"string","minLength":1}},"street_and_architecture":{"type":"string","minLength":1},"transport_and_daily_rhythm":{"type":"string","minLength":1},"seasonal_expression":{"type":"string","minLength":1},"ordinary_people":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"object","additionalProperties":false,"required":["portrait","daily_routine","material_details","crisis_exposure","knowledge_boundary"],"properties":{"portrait":{"type":"string","minLength":1},"daily_routine":{"type":"string","minLength":1},"material_details":{"type":"string","minLength":1},"crisis_exposure":{"type":"string","minLength":1},"knowledge_boundary":{"type":"string","minLength":1}}}},"key_story_events":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}
+      }
+    },
+    "route": {
+      "type":"object","additionalProperties":false,
+      "required":["route_id","from_city_id","to_city_id","travel_time","physical_route","information_route","custody_rule","story_function"],
+      "properties":{"route_id":{"type":"string","pattern":"^HST-ROUTE-[A-Za-z0-9._-]+$"},"from_city_id":{"type":"string","pattern":"^HST-CITY-"},"to_city_id":{"type":"string","pattern":"^HST-CITY-"},"travel_time":{"type":"string","minLength":1},"physical_route":{"type":"string","minLength":1},"information_route":{"type":"string","minLength":1},"custody_rule":{"type":"string","minLength":1},"story_function":{"type":"string","minLength":1}}
+    },
+    "worldSetting": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_refs","source_authority_refs","ownership_class","resolution_ref","narrative_distribution","story_window","season_profile","cities","intercity_routes","threat_mechanism"],
+      "properties":{
+        "id":{"type":"string","pattern":"^HST-WORLD-[A-Za-z0-9._-]+$"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"source_authority_refs":{"$ref":"#/$defs/authorityRefs"},"ownership_class":{"$ref":"#/$defs/ownership"},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]},"narrative_distribution":{"type":"string","minLength":1},"story_window":{"type":"string","minLength":1},"season_profile":{"type":"object","additionalProperties":false,"required":["season","temperature_and_weather","daylight_and_air","daily_effects","plot_effect"],"properties":{"season":{"type":"string","minLength":1},"temperature_and_weather":{"type":"string","minLength":1},"daylight_and_air":{"type":"string","minLength":1},"daily_effects":{"type":"string","minLength":1},"plot_effect":{"type":"string","minLength":1}}},"cities":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/city"}},"intercity_routes":{"type":"array","items":{"$ref":"#/$defs/route"}},"threat_mechanism":{"type":"object","additionalProperties":false,"required":["target_system","access_path","actuator_chain","observable_evidence","shutdown_condition"],"properties":{"target_system":{"type":"string","minLength":1},"access_path":{"type":"string","minLength":1},"actuator_chain":{"type":"array","minItems":2,"uniqueItems":true,"items":{"type":"string","minLength":1}},"observable_evidence":{"type":"array","minItems":2,"uniqueItems":true,"items":{"type":"string","minLength":1}},"shutdown_condition":{"type":"string","minLength":1}}}
+      }
+    },
+    "hdd": {
+      "type":"object","additionalProperties":false,
+      "required":["id","source_id","owner_stage","affected_obligation_ids","disposition","object_evidence_refs","rationale_anchor","downstream_effect","resolution_ref"],
+      "properties":{"id":{"type":"string","pattern":"^HDD-HA1-"},"source_id":{"$ref":"common.schema.json#/$defs/sourceId"},"owner_stage":{"const":"HA1"},"affected_obligation_ids":{"type":"array","uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/stableId"}},"disposition":{"enum":["not_needed_for_current_stage","conditional_structure_preserves_open","required_now","resolved_by_external_author_event"]},"object_evidence_refs":{"type":"array","uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/stableId"}},"rationale_anchor":{"type":"string","minLength":1},"downstream_effect":{"type":"string","minLength":1},"resolution_ref":{"oneOf":[{"type":"null"},{"$ref":"common.schema.json#/$defs/fileReference"}]}}
+    }
+  },
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","status","input_gate_ref","source_artifacts","authority_partition","design_decisions","derivation_claims","decision_dependencies","open_items","downstream_contract","architecture_choice","world_setting_architecture","structural_phases","narrative_units","chapter_shells","turning_point_anchors","entry_exit_state_contracts","scale_and_flexibility","downstream_obligations"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-narrative-architect"},"stage":{"const":"HA1"},"hld_run_id":{"type":"string","minLength":1},"status":{"const":"ready"},
+    "input_gate_ref":{"$ref":"common.schema.json#/$defs/fileReference"},
+    "source_artifacts":{"type":"array","minItems":1,"items":{"$ref":"common.schema.json#/$defs/fileReference"}},
+    "authority_partition":{"$ref":"common.schema.json#/$defs/authorityPartition"},
+    "design_decisions":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["id","choice","candidate_refs"],"properties":{"id":{"type":"string","pattern":"^HDDES-HA1-"},"choice":{"type":"string","minLength":1},"candidate_refs":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}}}},
+    "derivation_claims":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["id","source_refs","target_locator","value_sha256"],"properties":{"id":{"$ref":"common.schema.json#/$defs/stableId"},"source_refs":{"$ref":"#/$defs/sourceRefs"},"target_locator":{"type":"string","pattern":"^/"},"value_sha256":{"$ref":"common.schema.json#/$defs/sha256"}}}},
+    "decision_dependencies":{"type":"array","items":{"$ref":"#/$defs/hdd"}},
+    "open_items":{"type":"array","uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/sourceId"}},
+    "downstream_contract":{"type":"object","additionalProperties":false,"required":["consumer","required_roles"],"properties":{"consumer":{"const":"HS1"},"required_roles":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}}},
+    "architecture_choice":{"$ref":"#/$defs/architectureChoice"},
+    "world_setting_architecture":{"$ref":"#/$defs/worldSetting"},
+    "structural_phases":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/phase"}},
+    "narrative_units":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/unit"}},
+    "chapter_shells":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/shell"}},
+    "turning_point_anchors":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/anchor"}},
+    "entry_exit_state_contracts":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/stateContract"}},
+    "scale_and_flexibility":{"type":"object","additionalProperties":false,"required":["chapter_range","split_condition","merge_condition"],"properties":{"chapter_range":{"type":"array","minItems":2,"maxItems":2,"items":{"type":"integer","minimum":1}},"split_condition":{"type":"string","minLength":1},"merge_condition":{"type":"string","minLength":1}}},
+    "downstream_obligations":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["id","requirement"],"properties":{"id":{"$ref":"common.schema.json#/$defs/stableId"},"requirement":{"type":"string","minLength":1}}}}
+  }
+}

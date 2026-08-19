@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "author-resolution.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "hld_run_id", "question_ref", "answer_ref", "resolution_kind", "resume_stage", "new_revision", "classification_conclusion", "retarget_binding"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "question_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "answer_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "resolution_kind": {"enum": ["hld_local_resolution", "revision_target_resolution", "conception_authority_change"]},
+    "resume_stage": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/stage"}]},
+    "new_revision": {"type": "integer", "minimum": 1},
+    "classification_conclusion": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+    "retarget_binding": {"oneOf": [{"type": "null"}, {"type": "object"}]}
+  }
+}

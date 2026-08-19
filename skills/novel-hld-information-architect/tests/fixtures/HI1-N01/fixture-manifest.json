@@ -1,0 +1,1 @@
+{"case_id":"HI1-N01","sealed_before_execution":true,"files":[{"path":"stimulus.json","sha256":"da71468dc93b93b1adac4597efbdc36d152b680a25b2dbc7a116cabafccf4a8c"}],"single_injected_defect":"POV_LEAK_001"}

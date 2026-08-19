@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld-identity-contract.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "design_evidence_files", "work_requirement"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "design_evidence_files": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"enum": ["00-dependency-assessment.json", "01-obligation-analysis.json", "02-option-analysis.json", "03-projection-analysis.json", "04-adversarial-self-review.json"]},
+      "uniqueItems": true
+    },
+    "work_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_stage", "producer_prefix", "projector_stage", "downstream_prefix", "source_field", "suffix_identity_required"],
+      "properties": {
+        "producer_stage": {"const": "HK1"},
+        "producer_prefix": {"const": "LWR-"},
+        "projector_stage": {"const": "HP1"},
+        "downstream_prefix": {"const": "LWK-"},
+        "source_field": {"const": "source_lwr_id"},
+        "suffix_identity_required": {"const": true}
+      }
+    }
+  }
+}

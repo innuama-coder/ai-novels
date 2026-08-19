@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld-source-index.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "status", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "skill": {"const": "novel-hld-baseline-admitter"},
+    "stage": {"const": "HB0"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "entries": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "domain", "object_type", "schema_discriminator", "source", "workspace_source_ref", "locator", "value_sha256", "allowed_stages"],
+        "properties": {
+          "source_id": {"$ref": "common.schema.json#/$defs/sourceId"},
+          "domain": {"enum": ["intent", "storylines", "world", "environments", "events", "characters", "narrative", "quality", "cross-domain"]},
+          "object_type": {"enum": ["object", "array", "string", "number", "integer", "boolean", "null"]},
+          "schema_discriminator": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+          "source": {"type": "object"},
+          "workspace_source_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+          "locator": {"type": "string", "pattern": "^/"},
+          "value_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+          "allowed_stages": {"type": "array", "minItems": 2, "items": {"$ref": "common.schema.json#/$defs/stage"}, "uniqueItems": true}
+        }
+      }
+    }
+  }
+}

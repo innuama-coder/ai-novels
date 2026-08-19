@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Presentation Fidelity Reviewer"
+  short_description: "Independently prove that the human HLD report is faithful and decision-usable."
+  default_prompt: "Review the sealed HH1-A report against current HP1 only; record material drift and decision usability without editing content or reading HTML."
+policy:
+  allow_implicit_invocation: true

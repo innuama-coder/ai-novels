@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "author-decision.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "hld_run_id", "revision", "event_sequence", "event_id", "external", "current", "consumed", "decision", "author_text", "bindings", "revision_targets"],
+  "properties": {
+    "schema_version": {"enum": ["1.0", "1.1"]},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "minLength": 1},
+    "external": {"const": true},
+    "current": {"const": true},
+    "consumed": {"const": false},
+    "decision": {"enum": ["approved", "revise", "rejected"]},
+    "author_text": {"type": "string", "minLength": 1},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hp1_package_sha256", "hq2_acceptance_sha256", "hh1_manifest_sha256", "html_sha256"],
+      "properties": {
+        "hp1_package_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "hq2_acceptance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "hh1_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "html_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "revision_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target_kind", "target_id", "requested_change", "author_text_locator"],
+        "properties": {
+          "target_kind": {"enum": ["hld_content", "report_content", "render_expression", "conception_authority"]},
+          "target_id": {"type": "string", "minLength": 1},
+          "requested_change": {"type": "string", "minLength": 1},
+          "author_text_locator": {"type": "string", "minLength": 1},
+          "change_scope": {"enum": ["presentation_only", "hld_semantic", "conception_authority"]},
+          "semantic_target_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "target_field_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^/"}}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "1.1"}, "decision": {"const": "revise"}}, "required": ["schema_version", "decision"]},
+      "then": {
+        "properties": {
+          "revision_targets": {
+            "minItems": 1,
+            "items": {"required": ["change_scope", "target_field_paths"]}
+          }
+        }
+      }
+    }
+  ]
+}

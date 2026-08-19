@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "design_evidence_files": [
+    "00-dependency-assessment.json",
+    "01-obligation-analysis.json",
+    "02-option-analysis.json",
+    "03-projection-analysis.json",
+    "04-adversarial-self-review.json"
+  ],
+  "work_requirement": {
+    "producer_stage": "HK1",
+    "producer_prefix": "LWR-",
+    "projector_stage": "HP1",
+    "downstream_prefix": "LWK-",
+    "source_field": "source_lwr_id",
+    "suffix_identity_required": true
+  }
+}

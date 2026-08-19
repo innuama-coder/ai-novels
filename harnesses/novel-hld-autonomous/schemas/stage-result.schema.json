@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "stage-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "hld_run_id", "revision", "stage", "skill", "work_order_id", "task_id", "event_sequence", "result_scope", "result", "state_before_ref", "input_gate_ref", "result_manifest_ref", "validation_ref", "produced_at", "completion_ref", "internal_manifest_ref", "revision_class", "revision_report_ref", "candidate_ref", "local_defect_evidence", "author_event_ref", "gate_data_ref", "blocked_report_ref", "blocker_class", "affected_ids", "runtime_error_ref"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "skill": {"type": "string", "minLength": 1},
+    "work_order_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "result_scope": {"enum": ["top_level", "composite_internal"]},
+    "result": {"enum": ["ready", "revise", "blocked", "runtime_error"]},
+    "state_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "input_gate_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "result_manifest_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "validation_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "produced_at": {"type": "string", "format": "date-time"},
+    "completion_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "internal_manifest_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_class": {"oneOf": [{"type": "null"}, {"enum": ["local_candidate", "external_author_request"]}]},
+    "revision_report_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "candidate_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "local_defect_evidence": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/fileReference"}},
+    "author_event_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "gate_data_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "blocked_report_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "blocker_class": {"oneOf": [{"type": "null"}, {"enum": ["input_invalid", "upstream_defect", "author_required", "reality_dependency", "author_rejected", "exhausted"]}]},
+    "affected_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "runtime_error_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"result": {"const": "ready"}, "result_scope": {"const": "top_level"}}, "required": ["result", "result_scope"]},
+      "then": {"properties": {"completion_ref": {"$ref": "common.schema.json#/$defs/fileReference"}, "internal_manifest_ref": {"type": "null"}, "revision_class": {"type": "null"}, "revision_report_ref": {"type": "null"}, "candidate_ref": {"type": "null"}, "local_defect_evidence": {"maxItems": 0}, "author_event_ref": {"type": "null"}, "gate_data_ref": {"type": "null"}, "blocked_report_ref": {"type": "null"}, "blocker_class": {"type": "null"}, "affected_ids": {"maxItems": 0}, "runtime_error_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"result": {"const": "ready"}, "result_scope": {"const": "composite_internal"}}, "required": ["result", "result_scope"]},
+      "then": {"properties": {"completion_ref": {"type": "null"}, "internal_manifest_ref": {"$ref": "common.schema.json#/$defs/fileReference"}, "revision_class": {"type": "null"}, "revision_report_ref": {"type": "null"}, "candidate_ref": {"type": "null"}, "local_defect_evidence": {"maxItems": 0}, "author_event_ref": {"type": "null"}, "gate_data_ref": {"type": "null"}, "blocked_report_ref": {"type": "null"}, "blocker_class": {"type": "null"}, "affected_ids": {"maxItems": 0}, "runtime_error_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"result": {"const": "revise"}}, "required": ["result"]},
+      "then": {"properties": {"completion_ref": {"type": "null"}, "internal_manifest_ref": {"type": "null"}, "revision_class": {"enum": ["local_candidate", "external_author_request"]}, "revision_report_ref": {"$ref": "common.schema.json#/$defs/fileReference"}, "gate_data_ref": {"type": "null"}, "blocked_report_ref": {"type": "null"}, "blocker_class": {"type": "null"}, "runtime_error_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"result": {"const": "blocked"}}, "required": ["result"]},
+      "then": {"properties": {"completion_ref": {"type": "null"}, "internal_manifest_ref": {"type": "null"}, "revision_class": {"type": "null"}, "revision_report_ref": {"type": "null"}, "candidate_ref": {"type": "null"}, "local_defect_evidence": {"maxItems": 0}, "author_event_ref": {"type": "null"}, "gate_data_ref": {"$ref": "common.schema.json#/$defs/fileReference"}, "blocked_report_ref": {"$ref": "common.schema.json#/$defs/fileReference"}, "blocker_class": {"enum": ["input_invalid", "upstream_defect", "author_required", "reality_dependency", "author_rejected", "exhausted"]}, "runtime_error_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"result": {"const": "runtime_error"}}, "required": ["result"]},
+      "then": {"properties": {"completion_ref": {"type": "null"}, "internal_manifest_ref": {"type": "null"}, "revision_class": {"type": "null"}, "revision_report_ref": {"type": "null"}, "candidate_ref": {"type": "null"}, "local_defect_evidence": {"maxItems": 0}, "author_event_ref": {"type": "null"}, "gate_data_ref": {"type": "null"}, "blocked_report_ref": {"type": "null"}, "blocker_class": {"type": "null"}, "affected_ids": {"maxItems": 0}, "runtime_error_ref": {"$ref": "common.schema.json#/$defs/fileReference"}}}
+    }
+  ]
+}

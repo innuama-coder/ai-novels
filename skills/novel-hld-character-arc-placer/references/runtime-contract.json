@@ -1,0 +1,65 @@
+{
+  "artifact_role": "character_arc_placement",
+  "canonical_file": "character-arc-placement.json",
+  "canonical_schema": "hc1-canonical.schema.json",
+  "decision_prefix": "HDDES-HC1-",
+  "deterministic_checks": [
+    "work-order and input-gate identity equality",
+    "ordered HB0, HA1, and HS1 completion topology",
+    "actual reads contained by allowlist",
+    "stage-scoped HDD coverage before candidate",
+    "authority/ownership separation and stable IDs",
+    "core character arc role coverage and bilateral relationship state checks",
+    "exact package profile and external parent result envelope"
+  ],
+  "display_name": "Novel HLD Character Arc Placer",
+  "forbidden_keys": [
+    "appearance",
+    "wardrobe",
+    "room_decor",
+    "new_backstory",
+    "social_circle_addition",
+    "new_relationship",
+    "new_character",
+    "scene_actions",
+    "dialogue",
+    "sensory_detail",
+    "prose"
+  ],
+  "model_required": [
+    "character_participation_register",
+    "arc_state_models",
+    "arc_steps",
+    "relationship_steps",
+    "choice_cost_consequence_links",
+    "event_character_alignment",
+    "capability_information_permission_checks"
+  ],
+  "next_stage": "HI1",
+  "object_arrays": {
+    "arc_state_models": "HAS-",
+    "arc_steps": "HAS-",
+    "capability_information_permission_checks": "HAS-",
+    "character_participation_register": "HAS-",
+    "choice_cost_consequence_links": "HAS-",
+    "event_character_alignment": "HAS-",
+    "relationship_steps": "HRS-"
+  },
+  "object_fields": {},
+  "preview_file": "character-arc-placement.md",
+  "ready_capabilities": [
+    "core_character_arc_paths",
+    "relationship_change_placement",
+    "choice_cost_consequence_traceability",
+    "capability_information_permission_checks"
+  ],
+  "public_entrypoint": {"path":"skills/novel-hld-character-arc-placer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-character-arc-placer",
+  "stage": "HC1",
+  "upstream_stages": [
+    "HB0",
+    "HA1",
+    "HS1"
+  ]
+}

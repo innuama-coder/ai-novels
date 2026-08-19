@@ -1,0 +1,742 @@
+{
+    "$schema":  "https://json-schema.org/draft/2020-12/schema",
+    "$id":  "hc1-canonical.schema.json",
+    "$defs":  {
+                  "sourceRefs":  {
+                                     "type":  "array",
+                                     "minItems":  1,
+                                     "uniqueItems":  true,
+                                     "items":  {
+                                                   "$ref":  "common.schema.json#/$defs/sourceId"
+                                               }
+                                 },
+                  "authorityRef":  {
+                                       "type":  "object",
+                                       "additionalProperties":  false,
+                                       "required":  [
+                                                        "source_id",
+                                                        "classification",
+                                                        "open_item",
+                                                        "authority_class",
+                                                        "value_sha256"
+                                                    ],
+                                       "properties":  {
+                                                          "source_id":  {
+                                                                            "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                        },
+                                                          "classification":  {
+                                                                                 "enum":  [
+                                                                                              "mandatory",
+                                                                                              "freedom",
+                                                                                              "must_ask",
+                                                                                              "open"
+                                                                                          ]
+                                                                             },
+                                                          "open_item":  {
+                                                                            "type":  "boolean"
+                                                                        },
+                                                          "authority_class":  {
+                                                                                  "enum":  [
+                                                                                               "author_locked",
+                                                                                               "autonomous_owned",
+                                                                                               "downstream_freedom",
+                                                                                               "author_open"
+                                                                                           ]
+                                                                              },
+                                                          "value_sha256":  {
+                                                                               "$ref":  "common.schema.json#/$defs/sha256"
+                                                                           }
+                                                      }
+                                   },
+                  "authorityRefs":  {
+                                        "type":  "array",
+                                        "minItems":  1,
+                                        "items":  {
+                                                      "$ref":  "#/$defs/authorityRef"
+                                                  }
+                                    },
+                  "ownership":  {
+                                    "enum":  [
+                                                 "source_projection",
+                                                 "hld_owned",
+                                                 "preserved_open",
+                                                 "lld_freedom"
+                                             ]
+                                },
+                  "participation":  {
+                                        "type":  "object",
+                                        "additionalProperties":  false,
+                                        "required":  [
+                                                         "id",
+                                                         "source_refs",
+                                                         "source_authority_refs",
+                                                         "ownership_class",
+                                                         "resolution_ref",
+                                                         "character_id",
+                                                         "importance",
+                                                         "storyline_segment_ids",
+                                                         "responsibilities",
+                                                         "absence_reason"
+                                                     ],
+                                        "properties":  {
+                                                           "id":  {
+                                                                      "type":  "string",
+                                                                      "pattern":  "^HAS-"
+                                                                  },
+                                                           "source_refs":  {
+                                                                               "$ref":  "#/$defs/sourceRefs"
+                                                                           },
+                                                           "source_authority_refs":  {
+                                                                                         "$ref":  "#/$defs/authorityRefs"
+                                                                                     },
+                                                           "ownership_class":  {
+                                                                                   "$ref":  "#/$defs/ownership"
+                                                                               },
+                                                           "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                           "character_id":  {
+                                                                                "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                            },
+                                                           "importance":  {
+                                                                              "enum":  [
+                                                                                           "core",
+                                                                                           "support",
+                                                                                           "context"
+                                                                                       ]
+                                                                          },
+                                                           "storyline_segment_ids":  {
+                                                                                         "type":  "array",
+                                                                                         "uniqueItems":  true,
+                                                                                         "items":  {
+                                                                                                       "type":  "string",
+                                                                                                       "pattern":  "^HTS-"
+                                                                                                   }
+                                                                                     },
+                                                           "responsibilities":  {
+                                                                                    "type":  "array",
+                                                                                    "minItems":  1,
+                                                                                    "uniqueItems":  true,
+                                                                                    "items":  {
+                                                                                                  "type":  "string",
+                                                                                                  "minLength":  1
+                                                                                              }
+                                                                                },
+                                                           "absence_reason":  {
+                                                                                  "oneOf":  [
+                                                                                                {
+                                                                                                    "type":  "null"
+                                                                                                },
+                                                                                                {
+                                                                                                    "type":  "string",
+                                                                                                    "minLength":  1
+                                                                                                }
+                                                                                            ]
+                                                                              }
+                                                       }
+                                    },
+                  "state":  {
+                                "type":  "object",
+                                "additionalProperties":  false,
+                                "required":  [
+                                                 "goal"
+                                             ],
+                                "properties":  {
+                                                   "goal":  {
+                                                                "type":  "string",
+                                                                "minLength":  1
+                                                            },
+                                                   "belief":  {
+                                                                  "type":  "string",
+                                                                  "minLength":  1
+                                                              }
+                                               }
+                            },
+                  "arcModel":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "id",
+                                                    "source_refs",
+                                                    "source_authority_refs",
+                                                    "ownership_class",
+                                                    "resolution_ref",
+                                                    "character_id",
+                                                    "start_state",
+                                                    "end_state"
+                                                ],
+                                   "properties":  {
+                                                      "id":  {
+                                                                 "type":  "string",
+                                                                 "pattern":  "^HAS-"
+                                                             },
+                                                      "source_refs":  {
+                                                                          "$ref":  "#/$defs/sourceRefs"
+                                                                      },
+                                                      "source_authority_refs":  {
+                                                                                    "$ref":  "#/$defs/authorityRefs"
+                                                                                },
+                                                      "ownership_class":  {
+                                                                              "$ref":  "#/$defs/ownership"
+                                                                          },
+                                                      "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                      "character_id":  {
+                                                                           "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                       },
+                                                      "start_state":  {
+                                                                          "$ref":  "#/$defs/state"
+                                                                      },
+                                                      "end_state":  {
+                                                                        "$ref":  "#/$defs/state"
+                                                                    }
+                                                  }
+                               },
+                  "arcStep":  {
+                                  "type":  "object",
+                                  "additionalProperties":  false,
+                                  "required":  [
+                                                   "id",
+                                                   "source_refs",
+                                                   "source_authority_refs",
+                                                   "ownership_class",
+                                                   "resolution_ref",
+                                                   "character_id",
+                                                   "role",
+                                                   "pressure",
+                                                   "choice",
+                                                   "cost",
+                                                   "consequence",
+                                                   "unit_id",
+                                                   "event_id",
+                                                   "storyline_segment_id"
+                                               ],
+                                  "properties":  {
+                                                     "id":  {
+                                                                "type":  "string",
+                                                                "pattern":  "^HAS-"
+                                                            },
+                                                     "source_refs":  {
+                                                                         "$ref":  "#/$defs/sourceRefs"
+                                                                     },
+                                                     "source_authority_refs":  {
+                                                                                   "$ref":  "#/$defs/authorityRefs"
+                                                                               },
+                                                     "ownership_class":  {
+                                                                             "$ref":  "#/$defs/ownership"
+                                                                         },
+                                                     "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                     "character_id":  {
+                                                                          "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                      },
+                                                     "role":  {
+                                                                  "enum":  [
+                                                                               "start",
+                                                                               "pressure",
+                                                                               "choice",
+                                                                               "cost",
+                                                                               "result"
+                                                                           ]
+                                                              },
+                                                     "pressure":  {
+                                                                      "type":  "string",
+                                                                      "minLength":  1
+                                                                  },
+                                                     "choice":  {
+                                                                    "type":  "string",
+                                                                    "minLength":  1
+                                                                },
+                                                     "cost":  {
+                                                                  "type":  "string",
+                                                                  "minLength":  1
+                                                              },
+                                                     "consequence":  {
+                                                                         "type":  "string",
+                                                                         "minLength":  1
+                                                                     },
+                                                     "unit_id":  {
+                                                                     "type":  "string",
+                                                                     "pattern":  "^HNU-"
+                                                                 },
+                                                     "event_id":  {
+                                                                      "$ref":  "common.schema.json#/$defs/stableId"
+                                                                  },
+                                                     "storyline_segment_id":  {
+                                                                                  "type":  "string",
+                                                                                  "pattern":  "^HTS-"
+                                                                              }
+                                                 }
+                              },
+                  "relation":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "id",
+                                                    "source_refs",
+                                                    "source_authority_refs",
+                                                    "ownership_class",
+                                                    "resolution_ref",
+                                                    "relationship_id",
+                                                    "character_ids",
+                                                    "state_before",
+                                                    "state_after",
+                                                    "unit_id",
+                                                    "event_id"
+                                                ],
+                                   "properties":  {
+                                                      "id":  {
+                                                                 "type":  "string",
+                                                                 "pattern":  "^HRS-"
+                                                             },
+                                                      "source_refs":  {
+                                                                          "$ref":  "#/$defs/sourceRefs"
+                                                                      },
+                                                      "source_authority_refs":  {
+                                                                                    "$ref":  "#/$defs/authorityRefs"
+                                                                                },
+                                                      "ownership_class":  {
+                                                                              "$ref":  "#/$defs/ownership"
+                                                                          },
+                                                      "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                      "relationship_id":  {
+                                                                              "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                          },
+                                                      "character_ids":  {
+                                                                            "type":  "array",
+                                                                            "minItems":  2,
+                                                                            "maxItems":  2,
+                                                                            "uniqueItems":  true,
+                                                                            "items":  {
+                                                                                          "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                                      }
+                                                                        },
+                                                      "state_before":  {
+                                                                           "type":  "object",
+                                                                           "additionalProperties":  {
+                                                                                                        "type":  "string",
+                                                                                                        "minLength":  1
+                                                                                                    }
+                                                                       },
+                                                      "state_after":  {
+                                                                          "type":  "object",
+                                                                          "additionalProperties":  {
+                                                                                                       "type":  "string",
+                                                                                                       "minLength":  1
+                                                                                                   }
+                                                                      },
+                                                      "unit_id":  {
+                                                                      "type":  "string",
+                                                                      "pattern":  "^HNU-"
+                                                                  },
+                                                      "event_id":  {
+                                                                       "$ref":  "common.schema.json#/$defs/stableId"
+                                                                   }
+                                                  }
+                               },
+                  "ccc":  {
+                              "type":  "object",
+                              "additionalProperties":  false,
+                              "required":  [
+                                               "id",
+                                               "source_refs",
+                                               "source_authority_refs",
+                                               "ownership_class",
+                                               "resolution_ref",
+                                               "character_id",
+                                               "choice_step_id",
+                                               "cost_step_id",
+                                               "result_step_id"
+                                           ],
+                              "properties":  {
+                                                 "id":  {
+                                                            "type":  "string",
+                                                            "pattern":  "^HAS-"
+                                                        },
+                                                 "source_refs":  {
+                                                                     "$ref":  "#/$defs/sourceRefs"
+                                                                 },
+                                                 "source_authority_refs":  {
+                                                                               "$ref":  "#/$defs/authorityRefs"
+                                                                           },
+                                                 "ownership_class":  {
+                                                                         "$ref":  "#/$defs/ownership"
+                                                                     },
+                                                 "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                 "character_id":  {
+                                                                      "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                  },
+                                                 "choice_step_id":  {
+                                                                        "type":  "string",
+                                                                        "pattern":  "^HAS-"
+                                                                    },
+                                                 "cost_step_id":  {
+                                                                      "type":  "string",
+                                                                      "pattern":  "^HAS-"
+                                                                  },
+                                                 "result_step_id":  {
+                                                                        "type":  "string",
+                                                                        "pattern":  "^HAS-"
+                                                                    }
+                                             }
+                          },
+                  "eventAlignment":  {
+                                         "type":  "object",
+                                         "additionalProperties":  false,
+                                         "required":  [
+                                                          "id",
+                                                          "source_refs",
+                                                          "source_authority_refs",
+                                                          "ownership_class",
+                                                          "resolution_ref",
+                                                          "event_id",
+                                                          "responsible_character_ids",
+                                                          "result"
+                                                      ],
+                                         "properties":  {
+                                                            "id":  {
+                                                                       "type":  "string",
+                                                                       "pattern":  "^HAS-"
+                                                                   },
+                                                            "source_refs":  {
+                                                                                "$ref":  "#/$defs/sourceRefs"
+                                                                            },
+                                                            "source_authority_refs":  {
+                                                                                          "$ref":  "#/$defs/authorityRefs"
+                                                                                      },
+                                                            "ownership_class":  {
+                                                                                    "$ref":  "#/$defs/ownership"
+                                                                                },
+                                                            "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                            "event_id":  {
+                                                                             "$ref":  "common.schema.json#/$defs/stableId"
+                                                                         },
+                                                            "responsible_character_ids":  {
+                                                                                              "type":  "array",
+                                                                                              "minItems":  1,
+                                                                                              "uniqueItems":  true,
+                                                                                              "items":  {
+                                                                                                            "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                                                        }
+                                                                                          },
+                                                            "result":  {
+                                                                           "type":  "string",
+                                                                           "minLength":  1
+                                                                       }
+                                                        }
+                                     },
+                  "feasibility":  {
+                                      "type":  "object",
+                                      "additionalProperties":  false,
+                                      "required":  [
+                                                       "id",
+                                                       "source_refs",
+                                                       "source_authority_refs",
+                                                       "ownership_class",
+                                                       "resolution_ref",
+                                                       "character_id",
+                                                       "event_id",
+                                                       "capability_ref",
+                                                       "information_ref",
+                                                       "permission_ref",
+                                                       "verdict"
+                                                   ],
+                                      "properties":  {
+                                                         "id":  {
+                                                                    "type":  "string",
+                                                                    "pattern":  "^HAS-"
+                                                                },
+                                                         "source_refs":  {
+                                                                             "$ref":  "#/$defs/sourceRefs"
+                                                                         },
+                                                         "source_authority_refs":  {
+                                                                                       "$ref":  "#/$defs/authorityRefs"
+                                                                                   },
+                                                         "ownership_class":  {
+                                                                                 "$ref":  "#/$defs/ownership"
+                                                                             },
+                                                         "resolution_ref":  {"oneOf": [{"type": "null"},{"$ref": "common.schema.json#/$defs/fileReference"}]},
+                                                         "character_id":  {
+                                                                              "$ref":  "common.schema.json#/$defs/sourceId"
+                                                                          },
+                                                         "event_id":  {
+                                                                          "$ref":  "common.schema.json#/$defs/stableId"
+                                                                      },
+                                                         "capability_ref":  {
+                                                                                "$ref":  "common.schema.json#/$defs/stableId"
+                                                                            },
+                                                         "information_ref":  {
+                                                                                 "$ref":  "common.schema.json#/$defs/stableId"
+                                                                             },
+                                                         "permission_ref":  {
+                                                                                "$ref":  "common.schema.json#/$defs/stableId"
+                                                                            },
+                                                         "verdict":  {
+                                                                         "const":  "supported"
+                                                                     }
+                                                     }
+                                  },
+                  "hdd":  {
+                              "type":  "object",
+                              "additionalProperties":  false,
+                              "required":  [
+                                               "id",
+                                               "source_id",
+                                               "owner_stage",
+                                               "affected_obligation_ids",
+                                               "disposition",
+                                               "object_evidence_refs",
+                                               "rationale_anchor",
+                                               "downstream_effect",
+                                               "resolution_ref"
+                                           ],
+                              "properties":  {
+                                                 "id":  {
+                                                            "type":  "string",
+                                                            "pattern":  "^HDD-HC1-"
+                                                        },
+                                                 "source_id":  {
+                                                                   "$ref":  "common.schema.json#/$defs/sourceId"
+                                                               },
+                                                 "owner_stage":  {
+                                                                     "const":  "HC1"
+                                                                 },
+                                                 "affected_obligation_ids":  {
+                                                                                 "type":  "array",
+                                                                                 "uniqueItems":  true,
+                                                                                 "items":  {
+                                                                                               "$ref":  "common.schema.json#/$defs/stableId"
+                                                                                           }
+                                                                             },
+                                                 "disposition":  {
+                                                                     "enum":  [
+                                                                                  "not_needed_for_current_stage",
+                                                                                  "conditional_structure_preserves_open",
+                                                                                  "required_now",
+                                                                                  "resolved_by_external_author_event"
+                                                                              ]
+                                                                 },
+                                                 "object_evidence_refs":  {
+                                                                              "type":  "array",
+                                                                              "uniqueItems":  true,
+                                                                              "items":  {
+                                                                                            "$ref":  "common.schema.json#/$defs/stableId"
+                                                                                        }
+                                                                          },
+                                                 "rationale_anchor":  {
+                                                                          "type":  "string",
+                                                                          "minLength":  1
+                                                                      },
+                                                 "downstream_effect":  {
+                                                                           "type":  "string",
+                                                                           "minLength":  1
+                                                                       },
+                                                 "resolution_ref":  {
+                                                                        "oneOf":  [
+                                                                                      {
+                                                                                          "type":  "null"
+                                                                                      },
+                                                                                      {
+                                                                                          "$ref":  "common.schema.json#/$defs/fileReference"
+                                                                                      }
+                                                                                  ]
+                                                                    }
+                                             }
+                          }
+              },
+    "type":  "object",
+    "additionalProperties":  false,
+    "required":  [
+                     "schema_version",
+                     "skill",
+                     "stage",
+                     "hld_run_id",
+                     "status",
+                     "input_gate_ref",
+                     "source_artifacts",
+                     "authority_partition",
+                     "design_decisions",
+                     "derivation_claims",
+                     "decision_dependencies",
+                     "open_items",
+                     "downstream_contract",
+                     "character_participation_register",
+                     "arc_state_models",
+                     "arc_steps",
+                     "relationship_steps",
+                     "choice_cost_consequence_links",
+                     "event_character_alignment",
+                     "capability_information_permission_checks"
+                 ],
+    "properties":  {
+                       "schema_version":  {
+                                              "const":  "1.0"
+                                          },
+                       "skill":  {
+                                     "const":  "novel-hld-character-arc-placer"
+                                 },
+                       "stage":  {
+                                     "const":  "HC1"
+                                 },
+                       "hld_run_id":  {
+                                          "type":  "string",
+                                          "minLength":  1
+                                      },
+                       "status":  {
+                                      "const":  "ready"
+                                  },
+                       "input_gate_ref":  {
+                                              "$ref":  "common.schema.json#/$defs/fileReference"
+                                          },
+                       "source_artifacts":  {
+                                                "type":  "array",
+                                                "minItems":  1,
+                                                "items":  {
+                                                              "$ref":  "common.schema.json#/$defs/fileReference"
+                                                          }
+                                            },
+                       "authority_partition":  {
+                                                   "$ref":  "common.schema.json#/$defs/authorityPartition"
+                                               },
+                       "design_decisions":  {
+                                                "type":  "array",
+                                                "minItems":  1,
+                                                "items":  {
+                                                              "type":  "object",
+                                                              "additionalProperties":  false,
+                                                              "required":  [
+                                                                               "id",
+                                                                               "choice",
+                                                                               "candidate_refs"
+                                                                           ],
+                                                              "properties":  {
+                                                                                 "id":  {
+                                                                                            "type":  "string",
+                                                                                            "pattern":  "^HDDES-HC1-"
+                                                                                        },
+                                                                                 "choice":  {
+                                                                                                "type":  "string",
+                                                                                                "minLength":  1
+                                                                                            },
+                                                                                 "candidate_refs":  {
+                                                                                                        "type":  "array",
+                                                                                                        "minItems":  1,
+                                                                                                        "uniqueItems":  true,
+                                                                                                        "items":  {
+                                                                                                                      "type":  "string",
+                                                                                                                      "minLength":  1
+                                                                                                                  }
+                                                                                                    }
+                                                                             }
+                                                          }
+                                            },
+                       "derivation_claims":  {
+                                                 "type":  "array",
+                                                 "minItems":  1,
+                                                 "items":  {
+                                                               "type":  "object",
+                                                               "additionalProperties":  false,
+                                                               "required":  [
+                                                                                "id",
+                                                                                "source_refs",
+                                                                                "target_locator",
+                                                                                "value_sha256"
+                                                                            ],
+                                                               "properties":  {
+                                                                                  "id":  {
+                                                                                             "$ref":  "common.schema.json#/$defs/stableId"
+                                                                                         },
+                                                                                  "source_refs":  {
+                                                                                                      "$ref":  "#/$defs/sourceRefs"
+                                                                                                  },
+                                                                                  "target_locator":  {
+                                                                                                         "type":  "string",
+                                                                                                         "pattern":  "^/"
+                                                                                                     },
+                                                                                  "value_sha256":  {
+                                                                                                       "$ref":  "common.schema.json#/$defs/sha256"
+                                                                                                   }
+                                                                              }
+                                                           }
+                                             },
+                       "decision_dependencies":  {
+                                                     "type":  "array",
+                                                     "items":  {
+                                                                   "$ref":  "#/$defs/hdd"
+                                                               }
+                                                 },
+                       "open_items":  {
+                                          "type":  "array",
+                                          "uniqueItems":  true,
+                                          "items":  {
+                                                        "$ref":  "common.schema.json#/$defs/sourceId"
+                                                    }
+                                      },
+                       "downstream_contract":  {
+                                                   "type":  "object",
+                                                   "additionalProperties":  false,
+                                                   "required":  [
+                                                                    "consumer",
+                                                                    "required_roles"
+                                                                ],
+                                                   "properties":  {
+                                                                      "consumer":  {
+                                                                                       "const":  "HI1"
+                                                                                   },
+                                                                      "required_roles":  {
+                                                                                             "type":  "array",
+                                                                                             "minItems":  1,
+                                                                                             "uniqueItems":  true,
+                                                                                             "items":  {
+                                                                                                           "type":  "string",
+                                                                                                           "minLength":  1
+                                                                                                       }
+                                                                                         }
+                                                                  }
+                                               },
+                       "character_participation_register":  {
+                                                                "type":  "array",
+                                                                "minItems":  1,
+                                                                "items":  {
+                                                                              "$ref":  "#/$defs/participation"
+                                                                          }
+                                                            },
+                       "arc_state_models":  {
+                                                "type":  "array",
+                                                "minItems":  1,
+                                                "items":  {
+                                                              "$ref":  "#/$defs/arcModel"
+                                                          }
+                                            },
+                       "arc_steps":  {
+                                         "type":  "array",
+                                         "minItems":  1,
+                                         "items":  {
+                                                       "$ref":  "#/$defs/arcStep"
+                                                   }
+                                     },
+                       "relationship_steps":  {
+                                                  "type":  "array",
+                                                  "items":  {
+                                                                "$ref":  "#/$defs/relation"
+                                                            }
+                                              },
+                       "choice_cost_consequence_links":  {
+                                                             "type":  "array",
+                                                             "minItems":  1,
+                                                             "items":  {
+                                                                           "$ref":  "#/$defs/ccc"
+                                                                       }
+                                                         },
+                       "event_character_alignment":  {
+                                                         "type":  "array",
+                                                         "minItems":  1,
+                                                         "items":  {
+                                                                       "$ref":  "#/$defs/eventAlignment"
+                                                                   }
+                                                     },
+                       "capability_information_permission_checks":  {
+                                                                        "type":  "array",
+                                                                        "minItems":  1,
+                                                                        "items":  {
+                                                                                      "$ref":  "#/$defs/feasibility"
+                                                                                  }
+                                                                    }
+                   }
+}

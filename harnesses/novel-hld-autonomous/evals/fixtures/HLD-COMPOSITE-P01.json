@@ -1,0 +1,1 @@
+{"case_id":"HLD-COMPOSITE-P01","fixture_status":"executable-test-backed","single_defect":"none-positive-control","sealed_before_execution":true,"test":"tests/test_composite_publisher.py::test_hq2_ready_profile_and_reproduction + test_hh1_ready_copies_four_content_files"}

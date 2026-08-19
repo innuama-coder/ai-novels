@@ -1,0 +1,18 @@
+# Independent research sources
+
+Accessed 2026-08-06. Each absorption point is implemented in the methodology or SOP.
+
+1. [U.S. GAO, 2024 Government Auditing Standards](https://www.gao.gov/yellowbook) — require integrity, objectivity, independence, evidence, documentation, and quality management; applied to task separation and frozen review evidence.
+2. [GAO, Updating the 2024 Yellow Book](https://www.gao.gov/blog/updating-government-auditing-standards-2024-yellow-book) — independence of mind and impartial, fact-based review; applied to assembler/reviewer separation.
+3. [NASA Systems Engineering Handbook, Appendix D](https://www.nasa.gov/reference/system-engineering-handbook-appendix/) — uniquely identify requirements and maintain source-specific bidirectional verification matrices; applied to HP1↔report review.
+4. [NASA Systems Engineering Handbook PDF](https://www.nasa.gov/wp-content/uploads/2018/09/nasa_systems_engineering_handbook_0.pdf) — separate verification from validation and preserve bidirectional traceability; applied to structural checks versus author usability.
+5. [U.S. Census Bureau Statistical Quality Standard E2](https://www.census.gov/about/policies/quality/standards/standarde2.html) — conclusions must be supported by data; graphics must preserve dimensions, scales, units, clarity, and accessibility.
+6. [U.S. Census Bureau, Communicating with Census Data: Data Visualization](https://www.census.gov/content/dam/Census/library/working-papers/2017/demo/communicating-with-census-data-data-visualization.pdf) — misleading scales, unnecessary dimensions, and unsuitable chart forms can distort interpretation; applied to visual-data challenges.
+7. [ONS Data Visualisation Principles](https://service-manual.ons.gov.uk/data-visualisation/guidance/principles) — communicative visuals must be accurate, intuitive, necessary, simple, and consistent with surrounding text.
+8. [ONS Chart Text Guidance](https://service-manual.ons.gov.uk/data-visualisation/guidance/chart-text) — charts require explicit sources, clear measures/time coverage, concise text, and equivalent alternative text; applied to source and textual-equivalence review.
+9. [UK Government Analysis Function, Data Visualisation: Charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/) — expose chart data/context and avoid clutter or misleading comparison; applied to HVG set and context checks.
+10. [UK Government Analysis Function, Communicating Quality, Uncertainty and Change](https://analysisfunction.civilservice.gov.uk/policy-store/communicating-quality-uncertainty-and-change/) — state what can and cannot be concluded and preserve uncertainty; applied to enhancement/weakening review.
+11. [UK Government Analysis Function, Accessible Charts Checklist](https://analysisfunction.civilservice.gov.uk/policy-store/charts-a-checklist/) — declutter charts and retain accessible text/data context; applied only to semantic-data readiness, not HTML conformance.
+12. [W3C WAI Accessibility Principles](https://www.w3.org/WAI/fundamentals/accessibility-principles/) — charts and diagrams need equivalent descriptions of represented data; applied to HVG textual equivalence.
+13. [W3C WAI Images Tutorial](https://www.w3.org/WAI/tutorials/images/) — complex graphs/diagrams require complete text equivalents, while decorative images convey no information; applied to visual necessity and alternatives.
+14. [CDC Clear Communication Index](https://www.cdc.gov/ccindex/ccindex.html) — assess main message, language, visuals, and layout for audience understanding; applied to conclusion discovery and report-only retrieval.

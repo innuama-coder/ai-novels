@@ -1,0 +1,35 @@
+{
+  "artifact_role": "rhythm_continuity_architecture",
+  "canonical_file": "rhythm-continuity-architecture.json",
+  "canonical_schema": "hr1-canonical.schema.json",
+  "decision_prefix": "HDDES-HR1-",
+  "deterministic_checks": [
+    "public work-order/input-gate identity and ordered HB0-HI1 topology",
+    "exact allowlist reads and stage-scoped HDD coverage before candidate",
+    "story-time/discourse-order separation and transition continuity",
+    "parallel synchronization plus pacing/tension/recovery coverage",
+    "exact public ready/revise/blocked profiles and external result envelope"
+  ],
+  "display_name": "Novel HLD Rhythm Continuity Architect",
+  "forbidden_keys": ["exact_word_count", "scene_calendar", "transit_actions", "sensory_transition", "scene_actions", "dialogue", "prose", "new_event", "new_environment", "new_route", "new_world_mechanism", "new_causal_link"],
+  "model_required": ["story_time_model", "narrative_order_map", "unit_duration_density", "space_transition_map", "parallel_synchronization", "pacing_curve", "tension_curve", "recovery_windows", "continuity_ledger"],
+  "next_stage": "HK1",
+  "object_arrays": {
+    "narrative_order_map": "HTM-",
+    "unit_duration_density": "HTM-",
+    "space_transition_map": "HTM-",
+    "parallel_synchronization": "HTM-",
+    "pacing_curve": "HPC-",
+    "tension_curve": "HTN-",
+    "recovery_windows": "HPC-",
+    "continuity_ledger": "HTM-"
+  },
+  "object_fields": {"story_time_model": "HTM-"},
+  "preview_file": "rhythm-continuity-architecture.md",
+  "ready_capabilities": ["coherent_story_and_discourse_time", "legal_space_and_parallel_transitions", "macro_pacing_tension_recovery_controls"],
+  "public_entrypoint": {"path":"skills/novel-hld-rhythm-continuity-architect/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-rhythm-continuity-architect",
+  "stage": "HR1",
+  "upstream_stages": ["HB0", "HA1", "HS1", "HC1", "HI1"]
+}

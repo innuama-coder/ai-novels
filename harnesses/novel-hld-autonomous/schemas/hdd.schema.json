@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hdd.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "source_id", "owner_stage", "affected_obligation_ids", "disposition", "object_evidence_refs", "rationale_anchor", "downstream_effect", "resolution_ref"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^HDD-(HA1|HS1|HC1|HI1|HR1|HK1|HQ1)-.+$"},
+    "source_id": {"$ref": "common.schema.json#/$defs/sourceId"},
+    "owner_stage": {"enum": ["HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1"]},
+    "affected_obligation_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "disposition": {"enum": ["not_needed_for_current_stage", "conditional_structure_preserves_open", "required_now", "resolved_by_external_author_event"]},
+    "object_evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "rationale_anchor": {"type": "string", "minLength": 1},
+    "downstream_effect": {"type": "string", "minLength": 1},
+    "resolution_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]}
+  },
+  "allOf": [
+    {"if": {"properties": {"disposition": {"const": "resolved_by_external_author_event"}}}, "then": {"properties": {"resolution_ref": {"$ref": "common.schema.json#/$defs/fileReference"}}}, "else": {"properties": {"resolution_ref": {"type": "null"}}}}
+  ]
+}

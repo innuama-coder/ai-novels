@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "producer_skill": "novel-development-baseline-preparer",
+  "producer_baseline_schema_version": "2.0",
+  "files": {
+    "preparation_validator": "4f55a1fc4f46576fca163f353bd32dd5e245d5dd45bcc8f9600e6ec7152d0d69",
+    "preparation_runtime": "95973d112c3a1566a69f11825ff651eb74075f245cd70eccead017b97f19dc15",
+    "development_baseline_schema": "5a279979c0a6eb11316fc9f9d1f6200343fffcf168f97e8613996ee9a617296d",
+    "baseline_validation_schema": "85880e26c3fe3d8f3ceecff857fead9be992dc8cc09c49a26a8f3a0e022495e9",
+    "baseline_manifest_schema": "b86b9086a81fcfc44ce631e348d2edae2c446351cf1fe9e564e054fb5789c9fa",
+    "preparation_request_schema": "fc8f3d3339e963a84b8ec57eeb4faee308287e4b5d886715e68c6b86c4e81559",
+    "upstream_release_lock": "ea6347bef0189112d5986ff783519f8d6d988839aba2f1bc650c6a5f248a3ffd"
+  }
+}

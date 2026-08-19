@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-state.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "hld_run_id", "revision", "event_sequence", "status", "current_stage", "accepted_completions", "current_result_ref", "previous_state_ref", "revision_plan_ref", "revision_plan_state_ref", "waiting_transaction_ref"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "event_sequence": {"type": "integer", "minimum": 0},
+    "status": {"enum": ["initialized", "running", "waiting_author_answer", "waiting_author_decision", "return_active", "reality_reentry", "conception_reentry", "author_rejected", "runtime_stopped", "exhausted", "lld_ready"]},
+    "current_stage": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/stage"}]},
+    "accepted_completions": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/artifactReference"}},
+    "current_result_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "previous_state_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_plan_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_plan_state_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "waiting_transaction_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]}
+  }
+}

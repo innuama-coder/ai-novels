@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"composite-internal-runtime-error.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","harness","skill","stage","hld_run_id","status","error_code","message","failed_operation"],
+  "properties":{"schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"skill":{"type":"string","minLength":1},"stage":{"enum":["HQ2","HH1"]},"hld_run_id":{"type":"string","minLength":1},"status":{"const":"runtime_error"},"error_code":{"type":"string","pattern":"^[A-Z][A-Z0-9_]+$"},"message":{"type":"string","minLength":1},"failed_operation":{"type":"string","minLength":1}}
+}

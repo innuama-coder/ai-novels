@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"render-target-registry.schema.json",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","harness","hld_run_id","stage","skill","report_ref","fidelity_review_ref","renderer_binding","targets"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"hld_run_id":{"type":"string","minLength":1},"stage":{"const":"HH1"},"skill":{"const":"novel-hld-html-renderer"},
+    "report_ref":{"$ref":"#/$defs/fileReference"},"fidelity_review_ref":{"$ref":"#/$defs/fileReference"},
+    "renderer_binding":{"type":"object","additionalProperties":false,"required":["implementation_sha256","template_sha256","stylesheet_sha256","report_schema_sha256","fidelity_schema_sha256"],"properties":{"implementation_sha256":{"$ref":"#/$defs/sha256"},"template_sha256":{"$ref":"#/$defs/sha256"},"stylesheet_sha256":{"$ref":"#/$defs/sha256"},"report_schema_sha256":{"$ref":"#/$defs/sha256"},"fidelity_schema_sha256":{"$ref":"#/$defs/sha256"}}},
+    "targets":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"object","additionalProperties":false,"required":["id","dom_locator","render_role","source_visual_role","report_element_id","report_element_kind","visual_model_id","content_sha256"],"properties":{"id":{"type":"string","pattern":"^HUI-H(?:RE|VG)-[A-Za-z0-9._-]+-(?:report_element|visual_model)-0$"},"dom_locator":{"type":"string","minLength":1},"render_role":{"enum":["report_element","visual_model"]},"source_visual_role":{"type":"string","minLength":1},"report_element_id":{"type":"string","pattern":"^H(?:RE|VG)-[A-Za-z0-9._-]+$"},"report_element_kind":{"type":"string","minLength":1},"visual_model_id":{"oneOf":[{"type":"null"},{"type":"string","pattern":"^HVG-[A-Za-z0-9._-]+$"}]},"content_sha256":{"$ref":"#/$defs/sha256"}}}}
+  },
+  "$defs":{"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"fileReference":{"type":"object","additionalProperties":false,"required":["role","path","sha256"],"properties":{"role":{"type":"string","minLength":1},"path":{"type":"string","minLength":1},"sha256":{"$ref":"#/$defs/sha256"}}}}
+}

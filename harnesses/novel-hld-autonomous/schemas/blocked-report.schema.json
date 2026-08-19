@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "blocked-report.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "status", "blocker_class", "code", "evidence", "required_action"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "skill": {"const": "novel-hld-baseline-admitter"}, "stage": {"const": "HB0"},
+    "hld_run_id": {"type": "string", "minLength": 1}, "status": {"const": "blocked"}, "blocker_class": {"const": "input_invalid"},
+    "code": {"type": "string", "pattern": "^HB0_[A-Z0-9_]+$"}, "evidence": {"type": "string", "minLength": 1},
+    "required_action": {"type": "string", "minLength": 1}
+  }
+}

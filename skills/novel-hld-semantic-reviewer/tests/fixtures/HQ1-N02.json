@@ -1,0 +1,1 @@
+{"case_id":"HQ1-N02","fixture_version":"2.1","sealed_before_execution":true,"single_defect_injection":"pass_claim_only_object_coverage","scenario":"an object omitted from all first-order checks is mentioned only by a pass claim","expected_result":"revise"}

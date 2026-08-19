@@ -1,0 +1,1 @@
+{"case_id":"HLD-COORDINATOR-R02","sealed_before_execution":true,"scenario":"superseded-target-external-retarget","executable_test":"test_retarget_answer_must_select_allowed_same_owner_and_reissues_bound_group"}

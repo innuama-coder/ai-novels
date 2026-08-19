@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"composite-publish-execution.schema.json",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","harness","stage","hld_run_id","revision","work_order_id","implementation_sha256","publish_outcome","source_result_refs","input_hashes","output_hashes","deterministic"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"stage":{"enum":["HQ2","HH1"]},
+    "hld_run_id":{"type":"string","minLength":1},"revision":{"type":"integer","minimum":0},"work_order_id":{"type":"string","minLength":1},
+    "implementation_sha256":{"$ref":"common.schema.json#/$defs/sha256"},"publish_outcome":{"enum":["ready","revise","blocked","runtime_error"]},
+    "source_result_refs":{"type":"array","minItems":1,"items":{"$ref":"common.schema.json#/$defs/fileReference"}},
+    "input_hashes":{"type":"object","additionalProperties":{"$ref":"common.schema.json#/$defs/sha256"}},
+    "output_hashes":{"type":"object","additionalProperties":{"$ref":"common.schema.json#/$defs/sha256"}},"deterministic":{"const":true}
+  }
+}

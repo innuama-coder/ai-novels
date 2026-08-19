@@ -1,0 +1,4 @@
+interface:
+  display_name: "HLD→LLD 交接就绪度验证"
+  short_description: "隔离验证 handoff 的可消费性与 HLD 忠实度"
+  default_prompt: "使用 $novel-hld-lld-readiness-evaluator 执行 Harness 指定的 HQ2 隔离任务，并只交付 composite_internal 结果。"

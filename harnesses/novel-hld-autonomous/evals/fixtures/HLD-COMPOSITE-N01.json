@@ -1,0 +1,1 @@
+{"case_id":"HLD-COMPOSITE-N01","fixture_status":"executable-test-backed","single_defect":"internal-manifest-hash-drift","sealed_before_execution":true,"test":"tests/test_composite_publisher.py::test_boundary_internal_hash_drift_fails"}

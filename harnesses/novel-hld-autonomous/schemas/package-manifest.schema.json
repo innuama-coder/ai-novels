@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "package-manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "hld_run_id", "revision", "stage", "skill", "status", "files", "artifact_roles"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "skill": {"type": "string", "minLength": 1},
+    "status": {"enum": ["ready", "revise", "blocked", "runtime_error"]},
+    "files": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/fileReference"}},
+    "artifact_roles": {
+      "type": "object",
+      "additionalProperties": {"$ref": "common.schema.json#/$defs/fileReference"}
+    }
+  }
+}

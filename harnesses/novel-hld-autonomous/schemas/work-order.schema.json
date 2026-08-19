@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "work-order.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "hld_run_id", "revision", "work_order_id", "task_id", "stage", "action", "exact_owner_skill", "owner_version", "implementation_sha256", "event_sequence", "result_timestamp", "input_gate_ref", "state_before_ref", "upstream_completions", "file_allowlist", "unresolved_projection", "mode", "return_binding", "revision_plan_ref", "revision_plan_state_ref", "output_directory", "submission_status"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "work_order_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "action": {"enum": ["execute", "publish_composite"]},
+    "exact_owner_skill": {"type": "string", "minLength": 1},
+    "owner_version": {"$ref": "common.schema.json#/$defs/semver"},
+    "implementation_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "result_timestamp": {"type": "string", "format": "date-time"},
+    "input_gate_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "state_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "upstream_completions": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/artifactReference"}},
+    "file_allowlist": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/fileReference"}},
+    "unresolved_projection": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/sourceId"}, "uniqueItems": true},
+    "mode": {"enum": ["forward", "return_resolution"]},
+    "return_binding": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_plan_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "revision_plan_state_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "output_directory": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "submission_status": {"const": "open"}
+  },
+  "allOf": [
+    {"if": {"properties": {"mode": {"const": "forward"}}}, "then": {"properties": {"return_binding": {"type": "null"}}}}
+  ]
+}

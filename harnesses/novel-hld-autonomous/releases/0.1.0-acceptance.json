@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "name": "novel-hld-autonomous",
+  "version": "0.1.0",
+  "status": "implementation-candidate",
+  "stable_major": false,
+  "registered_skill_count": 14,
+  "registry_token_count": 17,
+  "structural_test_suites": ["harness-tests", "package-standard-tests", "skill-quick-validation", "empty-directory-post-install"],
+  "structural_executable_eval_cases": ["HLD-COORDINATOR-P01", "HLD-COORDINATOR-N01", "HLD-COORDINATOR-B01", "HLD-COORDINATOR-R01", "HLD-COORDINATOR-R02"],
+  "bounded_agentic_case_count": 42,
+  "hld_e2e_fixture_status": "declaration-only",
+  "agentic_qualification": "not-run",
+  "semantic_release_gate": "tools/validate_agentic_acceptance.py",
+  "post_install_validation": "required",
+  "archive_layout": "repository-root",
+  "forbidden_skills": ["novel-hld-writer"]
+}

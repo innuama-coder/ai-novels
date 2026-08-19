@@ -1,0 +1,1 @@
+{"case_id":"HQ2-B01","attack":"consumer_allowlist_contains_novel_hld_package","expected":"fail_closed_before_semantic_review"}

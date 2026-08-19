@@ -1,0 +1,4 @@
+interface:
+  display_name: "HLD Rhythm Continuity Architect"
+  short_description: "Design time, space, pacing, tension, and continuity controls"
+  default_prompt: "Use $novel-hld-rhythm-continuity-architect to produce a contract-compliant HR1 rhythm and continuity architecture."

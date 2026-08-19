@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"lld-handoff-acceptance.schema.json",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","harness","stage","hld_run_id","revision","status","consumer_test_ref","consumer_manifest_ref","consumer_result_ref","fidelity_test_ref","fidelity_manifest_ref","fidelity_result_ref","hp1_completion_ref","hb0_completion_ref"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"stage":{"const":"HQ2"},
+    "hld_run_id":{"type":"string","minLength":1},"revision":{"type":"integer","minimum":0},"status":{"const":"ready"},
+    "consumer_test_ref":{"$ref":"common.schema.json#/$defs/fileReference"},"consumer_manifest_ref":{"$ref":"common.schema.json#/$defs/fileReference"},"consumer_result_ref":{"$ref":"common.schema.json#/$defs/fileReference"},
+    "fidelity_test_ref":{"$ref":"common.schema.json#/$defs/fileReference"},"fidelity_manifest_ref":{"$ref":"common.schema.json#/$defs/fileReference"},"fidelity_result_ref":{"$ref":"common.schema.json#/$defs/fileReference"},
+    "hp1_completion_ref":{"$ref":"common.schema.json#/$defs/fileReference"},"hb0_completion_ref":{"$ref":"common.schema.json#/$defs/fileReference"}
+  }
+}

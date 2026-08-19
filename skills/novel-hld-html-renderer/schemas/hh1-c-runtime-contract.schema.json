@@ -1,0 +1,11 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"hh1-c-runtime-contract.schema.json","type":"object","additionalProperties":false,
+  "required":["contract_schema_version","skill","stage","owner_version","upstream_stages","result_scope","task_kinds","public_entrypoint","implementation_closure","required_roles","ready_profile","forbidden_input_classes","publisher_owner","top_level_artifact_forbidden"],
+  "properties":{
+    "contract_schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-html-renderer"},"stage":{"const":"HH1"},"owner_version":{"const":"1.0.0"},
+    "upstream_stages":{"type":"array","minItems":3,"maxItems":3,"uniqueItems":true,"items":{"enum":["HB0","HP1","HQ2"]}},"result_scope":{"const":"composite_internal"},"task_kinds":{"type":"array","minItems":1,"maxItems":1,"uniqueItems":true,"items":{"const":"HH1-C"}},
+    "public_entrypoint":{"type":"object","additionalProperties":false,"required":["path","runtime","arguments"],"properties":{"path":{"const":"skills/novel-hld-html-renderer/scripts/run_skill.py"},"runtime":{"const":"python"},"arguments":{"type":"array","minItems":1,"maxItems":1,"items":{"const":"work_order"}}}},
+    "implementation_closure":{"type":"object","additionalProperties":false,"required":["algorithm","ordered_files"],"properties":{"algorithm":{"const":"sha256-relative-path-nul-content-nul-v1"},"ordered_files":{"type":"array","minItems":31,"maxItems":31,"uniqueItems":true,"items":{"type":"string","pattern":"^(?:harnesses|skills)/"}}}},
+    "required_roles":{"type":"array","minItems":15,"maxItems":15,"uniqueItems":true,"items":{"type":"string","minLength":1}},"ready_profile":{"type":"array","minItems":5,"maxItems":5,"uniqueItems":true,"items":{"type":"string","minLength":1}},"forbidden_input_classes":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},"publisher_owner":{"const":"harness-core/composite-stage-publisher"},"top_level_artifact_forbidden":{"const":"stage-completion.json"}
+  }
+}

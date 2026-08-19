@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld-control-baseline.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "status", "source_baseline", "source_release", "lineage", "admission_verdicts", "authority_partition", "control_registry", "unresolved_register", "hld_assignment", "change_policy", "prohibitions", "source_access_policy"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "skill": {"const": "novel-hld-baseline-admitter"},
+    "stage": {"const": "HB0"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "ready"},
+    "source_baseline": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "source_release": {"type": "object"},
+    "lineage": {"type": "object"},
+    "admission_verdicts": {"type": "array", "minItems": 8, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "authority_partition": {"$ref": "common.schema.json#/$defs/authorityPartition"},
+    "control_registry": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "classification", "open_item", "authority_class", "domain", "source", "workspace_source_ref", "locator", "source_text", "source_value_sha256", "hld_instruction", "preserve_unresolved"],
+        "properties": {
+          "source_id": {"$ref": "common.schema.json#/$defs/sourceId"},
+          "classification": {"enum": ["mandatory", "freedom", "must_ask", "open"]},
+          "open_item": {"type": "boolean"},
+          "authority_class": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]},
+          "domain": {"enum": ["intent", "storylines", "world", "environments", "events", "characters", "narrative", "quality", "cross-domain"]},
+          "source": {"type": "object"},
+          "workspace_source_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+          "locator": {"type": "string", "pattern": "^/"},
+          "source_text": {"type": "string", "minLength": 1},
+          "source_value_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+          "hld_instruction": {"type": "string", "minLength": 1},
+          "preserve_unresolved": {"type": "boolean"}
+        }
+      }
+    },
+    "unresolved_register": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "domain", "classification", "open_item", "authority_class"],
+        "properties": {
+          "source_id": {"$ref": "common.schema.json#/$defs/sourceId"},
+          "domain": {"enum": ["intent", "storylines", "world", "environments", "events", "characters", "narrative", "quality", "cross-domain"]},
+          "classification": {"enum": ["must_ask", "open"]},
+          "open_item": {"type": "boolean"},
+          "authority_class": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]}
+        }
+      }
+    },
+    "hld_assignment": {"type": "object"},
+    "change_policy": {"type": "object"},
+    "prohibitions": {"type": "array", "minItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+    "source_access_policy": {"const": "SOURCE_ACCESS_MATRIX@1.0"}
+  }
+}

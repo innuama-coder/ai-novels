@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"hld-traceability-matrix.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","status","records"],
+  "properties":{"schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-package-assembler"},"stage":{"const":"HP1"},"hld_run_id":{"type":"string","minLength":1},"status":{"const":"ready"},"records":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/record"}}},
+  "$defs":{"ids":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},"record":{"type":"object","additionalProperties":false,"required":["id","source_ids","decision_ids","hld_object_ids","lwr_ids","lwk_ids"],"properties":{"id":{"type":"string","pattern":"^TRC-[0-9]{6}$"},"source_ids":{"$ref":"#/$defs/ids"},"decision_ids":{"$ref":"#/$defs/ids"},"hld_object_ids":{"$ref":"#/$defs/ids"},"lwr_ids":{"$ref":"#/$defs/ids"},"lwk_ids":{"$ref":"#/$defs/ids"}}}}
+}

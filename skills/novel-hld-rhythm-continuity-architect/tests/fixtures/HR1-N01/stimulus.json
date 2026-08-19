@@ -1,0 +1,1 @@
+{"case_id":"HR1-N01","single_injected_defect":"MIGRATION_001","defect":{"character_id":"CHAR-02","from_environment":"ENV-SECURE-A","to_environment":"ENV-REMOTE-B","available_minutes":5,"minimum_authorized_minutes":90,"authorized_mechanism":null}}

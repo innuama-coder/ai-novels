@@ -1,0 +1,62 @@
+{
+  "artifact_role": "narrative_architecture",
+  "canonical_file": "narrative-architecture.json",
+  "canonical_schema": "ha1-canonical.schema.json",
+  "decision_prefix": "HDDES-HA1-",
+  "deterministic_checks": [
+    "work-order and input-gate identity equality",
+    "ordered HB0 completion topology",
+    "actual reads contained by allowlist",
+    "stage-scoped HDD coverage before candidate",
+    "stable ID and authority/ownership separation",
+    "phase-unit-chapter containment and total unit state-contract coverage",
+    "exact ready/revise/blocked package profile and external stage-result envelope"
+  ],
+  "display_name": "Novel HLD Narrative Architect",
+  "forbidden_keys": [
+    "scene_actions",
+    "dialogue",
+    "sensory_detail",
+    "prose",
+    "new_event",
+    "new_character",
+    "pov_assignment",
+    "reveal_schedule"
+  ],
+  "model_required": [
+    "architecture_choice",
+    "world_setting_architecture",
+    "structural_phases",
+    "narrative_units",
+    "chapter_shells",
+    "turning_point_anchors",
+    "entry_exit_state_contracts",
+    "scale_and_flexibility",
+    "downstream_obligations"
+  ],
+  "next_stage": "HS1",
+  "object_arrays": {
+    "chapter_shells": "HCH-",
+    "entry_exit_state_contracts": "HST-",
+    "narrative_units": "HNU-",
+    "structural_phases": "HST-",
+    "turning_point_anchors": "HST-"
+  },
+  "object_fields": {
+    "architecture_choice": "HST-",
+    "world_setting_architecture": "HST-WORLD-"
+  },
+  "preview_file": "narrative-architecture.md",
+  "ready_capabilities": [
+    "stable_narrative_coordinate_system",
+    "ordered_chapter_shells",
+    "major_event_and_ending_anchors"
+  ],
+  "public_entrypoint": {"path":"skills/novel-hld-narrative-architect/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-narrative-architect",
+  "stage": "HA1",
+  "upstream_stages": [
+    "HB0"
+  ]
+}

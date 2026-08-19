@@ -1,0 +1,1 @@
+{"case_id":"HQ1-N01","fixture_version":"2.1","sealed_before_execution":true,"single_defect_injection":"semantic_near_miss","scenario":"review evidence is plausible prose but differs from the bound canonical object value","public_fixture":{"expected_result":"revise","canonical_residue_forbidden":true}}

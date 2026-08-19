@@ -1,0 +1,4 @@
+interface:
+  display_name: "HLD 人审报告 HTML 渲染器"
+  short_description: "确定性生成离线可访问 HTML/SVG 与 HUI registry"
+  default_prompt: "使用 $novel-hld-html-renderer 渲染已通过 HH1-B 的当前 HLD 人审报告；保持内容逐元素一致，只交付 HH1-C composite_internal 包。"

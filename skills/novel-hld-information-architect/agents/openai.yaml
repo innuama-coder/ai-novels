@@ -1,0 +1,4 @@
+interface:
+  display_name: "HLD Information Architect"
+  short_description: "Design POV, knowledge states, suspense, and reveal controls"
+  default_prompt: "Use $novel-hld-information-architect to produce a contract-compliant HI1 information architecture from the sealed upstream package."

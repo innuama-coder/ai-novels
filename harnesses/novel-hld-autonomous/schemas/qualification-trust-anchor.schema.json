@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"qualification-trust-anchor.schema.json",
+  "oneOf":[
+    {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","harness","status","algorithm"],
+      "properties":{"schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"status":{"const":"unconfigured"},"algorithm":{"const":"rsa-pkcs1v15-sha256"}}
+    },
+    {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","harness","status","algorithm","key_id","modulus_hex","exponent"],
+      "properties":{"schema_version":{"const":"1.0"},"harness":{"const":"novel-hld-autonomous"},"status":{"const":"configured"},"algorithm":{"const":"rsa-pkcs1v15-sha256"},"key_id":{"type":"string","pattern":"^[0-9a-f]{64}$"},"modulus_hex":{"type":"string","pattern":"^[0-9a-f]{512,}$"},"exponent":{"const":65537}}
+    }
+  ]
+}

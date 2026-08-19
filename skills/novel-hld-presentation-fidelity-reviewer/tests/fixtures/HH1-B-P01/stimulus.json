@@ -1,0 +1,1 @@
+{"case_id":"HH1-B-P01","candidate":"sealed HH1-A report exactly preserves current HP1","expected_verdict":"pass","expected_result":"ready","result_scope":"composite_internal"}

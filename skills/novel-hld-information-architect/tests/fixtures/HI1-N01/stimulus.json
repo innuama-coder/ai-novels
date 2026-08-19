@@ -1,0 +1,1 @@
+{"case_id":"HI1-N01","single_injected_defect":"POV_LEAK_001","defect":{"unit_id":"HNU-004","pov_id":"CHAR-01","information_id":"HIN-SECRET","character_can_perceive":false,"character_knows":false},"expected_defect_origin":"upstream_content_or_local_candidate_by_repair_scope"}

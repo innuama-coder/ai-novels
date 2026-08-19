@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"hh1-a-generation-session.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","task_id","actual_read_refs","material_locator_count"],
+  "properties":{"schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-review-report-assembler"},"stage":{"const":"HH1"},"hld_run_id":{"type":"string","minLength":1},"task_id":{"type":"string","minLength":1},"actual_read_refs":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"common.schema.json#/$defs/fileReference"}},"material_locator_count":{"type":"integer","minimum":1}}
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentic-acceptance.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "harness_version", "qualification_run_id", "status", "bounded_case_results", "harness_case_results", "reference_run", "attestation_ref", "created_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "harness_version": {"$ref": "common.schema.json#/$defs/semver"},
+    "qualification_run_id": {"type": "string", "minLength": 1},
+    "status": {"const": "qualified"},
+    "bounded_case_results": {"type": "array", "minItems": 42, "maxItems": 42, "items": {"$ref": "common.schema.json#/$defs/fileReference"}, "uniqueItems": true},
+    "harness_case_results": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "common.schema.json#/$defs/fileReference"}, "uniqueItems": true},
+    "reference_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id", "hld_run_id", "revision", "producer_task_id", "reviewer_task_id", "producer_task_receipt_ref", "reviewer_task_receipt_ref", "baseline_ref", "hld_completion_ref", "hp1_package_ref", "hq2_acceptance_ref", "hh1_manifest_ref", "human_review_report_ref", "render_registry_ref", "html_ref", "author_decision_ref", "semantic_review_ref", "verdict"],
+      "properties": {
+        "project_id": {"const": "duanxian"},
+        "hld_run_id": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 0},
+        "producer_task_id": {"type": "string", "minLength": 1},
+        "reviewer_task_id": {"type": "string", "minLength": 1},
+        "producer_task_receipt_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "reviewer_task_receipt_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "baseline_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "hld_completion_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "hp1_package_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "hq2_acceptance_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "hh1_manifest_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "human_review_report_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "render_registry_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "html_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "author_decision_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "semantic_review_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+        "verdict": {"const": "pass"}
+      }
+    },
+    "attestation_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

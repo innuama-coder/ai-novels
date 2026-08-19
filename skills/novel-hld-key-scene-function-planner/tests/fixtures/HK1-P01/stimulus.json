@@ -1,0 +1,1 @@
+{"case_id":"HK1-P01","single_injected_defect":null,"obligation_ids":["OBL-TURN","OBL-CONVERGE","OBL-CHOICE","OBL-PAYOFF","OBL-CLIMAX"],"requirements":["minimum sufficient HKF","one primary function","complete HKF-LWR coverage"]}

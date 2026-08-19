@@ -1,0 +1,68 @@
+name: novel-hld-autonomous
+version: 0.1.0
+status: implementation-candidate
+paradigm: review-gated-self-improving-generation
+portable_core: true
+author_gate: required
+supported_runtimes:
+  - codex
+unsupported_runtimes:
+  - claude
+  - gemini
+  - openclaw
+  - hermas
+stages:
+  - HB0
+  - HA1
+  - HS1
+  - HC1
+  - HI1
+  - HR1
+  - HK1
+  - HQ1
+  - HP1
+  - HQ2
+  - HH1
+  - HF1
+required_core_files:
+  - MANIFEST.runtime.yaml
+  - manifest.yaml
+  - agent.md
+  - workflow.md
+  - rules.md
+required_adapter_files:
+  codex:
+    - adapters/codex/install.md
+    - adapters/codex/mapping.md
+    - adapters/codex/operation.md
+    - adapters/codex/system-prompt.md
+validators:
+  - validators/validate_harness.py
+  - validators/validate_instance.py
+release_builder: tools/build_release.py
+agentic_qualification:
+  status: not-run
+  contract: docs/agentic-qualification-contract.md
+  validator: tools/validate_agentic_acceptance.py
+  trust_anchor: references/qualification-trust-anchor.json
+bounded_eval_dimensions:
+  - scope_fidelity
+  - input_gate_obedience
+  - output_contract_correctness
+  - semantic_or_deterministic_correctness
+  - boundary_discipline
+  - parent_consumability
+harness_eval_cases:
+  - HLD-E2E-P01
+  - HLD-E2E-N01
+  - HLD-E2E-B01
+  - HLD-E2E-R01
+  - HLD-E2E-R02
+  - HLD-COMPOSITE-P01
+  - HLD-COMPOSITE-N01
+  - HLD-COMPOSITE-B01
+  - HLD-COORDINATOR-P01
+  - HLD-COORDINATOR-N01
+  - HLD-COORDINATOR-B01
+  - HLD-COORDINATOR-R01
+  - HLD-COORDINATOR-R02

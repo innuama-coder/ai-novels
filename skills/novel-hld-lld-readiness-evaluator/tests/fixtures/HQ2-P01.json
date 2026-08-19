@@ -1,0 +1,1 @@
+{"case_id":"HQ2-P01","consumer":{"allowlist":"handoff_only","expected":"ready"},"fidelity":{"binding":"sealed_consumer_sha256","expected":"ready","task_identity":"new"}}

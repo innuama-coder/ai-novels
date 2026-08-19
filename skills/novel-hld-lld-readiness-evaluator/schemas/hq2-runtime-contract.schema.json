@@ -1,0 +1,23 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"hq2-runtime-contract.schema.json",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["contract_schema_version","skill","stage","owner_version","upstream_stages","result_scope","task_kinds","public_entrypoint","implementation_closure","modes","bounded_evidence_dimensions","publisher_owner","top_level_artifact_forbidden"],
+  "properties":{
+    "contract_schema_version":{"const":"1.0"},
+    "skill":{"const":"novel-hld-lld-readiness-evaluator"},
+    "stage":{"const":"HQ2"},
+    "owner_version":{"const":"1.0.0"},
+    "upstream_stages":{"type":"array","items":{"enum":["HB0","HP1"]},"uniqueItems":true,"minItems":2,"maxItems":2},
+    "result_scope":{"const":"composite_internal"},
+    "task_kinds":{"type":"array","items":{"enum":["consumer_test","fidelity_test"]},"uniqueItems":true,"minItems":2,"maxItems":2},
+    "public_entrypoint":{"type":"object","additionalProperties":false,"required":["path","runtime","arguments"],"properties":{"path":{"const":"skills/novel-hld-lld-readiness-evaluator/scripts/run_skill.py"},"runtime":{"const":"python"},"arguments":{"type":"array","items":{"enum":["work_order","draft_directory"]},"uniqueItems":true,"minItems":2,"maxItems":2}}},
+    "implementation_closure":{"type":"object","additionalProperties":false,"required":["algorithm","ordered_files"],"properties":{"algorithm":{"const":"sha256-relative-path-nul-content-nul-v1"},"ordered_files":{"type":"array","minItems":17,"maxItems":17,"uniqueItems":true,"items":{"type":"string","pattern":"^(?:harnesses|skills)/"}}}},
+    "modes":{"type":"object","additionalProperties":false,"required":["consumer_test","fidelity_test"],"properties":{"consumer_test":{"$ref":"#/$defs/mode"},"fidelity_test":{"$ref":"#/$defs/mode"}}},
+    "bounded_evidence_dimensions":{"type":"array","items":{"enum":["provenance","semantic_fit","instructional_quality","structure","consistency","boundary"]},"uniqueItems":true,"minItems":6,"maxItems":6},
+    "publisher_owner":{"const":"harness-core/composite-stage-publisher"},
+    "top_level_artifact_forbidden":{"const":"lld-handoff-acceptance.json"}
+  },
+  "$defs":{"mode":{"type":"object","additionalProperties":false,"required":["canonical_file","canonical_schema","execution_file","required_roles","ready_profile"],"properties":{"canonical_file":{"type":"string","minLength":1},"canonical_schema":{"type":"string","pattern":"^hq2-.+\\.schema\\.json$"},"execution_file":{"type":"string","minLength":1},"required_roles":{"type":"array","minItems":4,"uniqueItems":true,"items":{"type":"string","minLength":1}},"ready_profile":{"type":"array","minItems":5,"maxItems":5,"uniqueItems":true,"items":{"type":"string","minLength":1}}}}}
+}

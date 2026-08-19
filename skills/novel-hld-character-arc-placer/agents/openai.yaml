@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Character Arc Placer"
+  short_description: "Place character choices, costs, and relationship change"
+  default_prompt: "Use $novel-hld-character-arc-placer to execute an HC1 work order and publish contract-valid character arc placement."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "author-answer-event.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "hld_run_id", "question_ref", "question_sha256", "external_event_sequence", "author_text"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "question_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "question_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "external_event_sequence": {"type": "integer", "minimum": 1},
+    "author_text": {"type": "string", "minLength": 1}
+  }
+}

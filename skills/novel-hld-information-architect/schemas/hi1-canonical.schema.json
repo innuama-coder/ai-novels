@@ -1,0 +1,997 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hi1-canonical.schema.json",
+  "$defs": {
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/sourceId"
+      }
+    },
+    "authorityRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "classification",
+        "open_item",
+        "authority_class",
+        "value_sha256"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/sourceId"
+        },
+        "classification": {
+          "enum": [
+            "mandatory",
+            "freedom",
+            "must_ask",
+            "open"
+          ]
+        },
+        "open_item": {
+          "type": "boolean"
+        },
+        "authority_class": {
+          "enum": [
+            "author_locked",
+            "autonomous_owned",
+            "downstream_freedom",
+            "author_open"
+          ]
+        },
+        "value_sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "authorityRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/authorityRef"
+      }
+    },
+    "ownership": {
+      "enum": [
+        "source_projection",
+        "hld_owned",
+        "preserved_open",
+        "lld_freedom"
+      ]
+    },
+    "resolution": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "common.schema.json#/$defs/fileReference"
+        }
+      ]
+    },
+    "hdd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_id",
+        "owner_stage",
+        "affected_obligation_ids",
+        "disposition",
+        "object_evidence_refs",
+        "rationale_anchor",
+        "downstream_effect",
+        "resolution_ref"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HDD-HI1-"
+        },
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/sourceId"
+        },
+        "owner_stage": {
+          "const": "HI1"
+        },
+        "affected_obligation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "disposition": {
+          "enum": [
+            "not_needed_for_current_stage",
+            "conditional_structure_preserves_open",
+            "required_now",
+            "resolved_by_external_author_event"
+          ]
+        },
+        "object_evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "rationale_anchor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "downstream_effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        }
+      }
+    },
+    "povPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "allowed_modes",
+        "switch_rule",
+        "legality_rule"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HPV-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "allowed_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "switch_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legality_rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "povAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "unit_id",
+        "pov_character_id",
+        "focalization_mode",
+        "perception_limits"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HPV-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "pov_character_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "focalization_mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "perception_limits": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "informationNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "source_information_id",
+        "knower_ids",
+        "reader_state",
+        "acquisition_mode",
+        "earliest_legal_unit_id",
+        "forbidden_leak_unit_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HIN-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "source_information_id": {
+          "$ref": "common.schema.json#/$defs/sourceId"
+        },
+        "knower_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "reader_state": {
+          "enum": [
+            "known",
+            "hidden",
+            "inferable",
+            "misbelieved",
+            "open"
+          ]
+        },
+        "acquisition_mode": {
+          "enum": [
+            "perceived",
+            "told",
+            "inferred",
+            "remembered",
+            "documented",
+            "system_output",
+            "authorized_open"
+          ]
+        },
+        "earliest_legal_unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "forbidden_leak_unit_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "characterKnowledge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "character_id",
+        "unit_id",
+        "information_node_ids",
+        "misbelief_node_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HKS-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "character_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "information_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "misbelief_node_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^HIN-"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "readerKnowledge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "unit_id",
+        "information_node_ids",
+        "inference_permissions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HKS-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "information_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "inference_permissions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "suspense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "setup_node_ids",
+        "probe_node_ids",
+        "reveal_node_ids",
+        "payoff_node_ids",
+        "authorized_open_terminal"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HSP-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "setup_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "probe_node_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "reveal_node_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "payoff_node_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "authorized_open_terminal": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "payoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "information_node_ids",
+        "setup_unit_ids",
+        "terminal_unit_id",
+        "terminal_kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HIN-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "information_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "setup_unit_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "terminal_unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "terminal_kind": {
+          "enum": [
+            "reveal",
+            "payoff",
+            "authorized_open"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "inferenceRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "information_node_ids",
+        "concealment_basis",
+        "legal_inferences",
+        "forbidden_inferences"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HIN-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "information_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "concealment_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legal_inferences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "forbidden_inferences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill",
+    "stage",
+    "hld_run_id",
+    "status",
+    "input_gate_ref",
+    "source_artifacts",
+    "authority_partition",
+    "design_decisions",
+    "derivation_claims",
+    "decision_dependencies",
+    "open_items",
+    "downstream_contract",
+    "pov_policy",
+    "unit_pov_assignments",
+    "knowledge_states",
+    "reader_information_states",
+    "suspense_chains",
+    "information_nodes",
+    "reveal_payoff_matrix",
+    "concealment_and_inference_rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "skill": {
+      "const": "novel-hld-information-architect"
+    },
+    "stage": {
+      "const": "HI1"
+    },
+    "hld_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "const": "ready"
+    },
+    "input_gate_ref": {
+      "$ref": "common.schema.json#/$defs/fileReference"
+    },
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common.schema.json#/$defs/fileReference"
+      }
+    },
+    "authority_partition": {
+      "$ref": "common.schema.json#/$defs/authorityPartition"
+    },
+    "design_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "choice",
+          "candidate_refs"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^HDDES-HI1-"
+          },
+          "choice": {
+            "type": "string",
+            "minLength": 1
+          },
+          "candidate_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "derivation_claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source_refs",
+          "target_locator",
+          "value_sha256"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          },
+          "source_refs": {
+            "$ref": "#/$defs/sourceRefs"
+          },
+          "target_locator": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "value_sha256": {
+            "$ref": "common.schema.json#/$defs/sha256"
+          }
+        }
+      }
+    },
+    "decision_dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hdd"
+      }
+    },
+    "open_items": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/sourceId"
+      }
+    },
+    "downstream_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer",
+        "required_roles"
+      ],
+      "properties": {
+        "consumer": {
+          "const": "HR1"
+        },
+        "required_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "pov_policy": {
+      "$ref": "#/$defs/povPolicy"
+    },
+    "unit_pov_assignments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/povAssignment"
+      },
+      "minItems": 1
+    },
+    "knowledge_states": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/characterKnowledge"
+      },
+      "minItems": 1
+    },
+    "reader_information_states": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/readerKnowledge"
+      },
+      "minItems": 1
+    },
+    "suspense_chains": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/suspense"
+      },
+      "minItems": 1
+    },
+    "information_nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/informationNode"
+      },
+      "minItems": 1
+    },
+    "reveal_payoff_matrix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/payoff"
+      },
+      "minItems": 1
+    },
+    "concealment_and_inference_rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/inferenceRule"
+      },
+      "minItems": 1
+    }
+  }
+}

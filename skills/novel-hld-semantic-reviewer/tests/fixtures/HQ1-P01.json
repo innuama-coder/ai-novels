@@ -1,0 +1,1 @@
+{"case_id":"HQ1-P01","fixture_version":"2.1","sealed_before_execution":true,"single_defect_injection":"none","scenario":"real HB0 through HK1 public packages and an evidence-grounded independent pass","public_fixture":{"upstream_profiles":["HB0","HA1","HS1","HC1","HI1","HR1","HK1"],"output_profile":"HQ1","exact_semantic_read_closure":true,"all_object_coverage":true}}

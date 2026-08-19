@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Package Assembler"
+  short_description: "Seal reviewed HLD for LLD"
+  default_prompt: "Use $novel-hld-package-assembler to losslessly assemble this sealed, HQ1-approved HLD and produce the exact LLD handoff."
+policy:
+  allow_implicit_invocation: false

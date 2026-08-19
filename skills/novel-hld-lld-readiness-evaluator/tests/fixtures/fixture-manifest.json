@@ -1,0 +1,1 @@
+{"cases":{"HQ2-B01":{"expected":"gate_reject","fixture":"HQ2-B01.json"},"HQ2-N01":{"expected":"composite_internal_blocked","fixture":"HQ2-N01.json"},"HQ2-P01":{"expected":"consumer_ready_then_fidelity_ready","fixture":"HQ2-P01.json"}},"schema_version":"1.0"}

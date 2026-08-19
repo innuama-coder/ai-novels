@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "skill": "novel-hld-presentation-fidelity-reviewer",
+  "owner_version": "1.0.0",
+  "stage": "HH1",
+  "task_profile": "HH1.B",
+  "public_entrypoint": {"argv": ["python", "scripts/run_skill.py", "<work-order.json>", "<draft-directory>"], "success_exit": 0, "nonready_exit": 2, "runtime_error_exit": 1},
+  "required_allowlist_roles_ordered": ["hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "novel_hld_package", "hld_cross_index", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "human_review_report", "hh1_a_manifest", "hh1_a_generation_session", "hh1_a_work_order"],
+  "forbidden_input_classes": ["raw_conception", "chat", "prior_report", "sample_chapter", "novel_prose", "html", "svg", "css", "dom_registry"],
+  "draft_profile": ["canonical.json", "review-session.json"],
+  "ready_package_profile": ["presentation-fidelity-review.json", "review-session.json", "fidelity-review-execution.json", "validation.json", "package-manifest.json"],
+  "result_contract": {"result_scope": "composite_internal", "completion_ref": null, "stage_result_location": "package-parent/stage-result.json", "canonical_on_nonready": false},
+  "implementation_digest": {
+    "algorithm": "sha256",
+    "ordering": "resolved-path lexical order",
+    "record": "UTF-8 basename + NUL + exact file bytes + NUL",
+    "closure": [
+      "skills/novel-hld-presentation-fidelity-reviewer/scripts/hh1b_runtime.py",
+      "skills/novel-hld-presentation-fidelity-reviewer/scripts/run_skill.py",
+      "skills/novel-hld-presentation-fidelity-reviewer/references/runtime-contract.json",
+      "harnesses/novel-hld-autonomous/runtime/composite_internal_runtime.py",
+      "harnesses/novel-hld-autonomous/runtime/canonical.py",
+      "harnesses/novel-hld-autonomous/runtime/package_envelope.py",
+      "harnesses/novel-hld-autonomous/runtime/schema_catalog.py",
+      "harnesses/novel-hld-autonomous/schemas/*.schema.json (lexically expanded)",
+      "skills/novel-hld-presentation-fidelity-reviewer/references/presentation-fidelity-review.schema.json",
+      "skills/novel-hld-presentation-fidelity-reviewer/references/hh1-b-review-session.schema.json",
+      "skills/novel-hld-presentation-fidelity-reviewer/references/hh1-b-execution.schema.json",
+      "skills/novel-hld-presentation-fidelity-reviewer/references/hh1-b-validation.schema.json",
+      "skills/novel-hld-review-report-assembler/references/hld-human-review-report.schema.json",
+      "skills/novel-hld-package-assembler/references/novel-hld-package.schema.json"
+      ,"skills/novel-hld-package-assembler/references/hld-cross-index.schema.json"
+    ]
+  }
+}

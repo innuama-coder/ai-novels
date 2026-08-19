@@ -1,0 +1,12 @@
+name: novel-hld-autonomous
+version: 0.1.0
+runtime: codex
+status: implementation-candidate
+entry: adapters/codex/system-prompt.md
+operation_contract: adapters/codex/operation.md
+portable_core: true
+registered_skill_count: 14
+agentic_qualification: not-run
+qualification_contract: docs/agentic-qualification-contract.md
+qualification_validator: tools/validate_agentic_acceptance.py
+qualification_trust_anchor: references/qualification-trust-anchor.json

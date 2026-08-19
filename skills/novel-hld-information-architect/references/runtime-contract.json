@@ -1,0 +1,34 @@
+{
+  "artifact_role": "narrative_information_architecture",
+  "canonical_file": "narrative-information-architecture.json",
+  "canonical_schema": "hi1-canonical.schema.json",
+  "decision_prefix": "HDDES-HI1-",
+  "deterministic_checks": [
+    "public work-order/input-gate identity and ordered HB0-HC1 topology",
+    "exact allowlist reads and stage-scoped HDD coverage before candidate",
+    "authority-preserving POV and knowledge provenance",
+    "information-node legality and suspense setup-probe-reveal-payoff closure",
+    "exact public ready/revise/blocked profiles and external result envelope"
+  ],
+  "display_name": "Novel HLD Information Architect",
+  "forbidden_keys": ["clue_wording", "dialogue", "inner_monologue", "memory_text", "scene_actions", "sensory_detail", "prose", "new_event", "new_character", "new_relationship", "new_environment", "new_story_fact"],
+  "model_required": ["pov_policy", "unit_pov_assignments", "knowledge_states", "reader_information_states", "suspense_chains", "information_nodes", "reveal_payoff_matrix", "concealment_and_inference_rules"],
+  "next_stage": "HR1",
+  "object_arrays": {
+    "unit_pov_assignments": "HPV-",
+    "knowledge_states": "HKS-",
+    "reader_information_states": "HKS-",
+    "suspense_chains": "HSP-",
+    "information_nodes": "HIN-",
+    "reveal_payoff_matrix": "HIN-",
+    "concealment_and_inference_rules": "HIN-"
+  },
+  "object_fields": {"pov_policy": "HPV-"},
+  "preview_file": "narrative-information-architecture.md",
+  "ready_capabilities": ["legal_pov_assignments", "character_reader_knowledge_separation", "fair_suspense_and_payoff_control"],
+  "public_entrypoint": {"path":"skills/novel-hld-information-architect/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-information-architect",
+  "stage": "HI1",
+  "upstream_stages": ["HB0", "HA1", "HS1", "HC1"]
+}

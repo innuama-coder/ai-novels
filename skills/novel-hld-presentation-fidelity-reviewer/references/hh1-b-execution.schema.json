@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"hh1-b-execution.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","skill","stage","hld_run_id","work_order_id","task_id","producer_task_id","implementation_sha256","actual_read_hashes","review_sha256","deterministic"],
+  "properties":{"schema_version":{"const":"1.0"},"skill":{"const":"novel-hld-presentation-fidelity-reviewer"},"stage":{"const":"HH1"},"hld_run_id":{"type":"string","minLength":1},"work_order_id":{"type":"string","minLength":1},"task_id":{"type":"string","minLength":1},"producer_task_id":{"type":"string","minLength":1},"implementation_sha256":{"$ref":"common.schema.json#/$defs/sha256"},"actual_read_hashes":{"type":"object","additionalProperties":{"$ref":"common.schema.json#/$defs/sha256"}},"review_sha256":{"$ref":"common.schema.json#/$defs/sha256"},"deterministic":{"const":true}}
+}

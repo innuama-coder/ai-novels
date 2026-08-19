@@ -1,0 +1,1 @@
+{"case_id":"HH1-C-B01","attacks":["story_source_allowlist","html_attribute_injection","remote_url_text"],"expected":"allowlist_rejected_or_text_escaped_without_external_dependency"}

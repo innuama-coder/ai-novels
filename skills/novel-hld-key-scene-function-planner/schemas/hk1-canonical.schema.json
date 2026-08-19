@@ -1,0 +1,815 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hk1-canonical.schema.json",
+  "$defs": {
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/sourceId"
+      }
+    },
+    "authorityRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "classification",
+        "open_item",
+        "authority_class",
+        "value_sha256"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/sourceId"
+        },
+        "classification": {
+          "enum": [
+            "mandatory",
+            "freedom",
+            "must_ask",
+            "open"
+          ]
+        },
+        "open_item": {
+          "type": "boolean"
+        },
+        "authority_class": {
+          "enum": [
+            "author_locked",
+            "autonomous_owned",
+            "downstream_freedom",
+            "author_open"
+          ]
+        },
+        "value_sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "authorityRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/authorityRef"
+      }
+    },
+    "ownership": {
+      "enum": [
+        "source_projection",
+        "hld_owned",
+        "preserved_open",
+        "lld_freedom"
+      ]
+    },
+    "resolution": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "common.schema.json#/$defs/fileReference"
+        }
+      ]
+    },
+    "hdd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_id",
+        "owner_stage",
+        "affected_obligation_ids",
+        "disposition",
+        "object_evidence_refs",
+        "rationale_anchor",
+        "downstream_effect",
+        "resolution_ref"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HDD-HK1-"
+        },
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/sourceId"
+        },
+        "owner_stage": {
+          "const": "HK1"
+        },
+        "affected_obligation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "disposition": {
+          "enum": [
+            "not_needed_for_current_stage",
+            "conditional_structure_preserves_open",
+            "required_now",
+            "resolved_by_external_author_event"
+          ]
+        },
+        "object_evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "rationale_anchor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "downstream_effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        }
+      }
+    },
+    "hkf": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "unit_id",
+        "preconditions",
+        "trigger",
+        "primary_functions",
+        "secondary_functions",
+        "source_obligation_ids",
+        "storyline_refs",
+        "event_refs",
+        "character_refs",
+        "environment_refs",
+        "pov_constraint",
+        "knowledge_before",
+        "knowledge_after",
+        "required_state_change",
+        "choice_cost_result",
+        "tension_role",
+        "pacing_role",
+        "completion_criteria",
+        "forbidden_solutions",
+        "lld_freedom"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HKF-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "unit_id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_functions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "secondary_functions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_obligation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "storyline_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "event_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "character_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "environment_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "pov_constraint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "knowledge_before": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "knowledge_after": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "required_state_change": {
+          "type": "string",
+          "minLength": 1
+        },
+        "choice_cost_result": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tension_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pacing_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "completion_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "forbidden_solutions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lld_freedom": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "obligation_ids",
+        "hkf_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^HKF-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "obligation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          }
+        },
+        "hkf_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^HKF-"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "lwr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "hkf_ids",
+        "merge_split_rationale",
+        "entry_state",
+        "exit_state",
+        "required_elaboration",
+        "lld_freedoms",
+        "prohibitions",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^LWR-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "hkf_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^HKF-"
+          }
+        },
+        "merge_split_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_elaboration": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lld_freedoms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prohibitions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "freedom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "lwr_ids",
+        "freedoms",
+        "boundaries"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^LWR-[A-Za-z0-9._-]+$"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "source_authority_refs": {
+          "$ref": "#/$defs/authorityRefs"
+        },
+        "ownership_class": {
+          "$ref": "#/$defs/ownership"
+        },
+        "resolution_ref": {
+          "$ref": "#/$defs/resolution"
+        },
+        "lwr_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^LWR-"
+          }
+        },
+        "freedoms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ownership_class": {
+                "enum": [
+                  "hld_owned",
+                  "preserved_open",
+                  "lld_freedom"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill",
+    "stage",
+    "hld_run_id",
+    "status",
+    "input_gate_ref",
+    "source_artifacts",
+    "authority_partition",
+    "design_decisions",
+    "derivation_claims",
+    "decision_dependencies",
+    "open_items",
+    "downstream_contract",
+    "key_scene_functions",
+    "structural_coverage_matrix",
+    "storyline_coverage_matrix",
+    "arc_coverage_matrix",
+    "information_coverage_matrix",
+    "climax_and_payoff_coverage",
+    "lld_work_requirements",
+    "lld_freedoms"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "skill": {
+      "const": "novel-hld-key-scene-function-planner"
+    },
+    "stage": {
+      "const": "HK1"
+    },
+    "hld_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "const": "ready"
+    },
+    "input_gate_ref": {
+      "$ref": "common.schema.json#/$defs/fileReference"
+    },
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common.schema.json#/$defs/fileReference"
+      }
+    },
+    "authority_partition": {
+      "$ref": "common.schema.json#/$defs/authorityPartition"
+    },
+    "design_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "choice",
+          "candidate_refs"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^HDDES-HK1-"
+          },
+          "choice": {
+            "type": "string",
+            "minLength": 1
+          },
+          "candidate_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "derivation_claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source_refs",
+          "target_locator",
+          "value_sha256"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/stableId"
+          },
+          "source_refs": {
+            "$ref": "#/$defs/sourceRefs"
+          },
+          "target_locator": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "value_sha256": {
+            "$ref": "common.schema.json#/$defs/sha256"
+          }
+        }
+      }
+    },
+    "decision_dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hdd"
+      }
+    },
+    "open_items": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/sourceId"
+      }
+    },
+    "downstream_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer",
+        "required_roles"
+      ],
+      "properties": {
+        "consumer": {
+          "const": "HQ1"
+        },
+        "required_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "key_scene_functions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hkf"
+      },
+      "minItems": 1
+    },
+    "structural_coverage_matrix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "minItems": 1
+    },
+    "storyline_coverage_matrix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "minItems": 1
+    },
+    "arc_coverage_matrix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "minItems": 1
+    },
+    "information_coverage_matrix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      },
+      "minItems": 1
+    },
+    "climax_and_payoff_coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "lld_work_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lwr"
+      },
+      "minItems": 1
+    },
+    "lld_freedoms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/freedom"
+      },
+      "minItems": 1
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "gate-data.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "hld_run_id", "stage", "failed_gate", "evidence", "affected_ids"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "hld_run_id": {"type": "string", "minLength": 1}, "stage": {"const": "HB0"},
+    "failed_gate": {"type": "string", "minLength": 1}, "evidence": {"type": "string", "minLength": 1},
+    "affected_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,1 @@
+{"case_id":"HLD-COORDINATOR-P01","sealed_before_execution":true,"scenario":"valid-ready-prefix","executable_test":"test_positive_real_hb0_advances_and_issues_admissible_ha1"}

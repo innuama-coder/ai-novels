@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld-run-request.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "project_id", "hld_run_id", "hld_version", "preparation_request_path", "baseline_package_dir", "output_root", "author_gate", "replace"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "project_id": {"type": "string", "minLength": 1},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "hld_version": {"$ref": "common.schema.json#/$defs/semver"},
+    "preparation_request_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "baseline_package_dir": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "output_root": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "author_gate": {"const": "required"},
+    "replace": {"const": false}
+  }
+}

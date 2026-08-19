@@ -1,0 +1,1 @@
+{"cases":{"HH1-C-B01":{"expected":"input_gate_reject","fixture":"HH1-C-B01.json"},"HH1-C-N01":{"expected":"fidelity_gate_reject","fixture":"HH1-C-N01.json"},"HH1-C-P01":{"expected":"deterministic_internal_ready","fixture":"HH1-C-P01.json"}},"schema_version":"1.0"}

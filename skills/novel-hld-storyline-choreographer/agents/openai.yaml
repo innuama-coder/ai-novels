@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Storyline Choreographer"
+  short_description: "Weave all storylines into one coherent narrative network"
+  default_prompt: "Use $novel-hld-storyline-choreographer to execute an HS1 work order and publish complete storyline choreography."
+policy:
+  allow_implicit_invocation: false

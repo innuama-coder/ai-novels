@@ -1,0 +1,6 @@
+interface:
+  display_name: "Novel HLD Finalizer"
+  short_description: "Fail-closed author-gate verification and final HLD completion."
+  default_prompt: "Verify the sealed current HLD chain and external author decision; approve, project revise, or reject deterministically without changing HLD or state."
+policy:
+  allow_implicit_invocation: true

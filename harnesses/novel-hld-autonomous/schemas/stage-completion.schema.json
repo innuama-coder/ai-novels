@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "stage-completion.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "harness", "stage", "skill", "hld_run_id", "revision", "status", "input_gate_ref", "state_before_ref", "work_order_ref", "manifest_ref", "validation_ref", "upstream_completions", "canonical_artifacts", "owner_implementation", "return_binding", "ready_capabilities", "next_allowed_stage"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "skill": {"type": "string", "minLength": 1},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "status": {"const": "ready"},
+    "input_gate_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "state_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "work_order_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "manifest_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "validation_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "upstream_completions": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/artifactReference"}},
+    "canonical_artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/fileReference"}},
+    "owner_implementation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["skill", "version", "sha256"],
+      "properties": {
+        "skill": {"type": "string", "minLength": 1},
+        "version": {"$ref": "common.schema.json#/$defs/semver"},
+        "sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "return_binding": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+    "ready_capabilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "next_allowed_stage": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/stage"}]}
+  }
+}

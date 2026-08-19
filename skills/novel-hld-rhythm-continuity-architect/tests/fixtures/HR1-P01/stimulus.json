@@ -1,0 +1,1 @@
+{"case_id":"HR1-P01","single_injected_defect":null,"tracks":["LINE-A","LINE-B"],"requirements":["parallel synchronization","triggered flashback with return","authorized convergence","functional recovery window"]}

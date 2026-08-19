@@ -1,0 +1,1 @@
+{"case_id":"HI1-P01","single_injected_defect":null,"unresolved_projection":[{"source_id":"SRC-OPEN-01","expected_stage_disposition":"conditional_structure_preserves_open"}],"obligations":["limited POV","reader-ahead danger","setup-probe-reveal-payoff"],"author_contract":"show observable process; conceal decisive internal decision"}

@@ -1,0 +1,1 @@
+{"case_id":"HF1-N01","sealed_before_execution":true,"files":[{"path":"stimulus.json","sha256":"bb62157081b7ff4d7ff331dbf14b687776f08fb52e2402b80b4538ad8487c7bd"}],"single_injected_defect":"UPSTREAM_ENVELOPE_CLOSURE"}

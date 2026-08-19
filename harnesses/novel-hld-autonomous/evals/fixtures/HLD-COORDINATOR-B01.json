@@ -1,0 +1,1 @@
+{"case_id":"HLD-COORDINATOR-B01","sealed_before_execution":true,"scenario":"external-author-or-reality-blocker","executable_test":"test_reality_dependency_emits_a_schema_valid_external_research_request"}

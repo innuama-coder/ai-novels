@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "semver": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "stage": {
+      "enum": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1", "HP1", "HQ2", "HH1", "HF1"]
+    },
+    "fileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256"],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "manifest_path", "manifest_sha256", "completion_path", "completion_sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_path": {"$ref": "#/$defs/relativePath"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "completion_path": {"$ref": "#/$defs/relativePath"},
+        "completion_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "internalArtifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256", "manifest_path", "manifest_sha256"],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_path": {"$ref": "#/$defs/relativePath"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "sourceId": {"type": "string", "pattern": "^(INT|SUB|WLD|CHR|CAU|NAR|SLD|SL|SLC|WR|WF|WS|END|ENV|ZONE|EVD|EV|CHD|SLOT|REL|DEV|FND)-[A-Za-z0-9._-]+$"},
+    "stableId": {"type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Za-z0-9._-]+$"},
+    "authorityPartition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_classifications", "source_open_items", "source_authority_classes", "hld_ownership"],
+      "properties": {
+        "source_classifications": {
+          "type": "object", "additionalProperties": false,
+          "required": ["mandatory", "freedom", "must_ask", "open"],
+          "properties": {
+            "mandatory": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "freedom": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "must_ask": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "open": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true}
+          }
+        },
+        "source_open_items": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+        "source_authority_classes": {
+          "type": "object", "additionalProperties": false,
+          "required": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"],
+          "properties": {
+            "author_locked": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "autonomous_owned": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "downstream_freedom": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true},
+            "author_open": {"type": "array", "items": {"$ref": "#/$defs/sourceId"}, "uniqueItems": true}
+          }
+        },
+        "hld_ownership": {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_projection", "hld_owned", "preserved_open", "lld_freedom"],
+          "properties": {
+            "source_projection": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true},
+            "hld_owned": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true},
+            "preserved_open": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true},
+            "lld_freedom": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true}
+          }
+        }
+      }
+    }
+  }
+}

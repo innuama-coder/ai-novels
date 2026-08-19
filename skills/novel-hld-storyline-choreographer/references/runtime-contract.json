@@ -1,0 +1,63 @@
+{
+  "artifact_role": "storyline_choreography",
+  "canonical_file": "storyline-choreography.json",
+  "canonical_schema": "hs1-canonical.schema.json",
+  "decision_prefix": "HDDES-HS1-",
+  "deterministic_checks": [
+    "work-order and input-gate identity equality",
+    "ordered HB0 and HA1 completion topology",
+    "actual reads contained by allowlist",
+    "stage-scoped HDD coverage before candidate",
+    "authority/ownership separation and stable IDs",
+    "storyline disposition totality, segment placement, and connection integrity",
+    "exact package profile and external parent result envelope"
+  ],
+  "display_name": "Novel HLD Storyline Choreographer",
+  "forbidden_keys": [
+    "scene_actions",
+    "dialogue",
+    "sensory_detail",
+    "prose",
+    "new_event",
+    "new_story_fact",
+    "inner_arc_step",
+    "pov_assignment",
+    "pacing_curve"
+  ],
+  "model_required": [
+    "semantic_storyline_register",
+    "storyline_segments",
+    "unit_storyline_matrix",
+    "storyline_connections",
+    "convergence_and_split_points",
+    "event_storyline_placement",
+    "activation_disposition",
+    "subject_reconstruction_test"
+  ],
+  "next_stage": "HC1",
+  "object_arrays": {
+    "convergence_and_split_points": "HTC-",
+    "event_storyline_placement": "HTS-",
+    "semantic_storyline_register": "HTS-",
+    "storyline_connections": "HTC-",
+    "storyline_segments": "HTS-",
+    "unit_storyline_matrix": "HTS-",
+    "activation_disposition": "HTS-"
+  },
+  "object_fields": {},
+  "preview_file": "storyline-choreography.md",
+  "ready_capabilities": [
+    "complete_storyline_disposition",
+    "unit_level_storyline_placement",
+    "typed_storyline_connections",
+    "subject_reconstruction_evidence"
+  ],
+  "public_entrypoint": {"path":"skills/novel-hld-storyline-choreographer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version": "1.0.0",
+  "skill": "novel-hld-storyline-choreographer",
+  "stage": "HS1",
+  "upstream_stages": [
+    "HB0",
+    "HA1"
+  ]
+}

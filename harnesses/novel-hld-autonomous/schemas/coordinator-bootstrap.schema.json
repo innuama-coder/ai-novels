@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"coordinator-bootstrap.schema.json","type":"object","additionalProperties":false,
+  "required":["schema_version","source_root","hld_run_request_ref","hb0_file_allowlist"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"source_root":{"$ref":"common.schema.json#/$defs/relativePath"},
+    "hld_run_request_ref":{"$ref":"common.schema.json#/$defs/fileReference"},
+    "hb0_file_allowlist":{"type":"array","minItems":1,"items":{"$ref":"common.schema.json#/$defs/fileReference"}}
+  }
+}

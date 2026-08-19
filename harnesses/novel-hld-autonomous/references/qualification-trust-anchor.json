@@ -1,0 +1,6 @@
+{
+  "schema_version":"1.0",
+  "harness":"novel-hld-autonomous",
+  "status":"unconfigured",
+  "algorithm":"rsa-pkcs1v15-sha256"
+}
