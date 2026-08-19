@@ -18,12 +18,14 @@ AUTHOR_PROSE_FORBIDDEN=re.compile(
 CJK=re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 class Parser(HTMLParser):
     def __init__(self):
-        super().__init__(convert_charrefs=True);self.ids=[];self.targets=[];self.report_ids=[];self.bad=[];self.external=[];self.h1=0;self.landmarks=set();self.skip=False;self.title_text=[];self.in_doc_title=False;self.svg=[];self._svg=[];self.node_targets=[];self.edge_targets=[];self.visible_blocks=[];self._visible=[];self._ignored=0;self._nav=0
+        super().__init__(convert_charrefs=True);self.ids=[];self.targets=[];self.report_ids=[];self.bad=[];self.external=[];self.h1=0;self.landmarks=set();self.skip=False;self.title_text=[];self.in_doc_title=False;self.svg=[];self._svg=[];self.node_targets=[];self.edge_targets=[];self.visible_blocks=[];self.repeat_allowed_blocks=set();self._visible=[];self._ignored=0;self._nav=0;self._ul_repeat_stack=[]
     def handle_starttag(self,tag,attrs):
         values={k:(v or "") for k,v in attrs}
         if tag in {"style","script","template","noscript"}:self._ignored+=1
         if tag=="nav":self._nav+=1
-        if not self._ignored and not self._nav and tag in {"h1","h2","h3","h4","h5","h6","p","dt","dd","li"}:self._visible.append([tag,[]])
+        if tag=="ul":self._ul_repeat_stack.append("chapter-storylines" in values.get("class","").split())
+        repeat_allowed=tag=="li" and any(self._ul_repeat_stack)
+        if not self._ignored and not self._nav and tag in {"h1","h2","h3","h4","h5","h6","p","dt","dd","li"}:self._visible.append([tag,[],repeat_allowed])
         if tag in {"script","iframe","object","embed","link","base","form","input","button"}:self.bad.append(tag)
         for key in ("src","href","xlink:href","action","formaction"):
             if key in values and not (key=="href" and values[key].startswith("#")):self.external.append(f"{tag}.{key}")
@@ -41,8 +43,11 @@ class Parser(HTMLParser):
         elif self._svg and tag=="desc":self._svg[-1]["desc"]=True
     def handle_endtag(self,tag):
         if self._visible and self._visible[-1][0]==tag:
-            _,parts=self._visible.pop();value=re.sub(r"\s+"," ","".join(parts)).strip()
-            if value:self.visible_blocks.append(value)
+            _,parts,repeat_allowed=self._visible.pop();value=re.sub(r"\s+"," ","".join(parts)).strip()
+            if value:
+                if repeat_allowed:self.repeat_allowed_blocks.add(len(self.visible_blocks))
+                self.visible_blocks.append(value)
+        if tag=="ul" and self._ul_repeat_stack:self._ul_repeat_stack.pop()
         if tag=="nav" and self._nav:self._nav-=1
         if tag in {"style","script","template","noscript"} and self._ignored:self._ignored-=1
         if tag=="title" and not self._svg:self.in_doc_title=False
@@ -52,8 +57,8 @@ class Parser(HTMLParser):
         if self._visible and not self._ignored and not self._nav:self._visible[-1][1].append(data)
 def canonical_sha(value):return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")).hexdigest()
 def elements(report):return [item for name in ("title_and_decision_scope","overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary","visual_models") for item in report[name]]
-def validate_author_visible_language(blocks:list[str])->list[str]:
-    errors=[];seen={}
+def validate_author_visible_language(blocks:list[str],*,repeat_allowed:set[int]|None=None)->list[str]:
+    errors=[];seen={};repeat_allowed=repeat_allowed or set()
     for index,value in enumerate(blocks):
         if AUTHOR_PROSE_FORBIDDEN.search(value):errors.append(f"visible block {index} uses machine/process wording")
         if CJK.search(value) and value.count("；")>=3:errors.append(f"visible block {index} compresses too many conclusions")
@@ -62,7 +67,7 @@ def validate_author_visible_language(blocks:list[str])->list[str]:
         normalized=re.sub(r"\s+","",value).strip("。；，：、!?！？")
         if len(CJK.findall(normalized))>=12:
             previous=seen.get(normalized)
-            if previous is not None:errors.append(f"visible block {index} repeats substantive block {previous}")
+            if previous is not None and index not in repeat_allowed:errors.append(f"visible block {index} repeats substantive block {previous}")
             else:seen[normalized]=index
     return errors
 def validate_render_model(document:str,report:Mapping[str,Any],registry:Mapping[str,Any])->list[str]:
@@ -75,7 +80,7 @@ def validate_render_model(document:str,report:Mapping[str,Any],registry:Mapping[
     if parser.bad or parser.external:errors.append(f"offline/security violation tags={parser.bad} attrs={parser.external}")
     if parser.h1!=1 or parser.landmarks!={"header","nav","main","footer"} or not parser.skip or not "".join(parser.title_text).strip():errors.append("document landmark/title contract failed")
     if chr(0xfffd) in document:errors.append("Unicode replacement character detected")
-    errors.extend(validate_author_visible_language(parser.visible_blocks))
+    errors.extend(validate_author_visible_language(parser.visible_blocks,repeat_allowed=parser.repeat_allowed_blocks))
     for entry in targets:
         identifier=entry.get("id");report_id=entry.get("report_element_id");expected_role="visual_model" if str(report_id).startswith("HVG-") else "report_element"
         if identifier!=f"HUI-{report_id}-{expected_role}-0" or entry.get("render_role")!=expected_role or entry.get("dom_locator")!=f'[data-render-target-id="{identifier}"]':errors.append(f"HUI formula/locator mismatch: {report_id}")

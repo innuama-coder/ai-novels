@@ -7,7 +7,7 @@ HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE));import public_
 C=fx.C;publisher=fx.ab.publisher
 from runtime.package_envelope import validate_completion_bindings,validate_manifest,validate_ready_profile,validate_result_envelope  # noqa:E402
 from runtime.canonical import read_json  # noqa:E402
-from render_validation import validate_render_model  # noqa:E402
+from render_validation import Parser,validate_author_visible_language,validate_render_model  # noqa:E402
 
 def write(path,value):fx.ab.write_json(path,value)
 def tree(root):return {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob("*") if p.is_file()}
@@ -109,6 +109,12 @@ class HH1CRuntimeTests(unittest.TestCase):
         self.assertTrue(any("repeats substantive" in error for error in validate_render_model(duplicate,report,registry)))
         ai_memo=document.replace("</main>","<p>把人物关系投影到叙事链路，并与后续工作流对齐。</p></main>")
         self.assertTrue(any("machine/process" in error for error in validate_render_model(ai_memo,report,registry)))
+    def test_repeated_chapter_storyline_labels_are_not_treated_as_repeated_prose(self):
+        label="主要推进：R-07 与沈逾的相遇和告别"
+        parser=Parser();parser.feed(f'<ul class="chapter-storylines"><li>{label}</li></ul><ul class="chapter-storylines"><li>{label}</li></ul>')
+        self.assertEqual(validate_author_visible_language(parser.visible_blocks,repeat_allowed=parser.repeat_allowed_blocks),[])
+        parser=Parser();parser.feed(f"<p>{label}</p><p>{label}</p>")
+        self.assertTrue(any("repeats substantive" in error for error in validate_author_visible_language(parser.visible_blocks,repeat_allowed=parser.repeat_allowed_blocks)))
     def test_sealed_earlier_hp1_hq2_revisions_are_valid_consumer_inputs(self):
         fixture,work,_,_,_,_=self.build();context=C.load_context(work,C.SPEC,C.impl_hash(),C._catalog());report=read_json(context.roles["human_review_report"]);review=read_json(context.roles["presentation_fidelity_review"]);hp1=read_json(context.roles["novel_hld_package"]);hp1_completion=read_json(context.roles["hp1_completion"]);hq2=read_json(context.roles["lld_handoff_acceptance"]);hq2_completion=read_json(context.roles["hq2_completion"])
         earlier=copy.deepcopy(hq2);earlier["revision"]=context.work_order["revision"]-7;C._validate_identity(context,report,review,hp1,hp1_completion,earlier,hq2_completion)
