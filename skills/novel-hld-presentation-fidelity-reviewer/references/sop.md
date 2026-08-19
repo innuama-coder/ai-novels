@@ -19,22 +19,23 @@
 9. Inventory all material HP1 controls plus sealed conception character/environment definitions across the nine report domains.
 10. Locate each control in report elements; distinguish full, partial/weak, wrong-domain, and absent representation.
 11. Do not accept omission as a budget optimization.
+12. For character and concrete-place cards, treat only the first binding as the primary sealed definition. Verify every later binding is a current canonical HLD object derived from that same entity; retain it as fidelity evidence while continuing to require the canonical object in its original HLD domain.
 
 ## D. Validate visuals and budget
 
-12. For each HVG, compare node/edge/value/order/source sets and direction to HP1 and its textual conclusion.
-13. Check complete textual alternative at the semantic-data level only.
-14. Independently recount decision text and visual count; apply `CJK/500 + Latin/250 + visuals*0.25`; compare with the report declaration.
+13. For each HVG, compare node/edge/value/order/source sets and direction to HP1 and its textual conclusion.
+14. Check complete textual alternative at the semantic-data level only.
+15. Independently recount decision text and visual count; apply `CJK/500 + Latin/250 + visuals*0.25`; compare with the report declaration.
 
 ## E. Execute report-only retrieval
 
-15. Hide upstream content from the answering step. Answer all nine fixed questions using report elements only, including “who each character is” and “what each environment does.”
-16. For each answer record report IDs, source IDs, and locators. Fail answers that depend on reviewer memory or unbound inference.
-17. Inspect whether repetition, process prose, jargon, redundant visuals, or fragmented conclusions obstruct retrieval within the budget.
+16. Hide upstream content from the answering step. Answer all ten fixed questions using report elements only, including “who each character is” and “what each environment does.”
+17. For each answer record report IDs, source IDs, and locators. Fail answers that depend on reviewer memory or unbound inference.
+18. Inspect whether repetition, process prose, jargon, redundant visuals, or fragmented conclusions obstruct retrieval within the budget.
 
 ## F. Conclude and emit
 
-18. Separate material drift from style difference. Challenge every pass dimension with an attempted counterexample.
-19. Apply verdict algebra exactly. `fail` means report defect/upstream content; `revise` means reviewer evidence defect.
-20. Emit the exact internal package and package-external composite-internal result; never emit completion or HTML.
-21. Run deterministic validation and semantic rubric. Only sealed pass may proceed to HH1-C/publisher.
+19. Separate material drift from style difference. Challenge every pass dimension with an attempted counterexample.
+20. Apply verdict algebra exactly. `fail` means report defect/upstream content; `revise` means reviewer evidence defect.
+21. Emit the exact internal package and package-external composite-internal result; never emit completion or HTML.
+22. Run deterministic validation and semantic rubric. Only sealed pass may proceed to HH1-C/publisher.

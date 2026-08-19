@@ -247,6 +247,19 @@ class HH1BPublicRuntimeTests(unittest.TestCase):
         report=reseal_a_report(fixture,work,gate,draft,mutate);self.assertEqual(report["character_definitions"],[])
         code,result=B.execute(work,draft);self.assertEqual((code,result["result"]),(2,"blocked"))
 
+    def test_definition_card_accepts_same_entity_current_model_supplement_without_moving_primary_domain(self):
+        path="canonical-models/character-arc-placement.json";locator=f"{path}#/character_participation_register/0"
+        card={"id":"HRE-CHAR-01","element_kind":"character_definition","source_ids":["CHR-01","HAS-PARTICIPATION-01"],"locators":["novel-hld-package.json#/baseline_controls/0",locator]}
+        report={"character_definitions":[card],"environment_definitions":[]};binding_index={("HAS-PARTICIPATION-01",locator):{"model_path":path,"locator":"/character_participation_register/0"}};documents={path:{"character_participation_register":[{"source_refs":["CHR-01"]}]}}
+        B._validate_definition_supplements(report,binding_index,documents)
+        self.assertEqual(B._primary_locators(card),["novel-hld-package.json#/baseline_controls/0"])
+
+    def test_definition_card_rejects_unrelated_current_model_supplement(self):
+        path="canonical-models/character-arc-placement.json";locator=f"{path}#/character_participation_register/0"
+        report={"character_definitions":[{"id":"HRE-CHAR-01","source_ids":["CHR-01","HAS-PARTICIPATION-02"],"locators":["novel-hld-package.json#/baseline_controls/0",locator]}],"environment_definitions":[]};binding_index={("HAS-PARTICIPATION-02",locator):{"model_path":path,"locator":"/character_participation_register/0"}};documents={path:{"character_participation_register":[{"source_refs":["CHR-02"]}]}}
+        with self.assertRaises(B.InternalCondition) as raised:B._validate_definition_supplements(report,binding_index,documents)
+        self.assertEqual(raised.exception.code,"HH1B_DEFINITION_SUPPLEMENT_INVALID")
+
     def test_resealed_missing_world_environment_scope_is_blocked(self):
         fixture, work, order, gate, draft, _ = self.build()
         def mutate(report):

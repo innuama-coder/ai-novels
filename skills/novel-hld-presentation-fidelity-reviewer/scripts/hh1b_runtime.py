@@ -79,6 +79,26 @@ def _visual_pairs(visual:Mapping[str,Any],binding_index:Mapping[tuple[str,str],A
         result.update(_pairs(edge,binding_index,f"{visual['id']}:edge:{index}"))
     return result
 
+def _primary_locators(item:Mapping[str,Any])->list[str]:
+    if item.get("element_kind") in {"character_definition","environment_definition"}:
+        return list(item["locators"][:1])
+    return list(item["locators"])
+
+def _validate_definition_supplements(report:Mapping[str,Any],binding_index:Mapping[tuple[str,str],Any],documents:Mapping[str,Any])->None:
+    canonical_paths=set(MODEL_ROLES.values())
+    for section in ("character_definitions","environment_definitions"):
+        for item in report[section]:
+            base_source=item["source_ids"][0]
+            for pair in list(zip(item["source_ids"],item["locators"]))[1:]:
+                entry=binding_index.get(pair)
+                if entry is None or entry["model_path"] not in canonical_paths:
+                    raise InternalCondition("blocked","HH1B_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not a current canonical HLD model",[item["id"]])
+                value=json_pointer(documents[entry["model_path"]],entry["locator"])
+                direct_refs=set(value.get("source_refs",[])) if isinstance(value,Mapping) else set()
+                authority_refs={ref.get("source_id") for ref in value.get("source_authority_refs",[]) if isinstance(ref,Mapping)} if isinstance(value,Mapping) else set()
+                if base_source not in direct_refs|authority_refs:
+                    raise InternalCondition("blocked","HH1B_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not derived from {base_source}",[item["id"]])
+
 def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict[str,Any]]:
     machine=read_json(context.roles["novel_hld_package"]);report=read_json(context.roles["human_review_report"]);a_manifest=read_json(context.roles["hh1_a_manifest"]);a_session=read_json(context.roles["hh1_a_generation_session"]);a_work=read_json(context.roles["hh1_a_work_order"]);hp1_completion=read_json(context.roles["hp1_completion"]);hp1_manifest=read_json(context.roles["hp1_manifest"]);cross=read_json(context.roles["hld_cross_index"]);hb0_manifest=read_json(context.roles["hb0_manifest"]);baseline=read_json(context.roles["hld_control_baseline"])
     context.catalog.validate(report,"hld-human-review-report.schema.json");context.catalog.validate(a_manifest,"package-manifest.schema.json");context.catalog.validate(a_work,"work-order.schema.json");context.catalog.validate(hp1_completion,"stage-completion.schema.json");context.catalog.validate(hp1_manifest,"package-manifest.schema.json");context.catalog.validate(hb0_manifest,"package-manifest.schema.json");context.catalog.validate(baseline,"hld-control-baseline.schema.json")
@@ -96,6 +116,7 @@ def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict
         key=(item["id"],f"{item['model_path']}#{item['locator']}")
         if item["model_path"] not in documents or key in binding_index or canonical_sha256(json_pointer(documents[item["model_path"]],item["locator"]))!=item["value_sha256"]:raise InternalCondition("blocked","HH1B_CROSS_INDEX_VALUE_DRIFT",item["id"],[item["id"]])
         binding_index[key]=item
+    _validate_definition_supplements(report,binding_index,documents)
     elements=_all_elements(report);expected=[]
     for item in elements:expected.extend((item["id"],source,locator) for source,locator in _pairs(item,binding_index,item["id"]))
     actual=[(item["report_element_id"],item["source_id"],item["locator"]) for item in report["source_bindings"]]
@@ -108,7 +129,7 @@ def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict
     city_network=by_scope["city_and_region"].get("city_network",{});cities=city_network.get("cities",[]);links=city_network.get("intercity_links",[]);portraits=by_scope["local_people_and_daily_life"].get("ordinary_people_portraits",[]);city_names={city.get("city_name") for city in cities}
     if len(cities)<4 or len(city_names)!=len(cities) or len(links)<4 or {portrait.get("city") for portrait in portraits}!=city_names or "season_profile" not in by_scope["climate_and_physical_environment"]:raise InternalCondition("blocked","HH1B_WORLD_ENVIRONMENT_PROFILE_SHALLOW","four-city network, city-wide ordinary-person coverage, and season profile are not complete",["HH1-A"])
     expected_domains={locator:("character_definitions" if item["id"] in character_ids else "environment_definitions" if item["id"] in environment_ids else "world_environment_definitions" if item["id"] in world_environment_ids else DOMAIN_BY_PATH[item["model_path"]]) for (source,locator),item in binding_index.items()}
-    primary={section:{locator for element in report[section] for locator in element["locators"]} for section in set(DOMAIN_BY_PATH.values())|{"world_environment_definitions","character_definitions","environment_definitions"}}
+    primary={section:{locator for element in report[section] for locator in _primary_locators(element)} for section in set(DOMAIN_BY_PATH.values())|{"world_environment_definitions","character_definitions","environment_definitions"}}
     if any(locator not in primary[section] for locator,section in expected_domains.items()) or any(locator in expected_domains and expected_domains[locator]!=section for section,locators in primary.items() for locator in locators):raise InternalCondition("blocked","HH1B_PRIMARY_DOMAIN_COVERAGE_DRIFT","title/visual references cannot replace exact nine-domain primary coverage",["HH1-A"])
     for visual in report["visual_models"]:_visual_pairs(visual,binding_index)
     return machine,models,report,{"a_manifest":a_manifest,"a_session":a_session,"a_work":a_work,"binding_index":binding_index}
