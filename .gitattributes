@@ -1,0 +1,23 @@
+# HLD artifacts participate in byte-exact manifests. Keep their text bytes
+# stable across Windows, macOS, and Linux checkouts.
+harnesses/novel-hld-autonomous/**/*.md text eol=lf
+harnesses/novel-hld-autonomous/**/*.py text eol=lf
+harnesses/novel-hld-autonomous/**/*.json text eol=lf
+harnesses/novel-hld-autonomous/**/*.yaml text eol=lf
+harnesses/novel-hld-autonomous/**/*.yml text eol=lf
+harnesses/novel-hld-autonomous/**/*.css text eol=lf
+harnesses/novel-hld-autonomous/**/*.html text eol=lf
+
+skills/novel-hld-*/**/*.md text eol=lf
+skills/novel-hld-*/**/*.py text eol=lf
+skills/novel-hld-*/**/*.json text eol=lf
+skills/novel-hld-*/**/*.yaml text eol=lf
+skills/novel-hld-*/**/*.yml text eol=lf
+skills/novel-hld-*/**/*.css text eol=lf
+skills/novel-hld-*/**/*.html text eol=lf
+
+skills/novel-development-baseline-preparer/**/*.md text eol=lf
+skills/novel-development-baseline-preparer/**/*.py text eol=lf
+skills/novel-development-baseline-preparer/**/*.json text eol=lf
+skills/novel-development-baseline-preparer/**/*.yaml text eol=lf
+skills/novel-development-baseline-preparer/**/*.yml text eol=lf
