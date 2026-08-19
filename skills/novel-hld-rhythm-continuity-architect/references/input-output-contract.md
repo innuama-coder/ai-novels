@@ -40,4 +40,9 @@ Ready package exact files are canonical JSON; generation session; five ordered e
 - Pacing varies by narrative function; tension accumulates, turns, releases, and recovers without erasing core pressure.
 - Knowledge and POV legality remain intact under every reorder.
 - Macro density is expressed as relative bands/ranges, not invented exact word counts or scene schedules.
+- `story_time_model.elapsed_day_span` fixes the total relative story window, and
+  every unit has a non-overlapping, ordered `elapsed_start_day`/`elapsed_end_day`
+  plus a human-readable label. The first and last unit close the declared span, so
+  LLD never has to guess how a multi-week relationship, investigation, journey, or
+  legal transfer fits into the story.
 - The parent can consume the external result envelope without inspecting chat or hidden work.

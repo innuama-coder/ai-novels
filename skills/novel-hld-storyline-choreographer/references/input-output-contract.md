@@ -27,7 +27,10 @@ chat, old HLD, or presentation documents.
   baseline inventory rows;
 - each line has exactly one of `placed`, `background-carried`,
   `optional-not-activated`, or `preserved-open`, with authorization evidence;
-- every `placed` line has at least one `HTS-` segment;
+- every `placed` or `background-carried` line has at least one auditable `HTS-`
+  carrier segment and therefore an explicit HA1 unit/chapter placement;
+- `optional-not-activated` and `preserved-open` lines retain stable identities but
+  cannot masquerade as placed segments;
 - every segment refers to valid HA1 units/chapter shells and explicit entry and
   exit states;
 - every `HTC-` connection names existing endpoints and a typed causal,

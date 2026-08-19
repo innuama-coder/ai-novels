@@ -27,9 +27,13 @@ def validate_stage_model(model: dict[str, Any], _contract: Mapping[str, Any]) ->
     if any(value not in allowed for value in dispositions.values()):
         raise CandidateError("HS1 activation disposition is invalid")
     segment_lines = [item.get("source_storyline_id") for item in model["storyline_segments"]]
+    if len(segment_lines) != len(set(segment_lines)):
+        raise CandidateError("HS1 storyline segments must be unique by source storyline")
     for line_id, disposition in dispositions.items():
-        if disposition == "placed" and line_id not in segment_lines:
-            raise CandidateError(f"HS1 placed storyline {line_id} has no segment")
+        if disposition in {"placed", "background-carried"} and line_id not in segment_lines:
+            raise CandidateError(f"HS1 active/background storyline {line_id} has no auditable carrier segment")
+        if disposition in {"optional-not-activated", "preserved-open"} and line_id in segment_lines:
+            raise CandidateError(f"HS1 inactive/open storyline {line_id} cannot masquerade as a placed segment")
     connection_ids = {item["id"] for item in model["storyline_connections"]}
     for point in model["convergence_and_split_points"]:
         if not set(point.get("connection_ids", [])).issubset(connection_ids):

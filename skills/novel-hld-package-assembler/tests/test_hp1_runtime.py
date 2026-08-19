@@ -58,6 +58,18 @@ def canonical_entity_source_index(character_ids: list[str], environment_ids: lis
     return {"entries": entries}
 
 
+def add_handoff_story_and_time_controls(admitted: dict, *, storyline_id: str = "SL-001", unit_id: str = "HNU-001") -> None:
+    admitted["HS1"] = {"main": {
+        "semantic_storyline_register": [{"source_storyline_id": storyline_id}],
+        "activation_disposition": [{"source_storyline_id": storyline_id, "disposition": "placed"}],
+        "storyline_segments": [{"source_storyline_id": storyline_id, "unit_ids": [unit_id]}],
+    }}
+    admitted.setdefault("HR1", {"main": {}})["main"].setdefault("space_transition_map", [])
+    admitted["HR1"]["main"]["unit_duration_density"] = [{
+        "unit_id": unit_id, "elapsed_start_day": 0, "elapsed_end_day": 1, "elapsed_label": "day 0 to day 1",
+    }]
+
+
 def manifest_for(package: Path, content: list[Path], stage: str) -> Path:
     refs = [file_ref(path, package, "content") for path in sorted(content, key=lambda item: item.relative_to(package).as_posix())]
     value = {
@@ -110,11 +122,16 @@ def build_design_package(workspace: Path, stage: str, authority: dict, *, lwr_pr
         cities=[city("HST-CITY-NEUTRAL","Neutral Port","Third Country"),city("HST-CITY-C-COAST","C Coast","Country C"),city("HST-CITY-C-CAPITAL","C Capital","Country C"),city("HST-CITY-M-NORTH","M North Port","Country M")]
         def route(index,source,target):
             return {"route_id":f"HST-ROUTE-{index}","from_city_id":source,"to_city_id":target,"travel_time":"several hours","physical_route":"lawful physical transfer","information_route":"authenticated limited copy","custody_rule":"originals remain with the competent jurisdiction until lawful release","story_function":"the route changes who can verify the next step"}
-        model["world_setting_architecture"]={"id":"HST-WORLD-001","narrative_distribution":"Four cities separate neutral handoff, experiment, national decision, and physical intervention.","story_window":"six weeks in early autumn","season_profile":{"season":"early autumn storm season","temperature_and_weather":"coastal rain, inland dry air, and northern fog","daylight_and_air":"shortening days and different maritime air","daily_effects":"weather delays commuting and public services","plot_effect":"weather constrains action but never makes choices"},"cities":cities,"intercity_routes":[route("01","HST-CITY-NEUTRAL","HST-CITY-C-COAST"),route("02","HST-CITY-C-COAST","HST-CITY-C-CAPITAL"),route("03","HST-CITY-C-COAST","HST-CITY-M-NORTH"),route("04","HST-CITY-C-CAPITAL","HST-CITY-M-NORTH")],"threat_mechanism":{"target_system":"weather intervention network","access_path":"compromised maintenance credentials","actuator_chain":["false observation","unsafe command"],"observable_evidence":["log mismatch","physical trace"],"shutdown_condition":"revoke access and safe hardware"}}
+        model["world_setting_architecture"]={"id":"HST-WORLD-001","narrative_distribution":"Four cities separate neutral handoff, experiment, national decision, and physical intervention.","story_window":"six weeks in early autumn","season_profile":{"season":"early autumn storm season","temperature_and_weather":"coastal rain, inland dry air, and northern fog","daylight_and_air":"shortening days and different maritime air","daily_effects":"weather delays commuting and public services","plot_effect":"weather constrains action but never makes choices"},"cities":cities,"intercity_routes":[route("01","HST-CITY-NEUTRAL","HST-CITY-C-COAST"),route("02","HST-CITY-C-COAST","HST-CITY-C-CAPITAL"),route("03","HST-CITY-C-COAST","HST-CITY-M-NORTH"),route("04","HST-CITY-C-CAPITAL","HST-CITY-M-NORTH")],"threat_mechanism":{"target_system":"weather intervention network","physical_target_city_id":"HST-CITY-M-NORTH","political_pressure_city_id":"HST-CITY-C-CAPITAL","natural_hazard":"natural coastal storm","physical_actuators":["flood gate"],"scientific_limit":"the attack cannot create weather","access_path":"compromised maintenance credentials","actuator_chain":["false observation","unsafe command"],"observable_evidence":["log mismatch","physical trace"],"shutdown_condition":"revoke access and safe hardware"}}
+    elif stage == "HS1":
+        model["semantic_storyline_register"]=[{"source_storyline_id":"SL-001"}]
+        model["activation_disposition"]=[{"source_storyline_id":"SL-001","disposition":"placed"}]
+        model["storyline_segments"]=[{"source_storyline_id":"SL-001","unit_ids":["HNU-001"]}]
     elif stage == "HC1":
         model["character_participation_register"]=[{"character_id":"CHR-001","importance":"core","absence_reason":None}]
     elif stage == "HR1":
         model["space_transition_map"]=[{"id":"HTM-SPACE-001","from_environment_id":"ENV-001","to_environment_id":"ENV-001"}]
+        model["unit_duration_density"]=[{"unit_id":"HNU-001","elapsed_start_day":0,"elapsed_end_day":1,"elapsed_label":"day 0 to day 1"}]
     if stage == "HK1":
         model["key_scene_functions"] = [{
             "id": "HKF-001",
@@ -259,6 +276,7 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             }},
         }
 
+        add_handoff_story_and_time_controls(admitted)
         handoff, lwr_map = hp1.build_handoff(
             admitted,
             {"path": "HP1/package-manifest.json", "sha256": "a" * 64},
@@ -290,6 +308,13 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             {"character_id":"CHR-002","importance":"support","disposition":"placed","work_unit_ids":["LWK-001"],"absence_reason":None},
         ])
         self.assertEqual(handoff["environment_coverage"], {"required_ids":["ENV-001"],"placed_ids":["ENV-001"]})
+        self.assertEqual(handoff["storyline_dispositions"], [{
+            "storyline_id": "SL-001", "disposition": "placed", "work_unit_ids": ["LWK-001"], "absence_reason": None,
+        }])
+        self.assertEqual(handoff["work_unit_time_windows"], [{
+            "work_unit_id": "LWK-001", "source_unit_ids": ["HNU-001"],
+            "elapsed_start_day": 0, "elapsed_end_day": 1, "label": "day 0 to day 1",
+        }])
         self.assertEqual(handoff["terminal_state_refs"], ["after", "K-AFTER", "The choice is irreversible."])
 
     def test_missing_character_or_environment_disposition_fails_closed(self):
@@ -300,6 +325,7 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             "HR1":{"main":{"space_transition_map":[]}},
             "HK1":{"main":{"key_scene_functions":[{"id":"HKF-001","unit_id":"HNU-001","character_refs":["CHR-001"],"environment_refs":["ENV-001"],"storyline_refs":["SL-001"],"event_refs":["EV-001"],"pov_constraint":"limited","knowledge_before":["K0"],"knowledge_after":["K1"],"required_state_change":"changed"}],"lld_work_requirements":[{"id":"LWR-001","hkf_ids":["HKF-001"],"merge_split_rationale":"one function","entry_state":"before","exit_state":"after","required_elaboration":["realize"],"lld_freedoms":["wording"],"prohibitions":[],"acceptance_criteria":["done"]}]}},
         }
+        add_handoff_story_and_time_controls(admitted)
         with self.assertRaisesRegex(hp1.AssemblyBlocked,"HP1_CHARACTER_DISPOSITION_GAP"):
             hp1.build_handoff(admitted,{"path":"HP1/package-manifest.json","sha256":"a"*64},[],[],[])
         admitted["HC1"]["main"]["character_participation_register"].append({"character_id":"CHR-002","importance":"context","absence_reason":"named background only"})
@@ -325,6 +351,7 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             "HR1": {"main": {"space_transition_map": []}},
             "HK1": {"main": {"key_scene_functions": [{"id": "HKF-001", "unit_id": "HNU-001", "character_refs": ["CHR-001"], "environment_refs": ["ENV-001"], "storyline_refs": ["SL-001"], "event_refs": ["EV-001"], "pov_constraint": "limited", "knowledge_before": ["K0"], "knowledge_after": ["K1"], "required_state_change": "changed"}], "lld_work_requirements": [{"id": "LWR-001", "hkf_ids": ["HKF-001"], "merge_split_rationale": "one function", "entry_state": "before", "exit_state": "after", "required_elaboration": ["realize"], "lld_freedoms": ["wording"], "prohibitions": [], "acceptance_criteria": ["done"]}]}},
         }
+        add_handoff_story_and_time_controls(admitted)
         handoff, _ = hp1.build_handoff(admitted, {"path": "HP1/package-manifest.json", "sha256": "a" * 64}, [], [], [])
         self.assertEqual([item["character_id"] for item in handoff["character_dispositions"]], ["CHR-001"])
         self.assertEqual(handoff["environment_coverage"], {"required_ids": ["ENV-001"], "placed_ids": ["ENV-001"]})

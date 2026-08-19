@@ -13,8 +13,19 @@ def validate_stage_model(model:dict[str,Any],_contract:Mapping[str,Any])->None:
     unit_ids=[item.get("unit_id") for item in order];positions=[item.get("narrative_position") for item in order]
     if not order or None in unit_ids or len(unit_ids)!=len(set(unit_ids)) or positions!=list(range(len(positions))):raise CandidateError("HR1 narrative order must cover unique units in contiguous order")
     known=set(unit_ids)
-    for item in model["unit_duration_density"]:
+    durations={item.get("unit_id"):item for item in model["unit_duration_density"]}
+    if set(durations)!=known or len(durations)!=len(model["unit_duration_density"]):raise CandidateError("HR1 duration/time bands must cover every narrative unit exactly")
+    span=model["story_time_model"]["elapsed_day_span"]
+    if span["start_day"]>span["end_day"]:raise CandidateError("HR1 elapsed story span is reversed")
+    previous_end=None
+    for unit_id in unit_ids:
+        item=durations[unit_id]
         if item.get("unit_id") not in known or item.get("story_duration_class") not in {"instant","short","medium","long","open"} or item.get("discourse_density") not in {"compressed","balanced","expanded","open"}:raise CandidateError(f"{item['id']}: invalid duration/density contract")
+        start,end=item["elapsed_start_day"],item["elapsed_end_day"]
+        if start>end or start<span["start_day"] or end>span["end_day"]:raise CandidateError(f"{item['id']}: elapsed time band falls outside the story span")
+        if previous_end is not None and start<=previous_end:raise CandidateError(f"{item['id']}: elapsed time bands are not strictly ordered")
+        previous_end=end
+    if durations[unit_ids[0]]["elapsed_start_day"]!=span["start_day"] or durations[unit_ids[-1]]["elapsed_end_day"]!=span["end_day"]:raise CandidateError("HR1 unit time bands do not close the declared story span")
     for transition in model["space_transition_map"]:
         if transition.get("from_unit_id") not in known or transition.get("to_unit_id") not in known or not transition.get("continuity_preconditions"):raise CandidateError(f"{transition['id']}: illegal or unsupported space transition")
     for sync in model["parallel_synchronization"]:

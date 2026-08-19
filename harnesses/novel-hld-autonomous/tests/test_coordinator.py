@@ -139,6 +139,25 @@ class CoordinatorTests(unittest.TestCase):
             self.assertEqual(result.read_bytes(),before)
             self.assertEqual(len(list((workspace/"results").glob("*.json"))),1)
 
+    def test_invalid_revision_target_fails_before_result_is_archived(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,ledger=self.advance_to_ha1(Path(raw));self.nonready_for_active(workspace,ledger,"upstream_defect")
+            result=workspace/"stage-result.json";before=result.read_bytes();existing={path.name:path.read_bytes() for path in (workspace/"results").glob("*.json")}
+            target={"target_kind":"hld_content","affected_ids":["UNKNOWN-001"],"requirements":["repair"],"source_target_refs":["/finding"],"correction_condition":"repaired","defect_origin":"upstream_content","violated_contract":"architecture","automatic":True}
+            with self.assertRaisesRegex(coordinator.CoordinatorFailure,"unregistered stable ID prefix"):
+                coordinator.accept_result(workspace,result,"2026-08-06T00:02:00Z",[target])
+            self.assertEqual(result.read_bytes(),before)
+            self.assertEqual({path.name:path.read_bytes() for path in (workspace/"results").glob("*.json")},existing)
+
+    def test_exact_orphan_result_archive_is_recovered_without_duplicate_bytes(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,ledger=self.advance_to_ha1(Path(raw));self.nonready_for_active(workspace,ledger,"upstream_defect")
+            result=workspace/"stage-result.json";work=json.loads(coordinator.verify_file_ref(ledger["active_work_order_ref"],workspace).read_text());archive=workspace/"results"/f"result-{work['event_sequence']:06d}-HA1.json";shutil.copyfile(result,archive)
+            target={"target_kind":"hld_content","affected_ids":["HST-001"],"requirements":["repair"],"source_target_refs":["/finding"],"correction_condition":"repaired","defect_origin":"upstream_content","violated_contract":"architecture","automatic":True}
+            coordinator.accept_result(workspace,result,"2026-08-06T00:02:00Z",[target])
+            self.assertFalse(result.exists());self.assertTrue(archive.is_file())
+            _,after=coordinator.load_current(workspace);self.assertEqual(after["active_task_kind"],"HA1")
+
     def test_boundary_only_one_active_order_and_monotonic_event_sequence(self):
         with tempfile.TemporaryDirectory() as raw:
             workspace,order=self.initialized(Path(raw));_,first=coordinator.load_current(workspace);self.assertEqual(first["event_sequence"],1)

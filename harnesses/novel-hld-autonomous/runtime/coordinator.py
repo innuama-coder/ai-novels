@@ -208,8 +208,22 @@ def _basic_allowlist(workspace: Path, state_ref: Mapping[str,Any], stage: str, u
 
 def _archive_result(workspace: Path, result_path: Path, sequence: int, task_kind: str) -> tuple[Path,dict[str,Any]]:
     result=read_json(result_path);target=workspace/"results"/f"result-{sequence:06d}-{task_kind.replace('_','-')}.json";target.parent.mkdir(parents=True,exist_ok=True)
-    if target.exists():raise CoordinatorFailure("result archive collision")
+    if target.exists():
+        if target.read_bytes()!=result_path.read_bytes():raise CoordinatorFailure("result archive collision")
+        result_path.unlink();return target,result
     os.replace(result_path,target);return target,result
+
+
+def _preflight_revision_targets(workspace:Path,result_path:Path,work:Mapping[str,Any],result:Mapping[str,Any],targets:list[Mapping[str,Any]],task_kind:str)->None:
+    """Validate a non-ready revision plan before the stage result is archived."""
+    if result["result"] in {"ready","runtime_error"}:return
+    blocker=result.get("blocker_class")
+    if result["result"]=="blocked" and blocker in {"author_required","reality_dependency","author_rejected","exhausted"}:return
+    if not targets:raise CoordinatorFailure("revision/upstream-defect result requires parsed targets")
+    archive=workspace/"results"/f"result-{work['event_sequence']:06d}-{task_kind.replace('_','-')}.json"
+    future_ref={"role":"stage_result","path":archive.relative_to(workspace).as_posix(),"sha256":_hash(result_path)}
+    try:build_revision_plan(hld_run_id=result["hld_run_id"],source_result_ref=future_ref,targets=targets,source_event_ref=result.get("author_event_ref"))
+    except (KeyError,TypeError,ValueError) as error:raise CoordinatorFailure(str(error)) from error
 
 
 def _admit_result(workspace: Path, ledger: Mapping[str,Any], result_path: Path) -> tuple[dict[str,Any],dict[str,Any],Path,Path]:
@@ -357,6 +371,7 @@ def accept_result(workspace:Path,result_path:Path,timestamp:str,revision_targets
     routes_without_targets=result["result"] in {"ready","runtime_error"} or (result["result"]=="blocked" and (blocker=="author_required" or terminal_blocker))
     if task not in TASK_CONTRACT and not routes_without_targets and not targets:
         raise CoordinatorFailure("revision/upstream-defect result requires parsed targets")
+    if task not in TASK_CONTRACT:_preflight_revision_targets(workspace,result_path,work,result,targets,task)
     if task in TASK_CONTRACT:
         composite=read_json(verify_file_ref(ledger["composite_state_ref"],workspace,expected_role="composite_workspace_state"))
         for item in composite["issued_tasks"]:_verified_internal_record(workspace,item,require_ready=False)

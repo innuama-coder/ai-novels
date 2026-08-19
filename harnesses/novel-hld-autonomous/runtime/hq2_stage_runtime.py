@@ -333,13 +333,30 @@ def _verdict(model: Mapping[str, Any], tests: list[Mapping[str, Any]], findings:
         raise SemanticBlocked(mapping[origin], f"HQ2 {model['mode']} found {origin}", [value for item in findings for value in item["affected_ids"]])
 
 
+def _consumer_storyline_ids(handoff: Mapping[str, Any], units: list[Mapping[str, Any]], unit_ids: set[str]) -> set[str]:
+    storyline_dispositions = handoff.get("storyline_dispositions")
+    if not isinstance(storyline_dispositions, list) or not storyline_dispositions:
+        raise CandidateError("consumer handoff lacks the complete HS1 storyline disposition inventory")
+    story_ids = {item["storyline_id"] for item in storyline_dispositions}
+    if len(story_ids) != len(storyline_dispositions):
+        raise CandidateError("consumer handoff storyline disposition IDs are not unique")
+    placed_story_ids = {value for item in units for value in item["storyline_ids"]}
+    expected_placed = {item["storyline_id"] for item in storyline_dispositions if item["disposition"] in {"placed", "background-carried"}}
+    if placed_story_ids != expected_placed:
+        raise CandidateError("consumer handoff work units do not cover every active/background storyline")
+    time_windows = handoff.get("work_unit_time_windows")
+    if not isinstance(time_windows, list) or {item.get("work_unit_id") for item in time_windows} != unit_ids or len(time_windows) != len(unit_ids):
+        raise CandidateError("consumer handoff time windows do not exactly cover LLD work units")
+    return story_ids
+
+
 def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     handoff = read_json(context.roles["lld_handoff"])
     context.catalog.validate(handoff, "lld-handoff.schema.json")
     if handoff["hld_run_id"] != context.work_order["hld_run_id"]:
         raise CandidateError("consumer handoff run identity is stale")
     units = handoff["work_units"]; unit_ids = {item["id"] for item in units}
-    story_ids = {value for item in units for value in item["storyline_ids"]}
+    story_ids = _consumer_storyline_ids(handoff, units, unit_ids)
     character_ids = {value for item in units for value in item["character_ids"]}
     key_ids = unit_ids | {value for item in units for value in item["hkf_ids"]}
     if set(model["reconstruction_results"]["lld_work_order"]) != unit_ids:

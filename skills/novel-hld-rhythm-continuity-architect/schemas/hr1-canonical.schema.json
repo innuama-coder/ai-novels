@@ -144,7 +144,8 @@
         "resolution_ref",
         "epoch",
         "ordering_rule",
-        "precision"
+        "precision",
+        "elapsed_day_span"
       ],
       "properties": {
         "id": {
@@ -174,6 +175,16 @@
         "precision": {
           "type": "string",
           "minLength": 1
+        },
+        "elapsed_day_span": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start_day", "end_day", "label"],
+          "properties": {
+            "start_day": {"type": "integer", "minimum": 0},
+            "end_day": {"type": "integer", "minimum": 0},
+            "label": {"type": "string", "minLength": 1}
+          }
         }
       },
       "allOf": [
@@ -286,7 +297,10 @@
         "unit_id",
         "story_duration_class",
         "discourse_density",
-        "compression_permission"
+        "compression_permission",
+        "elapsed_start_day",
+        "elapsed_end_day",
+        "elapsed_label"
       ],
       "properties": {
         "id": {
@@ -326,6 +340,18 @@
           ]
         },
         "compression_permission": {
+          "type": "string",
+          "minLength": 1
+        },
+        "elapsed_start_day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "elapsed_end_day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "elapsed_label": {
           "type": "string",
           "minLength": 1
         }

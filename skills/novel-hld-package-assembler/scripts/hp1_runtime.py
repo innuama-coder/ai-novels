@@ -518,6 +518,7 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
     lwk_ids: set[str] = set()
     hkfs = {item.get("id"): item for item in hk1.get("key_scene_functions", []) if isinstance(item, dict) and isinstance(item.get("id"), str)}
     chapter_shells = admitted["HA1"]["main"].get("chapter_shells", [])
+    lwk_source_units: dict[str, list[str]] = {}
 
     def unique(values: Iterable[str]) -> list[str]:
         return list(dict.fromkeys(values))
@@ -584,6 +585,65 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
         projected["source_value_sha256"] = value_hash(lwr)
         lwks.append(projected)
         lwr_map[source_id] = lwr
+        functions = [hkfs[identifier] for identifier in lwr["hkf_ids"]]
+        if all(isinstance(item.get("unit_id"), str) for item in functions):
+            lwk_source_units[lwk_id] = unique(str(item["unit_id"]) for item in functions)
+        else:
+            shell_ids = set(projected["chapter_shell_ids"])
+            lwk_source_units[lwk_id] = unique(
+                str(item["parent_unit_id"]) for item in chapter_shells
+                if item.get("id") in shell_ids and isinstance(item.get("parent_unit_id"), str)
+            )
+        if not lwk_source_units[lwk_id]:
+            raise AssemblyBlocked("HP1_LWR_UNIT_LINEAGE_GAP", lwk_id, list(projected["hkf_ids"]))
+    hs1 = admitted["HS1"]["main"]
+    register_ids = [item.get("source_storyline_id") for item in hs1.get("semantic_storyline_register", [])]
+    disposition_items = hs1.get("activation_disposition", [])
+    dispositions_by_id = {item.get("source_storyline_id"): item.get("disposition") for item in disposition_items}
+    if None in register_ids or len(register_ids) != len(set(register_ids)) or set(dispositions_by_id) != set(register_ids):
+        raise AssemblyBlocked("HP1_STORYLINE_REGISTER_INVALID", "HS1 storyline register/disposition mismatch")
+    segments_by_id = {item.get("source_storyline_id"): item for item in hs1.get("storyline_segments", [])}
+    if None in segments_by_id or len(segments_by_id) != len(hs1.get("storyline_segments", [])):
+        raise AssemblyBlocked("HP1_STORYLINE_SEGMENT_INVALID", "HS1 storyline segment identity mismatch")
+    expected_by_lwk = {item["id"]: set() for item in lwks}
+    storyline_dispositions = []
+    for storyline_id in register_ids:
+        disposition = dispositions_by_id[storyline_id]
+        segment = segments_by_id.get(storyline_id)
+        if disposition in {"placed", "background-carried"} and not segment:
+            raise AssemblyBlocked("HP1_STORYLINE_PLACEMENT_GAP", storyline_id, [storyline_id])
+        if disposition in {"optional-not-activated", "preserved-open"} and segment:
+            raise AssemblyBlocked("HP1_STORYLINE_DISPOSITION_CONFLICT", storyline_id, [storyline_id])
+        source_units = set(segment.get("unit_ids", [])) if segment else set()
+        work_unit_ids = []
+        for lwk in lwks:
+            if source_units.intersection(lwk_source_units[lwk["id"]]):
+                work_unit_ids.append(lwk["id"])
+                expected_by_lwk[lwk["id"]].add(storyline_id)
+        if disposition in {"placed", "background-carried"} and not work_unit_ids:
+            raise AssemblyBlocked("HP1_STORYLINE_WORK_UNIT_GAP", storyline_id, [storyline_id])
+        storyline_dispositions.append({
+            "storyline_id": storyline_id,
+            "disposition": disposition,
+            "work_unit_ids": work_unit_ids,
+            "absence_reason": None if work_unit_ids else "该故事线保持未激活或开放，不得由详细设计擅自兑现。",
+        })
+    for lwk in lwks:
+        if set(lwk["storyline_ids"]) != expected_by_lwk[lwk["id"]]:
+            raise AssemblyBlocked("HP1_STORYLINE_HKF_DRIFT", lwk["id"], sorted(set(lwk["storyline_ids"]) ^ expected_by_lwk[lwk["id"]]))
+    duration_by_unit = {item.get("unit_id"): item for item in admitted["HR1"]["main"].get("unit_duration_density", [])}
+    work_unit_time_windows = []
+    for lwk in lwks:
+        source_units = lwk_source_units[lwk["id"]]
+        if any(unit_id not in duration_by_unit for unit_id in source_units):
+            raise AssemblyBlocked("HP1_TIME_WINDOW_GAP", lwk["id"], source_units)
+        windows = [duration_by_unit[unit_id] for unit_id in source_units]
+        work_unit_time_windows.append({
+            "work_unit_id": lwk["id"], "source_unit_ids": source_units,
+            "elapsed_start_day": min(item["elapsed_start_day"] for item in windows),
+            "elapsed_end_day": max(item["elapsed_end_day"] for item in windows),
+            "label": "；".join(unique(str(item["elapsed_label"]) for item in windows)),
+        })
     controls=admitted["HB0"]["main"].get("control_registry",[])
     control_ids={item.get("source_id") for item in controls if isinstance(item,dict)}
 
@@ -693,7 +753,8 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
         "schema_version": "1.0", "skill": SKILL, "stage": STAGE,
         "hld_run_id": admitted["HB0"]["completion"]["hld_run_id"], "status": "ready",
         "next_stage": "novel-lld", "current_hld_package": dict(package_ref),
-        "work_units": lwks, "character_dispositions":dispositions,
+        "work_units": lwks, "storyline_dispositions":storyline_dispositions,
+        "work_unit_time_windows":work_unit_time_windows, "character_dispositions":dispositions,
         "environment_coverage":{"required_ids":sorted(expected_environments),"placed_ids":sorted(placed_environments)},
         "world_setting":world,"space_transition_map":space_transitions,
         "terminal_state_refs":terminal_state_refs,

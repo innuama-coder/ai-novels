@@ -14,9 +14,9 @@ BASE.element=traced_element
 def stage_model(stage,input_gate_ref,actual_reads):
     model=BASE.common_model(stage,input_gate_ref,actual_reads);e=BASE.element
     model.update({
-        "story_time_model":e("HTM-STORY-001",epoch="relative-day-0",ordering_rule="causal before result",precision="macro"),
+        "story_time_model":e("HTM-STORY-001",epoch="relative-day-0",ordering_rule="causal before result",precision="macro",elapsed_day_span={"start_day":0,"end_day":1,"label":"first two days"}),
         "narrative_order_map":[e("HTM-ORDER-001",unit_id="HNU-001",narrative_position=0,story_time_anchor="day-0",order_mode="chronological")],
-        "unit_duration_density":[e("HTM-DURATION-001",unit_id="HNU-001",story_duration_class="short",discourse_density="balanced",compression_permission="bounded")],
+        "unit_duration_density":[e("HTM-DURATION-001",unit_id="HNU-001",story_duration_class="short",discourse_density="balanced",compression_permission="bounded",elapsed_start_day=0,elapsed_end_day=1,elapsed_label="day 0 to day 1")],
         "space_transition_map":[e("HTM-SPACE-001",from_unit_id="HNU-001",to_unit_id="HNU-001",from_environment_id="ENV-001",to_environment_id="ENV-001",continuity_preconditions=["same location"] )],
         "parallel_synchronization":[],
         "pacing_curve":[e("HPC-001",unit_id="HNU-001",pace="measured",pressure_function="commit conflict")],

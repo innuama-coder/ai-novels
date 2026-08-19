@@ -73,3 +73,15 @@ The harness is the only consumer allowed to advance or return the run.
 ## Closed semantic bindings
 
 `canonical.json` is validated by the local `ha1-canonical.schema.json` merged into the public SchemaCatalog before any HA1 semantic callback. Every canonical element has `resolution_ref`: mandatory, freedom and open projections use null; only an externally resolved `must_ask` may use a non-null allowlisted reference, and that reference must equal its HDD resolution. Authority partitions exactly reconstruct HB0. Each derivation claim points to its canonical value with an RFC 6901 locator and matching canonical SHA-256. Candidate IDs, decision bindings and projection IDs must agree; one candidate is legal only with non-empty unique-solution exclusion evidence. Session, all five evidence files, execution, validation and every non-ready artifact also use closed schemas.
+
+Every narrative unit also carries a closed causal contract: prior-unit dependencies,
+reality-action readiness before and after the unit, whether new information is still
+required for that action, and whether a personal choice is independent of it. Once
+the reality action is `execution_ready`, a later unit cannot claim that another
+piece of information is required to make the same action executable.
+
+Threat architecture names the physical target city, the distinct political-pressure
+city, the natural hazard, the physical actuators, and the scientific limit. Both city
+references must resolve in the city registry. A political event cannot substitute for
+the physical target, and the mechanism must not imply that technology creates or
+steers regional weather when the design only exploits a natural hazard.
