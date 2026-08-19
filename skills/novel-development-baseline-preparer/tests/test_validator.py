@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -85,6 +86,24 @@ def _review(run_id: str, refs: list[dict], input_gate: dict, handoff_evidence: d
             "result": "pass",
         }
 
+    required_quality_objects = [
+        {
+            "stage": "S1",
+            "id": "SL-001",
+            "classification": "s1_obligation",
+            "value_sha256": runtime.canonical_sha256(
+                {"id": "SL-001", "definition": "storyline"}
+            ),
+        },
+        {
+            "stage": "T1",
+            "id": "EV-001",
+            "classification": "t1_realization",
+            "value_sha256": runtime.canonical_sha256(
+                {"id": "EV-001", "definition": "event"}
+            ),
+        },
+    ]
     return {
         "schema_version": "2.0",
         "skill": "novel-conception-reviewer",
@@ -111,6 +130,16 @@ def _review(run_id: str, refs: list[dict], input_gate: dict, handoff_evidence: d
             "evidence_ids": ["INT-001"],
             "conclusion": "usable",
             "result": "pass",
+        },
+        "quality_coverage": {
+            "coverage_basis": "all-id-bearing-objects-in-S1-and-T1-canonical-models",
+            "required_objects": required_quality_objects,
+            "covered_objects": [
+                {**required_quality_objects[0], "handoff_check_ids": ["CHK-DOMAIN-S1"]},
+                {**required_quality_objects[1], "handoff_check_ids": ["CHK-DOMAIN-T1"]},
+            ],
+            "unresolved_blocking_quality_record_ids": [],
+            "result": "complete",
         },
         "handoff_test_evidence": handoff_evidence,
         "task_isolation": {
@@ -264,6 +293,31 @@ def _fixture(base: Path) -> Path:
             "status": "ready",
             field: values,
         }
+        if stage == "E1":
+            operational_slot = {
+                "id": "AAB-FIXTURE-OPS",
+                "actor_slot_id": "SLOT-FIXTURE-OPS",
+            }
+            document["actor_authority_bindings"] = [operational_slot]
+            cross_definitions.append({
+                "id": "SLOT-FIXTURE-OPS",
+                "json_pointer": "/actor_authority_bindings/0",
+                "kind": "e1_operational_slot",
+                "stage": "E1",
+                "value_sha256": runtime.canonical_sha256({
+                    "slot_id": "SLOT-FIXTURE-OPS",
+                    "kind": "e1_operational_slot",
+                }),
+            })
+        if stage == "T1":
+            document["planned_event_registry"] = copy.deepcopy(values)
+            cross_definitions.append({
+                "id": "EV-001",
+                "json_pointer": "/planned_event_registry/0",
+                "kind": "planned_event_registry",
+                "stage": "T1",
+                "value_sha256": runtime.canonical_sha256(values[0]),
+            })
         model_refs[stage] = _write_json(p1_root, f"canonical-models/{filename}", document)
         for index, value in enumerate(values):
             cross_definitions.append({
@@ -295,6 +349,14 @@ def _fixture(base: Path) -> Path:
         "authoritative_design_artifacts": [item["materialized"] for item in design_index_items],
         "canonical_models": model_refs,
         "review": p1_review_ref,
+        "quality_admission": {
+            "review": p1_review_ref,
+            "coverage_basis": "all-id-bearing-objects-in-S1-and-T1-canonical-models",
+            "required_object_count": 2,
+            "covered_object_count": 2,
+            "unresolved_blocking_quality_record_ids": [],
+            "result": "admitted",
+        },
         "cross_model_index": cross_index,
         "authority_partition": authority_partition,
         "open_items": [
@@ -573,6 +635,39 @@ def _fixture(base: Path) -> Path:
 
 
 class BaselineRuntimeTests(unittest.TestCase):
+    def test_t1_projection_pair_selects_only_matching_major_event(self) -> None:
+        major = {
+            "stage": "T1",
+            "kind": "major_events",
+            "pointer": "/major_events/4",
+        }
+        planned = {
+            "stage": "T1",
+            "kind": "planned_event_registry",
+            "pointer": "/planned_event_registry/4",
+        }
+        self.assertIs(major, runtime._control_record([planned, major]))
+        self.assertIsNone(runtime._control_record([planned, major, dict(major)]))
+        self.assertIsNone(
+            runtime._control_record([planned, {**major, "pointer": "/major_events/5"}])
+        )
+        self.assertIsNone(
+            runtime._control_record([planned, {**major, "stage": "S1"}])
+        )
+
+    @unittest.skipUnless(os.name == "nt", "Windows extended-path behavior")
+    def test_long_source_reference_is_supported(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            relative = "/".join(["nested-segment-" + ("x" * 32)] * 7 + ["artifact.json"])
+            target = runtime._physical_path(root).joinpath(*relative.split("/"))
+            target.parent.mkdir(parents=True)
+            target.write_text('{"ready":true}', encoding="utf-8", newline="")
+            resolved = runtime.resolve_relative(root, relative)
+            self.assertEqual(target.read_bytes(), resolved.read_bytes())
+            self.assertEqual(relative, runtime.local_ref(resolved, root=root)["path"])
+            shutil.rmtree(runtime._physical_path(root))
+
     def test_invalid_request_is_a_runtime_failure(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             request_path = Path(temporary) / "preparation-request.json"

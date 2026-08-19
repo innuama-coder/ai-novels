@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import os
 import re
 import shutil
 import tempfile
@@ -304,6 +305,12 @@ def _resolve_from(base: Path, value: str) -> Path:
     return (path if path.is_absolute() else base / path).resolve()
 
 
+def _physical_path(path: Path) -> Path:
+    if os.name == "nt" and not str(path).startswith("\\\\?\\"):
+        return Path("\\\\?\\" + str(path.absolute()))
+    return path
+
+
 def _safe_relative_path(value: Any) -> str:
     if not isinstance(value, str) or not value or "\\" in value:
         raise ValueError("not a safe relative POSIX path")
@@ -315,9 +322,10 @@ def _safe_relative_path(value: Any) -> str:
 
 def resolve_relative(root: Path, relative: Any) -> Path:
     safe = _safe_relative_path(relative)
-    candidate = root.joinpath(*PurePosixPath(safe).parts)
+    physical_root = _physical_path(root)
+    candidate = physical_root.joinpath(*PurePosixPath(safe).parts)
     resolved = candidate.resolve(strict=True)
-    resolved.relative_to(root.resolve())
+    resolved.relative_to(physical_root.resolve(strict=True))
     if not resolved.is_file():
         raise ValueError("reference is not a file")
     return resolved
@@ -325,8 +333,10 @@ def resolve_relative(root: Path, relative: Any) -> Path:
 
 def candidate_relative(root: Path, relative: Any) -> Path:
     safe = _safe_relative_path(relative)
-    candidate = root.joinpath(*PurePosixPath(safe).parts).resolve()
-    candidate.relative_to(root.resolve())
+    physical_root = _physical_path(root)
+    resolved_root = physical_root.resolve(strict=False)
+    candidate = resolved_root.joinpath(*PurePosixPath(safe).parts).resolve(strict=False)
+    candidate.relative_to(resolved_root)
     return candidate
 
 
@@ -346,15 +356,17 @@ def verify_ref(ref: Any, root: Path, label: str, owner: str) -> Path:
 
 
 def root_ref(path: Path, *, root: Path, root_name: str) -> dict[str, str]:
-    resolved = path.resolve(strict=True)
-    relative = resolved.relative_to(root.resolve()).as_posix()
+    physical_root = _physical_path(root).resolve(strict=True)
+    resolved = _physical_path(path).resolve(strict=True)
+    relative = resolved.relative_to(physical_root).as_posix()
     return {"root": root_name, "path": relative, "sha256": sha256_file(resolved)}
 
 
 def local_ref(path: Path, *, root: Path) -> dict[str, str]:
-    resolved = path.resolve(strict=True)
+    physical_root = _physical_path(root).resolve(strict=True)
+    resolved = _physical_path(path).resolve(strict=True)
     return {
-        "path": resolved.relative_to(root.resolve()).as_posix(),
+        "path": resolved.relative_to(physical_root).as_posix(),
         "sha256": sha256_file(resolved),
     }
 
@@ -376,7 +388,7 @@ def verify_manifest(manifest: Mapping[str, Any], root: Path, owner: str) -> None
     paths: set[str] = set()
     for index, ref in enumerate(files):
         path = verify_ref(ref, root, f"manifest.files[{index}]", owner)
-        key = (path.relative_to(root.resolve()).as_posix(), ref["sha256"])
+        key = (path.relative_to(_physical_path(root).resolve(strict=True)).as_posix(), ref["sha256"])
         if key[0] in paths:
             block("BASE_MANIFEST_DUPLICATE_PATH", key[0], owner, "Regenerate a unique manifest file inventory.")
         paths.add(key[0])
@@ -975,18 +987,50 @@ def _canonical_records(source: AdmittedSource) -> dict[str, list[dict[str, Any]]
             value = json_pointer(source.source_documents[stage], definition["json_pointer"])
         except (KeyError, IndexError, ValueError, TypeError) as error:
             block("BASE_CROSS_INDEX_POINTER_INVALID", f"{definition['id']}:{error}", stage, "Regenerate the canonical model and cross-model index together.", run_id=source.run_id)
-        if canonical_sha256(value) != definition["value_sha256"]:
+        indexed_value = value
+        if definition["kind"] == "e1_operational_slot":
+            slot_id = definition["id"]
+            bound_slot = value.get("actor_slot_id") if isinstance(value, Mapping) else value
+            if bound_slot != slot_id:
+                block("BASE_CROSS_INDEX_VALUE_DRIFT", definition["id"], stage, "Regenerate the canonical model and cross-model index together.", run_id=source.run_id)
+            indexed_value = {"slot_id": slot_id, "kind": "e1_operational_slot"}
+        if canonical_sha256(indexed_value) != definition["value_sha256"]:
             block("BASE_CROSS_INDEX_VALUE_DRIFT", definition["id"], stage, "Regenerate the canonical model and cross-model index together.", run_id=source.run_id)
         records.setdefault(definition["id"], []).append({
             "id": definition["id"],
             "stage": stage,
             "kind": definition["kind"],
             "pointer": definition["json_pointer"],
-            "value": value,
+            "value": indexed_value,
             "value_sha256": definition["value_sha256"],
             "path": source.source_paths[stage],
         })
     return records
+
+
+def _control_record(candidates: list[dict[str, Any]]) -> dict[str, Any] | None:
+    if len(candidates) == 1:
+        return candidates[0]
+    if len(candidates) != 2:
+        return None
+    by_kind = {item["kind"]: item for item in candidates}
+    if set(by_kind) != {"major_events", "planned_event_registry"}:
+        return None
+    major = by_kind["major_events"]
+    planned = by_kind["planned_event_registry"]
+    if major["stage"] != "T1" or planned["stage"] != "T1":
+        return None
+    major_match = re.fullmatch(r"/major_events/([0-9]+)", major["pointer"])
+    planned_match = re.fullmatch(
+        r"/planned_event_registry/([0-9]+)", planned["pointer"]
+    )
+    if (
+        major_match is None
+        or planned_match is None
+        or major_match.group(1) != planned_match.group(1)
+    ):
+        return None
+    return major
 
 
 def build_projection(source: AdmittedSource) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]]:
@@ -1027,7 +1071,7 @@ def build_projection(source: AdmittedSource) -> tuple[list[dict[str, Any]], dict
             record = author_records.get(source_id)
         else:
             candidates = canonical_records.get(source_id, [])
-            record = candidates[0] if len(candidates) == 1 else None
+            record = _control_record(candidates)
         if authority_class is None or record is None:
             block("BASE_CONTROL_DEFINITION_UNRESOLVED", source_id, "P1", "Repair the authority partition and cross-model definition ownership.", run_id=source.run_id)
         if record.get("authority_class", authority_class) != authority_class:
