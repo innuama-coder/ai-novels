@@ -17,7 +17,7 @@
 
 8. Write `title_and_decision_scope` as orientation, not story content.
 9. Populate all ten HLD domains with conclusion-first HRE elements. Create exactly five macro world-environment cards covering city/region, local people and daily life, social order and public atmosphere, technology and infrastructure, and climate/physical environment. Then give every sealed conception character and every concrete place its own structured definition card. One element should answer one author decision question.
-10. Preserve modal strength and open/closed status. Combine only compatible controls and retain all bindings.
+10. Preserve modal strength and open/closed status. Combine only compatible controls and retain all bindings. A definition card may cite a later canonical HLD refinement only after its baseline pair and only when that model explicitly derives from the same character or place source.
 11. Put open items, constraints, prohibited interpretations, and LLD freedoms in the final boundary section.
 
 ## D. Design visual models

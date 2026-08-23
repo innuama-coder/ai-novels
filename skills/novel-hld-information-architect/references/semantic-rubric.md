@@ -8,7 +8,7 @@
 
 ## Pass anchors
 
-1. **POV legality:** each assignment has a valid perceiver and cannot expose prohibited information.
+1. **POV legality:** every unit and chapter assignment has a valid, available perceiver; every chapter exact-binds an HC1 agency contract and acquisition path, and cannot expose events after that character loses consciousness or otherwise lacks access.
 2. **Knowledge provenance:** every knowledge-state transition names a pre-transition state, source/access path, and post-transition state.
 3. **Reader contract:** reader-ahead/behind relations are intentional and traceable; no narrator cheat is required.
 4. **Suspense closure:** mandatory setups, probes, reveals, and payoffs are complete or explicitly authorized open.

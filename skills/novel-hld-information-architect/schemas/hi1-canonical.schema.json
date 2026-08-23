@@ -278,6 +278,54 @@
         }
       ]
     },
+    "chapterPovAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_refs",
+        "source_authority_refs",
+        "ownership_class",
+        "resolution_ref",
+        "chapter_id",
+        "parent_unit_id",
+        "hc1_agency_contract_id",
+        "pov_character_id",
+        "focalization_mode",
+        "knowledge_acquisition_modes",
+        "perception_limits"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^HPV-[A-Za-z0-9._-]+$"},
+        "source_refs": {"$ref": "#/$defs/sourceRefs"},
+        "source_authority_refs": {"$ref": "#/$defs/authorityRefs"},
+        "ownership_class": {"$ref": "#/$defs/ownership"},
+        "resolution_ref": {"$ref": "#/$defs/resolution"},
+        "chapter_id": {"type": "string", "pattern": "^HCH-"},
+        "parent_unit_id": {"type": "string", "minLength": 1},
+        "hc1_agency_contract_id": {"type": "string", "pattern": "^HAS-"},
+        "pov_character_id": {"$ref": "common.schema.json#/$defs/stableId"},
+        "focalization_mode": {"type": "string", "minLength": 1},
+        "knowledge_acquisition_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["perceived", "told", "inferred", "remembered", "documented", "system_output"]}
+        },
+        "perception_limits": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"ownership_class": {"enum": ["hld_owned", "preserved_open", "lld_freedom"]}}},
+          "then": {"properties": {"resolution_ref": {"type": "null"}}}
+        }
+      ]
+    },
     "informationNode": {
       "type": "object",
       "additionalProperties": false,
@@ -808,6 +856,7 @@
     "downstream_contract",
     "pov_policy",
     "unit_pov_assignments",
+    "chapter_pov_assignments",
     "knowledge_states",
     "reader_information_states",
     "suspense_chains",
@@ -948,6 +997,13 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/povAssignment"
+      },
+      "minItems": 1
+    },
+    "chapter_pov_assignments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chapterPovAssignment"
       },
       "minItems": 1
     },

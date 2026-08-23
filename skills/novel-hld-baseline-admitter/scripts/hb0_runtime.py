@@ -30,7 +30,7 @@ from runtime.schema_catalog import SchemaCatalog  # noqa: E402
 from runtime.package_envelope import validate_completion_bindings  # noqa: E402
 
 STAGES = ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1", "HP1", "HQ2", "HH1", "HF1")
-DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1")
+DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1")
 NON_QUALITY_DOMAINS = ("intent", "storylines", "world", "environments", "events", "characters", "narrative", "cross-domain")
 ALL_DOMAINS = NON_QUALITY_DOMAINS + ("quality",)
 SOURCE_ACCESS = {

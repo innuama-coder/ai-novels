@@ -561,7 +561,7 @@ def build_plan(
         "CHR-SHEN-YU": "访谈执行者，最终负责告别。",
         "CHR-GUHENG": "牺牲的情报员，不是复生。",
         "CHR-ZHOULAN": "儿时守护者，承担亲属代价。",
-        "CHR-CHENG-YUAN": "在世妻子，守住同意边界。",
+        "CHR-CHENG-YUAN": "顾衡生前的妻子；顾衡去世后，她守住记忆使用的同意边界。",
         "CHR-XU-MANQING": "沈逾导师，承担推荐责任。",
         "CHR-QIN-ZHENG": "顾衡领导，承担授权责任。",
         "CHR-LIANG-CE": "顾衡接头人，负责现实核验。",

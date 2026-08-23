@@ -29,8 +29,8 @@
         "personality_and_motivation": {"type": "string", "minLength": 1},
         "capabilities_and_limits": {"type": "string", "minLength": 1},
         "relationships_and_change": {"type": "string", "minLength": 1},
-        "source_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
-        "locators": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
         "visual_role": {"type": "string", "minLength": 1},
         "review_question": {"type": "string", "minLength": 1}
       }
@@ -47,8 +47,8 @@
         "physical_character": {"type": "string", "minLength": 1},
         "access_and_limits": {"type": "string", "minLength": 1},
         "dramatic_use": {"type": "string", "minLength": 1},
-        "source_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
-        "locators": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
+        "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}},
         "visual_role": {"type": "string", "minLength": 1},
         "review_question": {"type": "string", "minLength": 1}
       }
@@ -192,7 +192,7 @@
     }
   },
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "skill", "stage", "hld_run_id", "revision", "status", "hp1_content_binding", "hq2_gate_binding", "title_and_decision_scope", "overall_narrative_architecture", "world_environment_definitions", "character_definitions", "environment_definitions", "storyline_choreography", "character_arc_placement", "pov_information_suspense", "time_space_pacing_tension", "key_scene_functions", "open_items_constraints_and_lld_boundary", "visual_models", "source_bindings", "review_budget"],
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "revision", "status", "hp1_content_binding", "hq2_gate_binding", "title_and_decision_scope", "overall_narrative_architecture", "world_environment_definitions", "character_definitions", "environment_definitions", "storyline_choreography", "character_arc_placement", "pov_information_suspense", "time_space_pacing_tension", "key_scene_functions", "chapter_definitions", "open_items_constraints_and_lld_boundary", "visual_models", "source_bindings", "review_budget"],
   "properties": {
     "schema_version": {"const": "1.0"}, "skill": {"const": "novel-hld-review-report-assembler"}, "stage": {"const": "HH1"},
     "hld_run_id": {"type": "string", "minLength": 1}, "revision": {"type": "integer", "minimum": 0}, "status": {"const": "ready"},
@@ -208,6 +208,7 @@
     "pov_information_suspense": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
     "time_space_pacing_tension": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
     "key_scene_functions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
+    "chapter_definitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
     "open_items_constraints_and_lld_boundary": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hre"}},
     "visual_models": {"type": "array", "items": {"$ref": "#/$defs/hvg"}},
     "source_bindings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["report_element_id", "source_id", "locator"], "properties": {"report_element_id": {"type": "string", "pattern": "^H(RE|VG)-[A-Za-z0-9._-]+$"}, "source_id": {"$ref": "#/$defs/sourceId"}, "locator": {"$ref": "#/$defs/locator"}}}},

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "authority-revision-bootstrap-completion.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "source_kind", "state", "finalization", "validation", "status"],
+  "properties": {"schema_version": {"const": "1.0"}, "kind": {"const": "authority-revision-bootstrap-completion"}, "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"}, "run_id": {"type": "string", "minLength": 1}, "source_kind": {"const": "authority_revision"}, "state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "validation": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "status": {"const": "ready"}}
+}

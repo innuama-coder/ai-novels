@@ -1,6 +1,6 @@
 ---
 name: novel-hld-semantic-reviewer
-description: 独立审查小说 HLD 的完整性、一致性、因果与现实可行性。仅在 novel-hld-autonomous 的 HQ1 阶段使用；读取 HB0 与 HA1–HK1 已验收公共包，输出证据绑定的审查结论，不修改上游 HLD，也不决定返工路由。
+description: 独立审查小说 HLD 的完整性、一致性、因果与现实可行性。仅在 novel-hld-autonomous 的 HQ1 阶段使用；读取 HB0、HA1–HK1 与 HD1 已验收公共包，输出证据绑定的审查结论，不修改上游 HLD，也不决定返工路由。
 ---
 
 # 小说 HLD 独立语义审查
@@ -16,7 +16,7 @@ description: 独立审查小说 HLD 的完整性、一致性、因果与现实�
 
 ## 唯一职责
 
-独立重读 HB0 与 HA1–HK1 的正式交付，判断这套 HLD 是否完整、自洽、可信、可开发，并形成 `hld-semantic-review.json`。本技能验证设计，不替生产技能重写设计。
+独立重读 HB0、HA1–HK1 与 HD1 的正式交付，判断这套 HLD 是否完整、自洽、可信、可开发，并形成 `hld-semantic-review.json`。其中必须逐章检查 HD1 是否真正给出目标、阻力、选择、代价、状态变化与 LLD 交接，而不是把章节标题换一种说法。本技能验证设计，不替生产技能重写设计。
 
 ## 硬边界
 

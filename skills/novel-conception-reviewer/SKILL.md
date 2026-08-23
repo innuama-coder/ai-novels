@@ -53,6 +53,13 @@ P1 必须由 Agent 显式选择 B0/S1–C1 审查对象并提交当前对象指�
    T1 `2.2+` 中 planned/canonical 双写不是两个审查对象。运行时只在事件、命题、
    因果边三组正式投影逐字段闭合时，使用 canonical 完整对象及 canonical pointer
    形成唯一指纹；缺项、漂移或第三来源必须在 evidence 写入前失败。
+
+   T1 `2.5` 的生命周期不是章节文字判断。`review-plan` 必须列出
+   `typed_lifecycle_causal_closure`，T1 域审查必须绑定
+   `T1-2.5-typed-lifecycle-causal-closure`；跨域审查的同名 check 必须同时绑定全部
+   `LFS-*`、`LFC-*` 与它们引用的 S1/E1 来源对象。handoff 的
+   `chronology_reconstruction` 和 `causal_precondition_trace` 也必须各自完整覆盖这些
+   对象，分别证明世界发生顺序与正式因果／权限链可以由下游独立重建。
 3. 切换到新的 `handoff-evaluator` 任务调用 `start_handoff_review`。该入口只投影
    B0/S1/W1/E1/T1/C1 各自的 canonical 与 manifest，共 12 个文件。完成独立测试后
    handoff-evaluator 必须为九项开发可用性任务逐项提交同结构 assertion binding，

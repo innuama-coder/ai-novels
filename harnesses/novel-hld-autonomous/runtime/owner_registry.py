@@ -21,7 +21,7 @@ from .schema_catalog import SchemaCatalog
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
 REGISTRY_PATH = ROOT / "references" / "public-runtime-registry.json"
-TOKENS=frozenset({"HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","consumer_test","fidelity_test","HH1-A","HH1-B","HH1-C","publisher","HH1-publisher","HF1"})
+TOKENS=frozenset({"HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","consumer_test","fidelity_test","HH1-A","HH1-B","HH1-C","publisher","HH1-publisher","HF1"})
 
 
 class RuntimeRegistryError(ContractError):

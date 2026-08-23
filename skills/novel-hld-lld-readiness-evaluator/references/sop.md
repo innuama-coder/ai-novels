@@ -7,9 +7,10 @@
 3. 只读取 handoff、handoff schema 和两个身份元数据；完整记录 actual reads。
 4. 从 handoff 重建 LLD 工作顺序、依赖、进入/退出状态和启动条件。
 5. 对所有 mandatory storyline、核心角色变化、关键功能/结果做全量追踪。
-6. 对每个 LWK 核对 required elaboration、LLD freedom、prohibition、POV/知识边界和 acceptance criteria。
-7. 把会迫使 LLD 猜测主体信息的问题写入 `missing_guesswork`；其他实质问题写入 `findings`。
-8. 完成六维对象证据、verdict/origin，交由公共运行时验证并原子发布内部包。
+6. 对每个 HDF 逐章定义做消费测试，确认详细设计不需要猜测本章目标、阻力、选择、代价、章末变化与下一章连接。
+7. 对每个 LWK 核对 required elaboration、LLD freedom、prohibition、POV/知识边界和 acceptance criteria。
+8. 把会迫使 LLD 猜测主体信息的问题写入 `missing_guesswork`；其他实质问题写入 `findings`。
+9. 完成六维对象证据、verdict/origin，交由公共运行时验证并原子发布内部包。
 
 ## B. fidelity_test
 

@@ -20,6 +20,12 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Sequence
 
 
+canonical_runtime = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.canonical"
+)
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 _HERE = Path(__file__).resolve()
 _SKILL = _HERE.parents[1]
 _REPO = _HERE.parents[3]
@@ -101,6 +107,8 @@ QUALITY_TRACE_SCOPES = HANDOFF_TASKS[-4:]
 QUALITY_COVERAGE_BASIS = (
     "all-id-bearing-objects-in-S1-and-T1-canonical-models"
 )
+T1_LIFECYCLE_CLOSURE_SCOPE = "typed_lifecycle_causal_closure"
+T1_LIFECYCLE_REVIEW_CONTRACT = "T1-2.5-typed-lifecycle-causal-closure"
 
 
 class Q1Error(ValueError):
@@ -731,6 +739,9 @@ def _validate_handoff_payload(
         object_index=object_index,
         phase="handoff",
     )
+    _validate_t1_lifecycle_handoff_coverage(
+        payload, object_index=object_index
+    )
     _validate_quality_trace_coverage(payload, object_index)
 
 
@@ -746,6 +757,8 @@ _OWNER_PREFIXES = {
     "ZONE-": "E1",
     "EVD-": "T1",
     "EV-": "T1",
+    "LFS-": "T1",
+    "LFC-": "T1",
     "CHD-": "C1",
     "SLOT-": "C1",
     "CHR-": "C1",
@@ -802,6 +815,8 @@ _STAGE_KIND_PREFIXES = {
     "T1": {
         "EVD-": "event-demand",
         "EV-": "event",
+        "LFS-": "lifecycle-scope",
+        "LFC-": "lifecycle-contract",
     },
     "C1": {
         "CHD-": "character-demand",
@@ -846,6 +861,10 @@ _T1_EVENT_PROJECTION_MAP = {
     "next_pressure": "next_pressure",
     "source_ids": "source_ids",
     "atomicity_reason": "atomicity_reason",
+}
+_T1_EVENT_PROJECTION_MAP_25 = {
+    "consumes_token_instance_ids": "consumes_token_instance_ids",
+    "lifecycle_effects": "lifecycle_effects",
 }
 _T1_PROPOSITION_PROJECTION_FIELDS = (
     "id",
@@ -990,8 +1009,13 @@ def _validate_t1_event_projection(
     identifier: str,
     planned: Mapping[str, Any],
     canonical: Mapping[str, Any],
+    *,
+    schema_version: Any,
 ) -> None:
-    for source_field, target_field in _T1_EVENT_PROJECTION_MAP.items():
+    projection_map = dict(_T1_EVENT_PROJECTION_MAP)
+    if schema_version == "2.5":
+        projection_map.update(_T1_EVENT_PROJECTION_MAP_25)
+    for source_field, target_field in projection_map.items():
         if source_field not in planned or planned[source_field] != canonical.get(target_field):
             _fail(
                 "Q1_STORY_OBJECT_PROJECTION_INVALID",
@@ -1028,7 +1052,12 @@ def _index_t1_projection_pairs(
             source = planned[identifier]
             target = canonical[identifier]
             if pair_kind == "event":
-                _validate_t1_event_projection(identifier, source, target)
+                _validate_t1_event_projection(
+                    identifier,
+                    source,
+                    target,
+                    schema_version=model.get("schema_version"),
+                )
             elif pair_kind == "proposition":
                 try:
                     source_projection = {
@@ -1070,7 +1099,7 @@ def _index_stage_model(
 ) -> None:
     excluded: set[str] = set()
     protected: set[tuple[str, str]] = set()
-    if stage == "T1" and model.get("schema_version") in {"2.2", "2.3", "2.4"}:
+    if stage == "T1" and model.get("schema_version") in {"2.2", "2.3", "2.4", "2.5"}:
         protected = _index_t1_projection_pairs(model, output)
         excluded = {
             field
@@ -1147,6 +1176,110 @@ def _quality_targets(
             item["id"],
         ),
     )
+
+
+def _t1_lifecycle_review_keys(
+    object_index: Mapping[tuple[str, str], Mapping[str, Any]],
+) -> set[tuple[str, str]]:
+    lifecycle_keys = {
+        key
+        for key, record in object_index.items()
+        if key[0] == "T1"
+        and record.get("kind") in {"lifecycle-scope", "lifecycle-contract"}
+    }
+    source_ids: set[str] = set()
+    for key in lifecycle_keys:
+        value = object_index[key]["value"]
+        source_ids.update(value.get("source_ids", []))
+    source_keys = {
+        key for key in object_index if key[1] in source_ids
+    }
+    return lifecycle_keys | source_keys
+
+
+def _validate_t1_lifecycle_review_coverage(
+    body: Mapping[str, Any],
+    *,
+    object_index: Mapping[tuple[str, str], Mapping[str, Any]],
+    phase: str,
+) -> None:
+    required_keys = _t1_lifecycle_review_keys(object_index)
+    if not required_keys:
+        return
+    if phase == "review-plan":
+        if T1_LIFECYCLE_CLOSURE_SCOPE not in body["review_plan"][
+            "cross_domain_dimensions"
+        ]:
+            _fail(
+                "Q1_T1_LIFECYCLE_REVIEW_MISSING",
+                "review plan omits typed lifecycle causal closure",
+            )
+        return
+    if phase == "domain-challenges":
+        t1_review = next(
+            item for item in body["domain_reviews"] if item["scope"] == "T1"
+        )
+        if t1_review["checked_contract"] != T1_LIFECYCLE_REVIEW_CONTRACT:
+            _fail(
+                "Q1_T1_LIFECYCLE_REVIEW_MISSING",
+                "T1 domain review does not bind the 2.5 lifecycle contract",
+            )
+        return
+    if phase == "cross-domain-challenges":
+        checks = [
+            item
+            for item in body["cross_domain_checks"]
+            if item["scope"] == T1_LIFECYCLE_CLOSURE_SCOPE
+        ]
+        if len(checks) != 1:
+            _fail(
+                "Q1_T1_LIFECYCLE_REVIEW_MISSING",
+                "one typed lifecycle cross-domain check is required",
+            )
+        binding = next(
+            item
+            for item in body["assertion_bindings"]
+            if item["check_id"] == checks[0]["id"]
+        )
+        observed = {
+            (item["stage"], item["id"])
+            for item in binding["evidence_objects"]
+        }
+        if not required_keys.issubset(observed):
+            _fail(
+                "Q1_T1_LIFECYCLE_REVIEW_INCOMPLETE",
+                "typed lifecycle source and realization objects are incomplete",
+            )
+
+
+def _validate_t1_lifecycle_handoff_coverage(
+    payload: Mapping[str, Any],
+    *,
+    object_index: Mapping[tuple[str, str], Mapping[str, Any]],
+) -> None:
+    required_keys = _t1_lifecycle_review_keys(object_index)
+    if not required_keys:
+        return
+    for scope in ("chronology_reconstruction", "causal_precondition_trace"):
+        check_id = next(
+            item["id"]
+            for item in payload["handoff_checks"]
+            if item["scope"] == scope
+        )
+        binding = next(
+            item
+            for item in payload["assertion_bindings"]
+            if item["check_id"] == check_id
+        )
+        observed = {
+            (item["stage"], item["id"])
+            for item in binding["evidence_objects"]
+        }
+        if not required_keys.issubset(observed):
+            _fail(
+                "Q1_T1_LIFECYCLE_HANDOFF_INCOMPLETE",
+                scope,
+            )
 
 
 def _quality_coverage_records(
@@ -1484,14 +1617,18 @@ def _binding_policy(
                 "target_required": False,
             },
             "chronology_reconstruction": {
-                "stages": {"S1", "T1"},
+                # T1 2.5 lifecycle scopes/contracts explicitly cite both
+                # storyline obligations and E1 capability facts.  Chronology
+                # reconstruction must therefore admit the E1 preconditions it
+                # is required to cover, while remaining closed to W1/C1.
+                "stages": {"S1", "E1", "T1"},
                 "predicate": "chronology-reconstruction",
                 "operator": "reconstruct-chronology",
                 "cross_stage": True,
                 "target_required": True,
             },
             "causal_precondition_trace": {
-                "stages": {"S1", "T1"},
+                "stages": {"S1", "E1", "T1"},
                 "predicate": "causal-precondition",
                 "operator": "trace-preconditions",
                 "cross_stage": True,
@@ -1815,18 +1952,13 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/references/isolation-protocol.md": (
             _SKILL / "references" / "isolation-protocol.md"
         ),
-        "workflow/conception-autonomous-workflow-v2.md": (
-            _REPO
-            / "docs"
-            / "ai-novel-workflow"
-            / "conception-autonomous-workflow-v2.md"
-        ),
     }
     for name in (
         "canonical.py",
         "contracts.py",
         "coordinator.py",
         "return_routing.py",
+        "stage_implementation_identity.py",
     ):
         values[f"runtime/{name}"] = runtime_root / name
     for name in (
@@ -2164,6 +2296,9 @@ def submit_semantic_phase(
             object_index=object_index,
             phase=phase,
         )
+    _validate_t1_lifecycle_review_coverage(
+        body, object_index=object_index, phase=phase
+    )
     previous = None
     if completed:
         previous = _sha256_file(
@@ -2930,37 +3065,64 @@ def validate_q1_package(
     implementation = aggregate.get("implementation_catalog")
     if not isinstance(implementation, list):
         _fail("Q1_IMPLEMENTATION_STALE", "catalog missing")
-    current_implementation = _implementation_identity()
-    if aggregate.get("implementation_identity") != current_implementation:
-        _fail("Q1_IMPLEMENTATION_STALE", "package identity differs")
     catalog = {
         item.get("identity"): item.get("artifact")
         for item in implementation
         if isinstance(item, Mapping)
     }
-    expected_catalog = {
-        item["identity"]: item
-        for item in current_implementation["catalog"]
-    }
+    try:
+        identity_mode, catalog = stage_identity.validate_stage_catalog(
+            stage="Q1",
+            records=implementation,
+            package_root=root,
+            current_paths=_implementation_paths(),
+            verify_artifact_reference=canonical_runtime.verify_artifact_reference,
+            sha256_file=_sha256_file,
+        )
+    except stage_identity.StageImplementationIdentityError as error:
+        _fail("Q1_IMPLEMENTATION_STALE", str(error))
+    sealed_identity = aggregate.get("implementation_identity")
+    if identity_mode == stage_identity.STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION:
+        if sealed_identity != _implementation_identity():
+            _fail("Q1_IMPLEMENTATION_STALE", "package identity differs")
+    else:
+        if (
+            not isinstance(sealed_identity, Mapping)
+            or set(sealed_identity) != {"algorithm", "catalog", "canonical_digest"}
+            or sealed_identity.get("algorithm") != _IMPLEMENTATION_IDENTITY_ALGORITHM
+            or not isinstance(sealed_identity.get("catalog"), list)
+            or sealed_identity.get("canonical_digest")
+            != _canonical_sha256(sealed_identity.get("catalog"))
+        ):
+            _fail("Q1_IMPLEMENTATION_STALE", "legacy package identity is malformed")
+        sealed_catalog = {
+            item.get("identity"): item
+            for item in sealed_identity["catalog"]
+            if isinstance(item, Mapping)
+        }
+        current_sources = {
+            item["identity"]: item["source_path"]
+            for item in _implementation_identity()["catalog"]
+        }
+        if (
+            len(sealed_catalog) != len(sealed_identity["catalog"])
+            or set(sealed_catalog) != set(catalog)
+            or any(
+                item.get("sha256") != catalog[identity].get("sha256")
+                or (
+                    identity in current_sources
+                    and item.get("source_path") != current_sources[identity]
+                )
+                for identity, item in sealed_catalog.items()
+            )
+        ):
+            _fail("Q1_IMPLEMENTATION_STALE", "legacy package identity differs")
     if (
         len(catalog) != len(implementation)
-        or set(catalog) != set(expected_catalog)
         or aggregate.get("implementation")
         != [item["artifact"] for item in implementation]
     ):
         _fail("Q1_IMPLEMENTATION_STALE", "package catalog is not exact")
-    for identity, source in _implementation_paths().items():
-        reference = catalog.get(identity)
-        if not isinstance(reference, Mapping):
-            _fail("Q1_IMPLEMENTATION_STALE", identity)
-        path = root / PurePosixPath(reference["path"])
-        if (
-            not path.is_file()
-            or _sha256_file(path) != reference["sha256"]
-            or reference["sha256"] != _sha256_file(source)
-            or reference["sha256"] != expected_catalog[identity]["sha256"]
-        ):
-            _fail("Q1_IMPLEMENTATION_STALE", identity)
     if verdict == "ready":
         manifest = _read(
             root / "package-manifest.json", "Q1_MANIFEST_INVALID"
@@ -3460,6 +3622,8 @@ __all__ = [
     "HANDOFF_PHASE",
     "FINAL_PHASE",
     "FORBIDDEN_HANDOFF_READS",
+    "T1_LIFECYCLE_CLOSURE_SCOPE",
+    "T1_LIFECYCLE_REVIEW_CONTRACT",
     "Q1Error",
     "Q1RunReceipt",
     "materialize_exact_allowlist",

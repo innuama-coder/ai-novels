@@ -21,7 +21,7 @@ An authorized open terminal may replace reveal/payoff only when the source expli
 
 ## Select POV by information function
 
-Compare at least two legal POV allocations when freedom exists. Evaluate each by access to the required event, emotional stake, concealment cost, risk of unnatural ignorance, switch overhead, and downstream scene freedom. Choose the smallest POV system that can carry every information obligation without leakage. Mark prohibited POVs when their normal knowledge would collapse a suspense chain.
+Compare at least two legal POV allocations when freedom exists. Evaluate each by access to the required event, consciousness and availability at that time, emotional stake, concealment cost, risk of unnatural ignorance, switch overhead, and downstream scene freedom. Choose the smallest POV system that can carry every information obligation without leakage. Give every chapter shell an explicit effective assignment even when it inherits the unit default. Mark prohibited POVs when the character is absent, unconscious, lacks a legal information path, or would collapse a suspense chain.
 
 ## Apply the honesty tests
 

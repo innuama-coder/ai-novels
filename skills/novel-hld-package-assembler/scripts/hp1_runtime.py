@@ -30,8 +30,8 @@ from runtime.hdd import project_unresolved  # noqa: E402
 from runtime.schema_catalog import SchemaCatalog  # noqa: E402
 from runtime.package_envelope import validate_completion_bindings, validate_manifest, validate_ready_profile  # noqa: E402
 
-UPSTREAM = ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1")
-DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1")
+UPSTREAM = ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1")
+DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1")
 CANONICAL_FILES = {
     "HA1": "narrative-architecture.json",
     "HS1": "storyline-choreography.json",
@@ -39,6 +39,7 @@ CANONICAL_FILES = {
     "HI1": "narrative-information-architecture.json",
     "HR1": "rhythm-continuity-architecture.json",
     "HK1": "key-scene-function-map.json",
+    "HD1": "chapter-definition-architecture.json",
 }
 MAIN_ROLES = {
     "HB0": "hb0_control_baseline",
@@ -749,11 +750,20 @@ def build_handoff(admitted: Mapping[str, Any], package_ref: Mapping[str, Any], s
     if len(city_ids)>=3 and not space_transitions:
         raise AssemblyBlocked("HP1_MULTI_CITY_SPACE_TRANSITION_GAP",",".join(city_ids),city_ids)
     terminal_state_refs=list(lwks[-1]["exit_state_refs"])
+    chapter_definitions=admitted["HD1"]["main"].get("chapter_definitions",[])
+    if not isinstance(chapter_definitions,list) or not chapter_definitions:
+        raise AssemblyBlocked("HP1_CHAPTER_DEFINITION_MISSING","HD1.chapter_definitions")
+    chapter_definition_refs=[{
+        "id":item["id"],"chapter_id":item["chapter_id"],"chapter_number":item["chapter_number"],
+        "model_path":"canonical-models/chapter-definition-architecture.json",
+        "locator":f"/chapter_definitions/{index}","value_sha256":value_hash(item),
+    } for index,item in enumerate(chapter_definitions)]
     handoff = {
         "schema_version": "1.0", "skill": SKILL, "stage": STAGE,
         "hld_run_id": admitted["HB0"]["completion"]["hld_run_id"], "status": "ready",
         "next_stage": "novel-lld", "current_hld_package": dict(package_ref),
-        "work_units": lwks, "storyline_dispositions":storyline_dispositions,
+        "work_units": lwks, "chapter_definition_refs":chapter_definition_refs,
+        "storyline_dispositions":storyline_dispositions,
         "work_unit_time_windows":work_unit_time_windows, "character_dispositions":dispositions,
         "environment_coverage":{"required_ids":sorted(expected_environments),"placed_ids":sorted(placed_environments)},
         "world_setting":world,"space_transition_map":space_transitions,
@@ -948,7 +958,7 @@ def write_ready(context: Context, admitted: Mapping[str, Any], destination: Path
     validation = {
         "schema_version": "1.0", "skill": SKILL, "stage": STAGE, "hld_run_id": context.work_order["hld_run_id"],
         "status": "pass", "checks": [
-            "eight-upstream-current-ready", "canonical-byte-copy", "authority-partition-equality",
+            "nine-upstream-current-ready", "canonical-byte-copy", "authority-partition-equality",
             "hq1-pass-empty-findings", "hdd-aggregate-deterministic", "stable-id-index-unique",
             "trace-source-decision-lwk", "lwr-lwk-bijection", "markdown-deterministic", "ready-profile-closed",
         ], "errors": [],

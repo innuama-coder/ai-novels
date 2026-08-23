@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "authority-revision-evidence-index.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "evidence", "source_bindings", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "kind": {"const": "authority-revision-evidence-index"},
+    "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"}, "run_id": {"type": "string", "minLength": 1},
+    "evidence": {"$ref": "#/$defs/evidenceSet"},
+    "source_bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parent_state", "parent_final_completion", "parent_p1_completion", "parent_h1_completion", "parent_author_decision", "hld_question", "hld_answer", "hld_resolution", "hld_state", "author_event"],
+      "properties": {
+        "parent_state": {"$ref": "#/$defs/sourceBinding"}, "parent_final_completion": {"$ref": "#/$defs/sourceBinding"},
+        "parent_p1_completion": {"$ref": "#/$defs/sourceBinding"}, "parent_h1_completion": {"$ref": "#/$defs/sourceBinding"},
+        "parent_author_decision": {"$ref": "#/$defs/sourceBinding"}, "hld_question": {"$ref": "#/$defs/sourceBinding"},
+        "hld_answer": {"$ref": "#/$defs/sourceBinding"}, "hld_resolution": {"$ref": "#/$defs/sourceBinding"},
+        "hld_state": {"$ref": "#/$defs/sourceBinding"}, "author_event": {"$ref": "#/$defs/sourceBinding"}
+      }
+    },
+    "status": {"const": "sealed"}
+  },
+  "$defs": {
+    "evidenceSet": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parent_state", "parent_final_completion", "parent_p1_completion", "parent_h1_completion", "parent_author_decision", "hld_question", "hld_answer", "hld_resolution", "hld_state", "author_event"],
+      "properties": {
+        "parent_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "parent_final_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "parent_p1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "parent_h1_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "parent_author_decision": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "hld_question": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "hld_answer": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "hld_resolution": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+        "hld_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "author_event": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      }
+    },
+    "sourceBinding": {
+      "type": "object", "additionalProperties": false, "required": ["root", "root_identity_sha256", "source_artifact", "copied_artifact"],
+      "properties": {"root": {"type": "string", "minLength": 1}, "root_identity_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}, "source_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "copied_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}}
+    }
+  }
+}

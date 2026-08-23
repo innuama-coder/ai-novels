@@ -15,6 +15,9 @@ from typing import Any, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 s1_runtime = importlib.import_module(
     "skills.novel-storyline-architecture-designer.scripts.run_v2"
 )
@@ -211,13 +214,11 @@ W1_RUNTIME_DEPENDENCIES = (
     "canonical.py",
     "contracts.py",
     "coordinator.py",
-    "baseline.py",
+    "stage_implementation_identity.py",
 )
 
 W1_SCHEMA_DEPENDENCIES = (
     "world-model.schema.json",
-    "storyline-architecture.schema.json",
-    "author-control-baseline.schema.json",
     "canonical-common.schema.json",
     "common-defs.schema.json",
     "input-gate.schema.json",
@@ -232,11 +233,6 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/run_v2.py": _HERE,
         "skill/SKILL.md": _SKILL / "SKILL.md",
         "skill/runtime-contract.md": _SKILL / "references" / "runtime-contract.md",
-        "upstream/S1-run_v2.py": _S1_SKILL / "scripts" / "run_v2.py",
-        "upstream/S1-SKILL.md": _S1_SKILL / "SKILL.md",
-        "upstream/S1-runtime-contract.md": (
-            _S1_SKILL / "references" / "runtime-contract.md"
-        ),
     }
     for name in W1_RUNTIME_DEPENDENCIES:
         values[f"runtime/{name}"] = runtime_dir / name
@@ -1945,14 +1941,14 @@ def validate_w1_package(
             item["identity"]: item["artifact"]
             for item in early_execution.get("implementation_catalog", [])
         }
-        for identity in _implementation_paths():
-            reference = early_catalog.get(identity)
-            if reference is None:
-                _fail("W1_LEGACY_PROVENANCE_UNTRUSTED", identity)
+        for identity, reference in early_catalog.items():
             try:
                 rt.verify_artifact_reference(reference, root=root)
             except Exception as error:
-                _fail("W1_LEGACY_PROVENANCE_UNTRUSTED", str(error))
+                _fail(
+                    "W1_LEGACY_PROVENANCE_UNTRUSTED",
+                    f"{identity}: {error}",
+                )
         _validate_legacy_package_provenance(
             model,
             early_session,
@@ -2120,20 +2116,28 @@ def validate_w1_package(
         "evidence": expected_evidence,
     }:
         _fail("W1_EVIDENCE_INVALID", "evidence index is stale")
-    catalog = {
-        item["identity"]: item["artifact"]
-        for item in execution.get("implementation_catalog", [])
-    }
-    for identity, current in _implementation_paths().items():
-        reference = catalog.get(identity)
-        if reference is None:
-            _fail("W1_IMPLEMENTATION_STALE", identity)
+    if current_contract:
         try:
-            rt.verify_artifact_reference(reference, root=root)
-        except Exception as error:
+            _, catalog = stage_identity.validate_stage_catalog(
+                stage="W1",
+                records=execution.get("implementation_catalog"),
+                package_root=root,
+                current_paths=_implementation_paths(),
+                verify_artifact_reference=rt.verify_artifact_reference,
+                sha256_file=rt.sha256_file,
+            )
+        except stage_identity.StageImplementationIdentityError as error:
             _fail("W1_IMPLEMENTATION_STALE", str(error))
-        if current_contract and reference["sha256"] != rt.sha256_file(current):
-            _fail("W1_IMPLEMENTATION_STALE", identity)
+    else:
+        catalog = {
+            item["identity"]: item["artifact"]
+            for item in execution.get("implementation_catalog", [])
+        }
+        for identity, reference in catalog.items():
+            try:
+                rt.verify_artifact_reference(reference, root=root)
+            except Exception as error:
+                _fail("W1_IMPLEMENTATION_STALE", f"{identity}: {error}")
     if not current_contract:
         _validate_legacy_package_provenance(
             model,

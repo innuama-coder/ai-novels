@@ -37,6 +37,12 @@ from .h1_readability import (
 )
 from .production_store import ProductionRunStore, ProductionStoreError
 from .production_coordinator import ProductionCoordinator
+from .stage_implementation_identity import (
+    STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION,
+    TRUSTED_LEGACY_CATALOGS,
+    canonical_catalog_digest,
+    migration_registry_digest,
+)
 
 
 class ProductionOrchestratorError(ValueError):
@@ -111,6 +117,38 @@ _STAGE_IDENTITY_SOURCES = {
     },
 }
 
+_STAGE_PUBLIC_VALIDATORS = {
+    "B0": ("runtime.baseline", "validate_baseline_package"),
+    "S1": (
+        "skills.novel-storyline-architecture-designer.scripts.run_v2",
+        "validate_s1_package",
+    ),
+    "W1": (
+        "skills.novel-world-model-designer.scripts.run_v2",
+        "validate_w1_package",
+    ),
+    "E1": (
+        "skills.novel-environment-system-designer.scripts.run_v2",
+        "validate_e1_package",
+    ),
+    "T1": (
+        "skills.novel-event-timeline-designer.scripts.run_v2",
+        "validate_t1_package",
+    ),
+    "C1": (
+        "skills.novel-character-system-designer.scripts.run_v2",
+        "validate_c1_package",
+    ),
+    "Q1": (
+        "skills.novel-conception-reviewer.scripts.run_v2",
+        "validate_q1_package",
+    ),
+    "P1": (
+        "skills.novel-conception-deliverable-assembler.scripts.run_v2",
+        "validate_p1_package",
+    ),
+}
+
 
 def _current_identity_bindings(stage: str) -> dict[str, dict[str, str]]:
     source = _STAGE_IDENTITY_SOURCES[stage]
@@ -134,8 +172,8 @@ CURRENT_CONCEPTION_PRODUCTION_CONTRACT = {
         "identity_bindings": _current_identity_bindings("E1"),
     },
     "T1": {
-        "model_schema_version": "2.4",
-        "semantic_review_protocols": ["t1-initial-event-plan-semantics-v4"],
+        "model_schema_version": "2.5",
+        "semantic_review_protocols": ["t1-initial-event-plan-semantics-v5"],
         "identity_bindings": _current_identity_bindings("T1"),
     },
 }
@@ -262,6 +300,8 @@ def _validate_internal_h1_fidelity_failure(
     failure: SealedDocument,
     *,
     workspace: SealedDocument,
+    generation_session: SealedDocument,
+    require_persisted: bool = True,
 ) -> None:
     required = {
         "schema_version", "kind", "run_id", "h1_session_id", "review_id",
@@ -313,13 +353,241 @@ def _validate_internal_h1_fidelity_failure(
             str(failure.data.get("review_id", "")),
         )
     try:
-        persisted = context.store.load_document(failure.reference)
+        persisted = (
+            context.store.load_document(failure.reference)
+            if require_persisted
+            else None
+        )
     except ProductionStoreError as error:
         raise ProductionOrchestratorError(error.code, str(error)) from error
-    if persisted.data != failure.data:
+    if persisted is not None and persisted.data != failure.data:
         raise ProductionOrchestratorError(
             "PROD_H1_FRAGMENT_FIDELITY_FAILURE_INVALID", failure.data["review_id"]
         )
+    producer = generation_session.data.get("identity")
+    if (
+        not isinstance(producer, Mapping)
+        or not isinstance(producer.get("task_id"), str)
+        or not producer["task_id"].strip()
+        or not isinstance(producer.get("thread_id"), str)
+        or not producer["thread_id"].strip()
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_FIDELITY_FAILURE_INVALID",
+            "fragment producer identity",
+        )
+    if (
+        reviewer.get("task_id") == producer.get("task_id")
+        or reviewer.get("thread_id") == producer.get("thread_id")
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_FIDELITY_REVIEW_NOT_INDEPENDENT",
+            "fragment producer identity reused",
+        )
+
+
+_H1_FIDELITY_DIMENSIONS = (
+    "author_control_fidelity",
+    "world_story_character_fidelity",
+    "omission_and_emphasis_fidelity",
+    "fragment_authority_boundary",
+    "review_decision_integrity",
+)
+
+
+def _h1_string_leaves(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, Mapping):
+        return [leaf for child in value.values() for leaf in _h1_string_leaves(child)]
+    if isinstance(value, list):
+        return [leaf for child in value for leaf in _h1_string_leaves(child)]
+    return []
+
+
+def _validate_internal_h1_plan_fidelity_failure(
+    context: ProductionContext,
+    failure: SealedDocument,
+    *,
+    candidate_report: SealedDocument,
+    workspace: SealedDocument,
+    plan_manifest: SealedDocument,
+    fragment_manifest: SealedDocument,
+    require_persisted: bool = True,
+) -> tuple[SealedDocument, SealedDocument]:
+    """Validate one independent, sealed ``revise`` verdict against exact bytes."""
+
+    if not isinstance(failure, SealedDocument) or not isinstance(
+        candidate_report, SealedDocument
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", "missing sealed evidence"
+        )
+    try:
+        persisted_candidate = context.store.load_document(candidate_report.reference)
+        persisted_failure = (
+            context.store.load_document(failure.reference)
+            if require_persisted else None
+        )
+    except ProductionStoreError as error:
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID",
+            "candidate/review authority evidence is not sealed",
+        ) from error
+    if persisted_candidate.data != candidate_report.data or (
+        persisted_failure is not None and persisted_failure.data != failure.data
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", "persisted evidence drift"
+        )
+    try:
+        context.store.runtime.validate(
+            failure.data, "presentation-fidelity-review.schema.json"
+        )
+    except Exception as error:
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", str(error)
+        ) from error
+    if (
+        canonical_sha256(failure.data) != failure.reference.get("sha256")
+        or canonical_sha256(candidate_report.data)
+        != candidate_report.reference.get("sha256")
+        or not str(failure.reference.get("path", "")).startswith(
+            "reviews/h1-presentation-fidelity/"
+        )
+        or not str(failure.reference.get("path", "")).endswith(".json")
+        or failure.data.get("run_id") != context.state.data.get("run_id")
+        or failure.data.get("h1_session_id") != workspace.data.get("session_id")
+        or failure.data.get("verdict") != "revise"
+        or failure.data.get("blockers") != []
+        or [item.get("id") for item in failure.data.get("dimensions", [])]
+        != list(_H1_FIDELITY_DIMENSIONS)
+        or not any(
+            item.get("verdict") == "revise"
+            for item in failure.data.get("dimensions", [])
+        )
+        or any(
+            item.get("verdict") not in {"pass", "revise"}
+            for item in failure.data.get("dimensions", [])
+        )
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID",
+            str(failure.reference.get("path", "")),
+        )
+    expected_inputs = {
+        "p1_completion": {
+            "path": workspace.data["p1_completion"]["path"],
+            "sha256": workspace.data["p1_completion"]["sha256"],
+        },
+        "plan_manifest": dict(plan_manifest.reference),
+        "fragment_manifest": dict(fragment_manifest.reference),
+        "report_sha256": candidate_report.reference["sha256"],
+    }
+    reviews = failure.data.get("element_reviews", [])
+    reviewed_ids = [item.get("element_id") for item in reviews]
+    report_objects: dict[str, Mapping[str, Any]] = {}
+
+    def collect_report_objects(value: Any) -> None:
+        if isinstance(value, Mapping):
+            element_id = value.get("id")
+            if isinstance(element_id, str) and re.fullmatch(
+                r"(?:MOD|VIS|FRAG|PROMPT)-[A-Za-z0-9._-]+", element_id
+            ):
+                if element_id in report_objects:
+                    raise ProductionOrchestratorError(
+                        "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID",
+                        f"duplicate candidate element: {element_id}",
+                    )
+                report_objects[element_id] = value
+            for child in value.values():
+                collect_report_objects(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect_report_objects(child)
+
+    collect_report_objects(candidate_report.data)
+    dimension_ids = {
+        element_id
+        for dimension in failure.data.get("dimensions", [])
+        for element_id in dimension.get("evidence_element_ids", [])
+    }
+    leaves = _h1_string_leaves(candidate_report.data)
+    if (
+        failure.data.get("inputs") != expected_inputs
+        or not reviews
+        or len(reviewed_ids) != len(set(reviewed_ids))
+        or set(reviewed_ids) != dimension_ids
+        or set(reviewed_ids) != set(report_objects)
+        or any(
+            item.get("content_sha256")
+            != canonical_sha256(report_objects[item["element_id"]])
+            for item in reviews
+        )
+        or not any(
+            item.get("verdict") == "revise"
+            and any(
+                item.get(field) is False
+                for field in (
+                    "no_material_omission",
+                    "no_contradiction",
+                    "no_authority_escalation",
+                )
+            )
+            for item in reviews
+        )
+        or any(
+            not all(any(quote in leaf for leaf in leaves) for quote in item["evidence_quotes"])
+            for item in reviews
+        )
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", "review evidence"
+        )
+
+    sessions: list[SealedDocument] = []
+    producer_identities: list[Mapping[str, Any]] = []
+    for label, manifest in (
+        ("plan", plan_manifest),
+        ("fragment", fragment_manifest),
+    ):
+        try:
+            _physical, normalized = _h1_refresh_artifact(
+                context.store,
+                manifest=manifest,
+                reference=manifest.data.get("artifact_roles", {}).get(
+                    "generation_session"
+                ),
+            )
+            session = context.store.load_document(normalized)
+        except (ProductionStoreError, ProductionOrchestratorError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", f"{label} identity: {error}"
+            ) from error
+        identity = session.data.get("identity")
+        if (
+            not isinstance(identity, Mapping)
+            or not isinstance(identity.get("task_id"), str)
+            or not identity["task_id"].strip()
+            or not isinstance(identity.get("thread_id"), str)
+            or not identity["thread_id"].strip()
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", f"{label} identity"
+            )
+        sessions.append(session)
+        producer_identities.append(identity)
+    reviewer = failure.data.get("reviewer", {})
+    if any(
+        reviewer == identity
+        or reviewer.get("task_id") == identity.get("task_id")
+        or reviewer.get("thread_id") == identity.get("thread_id")
+        for identity in producer_identities
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_REVIEW_NOT_INDEPENDENT", "producer identity reused"
+        )
+    return sessions[0], sessions[1]
 
 
 _H1_FRAGMENT_ARTIFACT_ROLES = {
@@ -735,6 +1003,7 @@ def _completion_contract_identity(
         "canonical": dict(canonical.reference),
         "model_schema_version": version,
         "identity_bindings": observed_bindings,
+        "implementation_catalog_sha256": canonical_catalog_digest(catalog),
         "semantic_review_protocols": observed_protocols,
         "contract_profile_sha256": canonical_sha256(contract_profile),
         "canonical_identity_sha256": canonical_sha256(
@@ -863,6 +1132,239 @@ def _identity_matches_current_profile(stage: str, identity: Mapping[str, Any]) -
     )
 
 
+def _identity_matches_approved_migration(
+    stage: str, identity: Mapping[str, Any]
+) -> bool:
+    """Accept only one frozen package-catalog migration to current identity.
+
+    The public stage validator has already replayed the full package.  This
+    second, production-owned check narrows the remaining implementation drift
+    to the exact catalog digest and old-to-current pairs registered by the
+    versioned migration authority.
+    """
+
+    authority = TRUSTED_LEGACY_CATALOGS.get(stage)
+    if not isinstance(authority, Mapping) or identity.get(
+        "implementation_catalog_sha256"
+    ) != authority.get("canonical_digest"):
+        return False
+    expected = CURRENT_CONCEPTION_PRODUCTION_CONTRACT[stage]
+    observed_bindings = identity.get("identity_bindings")
+    if (
+        identity.get("model_schema_version") != expected["model_schema_version"]
+        or identity.get("semantic_review_protocols")
+        != expected["semantic_review_protocols"]
+        or not isinstance(observed_bindings, Mapping)
+        or set(observed_bindings) != set(expected["identity_bindings"])
+    ):
+        return False
+    approved = authority.get("approved_mismatches", {})
+    for kind, current in expected["identity_bindings"].items():
+        observed = observed_bindings.get(kind)
+        artifact = observed.get("artifact") if isinstance(observed, Mapping) else None
+        if (
+            not isinstance(artifact, Mapping)
+            or observed.get("identity") != current["identity"]
+        ):
+            return False
+        stored_sha = artifact.get("sha256")
+        current_sha = current["sha256"]
+        if stored_sha == current_sha:
+            continue
+        if approved.get(current["identity"]) != (stored_sha, current_sha):
+            return False
+    return True
+
+
+def _validate_public_completion_chain(
+    store: ProductionRunStore, latest: SealedDocument
+) -> tuple[list[dict[str, Any]], tuple[str, dict[str, Any]] | None]:
+    """Replay every current B0-P1 package, returning the first real owner failure."""
+
+    current = latest.data.get("current_stage_completions")
+    expected_stages = tuple(STAGE_ORDER[:-1])
+    if not isinstance(current, Mapping):
+        return [], ("B0", {"stage": "B0", "identity_error": "completion-map"})
+    for stage in expected_stages:
+        reference = current.get(stage)
+        if not isinstance(reference, Mapping):
+            return [], (
+                stage,
+                {"stage": stage, "identity_error": "completion-missing"},
+            )
+    if set(current) != set(expected_stages):
+        unexpected = next(
+            (stage for stage in STAGE_ORDER if stage not in expected_stages and stage in current),
+            "B0",
+        )
+        return [], (
+            unexpected,
+            {"stage": unexpected, "identity_error": "completion-set"},
+        )
+
+    evidence: list[dict[str, Any]] = []
+    for stage in expected_stages:
+        reference = current[stage]
+        try:
+            package_root = store.resolve_completion_package_root(
+                reference, expected_stage=stage
+            )
+            module_name, validator_name = _STAGE_PUBLIC_VALIDATORS[stage]
+            if stage == "B0":
+                module_name = f"{__package__}.baseline"
+            validator = getattr(importlib.import_module(module_name), validator_name)
+            validator_root = package_root
+            if os.name == "nt" and not str(package_root).startswith("\\\\?\\"):
+                validator_root = Path("\\\\?\\" + str(package_root.resolve()))
+            result = validator(validator_root)
+            if (
+                not isinstance(result, Mapping)
+                or result.get("verdict", result.get("status")) != "ready"
+            ):
+                raise ValueError("public validator did not return ready")
+        except Exception as error:
+            return evidence, (
+                stage,
+                {
+                    "stage": stage,
+                    "completion": dict(reference),
+                    "identity_error": "PROD_COMPLETION_PUBLIC_REPLAY_FAILED",
+                    "detail": str(error),
+                },
+            )
+        evidence.append(
+            {
+                "stage": stage,
+                "completion": dict(reference),
+                "validation_sha256": canonical_sha256(dict(result)),
+            }
+        )
+    return evidence, None
+
+
+def _compatible_qualification_refresh_identity(
+    store: ProductionRunStore,
+    latest: SealedDocument,
+    qualification: SealedDocument,
+    identities: Mapping[str, Mapping[str, Any]],
+) -> tuple[dict[str, Any] | None, tuple[str, dict[str, Any]] | None]:
+    """Classify a digest-only, migration-authorized refresh at current H1.
+
+    No schema, owner version, review protocol, binding identity, package byte,
+    or state semantic change is admitted.  A failed public replay is returned
+    as its actual B0-P1 owner instead of being disguised as qualification drift.
+    """
+
+    qualified = qualification.data.get("production_contract")
+    current = CURRENT_CONCEPTION_PRODUCTION_CONTRACT
+    if (
+        not isinstance(qualified, Mapping)
+        or canonical_sha256(qualified)
+        != qualification.data.get("new_contract_digest")
+        or canonical_sha256(current)
+        != CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256
+        or set(qualified) != set(current)
+        or qualified.get("schema_version") != current.get("schema_version")
+    ):
+        return None, None
+    changed: list[dict[str, Any]] = []
+    versions = qualification.data.get("production_versions")
+    if not isinstance(versions, Mapping):
+        return None, None
+    for stage in ("E1", "T1"):
+        old_owner = qualified.get(stage)
+        new_owner = current.get(stage)
+        identity = identities.get(stage)
+        if (
+            not isinstance(old_owner, Mapping)
+            or not isinstance(new_owner, Mapping)
+            or not isinstance(identity, Mapping)
+            or old_owner.get("model_schema_version")
+            != new_owner.get("model_schema_version")
+            or versions.get(stage) != new_owner.get("model_schema_version")
+            or old_owner.get("semantic_review_protocols")
+            != new_owner.get("semantic_review_protocols")
+            or set(old_owner) != set(new_owner)
+            or not isinstance(old_owner.get("identity_bindings"), Mapping)
+            or not isinstance(new_owner.get("identity_bindings"), Mapping)
+            or set(old_owner.get("identity_bindings", {}))
+            != set(new_owner.get("identity_bindings", {}))
+        ):
+            return None, None
+        for kind, old_binding in old_owner["identity_bindings"].items():
+            new_binding = new_owner["identity_bindings"][kind]
+            observed = identity.get("identity_bindings", {}).get(kind, {})
+            if (
+                not isinstance(old_binding, Mapping)
+                or not isinstance(new_binding, Mapping)
+                or set(old_binding) != {"identity", "sha256"}
+                or set(new_binding) != {"identity", "sha256"}
+                or old_binding.get("identity") != new_binding.get("identity")
+                or observed.get("identity") != old_binding.get("identity")
+                or observed.get("artifact", {}).get("sha256")
+                != old_binding.get("sha256")
+            ):
+                return None, None
+            if old_binding["sha256"] != new_binding["sha256"]:
+                authority = TRUSTED_LEGACY_CATALOGS.get(stage, {})
+                if (
+                    authority.get("approved_mismatches", {}).get(
+                        old_binding["identity"]
+                    )
+                    != (old_binding["sha256"], new_binding["sha256"])
+                    or identity.get("implementation_catalog_sha256")
+                    != authority.get("canonical_digest")
+                ):
+                    return None, None
+                changed.append(
+                    {
+                        "stage": stage,
+                        "kind": kind,
+                        "identity": old_binding["identity"],
+                        "stored_sha256": old_binding["sha256"],
+                        "approved_current_sha256": new_binding["sha256"],
+                    }
+                )
+        if not (
+            _identity_matches_current_profile(stage, identity)
+            or _identity_matches_approved_migration(stage, identity)
+        ):
+            return None, None
+    if not changed:
+        return None, None
+    active_reference = latest.data.get("active_return")
+    if not isinstance(active_reference, Mapping):
+        return None, None
+    try:
+        active = store.load_document(active_reference)
+    except ProductionStoreError:
+        return None, None
+    if (
+        active.data.get("target_stage") != "H1"
+        or active.data.get("resume_stage") != "H1"
+        or active.data.get("return_kind") != "local_revision"
+        or active.data.get("invalidated_stages") != ["H1"]
+        or canonical_sha256(active.data) != active.reference.get("sha256")
+    ):
+        return None, None
+    public_replays, failure = _validate_public_completion_chain(store, latest)
+    if failure is not None:
+        return None, failure
+    return {
+        "stage": "H1",
+        "classification": "migration-approved-compatible-qualification-refresh",
+        "active_return": dict(active.reference),
+        "qualified_contract_digest": qualification.data["new_contract_digest"],
+        "current_contract_digest": CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
+        "implementation_identity_contract_version": (
+            STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION
+        ),
+        "implementation_migration_registry_sha256": migration_registry_digest(),
+        "approved_implementation_migrations": changed,
+        "public_replays": public_replays,
+    }, None
+
+
 def _contract_upgrade_owner_target(
     qualification: SealedDocument,
 ) -> tuple[str, dict[str, Any]]:
@@ -964,6 +1466,7 @@ def _actual_contract_upgrade_target(
         for stage in ("E1", "T1")
     }
     identities: dict[str, Any] = {}
+    stale_profiles: list[str] = []
     for stage in ("E1", "T1"):
         reference = latest.data["current_stage_completions"].get(stage)
         if not isinstance(reference, Mapping):
@@ -977,9 +1480,15 @@ def _actual_contract_upgrade_target(
                 "identity_error": error.code,
             }
         identities[stage] = identity
-        if not _identity_matches_current_profile(stage, identity):
-            return stage, identity
+        if not (
+            _identity_matches_current_profile(stage, identity)
+            or _identity_matches_approved_migration(stage, identity)
+        ):
+            stale_profiles.append(stage)
     if qualification is None:
+        if stale_profiles:
+            stage = stale_profiles[0]
+            return stage, identities[stage]
         raise ProductionOrchestratorError(
             "PROD_CONTRACT_UPGRADE_BASIS_MISSING", "E1/T1"
         )
@@ -991,6 +1500,16 @@ def _actual_contract_upgrade_target(
         qualification.data.get("new_contract_digest")
         != CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256
     ):
+        compatible, public_failure = _compatible_qualification_refresh_identity(
+            store, latest, qualification, identities
+        )
+        if public_failure is not None:
+            return public_failure
+        if compatible is not None:
+            return "H1", compatible
+        if stale_profiles:
+            stage = stale_profiles[0]
+            return stage, identities[stage]
         active_reference = latest.data.get("active_return")
         qualified_return = qualification.data.get("return_request")
         if (
@@ -1015,6 +1534,9 @@ def _actual_contract_upgrade_target(
                     ),
                 }
         return _contract_upgrade_owner_target(qualification)
+    if stale_profiles:
+        stage = stale_profiles[0]
+        return stage, identities[stage]
     raise ProductionOrchestratorError(
         "PROD_CONTRACT_UPGRADE_NOT_REQUIRED", "current qualification"
     )
@@ -1065,10 +1587,12 @@ def _validate_current_contract_qualification(
             transition_mode not in {
                 "new_return",
                 "active_return_refresh",
+                "compatible_qualification_refresh",
                 "active_return_escalation",
                 "active_stage_return_refresh",
                 "stage_return",
                 "internal_h1_fragment_return",
+                "internal_h1_plan_return",
                 "internal_h1_readability_return",
                 "internal_h1_html_readability_return",
             }
@@ -1078,8 +1602,25 @@ def _validate_current_contract_qualification(
             or generation < 0
             or (transition_mode == "new_return" and generation != 0)
             or (
-                transition_mode == "active_return_refresh"
-                and (generation < 1 or not isinstance(prior_reference, Mapping))
+                transition_mode in {
+                    "active_return_refresh",
+                    "compatible_qualification_refresh",
+                }
+                and (
+                    generation < 1
+                    or not isinstance(prior_reference, Mapping)
+                    or (
+                        transition_mode == "compatible_qualification_refresh"
+                        and (
+                            qualification.data.get("target_stage") != "H1"
+                            or qualification.data.get("superseded_return") is not None
+                            or qualification.data.get("stale_identity", {}).get(
+                                "classification"
+                            )
+                            != "migration-approved-compatible-qualification-refresh"
+                        )
+                    )
+                )
             )
             or (
                 transition_mode == "active_return_escalation"
@@ -1112,6 +1653,7 @@ def _validate_current_contract_qualification(
             or (
                 transition_mode in {
                     "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                 }
                 and (
@@ -1157,10 +1699,12 @@ def _validate_current_contract_qualification(
                 or (
                     transition_mode in {
                         "active_return_refresh",
+                        "compatible_qualification_refresh",
                         "active_return_escalation",
                         "active_stage_return_refresh",
                         "stage_return",
                         "internal_h1_fragment_return",
+                        "internal_h1_plan_return",
                         "internal_h1_readability_return",
                         "internal_h1_html_readability_return",
                     }
@@ -1180,7 +1724,10 @@ def _validate_current_contract_qualification(
         if not isinstance(reference, Mapping):
             continue
         identity = _completion_contract_identity(store, reference)
-        if not _identity_matches_current_profile(stage, identity):
+        if not (
+            _identity_matches_current_profile(stage, identity)
+            or _identity_matches_approved_migration(stage, identity)
+        ):
             raise ProductionOrchestratorError(
                 "PROD_CONTRACT_QUALIFICATION_STALE", f"{scope}:{stage}"
             )
@@ -1205,9 +1752,347 @@ def _validate_prepared_contract_upgrade(
         ]
         for stage in ("E1", "T1")
     }
+    if plan.data.get("transition_mode") == "compatible_qualification_refresh":
+        post = [
+            SealedDocument(data=dict(item["data"]), reference=dict(item["reference"]))
+            for item in plan.data.get("post_upgrade_documents", [])
+        ]
+        gates = [
+            item
+            for item in post
+            if item.reference["path"].startswith("orchestration/input-gates/")
+        ]
+        orders = [
+            item
+            for item in post
+            if item.reference == plan.data.get("post_upgrade_work_order")
+        ]
+        try:
+            active = store.load_document(predecessor.data["active_return"])
+            pending = store.load_document(plan.data["pending_work_order"])
+            workspace = store.load_document(
+                plan.data["stale_identity"]["current_workspace"]
+            )
+            pending_gate = store.load_document(pending.data["input_gate"])
+            identities = {
+                stage: _completion_contract_identity(
+                    store, predecessor.data["current_stage_completions"][stage]
+                )
+                for stage in ("E1", "T1")
+            }
+            compatible, public_failure = _compatible_qualification_refresh_identity(
+                store, predecessor, qualification, identities
+            )
+        except (KeyError, TypeError, ProductionStoreError, ProductionOrchestratorError) as error:
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+            ) from error
+        action = pending.data.get("action")
+        contract = ACTION_CONTRACT.get(action)
+        expected_stale = (
+            {
+                **compatible,
+                "origin_action": action,
+                "resume_point": action,
+                "pending_work_order": dict(pending.reference),
+                "current_workspace": dict(workspace.reference),
+            }
+            if compatible is not None
+            else None
+        )
+        predecessor_coordinator = ProductionCoordinator.from_snapshot(
+            predecessor.data,
+            predecessor.reference,
+            active_return_request=active,
+            runtime=store.runtime,
+        )
+        successor_coordinator = ProductionCoordinator.from_snapshot(
+            successor.data,
+            successor.reference,
+            active_return_request=request,
+            runtime=store.runtime,
+        )
+        try:
+            expected_pending_gate = predecessor_coordinator.build_input_gate(
+                "H1",
+                pending_gate.reference["path"],
+                active_return_request=active,
+            )
+            expected_gate = successor_coordinator.build_input_gate(
+                "H1", gates[0].reference["path"], active_return_request=request
+            )
+        except (CoordinatorError, IndexError) as error:
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+            ) from error
+        prior_generation = qualification.data.get("refresh_generation", 0)
+        raw_inputs = plan.data.get("post_upgrade_inputs")
+        if (
+            public_failure is not None
+            or expected_stale is None
+            or plan.data.get("stale_identity") != expected_stale
+            or predecessor.data.get("active_return") != request.reference
+            or successor.data.get("active_return") != request.reference
+            or successor.data.get("current_stage_completions")
+            != predecessor.data.get("current_stage_completions")
+            or successor.data.get("superseded_completions")
+            != predecessor.data.get("superseded_completions")
+            or successor.data.get("status") != predecessor.data.get("status")
+            or successor.data.get("author_decision")
+            != predecessor.data.get("author_decision")
+            or successor.data.get("development_status")
+            != predecessor.data.get("development_status")
+            or successor.data.get("h1_workspace")
+            != predecessor.data.get("h1_workspace")
+            or request.reference != active.reference
+            or request.data != active.data
+            or contract is None
+            or contract[0] != "H1"
+            or action not in H1_ACTION_STATES
+            or workspace.data.get("state") != H1_ACTION_STATES[action][0]
+            or pending.data.get("state") != predecessor.reference
+            or pending.data.get("h1_workspace") != workspace.reference
+            or pending.data.get("required_actor") != contract[1]
+            or pending.data.get("status") != "pending"
+            or pending_gate != expected_pending_gate
+            or plan.data.get("old_contract_digest")
+            != qualification.data.get("new_contract_digest")
+            or plan.data.get("new_contract_digest")
+            != CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256
+            or plan.data.get("production_contract")
+            != CURRENT_CONCEPTION_PRODUCTION_CONTRACT
+            or plan.data.get("production_versions") != production_versions
+            or plan.data.get("prior_qualification") != qualification.reference
+            or plan.data.get("refresh_generation") != prior_generation + 1
+            or plan.data.get("target_stage") != "H1"
+            or plan.data.get("invalidated_stages") != []
+            or plan.data.get("session_references") != []
+            or plan.data.get("completion_references") != []
+            or plan.data.get("work_order_references") != [pending.reference]
+            or plan.data.get("superseded_return") is not None
+            or raw_inputs != pending.data.get("inputs")
+            or len(gates) != 1
+            or len(orders) != 1
+            or gates[0] != expected_gate
+            or orders[0].data.get("action") != action
+            or orders[0].data.get("state") != successor.reference
+            or orders[0].data.get("input_gate") != expected_gate.reference
+            or orders[0].data.get("h1_workspace") != workspace.reference
+            or orders[0].data.get("required_actor") != contract[1]
+            or orders[0].data.get("inputs") != raw_inputs
+            or orders[0].data.get("status") != "pending"
+        ):
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", plan.reference["path"]
+            )
+        return
+    plan_return_refresh = (
+        plan.data.get("transition_mode") == "active_stage_return_refresh"
+        and plan.data.get("target_stage") == "H1"
+        and "review_completion" in plan.data.get("stale_identity", {})
+        and "candidate_report" in plan.data.get("stale_identity", {})
+    )
+    if (
+        plan.data.get("transition_mode") == "internal_h1_plan_return"
+        or plan_return_refresh
+    ):
+        stale = plan.data.get("stale_identity", {})
+        post = [
+            SealedDocument(data=dict(item["data"]), reference=dict(item["reference"]))
+            for item in plan.data.get("post_upgrade_documents", [])
+        ]
+        try:
+            old_workspace = store.load_document(stale["current_workspace"])
+            review_workspace = store.load_document(
+                stale.get("review_workspace", stale["current_workspace"])
+            )
+            initialized = next(
+                item for item in post
+                if item.reference == stale.get("initialized_workspace")
+            )
+            pending = store.load_document(stale["pending_work_order"])
+            failure = store.load_document(stale["fidelity_failure"])
+            candidate = store.load_document(stale["candidate_report"])
+            review_assignment = store.load_document(stale["review_assignment"])
+            review_completion = store.load_document(stale["review_completion"])
+            plan_manifest = store.load_document(stale["plan_manifest"])
+            fragment_manifest = store.load_document(stale["fragment_manifest"])
+        except (KeyError, StopIteration, TypeError, ProductionStoreError) as error:
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+            ) from error
+        gates = [
+            item for item in post
+            if item.reference["path"].startswith("orchestration/input-gates/")
+        ]
+        orders = [
+            item for item in post
+            if item.reference == plan.data.get("post_upgrade_work_order")
+        ]
+        expected_inputs = plan.data.get("post_upgrade_inputs")
+        prior_generation = qualification.data.get("refresh_generation", 0)
+        old_return = None
+        if plan_return_refresh:
+            try:
+                old_return = store.load_document(plan.data["superseded_return"])
+            except (KeyError, TypeError, ProductionStoreError) as error:
+                raise ProductionStoreError(
+                    "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+                ) from error
+        predecessor_coordinator = ProductionCoordinator.from_snapshot(
+            predecessor.data,
+            predecessor.reference,
+            active_return_request=old_return,
+            runtime=store.runtime,
+        )
+        predecessor_context = ProductionContext(
+            store, predecessor_coordinator, predecessor, None
+        )
+        try:
+            plan_session, fragment_session = _validate_internal_h1_plan_fidelity_failure(
+                predecessor_context,
+                failure,
+                candidate_report=candidate,
+                workspace=review_workspace,
+                plan_manifest=plan_manifest,
+                fragment_manifest=fragment_manifest,
+            )
+        except ProductionOrchestratorError as error:
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+            ) from error
+        nested_plan_escalation = bool(
+            plan_return_refresh
+            and old_return is not None
+            and old_return.data.get("calculated_owner") == "H1-B"
+            and old_return.data.get("resume_point") == "H1-B"
+        )
+        prior_fragment_invalidation = None
+        if nested_plan_escalation:
+            try:
+                prior_fragment_invalidation = store.load_document(
+                    stale["prior_fragment_session_invalidation"]
+                )
+            except (KeyError, TypeError, ProductionStoreError) as error:
+                raise ProductionStoreError(
+                    "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+                ) from error
+        if (
+            predecessor.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
+            or predecessor.data.get("author_decision") is not None
+            or "H1" in predecessor.data.get("current_stage_completions", {})
+            or successor.data.get("active_return") != request.reference
+            or request.data.get("origin_stage") != "H1"
+            or request.data.get("calculated_owner") != "H1-A"
+            or request.data.get("resume_point") != "H1-A-plan"
+            or request.data.get("invalidated_h1_artifacts")
+            != ["plan", "fragments", "assembly", "html", "completion"]
+            or request.data.get("evidence_ids") != [failure.reference["sha256"]]
+            or review_completion.data.get("assignment")
+            != review_assignment.reference
+            or review_completion.data.get("review") != failure.reference
+            or review_completion.data.get("candidate_report") != candidate.reference
+            or review_completion.data.get("state") != predecessor.reference
+            or review_completion.data.get("h1_workspace")
+            != old_workspace.reference
+            or review_completion.data.get("review_workspace")
+            != review_workspace.reference
+            or review_completion.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
+            or review_completion.data.get("active_return_qualification")
+            != (qualification.reference if nested_plan_escalation else None)
+            or review_assignment.data.get("reviewer")
+            != failure.data.get("reviewer")
+            or review_assignment.data.get("state") != predecessor.reference
+            or review_assignment.data.get("h1_workspace")
+            != old_workspace.reference
+            or review_assignment.data.get("review_workspace")
+            != review_workspace.reference
+            or review_assignment.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
+            or review_assignment.data.get("active_return_qualification")
+            != (qualification.reference if nested_plan_escalation else None)
+            or review_assignment.data.get("pending_work_order")
+            != pending.reference
+            or review_workspace.data.get("state") != "fragments_ready"
+            or review_workspace.data.get("artifacts")
+            != {
+                "plan_manifest": plan_manifest.reference,
+                "fragment_manifest": fragment_manifest.reference,
+            }
+            or (
+                old_workspace.data.get("state") != "planned"
+                if nested_plan_escalation
+                else old_workspace.reference != review_workspace.reference
+            )
+            or (
+                old_workspace.data.get("artifacts")
+                != {"plan_manifest": plan_manifest.reference}
+                if nested_plan_escalation else False
+            )
+            or pending.data.get("action")
+            != ("H1-B" if nested_plan_escalation else "H1-A-assemble")
+            or pending.data.get("state") != predecessor.reference
+            or pending.data.get("h1_workspace") != old_workspace.reference
+            or plan.data.get("session_references")
+            != (
+                [plan_session.reference]
+                if nested_plan_escalation
+                else [plan_session.reference, fragment_session.reference]
+            )
+            or (
+                stale.get("active_return_qualification") != qualification.reference
+                if nested_plan_escalation else False
+            )
+            or (
+                prior_fragment_invalidation is None
+                or prior_fragment_invalidation.reference not in qualification.data.get(
+                    "session_invalidation_receipts", []
+                )
+                or prior_fragment_invalidation.data.get("session")
+                != fragment_session.reference
+                if nested_plan_escalation else False
+            )
+            or initialized.data.get("state") != "initialized"
+            or initialized.data.get("p1_completion")
+            != successor.data.get("current_stage_completions", {}).get("P1")
+            or initialized.data.get("previous_state_sha256") is not None
+            or initialized.data.get("artifacts") != {}
+            or plan.data.get("old_contract_digest")
+            != qualification.data.get("new_contract_digest")
+            or plan.data.get("new_contract_digest")
+            != CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256
+            or plan.data.get("production_contract")
+            != CURRENT_CONCEPTION_PRODUCTION_CONTRACT
+            or plan.data.get("production_versions") != production_versions
+            or plan.data.get("prior_qualification") != qualification.reference
+            or plan.data.get("refresh_generation") != prior_generation + 1
+            or plan.data.get("superseded_return")
+            != (old_return.reference if old_return is not None else None)
+            or len(post) != 3
+            or len(gates) != 1
+            or len(orders) != 1
+            or not isinstance(expected_inputs, Mapping)
+            or orders[0].data.get("action") != "H1-A-plan"
+            or orders[0].data.get("h1_workspace") != initialized.reference
+            or orders[0].data.get("inputs") != expected_inputs
+            or expected_inputs.get("p1_package")
+            != str(
+                store.resolve_completion_package_root(
+                    successor.data["current_stage_completions"]["P1"],
+                    expected_stage="P1",
+                )
+            )
+        ):
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", plan.reference["path"]
+            )
+        return
     if (
         plan.data.get("transition_mode") == "active_stage_return_refresh"
         and plan.data.get("target_stage") == "H1"
+        and "implementation_failure" in plan.data.get("stale_identity", {})
     ):
         stale = plan.data.get("stale_identity", {})
         post = [
@@ -1542,7 +2427,16 @@ def _validate_prepared_contract_upgrade(
                 "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", plan.reference["path"]
             )
         return
-    if plan.data.get("transition_mode") == "internal_h1_fragment_return":
+    fragment_return_refresh = (
+        plan.data.get("transition_mode") == "active_stage_return_refresh"
+        and plan.data.get("target_stage") == "H1"
+        and "consumed_work_order" in plan.data.get("stale_identity", {})
+        and "fidelity_failure" in plan.data.get("stale_identity", {})
+    )
+    if (
+        plan.data.get("transition_mode") == "internal_h1_fragment_return"
+        or fragment_return_refresh
+    ):
         stale = plan.data.get("stale_identity", {})
         post = [
             SealedDocument(data=dict(item["data"]), reference=dict(item["reference"]))
@@ -1562,6 +2456,8 @@ def _validate_prepared_contract_upgrade(
             consumed_order = store.load_document(stale["consumed_work_order"])
             fidelity_failure = store.load_document(stale["fidelity_failure"])
             fragment_manifest = store.load_document(stale["fragment_manifest"])
+            review_assignment = store.load_document(stale["review_assignment"])
+            review_completion = store.load_document(stale["review_completion"])
         except (KeyError, TypeError, ProductionStoreError) as error:
             raise ProductionStoreError(
                 "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
@@ -1571,8 +2467,55 @@ def _validate_prepared_contract_upgrade(
             copy.deepcopy(dict(raw_inputs)) if isinstance(raw_inputs, Mapping) else None
         )
         prior_generation = qualification.data.get("refresh_generation", 0)
+        old_return = None
+        if fragment_return_refresh:
+            try:
+                old_return = store.load_document(plan.data["superseded_return"])
+            except (KeyError, TypeError, ProductionStoreError) as error:
+                raise ProductionStoreError(
+                    "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+                ) from error
+        recovery_coordinator = ProductionCoordinator.from_snapshot(
+            predecessor.data,
+            predecessor.reference,
+            active_return_request=old_return,
+            runtime=store.runtime,
+        )
+        recovery_context = ProductionContext(
+            store, recovery_coordinator, predecessor, old_return
+        )
+        try:
+            fragment_artifacts = _validate_internal_h1_fragment_package(
+                recovery_context,
+                manifest=fragment_manifest,
+                workspace=current_workspace,
+                planned_workspace=planned_workspace,
+            )
+            _validate_internal_h1_fidelity_failure(
+                recovery_context,
+                fidelity_failure,
+                workspace=current_workspace,
+                generation_session=fragment_artifacts["generation_session"],
+            )
+        except ProductionOrchestratorError as error:
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID", str(error)
+            ) from error
+        consumed_state_is_current = (
+            consumed_order.data.get("state") == predecessor.reference
+        )
+        if not consumed_state_is_current:
+            consumed_state_is_current = (
+                _is_direct_compatible_qualification_state_rebase(
+                    recovery_context,
+                    bound_state=consumed_order.data.get("state", {}),
+                    latest=predecessor,
+                    workspace=current_workspace,
+                )
+            )
         if (
-            predecessor.data.get("active_return") is not None
+            predecessor.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
             or request.data.get("origin_kind") != "stage"
             or request.data.get("origin_stage") != "H1"
             or request.data.get("calculated_owner") != "H1-B"
@@ -1605,10 +2548,53 @@ def _validate_prepared_contract_upgrade(
             or current_workspace.data.get("artifacts", {}).get("fragment_manifest")
             != fragment_manifest.reference
             or consumed_order.data.get("action") != "H1-B"
+            or not consumed_state_is_current
             or stale.get("fidelity_failure") != fidelity_failure.reference
+            or stale.get("review_assignment") != review_assignment.reference
+            or stale.get("review_completion") != review_completion.reference
             or request.data.get("evidence_ids")
             != [fidelity_failure.data.get("review_id")]
-            or plan.data.get("superseded_return") is not None
+            or review_completion.data.get("kind")
+            != "internal-h1-fragment-fidelity-review-completion"
+            or review_completion.data.get("status") != "complete"
+            or review_completion.data.get("assignment")
+            != review_assignment.reference
+            or review_completion.data.get("review")
+            != fidelity_failure.reference
+            or review_completion.data.get("fragment_manifest")
+            != fragment_manifest.reference
+            or review_completion.data.get("state") != predecessor.reference
+            or review_completion.data.get("h1_workspace")
+            != current_workspace.reference
+            or review_assignment.data.get("kind")
+            != "internal-h1-fragment-fidelity-review-assignment"
+            or review_assignment.data.get("status") != "assigned"
+            or review_assignment.data.get("reviewer")
+            != fidelity_failure.data.get("reviewer")
+            or review_assignment.data.get("state") != predecessor.reference
+            or review_assignment.data.get("h1_workspace")
+            != current_workspace.reference
+            or review_assignment.data.get("planned_workspace")
+            != planned_workspace.reference
+            or review_assignment.data.get("consumed_work_order")
+            != consumed_order.reference
+            or review_assignment.data.get("consumed_marker")
+            != stale.get("consumed_marker")
+            or review_assignment.data.get("fragment_manifest")
+            != fragment_manifest.reference
+            or review_assignment.data.get("generation_session")
+            != fragment_artifacts["generation_session"].reference
+            or plan.data.get("superseded_return")
+            != (old_return.reference if old_return is not None else None)
+            or (
+                old_return is not None
+                and (
+                    old_return.data.get("origin_stage") != "H1"
+                    or old_return.data.get("resume_stage") != "H1"
+                    or old_return.data.get("resume_point")
+                    not in {"H1-A-plan", "H1-B"}
+                )
+            )
             or len(gates) != 1
             or len(orders) != 1
             or expected_inputs is None
@@ -2495,6 +3481,32 @@ def initialize_production_run(
     return ProductionContext(store, coordinator, state, None)
 
 
+def build_authority_revision_review_material(*args: Any, **kwargs: Any) -> Any:
+    """Public lazy bridge for the read-only review-material builder."""
+
+    from .conception_revision import (
+        build_authority_revision_review_material as build_material,
+    )
+
+    return build_material(*args, **kwargs)
+
+
+def initialize_conception_revision_run(*args: Any, **kwargs: Any) -> Any:
+    """Public lazy bridge to the authority-revision bootstrap runtime."""
+
+    from .conception_revision import initialize_conception_revision_run as initialize
+
+    return initialize(*args, **kwargs)
+
+
+def validate_conception_revision_run(*args: Any, **kwargs: Any) -> Any:
+    """Public lazy bridge for read-only revision bootstrap validation."""
+
+    from .conception_revision import validate_conception_revision_run as validate
+
+    return validate(*args, **kwargs)
+
+
 def _resume_production_run(
     run_root: str | Path,
     *,
@@ -2504,6 +3516,7 @@ def _resume_production_run(
     contract_runtime = runtime or ContractRuntime()
     store = ProductionRunStore(run_root, runtime=contract_runtime)
     with store.lock():
+        store.recover_h1_fidelity_authority_transactions()
         state = store.latest_state()
         state = store.reconcile_contract_upgrades(
             state,
@@ -2636,6 +3649,234 @@ def issue_stage_work(
             inputs=qualified_inputs,
         )
         return gate, order
+
+
+def apply_compatible_qualification_refresh(
+    context: ProductionContext,
+    *,
+    actor: str,
+) -> tuple[SealedDocument, ProductionContext, SealedDocument, SealedDocument]:
+    """Rebase a stale digest after an exact, migration-approved code refresh.
+
+    This edge exists only for an already-active H1 return.  It replays every
+    current B0-P1 package, preserves their completion references and the exact
+    current H1 workspace, advances a qualification-only state revision, and
+    reissues the same pending H1 action against that unchanged workspace.
+    """
+
+    if actor != "production-orchestrator":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    with context.store.lock():
+        latest = context.store.latest_state()
+        _require_context_current(context, latest)
+        qualification = context.store.current_contract_upgrade()
+        context.store.trusted_contract_upgrade_markers()
+        target, compatible = _actual_contract_upgrade_target(
+            context.store, latest, qualification
+        )
+        if (
+            qualification is None
+            or target != "H1"
+            or compatible.get("classification")
+            != "migration-approved-compatible-qualification-refresh"
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_NOT_ADMISSIBLE", target
+            )
+        active_reference = latest.data.get("active_return")
+        if (
+            context.active_return is None
+            or active_reference != context.active_return.reference
+            or compatible.get("active_return") != active_reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_STATE_INVALID",
+                "active return",
+            )
+        active = context.store.load_document(active_reference)
+        pending = context.store.pending_work_order()
+        workspace = context.store.latest_workspace()
+        if pending is None:
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_STATE_INVALID",
+                "pending H1 order",
+            )
+        action = pending.data.get("action")
+        contract = ACTION_CONTRACT.get(str(action))
+        if (
+            action not in H1_ACTION_STATES
+            or contract is None
+            or contract[0] != "H1"
+            or pending.data.get("run_id") != latest.data.get("run_id")
+            or pending.data.get("state") != latest.reference
+            or pending.data.get("h1_workspace") != workspace.reference
+            or pending.data.get("required_actor") != contract[1]
+            or pending.data.get("status") != "pending"
+            or workspace.data.get("state") != H1_ACTION_STATES[action][0]
+            or workspace.data.get("p1_completion")
+            != latest.data["current_stage_completions"].get("P1")
+            or not isinstance(pending.data.get("input_gate"), Mapping)
+            or "_contract_qualification" in pending.data.get("inputs", {})
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_STATE_INVALID",
+                str(action),
+            )
+        try:
+            pending_gate = context.store.load_document(pending.data["input_gate"])
+            expected_pending_gate = context.coordinator.build_input_gate(
+                "H1",
+                pending_gate.reference["path"],
+                active_return_request=active,
+            )
+        except (ProductionStoreError, CoordinatorError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_STATE_INVALID", str(error)
+            ) from error
+        if pending_gate != expected_pending_gate:
+            raise ProductionOrchestratorError(
+                "PROD_COMPATIBLE_QUALIFICATION_REFRESH_STATE_INVALID",
+                "pending gate",
+            )
+        pending_intent = context.store._load_commit_intent(pending)
+        fresh = ProductionCoordinator.from_snapshot(
+            copy.deepcopy(latest.data),
+            latest.reference,
+            active_return_request=active,
+            runtime=context.store.runtime,
+        )
+        try:
+            transition = fresh.refresh_active_return(
+                request=active,
+                next_state_path=(
+                    f"state/revision-{latest.data['revision'] + 1:03d}.json"
+                ),
+            )
+        except CoordinatorError as error:
+            raise ProductionOrchestratorError(error.code, str(error)) from error
+        successor = _sealed(transition)
+        gate = fresh.build_input_gate(
+            "H1",
+            (
+                "orchestration/input-gates/"
+                f"revision-{successor.data['revision']:03d}-{action}/input-gate.json"
+            ),
+            active_return_request=active,
+        )
+        raw_inputs = copy.deepcopy(dict(pending.data.get("inputs", {})))
+        order_body = {
+            "schema_version": "2.0",
+            "run_id": successor.data["run_id"],
+            "action": action,
+            "state": dict(successor.reference),
+            "input_gate": dict(gate.reference),
+            "h1_workspace": dict(workspace.reference),
+            "required_actor": contract[1],
+            "inputs": raw_inputs,
+            "status": "pending",
+        }
+        work_id = canonical_sha256(order_body)[:24]
+        order_data = {**order_body, "work_id": work_id}
+        order = SealedDocument(
+            data=order_data,
+            reference={
+                "path": f"orchestration/work-orders/{work_id}.json",
+                "sha256": canonical_sha256(order_data),
+            },
+        )
+        post_documents = [
+            {"data": copy.deepcopy(gate.data), "reference": dict(gate.reference)},
+            {"data": copy.deepcopy(order.data), "reference": dict(order.reference)},
+        ]
+        production_versions = {
+            stage: CURRENT_CONCEPTION_PRODUCTION_CONTRACT[stage][
+                "model_schema_version"
+            ]
+            for stage in ("E1", "T1")
+        }
+        inventory = {
+            "session_references": [],
+            "work_order_references": [dict(pending.reference)],
+            "completion_references": [],
+            "pending_work_order": dict(pending.reference),
+            "pending_commit_intent": (
+                dict(pending_intent.reference) if pending_intent else None
+            ),
+        }
+        stale_identity = {
+            **copy.deepcopy(compatible),
+            "origin_action": action,
+            "resume_point": action,
+            "pending_work_order": dict(pending.reference),
+            "current_workspace": dict(workspace.reference),
+        }
+        generation = qualification.data.get("refresh_generation", 0) + 1
+        if not isinstance(generation, int) or generation < 1:
+            raise ProductionOrchestratorError(
+                "PROD_CONTRACT_QUALIFICATION_STALE", "refresh_generation"
+            )
+        migration_id = canonical_sha256(
+            [
+                latest.reference,
+                active.reference,
+                qualification.data["new_contract_digest"],
+                CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
+            ]
+        )[:24]
+        plan_body = {
+            "schema_version": "1.0",
+            "migration_id": migration_id,
+            "reason": "contract_upgrade",
+            "predecessor_state": dict(latest.reference),
+            "successor_state": dict(successor.reference),
+            "successor_snapshot": copy.deepcopy(successor.data),
+            "return_request": dict(active.reference),
+            "old_contract_digest": qualification.data["new_contract_digest"],
+            "new_contract_digest": CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
+            "invalidated_stages": [],
+            "production_versions": production_versions,
+            **inventory,
+            "transition_mode": "compatible_qualification_refresh",
+            "refresh_generation": generation,
+            "prior_qualification": dict(qualification.reference),
+            "target_stage": "H1",
+            "stale_identity": stale_identity,
+            "production_contract": copy.deepcopy(
+                CURRENT_CONCEPTION_PRODUCTION_CONTRACT
+            ),
+            "inventory_sha256": canonical_sha256(inventory),
+            "superseded_return": None,
+            "post_upgrade_documents": post_documents,
+            "post_upgrade_work_order": dict(order.reference),
+            "post_upgrade_inputs": raw_inputs,
+            "status": "prepared",
+        }
+        plan = context.store.build_contract_upgrade_plan(plan_body)
+        receipt, _derived = context.store.build_contract_upgrade_completion(
+            plan, successor=successor
+        )
+        _validate_prepared_contract_upgrade(
+            store=context.store,
+            plan=plan,
+            receipt=receipt,
+            predecessor=latest,
+            successor=successor,
+            request=active,
+            qualification=qualification,
+        )
+        context.store.preflight_contract_upgrade_transaction(
+            request=active,
+            plan=plan,
+            successor=successor,
+            complete_receipt=receipt,
+        )
+        context.store.persist_document(plan)
+        context.store.persist_state(successor)
+        receipt = context.store.complete_contract_upgrade(
+            plan, successor=successor
+        )
+    refreshed = ProductionContext(context.store, fresh, successor, active)
+    return receipt, refreshed, gate, order
 
 
 def apply_contract_upgrade(
@@ -3199,11 +4440,507 @@ def apply_stage_return(
     return receipt, returned, gate, order
 
 
+def _current_h1_fragment_fidelity_material(
+    context: ProductionContext,
+    *,
+    consumed_work_order: SealedDocument,
+    fragment_manifest: SealedDocument,
+) -> tuple[
+    SealedDocument,
+    SealedDocument,
+    SealedDocument,
+    SealedDocument,
+    SealedDocument,
+    dict[str, SealedDocument],
+    dict[str, str],
+]:
+    """Resolve the exact current H1-B candidate and its consumed order."""
+
+    latest = context.store.latest_state()
+    _require_context_current(context, latest)
+    active = context.active_return
+    active_reference = latest.data.get("active_return")
+    if (active is None) != (active_reference is None) or (
+        active is not None and active.reference != active_reference
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_STATE_INVALID", "active return binding"
+        )
+    if active is not None:
+        try:
+            persisted_active = context.store.load_document(active.reference)
+        except ProductionStoreError as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_RETURN_STATE_INVALID", "active return is not sealed"
+            ) from error
+        resume_point = active.data.get("resume_point")
+        expected_owner = {"H1-A-plan": "H1-A", "H1-B": "H1-B"}.get(
+            resume_point
+        )
+        expected_artifacts = {
+            "H1-A-plan": ["plan", "fragments", "assembly", "html", "completion"],
+            "H1-B": ["fragments", "assembly", "html", "completion"],
+        }.get(resume_point)
+        if (
+            persisted_active.data != active.data
+            or expected_owner is None
+            or active.data.get("origin_kind") != "stage"
+            or active.data.get("origin_stage") != "H1"
+            or active.data.get("return_kind") != "local_revision"
+            or active.data.get("calculated_owner") != expected_owner
+            or active.data.get("target_stage") != "H1"
+            or active.data.get("resume_stage") != "H1"
+            or active.data.get("invalidated_stages") != ["H1"]
+            or active.data.get("invalidated_h1_artifacts") != expected_artifacts
+            or canonical_sha256(active.data) != active.reference.get("sha256")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_RETURN_STATE_INVALID", "foreign active return"
+            )
+    workspace = context.store.latest_workspace()
+    if (
+        latest.data.get("author_decision") is not None
+        or "H1" in latest.data.get("current_stage_completions", {})
+        or workspace.data.get("state") != "fragments_ready"
+        or set(workspace.data.get("artifacts", {}))
+        != {"plan_manifest", "fragment_manifest"}
+        or workspace.data["artifacts"]["fragment_manifest"]
+        != fragment_manifest.reference
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_STATE_INVALID", "fragments_ready candidate"
+        )
+    planned_reference = {
+        "path": f"H1/{workspace.data['session_id']}/workspace-planned.json",
+        "sha256": workspace.data["previous_state_sha256"],
+    }
+    try:
+        planned = context.store.load_document(planned_reference)
+        persisted_order = context.store.load_document(consumed_work_order.reference)
+        persisted_manifest = context.store.load_document(fragment_manifest.reference)
+    except ProductionStoreError as error:
+        raise ProductionOrchestratorError(error.code, str(error)) from error
+    order_state_is_current = consumed_work_order.data.get("state") == latest.reference
+    if not order_state_is_current:
+        order_state_is_current = _is_direct_compatible_qualification_state_rebase(
+            context,
+            bound_state=consumed_work_order.data.get("state", {}),
+            latest=latest,
+            workspace=workspace,
+        )
+    if (
+        persisted_order.data != consumed_work_order.data
+        or persisted_manifest.data != fragment_manifest.data
+        or consumed_work_order.data.get("action") != "H1-B"
+        or not order_state_is_current
+        or consumed_work_order.data.get("h1_workspace") != planned.reference
+        or planned.data.get("state") != "planned"
+        or planned.data.get("session_id") != workspace.data.get("session_id")
+        or planned.data.get("p1_completion") != workspace.data.get("p1_completion")
+        or planned.data.get("artifacts")
+        != {"plan_manifest": workspace.data["artifacts"]["plan_manifest"]}
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_ORDER_INVALID",
+            str(consumed_work_order.data.get("work_id", "")),
+        )
+    consumed_path = (
+        context.store.root
+        / "orchestration"
+        / "work-orders"
+        / f"{consumed_work_order.data['work_id']}.consumed.json"
+    )
+    if not consumed_path.is_file():
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_ORDER_INVALID", "missing consumed marker"
+        )
+    try:
+        consumed_body = json.loads(consumed_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_ORDER_INVALID", "consumed marker"
+        ) from error
+    if consumed_body != {
+        "schema_version": "2.0",
+        "work_order": dict(consumed_work_order.reference),
+        "successor": dict(workspace.reference),
+        "status": "consumed",
+    }:
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_RETURN_ORDER_INVALID", "consumed marker"
+        )
+    artifacts = _validate_internal_h1_fragment_package(
+        context,
+        manifest=fragment_manifest,
+        workspace=workspace,
+        planned_workspace=planned,
+    )
+    marker_reference = {
+        "path": consumed_path.relative_to(context.store.root).as_posix(),
+        "sha256": sha256_file(consumed_path),
+    }
+    return (
+        latest,
+        workspace,
+        planned,
+        consumed_work_order,
+        fragment_manifest,
+        artifacts,
+        marker_reference,
+    )
+
+
+def _is_direct_compatible_qualification_state_rebase(
+    context: ProductionContext,
+    *,
+    bound_state: Mapping[str, str],
+    latest: SealedDocument,
+    workspace: SealedDocument,
+) -> bool:
+    """Prove one old H1 work binding crosses only a compatible refresh.
+
+    The consumed H1-B order remains immutable.  It may name the immediately
+    preceding state only when the current qualification receipt proves that
+    exact predecessor/successor edge, and when the pending H1 action and
+    fragments-ready workspace were reissued byte-for-value.  This is not a
+    general stale-state allowance.
+    """
+
+    try:
+        context.store.trusted_contract_upgrade_markers()
+        qualification = context.store.current_contract_upgrade()
+        predecessor = context.store.load_document(bound_state)
+        if qualification is None:
+            return False
+        plan = context.store.load_document(qualification.data["plan"])
+        old_pending = context.store.load_document(plan.data["pending_work_order"])
+        current_pending = context.store.pending_work_order()
+    except (KeyError, TypeError, ProductionStoreError):
+        return False
+    predecessor_semantics = {
+        key: value
+        for key, value in predecessor.data.items()
+        if key not in {"revision", "previous_state"}
+    }
+    latest_semantics = {
+        key: value
+        for key, value in latest.data.items()
+        if key not in {"revision", "previous_state"}
+    }
+    stale = plan.data.get("stale_identity", {})
+    return bool(
+        current_pending is not None
+        and qualification.data.get("transition_mode")
+        == "compatible_qualification_refresh"
+        and qualification.data.get("target_stage") == "H1"
+        and qualification.data.get("invalidated_stages") == []
+        and qualification.data.get("superseded_return") is None
+        and qualification.data.get("plan") == plan.reference
+        and qualification.data.get("predecessor_state") == predecessor.reference
+        and qualification.data.get("successor_state") == latest.reference
+        and plan.data.get("transition_mode") == "compatible_qualification_refresh"
+        and plan.data.get("predecessor_state") == predecessor.reference
+        and plan.data.get("successor_state") == latest.reference
+        and latest.data.get("previous_state") == predecessor.reference
+        and latest.data.get("revision") == predecessor.data.get("revision", -2) + 1
+        and predecessor_semantics == latest_semantics
+        and stale.get("classification")
+        == "migration-approved-compatible-qualification-refresh"
+        and stale.get("current_workspace") == workspace.reference
+        and plan.data.get("post_upgrade_work_order") == current_pending.reference
+        and current_pending.data.get("state") == latest.reference
+        and current_pending.data.get("h1_workspace") == workspace.reference
+        and current_pending.data.get("status") == "pending"
+        and old_pending.reference == plan.data.get("pending_work_order")
+        and old_pending.data.get("state") == predecessor.reference
+        and old_pending.data.get("h1_workspace") == workspace.reference
+        and old_pending.data.get("status") == "pending"
+        and old_pending.data.get("action") == "H1-A-assemble"
+        and current_pending.data.get("action") == old_pending.data.get("action")
+        and current_pending.data.get("inputs") == old_pending.data.get("inputs")
+        and current_pending.data.get("required_actor")
+        == old_pending.data.get("required_actor")
+        and stale.get("origin_action") == old_pending.data.get("action")
+        and stale.get("resume_point") == old_pending.data.get("action")
+    )
+
+
+def _require_fresh_active_h1_reviewer(
+    context: ProductionContext,
+    reviewer: Mapping[str, Any],
+    *,
+    error_code: str,
+) -> None:
+    """Reject reuse of the reviewer task or thread from the active H1 return."""
+
+    active = context.active_return
+    if active is None:
+        return
+    try:
+        qualification = context.store.current_contract_upgrade()
+        if (
+            qualification is None
+            or qualification.data.get("return_request") != active.reference
+        ):
+            raise ProductionStoreError(
+                "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID",
+                "active H1 return qualification",
+            )
+        assignment_reference = qualification.data.get(
+            "stale_identity", {}
+        ).get("review_assignment")
+        if (
+            assignment_reference is None
+            and qualification.data.get("transition_mode")
+            == "compatible_qualification_refresh"
+        ):
+            prior_reference = qualification.data.get("prior_qualification")
+            if not isinstance(prior_reference, Mapping):
+                raise ProductionStoreError(
+                    "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID",
+                    "compatible refresh prior qualification",
+                )
+            prior = context.store.load_document(prior_reference)
+            if prior.data.get("return_request") != active.reference:
+                raise ProductionStoreError(
+                    "PROD_CONTRACT_QUALIFICATION_CHAIN_INVALID",
+                    "compatible refresh active return ancestry",
+                )
+            assignment_reference = prior.data.get("stale_identity", {}).get(
+                "review_assignment"
+            )
+        if assignment_reference is None:
+            return
+        prior_assignment = context.store.load_document(assignment_reference)
+    except ProductionStoreError as error:
+        raise ProductionOrchestratorError(error.code, str(error)) from error
+    prior = prior_assignment.data.get("reviewer")
+    if (
+        not isinstance(prior, Mapping)
+        or not isinstance(prior.get("task_id"), str)
+        or not prior["task_id"].strip()
+        or not isinstance(prior.get("thread_id"), str)
+        or not prior["thread_id"].strip()
+    ):
+        raise ProductionOrchestratorError(error_code, "prior reviewer identity")
+    if (
+        reviewer.get("task_id") == prior.get("task_id")
+        or reviewer.get("thread_id") == prior.get("thread_id")
+    ):
+        raise ProductionOrchestratorError(
+            error_code, "active H1 reviewer identity reused"
+        )
+
+
+def assign_internal_h1_fragment_fidelity_review(
+    context: ProductionContext,
+    *,
+    consumed_work_order: SealedDocument,
+    fragment_manifest: SealedDocument,
+    reviewer: Mapping[str, Any],
+    actor: str,
+) -> SealedDocument:
+    """Precommit an independent reviewer to the exact current H1-B package."""
+
+    if actor != "production-orchestrator":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    if (
+        not isinstance(reviewer, Mapping)
+        or set(reviewer) != {"task_id", "thread_id", "independence_basis"}
+        or reviewer.get("independence_basis")
+        != "separate-task-no-producer-context"
+        or not all(
+            isinstance(reviewer.get(field), str) and reviewer[field].strip()
+            for field in ("task_id", "thread_id")
+        )
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_FRAGMENT_FIDELITY_REVIEWER_INVALID", "reviewer identity"
+        )
+    with context.store.lock():
+        (
+            latest,
+            workspace,
+            planned,
+            consumed,
+            manifest,
+            artifacts,
+            consumed_marker,
+        ) = _current_h1_fragment_fidelity_material(
+            context,
+            consumed_work_order=consumed_work_order,
+            fragment_manifest=fragment_manifest,
+        )
+        producer = artifacts["generation_session"].data.get("identity")
+        if (
+            not isinstance(producer, Mapping)
+            or not isinstance(producer.get("task_id"), str)
+            or not producer["task_id"].strip()
+            or not isinstance(producer.get("thread_id"), str)
+            or not producer["thread_id"].strip()
+            or reviewer.get("task_id") == producer.get("task_id")
+            or reviewer.get("thread_id") == producer.get("thread_id")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_FIDELITY_REVIEW_NOT_INDEPENDENT",
+                "fragment producer identity reused",
+            )
+        _require_fresh_active_h1_reviewer(
+            context,
+            reviewer,
+            error_code="PROD_H1_FRAGMENT_FIDELITY_REVIEW_NOT_INDEPENDENT",
+        )
+        body = {
+            "schema_version": "1.0",
+            "kind": "internal-h1-fragment-fidelity-review-assignment",
+            "run_id": latest.data["run_id"],
+            "state": dict(latest.reference),
+            "h1_workspace": dict(workspace.reference),
+            "planned_workspace": dict(planned.reference),
+            "consumed_work_order": dict(consumed.reference),
+            "consumed_marker": consumed_marker,
+            "fragment_manifest": dict(manifest.reference),
+            "generation_session": dict(
+                artifacts["generation_session"].reference
+            ),
+            "reviewer": copy.deepcopy(dict(reviewer)),
+            "status": "assigned",
+        }
+        assignment_id = canonical_sha256(body)[:24]
+        assignment_data = {**body, "assignment_id": assignment_id}
+        assignment = SealedDocument(
+            data=assignment_data,
+            reference={
+                "path": (
+                    "orchestration/h1-fragment-fidelity-review-assignments/"
+                    f"{assignment_id}.json"
+                ),
+                "sha256": canonical_sha256(assignment_data),
+            },
+        )
+        context.store._persist_h1_fidelity_authority_document(assignment)
+    return assignment
+
+
+def record_internal_h1_fragment_fidelity_failure(
+    context: ProductionContext,
+    *,
+    assignment: SealedDocument,
+    consumed_work_order: SealedDocument,
+    fragment_manifest: SealedDocument,
+    fidelity_failure: SealedDocument,
+    actor: str,
+) -> SealedDocument:
+    """Seal an H1-B failure only under its exact precommitted assignment."""
+
+    if actor != "novel-conception-presentation-fidelity-reviewer":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    with context.store.lock():
+        (
+            latest,
+            workspace,
+            planned,
+            consumed,
+            manifest,
+            artifacts,
+            consumed_marker,
+        ) = _current_h1_fragment_fidelity_material(
+            context,
+            consumed_work_order=consumed_work_order,
+            fragment_manifest=fragment_manifest,
+        )
+        try:
+            persisted_assignment = context.store.load_document(
+                assignment.reference
+            )
+        except ProductionStoreError as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_FIDELITY_ASSIGNMENT_INVALID", str(error)
+            ) from error
+        completion_root = (
+            context.store.root
+            / "orchestration"
+            / "h1-fragment-fidelity-review-completions"
+        )
+        for path in completion_root.glob("*.json"):
+            try:
+                prior = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, json.JSONDecodeError) as error:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_FRAGMENT_FIDELITY_ASSIGNMENT_INVALID", str(error)
+                ) from error
+            if prior.get("assignment") == assignment.reference:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_FRAGMENT_FIDELITY_ASSIGNMENT_REUSED",
+                    str(assignment.data.get("assignment_id", "")),
+                )
+        expected = {
+            "state": latest.reference,
+            "h1_workspace": workspace.reference,
+            "planned_workspace": planned.reference,
+            "consumed_work_order": consumed.reference,
+            "consumed_marker": consumed_marker,
+            "fragment_manifest": manifest.reference,
+            "generation_session": artifacts["generation_session"].reference,
+        }
+        if (
+            persisted_assignment.data != assignment.data
+            or assignment.data.get("kind")
+            != "internal-h1-fragment-fidelity-review-assignment"
+            or assignment.data.get("status") != "assigned"
+            or any(
+                assignment.data.get(field) != value
+                for field, value in expected.items()
+            )
+            or fidelity_failure.data.get("reviewer")
+            != assignment.data.get("reviewer")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_FIDELITY_ASSIGNMENT_INVALID",
+                str(assignment.data.get("assignment_id", "")),
+            )
+        _validate_internal_h1_fidelity_failure(
+            context,
+            fidelity_failure,
+            workspace=workspace,
+            generation_session=artifacts["generation_session"],
+            require_persisted=False,
+        )
+        body = {
+            "schema_version": "1.0",
+            "kind": "internal-h1-fragment-fidelity-review-completion",
+            "run_id": latest.data["run_id"],
+            "assignment": dict(assignment.reference),
+            "review": dict(fidelity_failure.reference),
+            "fragment_manifest": dict(manifest.reference),
+            "state": dict(latest.reference),
+            "h1_workspace": dict(workspace.reference),
+            "status": "complete",
+        }
+        completion_id = canonical_sha256(body)[:24]
+        completion_data = {**body, "completion_id": completion_id}
+        completion = SealedDocument(
+            data=completion_data,
+            reference={
+                "path": (
+                    "orchestration/h1-fragment-fidelity-review-completions/"
+                    f"{completion_id}.json"
+                ),
+                "sha256": canonical_sha256(completion_data),
+            },
+        )
+        context.store.persist_h1_fidelity_authority_pair(
+            fidelity_failure, completion
+        )
+    return completion
+
+
 def apply_internal_h1_fragment_return(
     context: ProductionContext,
     *,
     consumed_work_order: SealedDocument,
     fidelity_failure: SealedDocument,
+    review_completion: SealedDocument,
     request: SealedDocument,
     actor: str,
     inputs: Mapping[str, Any],
@@ -3225,11 +4962,54 @@ def apply_internal_h1_fragment_return(
     with context.store.lock():
         latest = context.store.latest_state()
         _require_context_current(context, latest)
-        if context.active_return is not None or latest.data.get("active_return") is not None:
+        old_return = context.active_return
+        active_reference = latest.data.get("active_return")
+        if (old_return is None) != (active_reference is None) or (
+            old_return is not None and old_return.reference != active_reference
+        ):
             raise ProductionOrchestratorError(
-                "PROD_H1_FRAGMENT_RETURN_ACTIVE_EXISTS",
-                str(request.data.get("return_id", "")),
+                "PROD_H1_FRAGMENT_RETURN_STATE_INVALID", "active return binding"
             )
+        if old_return is not None:
+            try:
+                persisted_old_return = context.store.load_document(
+                    old_return.reference
+                )
+            except ProductionStoreError as error:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_FRAGMENT_RETURN_STATE_INVALID",
+                    "active return is not sealed",
+                ) from error
+            old_resume_point = old_return.data.get("resume_point")
+            expected_owner = {
+                "H1-A-plan": "H1-A",
+                "H1-B": "H1-B",
+            }.get(old_resume_point)
+            expected_h1_artifacts = {
+                "H1-A-plan": [
+                    "plan", "fragments", "assembly", "html", "completion"
+                ],
+                "H1-B": ["fragments", "assembly", "html", "completion"],
+            }.get(old_resume_point)
+            if (
+                persisted_old_return.data != old_return.data
+                or expected_owner is None
+                or old_return.data.get("origin_kind") != "stage"
+                or old_return.data.get("origin_stage") != "H1"
+                or old_return.data.get("return_kind") != "local_revision"
+                or old_return.data.get("calculated_owner") != expected_owner
+                or old_return.data.get("target_stage") != "H1"
+                or old_return.data.get("resume_stage") != "H1"
+                or old_return.data.get("invalidated_stages") != ["H1"]
+                or old_return.data.get("invalidated_h1_artifacts")
+                != expected_h1_artifacts
+                or canonical_sha256(old_return.data)
+                != old_return.reference.get("sha256")
+            ):
+                raise ProductionOrchestratorError(
+                    "PROD_H1_FRAGMENT_RETURN_STATE_INVALID",
+                    "foreign active return",
+                )
         qualification = _validate_current_contract_qualification(
             context.store,
             context.store.current_contract_upgrade(),
@@ -3265,10 +5045,18 @@ def apply_internal_h1_fragment_return(
             )
         except ProductionStoreError as error:
             raise ProductionOrchestratorError(error.code, str(error)) from error
+        order_state_is_current = consumed_work_order.data.get("state") == latest.reference
+        if not order_state_is_current:
+            order_state_is_current = _is_direct_compatible_qualification_state_rebase(
+                context,
+                bound_state=consumed_work_order.data.get("state", {}),
+                latest=latest,
+                workspace=workspace,
+            )
         if (
             persisted_order.data != consumed_work_order.data
             or consumed_work_order.data.get("action") != "H1-B"
-            or consumed_work_order.data.get("state") != latest.reference
+            or not order_state_is_current
             or consumed_work_order.data.get("h1_workspace") != planned.reference
             or planned.data.get("state") != "planned"
             or planned.data.get("session_id") != workspace.data.get("session_id")
@@ -3308,8 +5096,57 @@ def apply_internal_h1_fragment_return(
         )
 
         _validate_internal_h1_fidelity_failure(
-            context, fidelity_failure, workspace=workspace
+            context,
+            fidelity_failure,
+            workspace=workspace,
+            generation_session=fragment_artifacts["generation_session"],
         )
+        try:
+            persisted_review_completion = context.store.load_document(
+                review_completion.reference
+            )
+            review_assignment = context.store.load_document(
+                review_completion.data["assignment"]
+            )
+        except (KeyError, TypeError, ProductionStoreError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_FIDELITY_AUTHORITY_INVALID", str(error)
+            ) from error
+        consumed_reference = {
+            "path": consumed_path.relative_to(context.store.root).as_posix(),
+            "sha256": sha256_file(consumed_path),
+        }
+        if (
+            persisted_review_completion.data != review_completion.data
+            or review_completion.data.get("kind")
+            != "internal-h1-fragment-fidelity-review-completion"
+            or review_completion.data.get("status") != "complete"
+            or review_completion.data.get("run_id") != latest.data.get("run_id")
+            or review_completion.data.get("review") != fidelity_failure.reference
+            or review_completion.data.get("fragment_manifest")
+            != fragment_manifest.reference
+            or review_completion.data.get("state") != latest.reference
+            or review_completion.data.get("h1_workspace") != workspace.reference
+            or review_assignment.data.get("kind")
+            != "internal-h1-fragment-fidelity-review-assignment"
+            or review_assignment.data.get("status") != "assigned"
+            or review_assignment.data.get("reviewer")
+            != fidelity_failure.data.get("reviewer")
+            or review_assignment.data.get("state") != latest.reference
+            or review_assignment.data.get("h1_workspace") != workspace.reference
+            or review_assignment.data.get("planned_workspace") != planned.reference
+            or review_assignment.data.get("consumed_work_order")
+            != consumed_work_order.reference
+            or review_assignment.data.get("consumed_marker") != consumed_reference
+            or review_assignment.data.get("fragment_manifest")
+            != fragment_manifest.reference
+            or review_assignment.data.get("generation_session")
+            != fragment_artifacts["generation_session"].reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_FRAGMENT_FIDELITY_AUTHORITY_INVALID",
+                str(review_completion.data.get("completion_id", "")),
+            )
         for path in (
             context.store.root / "orchestration" / "contract-upgrades"
         ).glob("*.json"):
@@ -3367,14 +5204,24 @@ def apply_internal_h1_fragment_return(
         fresh = ProductionCoordinator.from_snapshot(
             copy.deepcopy(latest.data),
             copy.deepcopy(latest.reference),
-            active_return_request=None,
+            active_return_request=old_return,
             runtime=context.store.runtime,
         )
         try:
-            transition = fresh.apply_return_request(
-                request=request,
-                next_state_path=f"state/revision-{latest.data['revision'] + 1:03d}.json",
-            )
+            if old_return is None:
+                transition = fresh.apply_return_request(
+                    request=request,
+                    next_state_path=(
+                        f"state/revision-{latest.data['revision'] + 1:03d}.json"
+                    ),
+                )
+            else:
+                transition = fresh.refresh_active_stage_return(
+                    request=request,
+                    next_state_path=(
+                        f"state/revision-{latest.data['revision'] + 1:03d}.json"
+                    ),
+                )
         except CoordinatorError as error:
             raise ProductionOrchestratorError(error.code, str(error)) from error
         successor = _sealed(transition)
@@ -3444,10 +5291,6 @@ def apply_internal_h1_fragment_return(
             qualification.data["new_contract_digest"],
             CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
         ])[:24]
-        consumed_reference = {
-            "path": consumed_path.relative_to(context.store.root).as_posix(),
-            "sha256": sha256_file(consumed_path),
-        }
         stale_identity = {
             "stage": "H1",
             "origin_action": "H1-B",
@@ -3458,8 +5301,12 @@ def apply_internal_h1_fragment_return(
             "planned_workspace": dict(planned.reference),
             "fragment_manifest": dict(fragment_manifest.reference),
             "fidelity_failure": dict(fidelity_failure.reference),
+            "review_assignment": dict(review_assignment.reference),
+            "review_completion": dict(review_completion.reference),
             "evidence_ids": list(request.data["evidence_ids"]),
         }
+        if old_return is not None:
+            stale_identity["superseded_return"] = dict(old_return.reference)
         plan_body = {
             "schema_version": "1.0",
             "migration_id": migration_id,
@@ -3473,7 +5320,11 @@ def apply_internal_h1_fragment_return(
             "invalidated_stages": ["H1"],
             "production_versions": production_versions,
             **inventory,
-            "transition_mode": "internal_h1_fragment_return",
+            "transition_mode": (
+                "internal_h1_fragment_return"
+                if old_return is None
+                else "active_stage_return_refresh"
+            ),
             "refresh_generation": generation,
             "prior_qualification": dict(qualification.reference),
             "target_stage": "H1",
@@ -3482,7 +5333,9 @@ def apply_internal_h1_fragment_return(
                 CURRENT_CONCEPTION_PRODUCTION_CONTRACT
             ),
             "inventory_sha256": canonical_sha256(inventory),
-            "superseded_return": None,
+            "superseded_return": (
+                None if old_return is None else dict(old_return.reference)
+            ),
             "post_upgrade_documents": [
                 {"data": copy.deepcopy(gate.data), "reference": dict(gate.reference)},
                 {"data": copy.deepcopy(order.data), "reference": dict(order.reference)},
@@ -3510,6 +5363,793 @@ def apply_internal_h1_fragment_return(
     return (
         receipt,
         ProductionContext(context.store, fresh, successor, request),
+        gate,
+        order,
+    )
+
+
+def _current_h1_plan_fidelity_material(
+    context: ProductionContext,
+) -> tuple[
+    SealedDocument, SealedDocument, SealedDocument, SealedDocument,
+    SealedDocument, SealedDocument, tuple[SealedDocument, SealedDocument],
+    SealedDocument | None,
+]:
+    latest = context.store.latest_state()
+    _require_context_current(context, latest)
+    active = context.active_return
+    active_reference = latest.data.get("active_return")
+    if (active is None) != (active_reference is None) or (
+        active is not None and active.reference != active_reference
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_RETURN_STATE_INVALID", "active return binding"
+        )
+    active_resume_point: str | None = None
+    if active is not None:
+        try:
+            persisted_active = context.store.load_document(active.reference)
+        except ProductionStoreError as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "active return is not sealed"
+            ) from error
+        active_resume_point = active.data.get("resume_point")
+        expected_owner = {
+            "H1-A-plan": "H1-A",
+            "H1-B": "H1-B",
+        }.get(active_resume_point)
+        expected_artifacts = {
+            "H1-A-plan": [
+                "plan", "fragments", "assembly", "html", "completion"
+            ],
+            "H1-B": ["fragments", "assembly", "html", "completion"],
+        }.get(active_resume_point)
+        if (
+            persisted_active.data != active.data
+            or expected_owner is None
+            or active.data.get("origin_kind") != "stage"
+            or active.data.get("origin_stage") != "H1"
+            or active.data.get("return_kind") != "local_revision"
+            or active.data.get("calculated_owner") != expected_owner
+            or active.data.get("target_stage") != "H1"
+            or active.data.get("resume_stage") != "H1"
+            or active.data.get("invalidated_stages") != ["H1"]
+            or active.data.get("invalidated_h1_artifacts")
+            != expected_artifacts
+            or canonical_sha256(active.data) != active.reference.get("sha256")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "foreign active return"
+            )
+    current_workspace = context.store.latest_workspace()
+    pending = context.store.pending_work_order()
+    reviewed_workspace = current_workspace
+    active_qualification: SealedDocument | None = None
+    if active_resume_point == "H1-B":
+        active_qualification = _validate_current_contract_qualification(
+            context.store,
+            context.store.current_contract_upgrade(),
+            scope="internal-h1-plan-review-over-active-h1-b",
+        )
+        stale = active_qualification.data.get("stale_identity", {})
+        active_mode = active_qualification.data.get("transition_mode")
+        if (
+            active_mode not in {
+                "internal_h1_fragment_return", "active_stage_return_refresh"
+            }
+            or active_qualification.data.get("return_request") != active.reference
+            or active_qualification.data.get("successor_state") != latest.reference
+            or active_qualification.data.get("post_upgrade_work_order")
+            != (pending.reference if pending is not None else None)
+            or stale.get("stage") != "H1"
+            or stale.get("origin_action") != "H1-B"
+            or stale.get("resume_point") != "H1-B"
+            or stale.get("planned_workspace") != current_workspace.reference
+            or (
+                stale.get("superseded_return")
+                != active_qualification.data.get("superseded_return")
+                if active_mode == "active_stage_return_refresh" else False
+            )
+            or (
+                active_qualification.data.get("superseded_return") is not None
+                if active_mode == "internal_h1_fragment_return" else False
+            )
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "active H1-B ancestry"
+            )
+        try:
+            reviewed_workspace = context.store.load_document(
+                stale["current_workspace"]
+            )
+            consumed_order = context.store.load_document(
+                stale["consumed_work_order"]
+            )
+            fragment_manifest = context.store.load_document(
+                stale["fragment_manifest"]
+            )
+        except (KeyError, TypeError, ProductionStoreError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "active H1-B evidence"
+            ) from error
+        consumed_marker = stale.get("consumed_marker")
+        try:
+            marker = context.store.load_document(consumed_marker).data
+        except (TypeError, ProductionStoreError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "active H1-B consumed marker"
+            ) from error
+        if (
+            current_workspace.data.get("state") != "planned"
+            or set(current_workspace.data.get("artifacts", {}))
+            != {"plan_manifest"}
+            or reviewed_workspace.data.get("state") != "fragments_ready"
+            or reviewed_workspace.data.get("session_id")
+            != current_workspace.data.get("session_id")
+            or reviewed_workspace.data.get("p1_completion")
+            != current_workspace.data.get("p1_completion")
+            or reviewed_workspace.data.get("previous_state_sha256")
+            != current_workspace.reference.get("sha256")
+            or reviewed_workspace.data.get("artifacts")
+            != {
+                "plan_manifest": current_workspace.data["artifacts"]["plan_manifest"],
+                "fragment_manifest": fragment_manifest.reference,
+            }
+            or pending is None
+            or pending.data.get("action") != "H1-B"
+            or pending.data.get("state") != latest.reference
+            or pending.data.get("h1_workspace") != current_workspace.reference
+            or consumed_order.data.get("action") != "H1-B"
+            or consumed_order.data.get("h1_workspace")
+            != current_workspace.reference
+            or marker
+            != {
+                "schema_version": "2.0",
+                "work_order": consumed_order.reference,
+                "successor": reviewed_workspace.reference,
+                "status": "consumed",
+            }
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID",
+                "planned/H1-B active escalation material",
+            )
+    else:
+        artifacts = current_workspace.data.get("artifacts", {})
+        if (
+            current_workspace.data.get("state") != "fragments_ready"
+            or set(artifacts) != {"plan_manifest", "fragment_manifest"}
+            or pending is None
+            or pending.data.get("action") != "H1-A-assemble"
+            or pending.data.get("state") != latest.reference
+            or pending.data.get("h1_workspace") != current_workspace.reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID",
+                "fragments_ready/H1-A-assemble",
+            )
+        fragment_manifest = None
+    if (
+        latest.data.get("author_decision") is not None
+        or "H1" in latest.data.get("current_stage_completions", {})
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_RETURN_STATE_INVALID", "pre-assembly H1"
+        )
+    try:
+        context.store.require_current_work_order(pending, state=latest)
+        plan_manifest = context.store.load_document(
+            current_workspace.data["artifacts"]["plan_manifest"]
+        )
+        if fragment_manifest is None:
+            fragment_manifest = context.store.load_document(
+                current_workspace.data["artifacts"]["fragment_manifest"]
+            )
+        sessions: list[SealedDocument] = []
+        for manifest in (plan_manifest, fragment_manifest):
+            _physical, normalized = _h1_refresh_artifact(
+                context.store,
+                manifest=manifest,
+                reference=manifest.data.get("artifact_roles", {}).get(
+                    "generation_session"
+                ),
+            )
+            sessions.append(context.store.load_document(normalized))
+    except (ProductionStoreError, ProductionOrchestratorError) as error:
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", str(error)
+        ) from error
+    return (
+        latest, current_workspace, reviewed_workspace, pending, plan_manifest,
+        fragment_manifest, (sessions[0], sessions[1]), active_qualification,
+    )
+
+
+def assign_internal_h1_plan_fidelity_review(
+    context: ProductionContext,
+    *,
+    candidate_report: SealedDocument,
+    reviewer: Mapping[str, Any],
+    actor: str,
+) -> SealedDocument:
+    """Precommit the real independent reviewer before accepting its verdict."""
+
+    if actor != "production-orchestrator":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    if (
+        not isinstance(reviewer, Mapping)
+        or set(reviewer) != {"task_id", "thread_id", "independence_basis"}
+        or reviewer.get("independence_basis")
+        != "separate-task-no-producer-context"
+        or not all(
+            isinstance(reviewer.get(field), str) and reviewer[field].strip()
+            for field in ("task_id", "thread_id")
+        )
+    ):
+        raise ProductionOrchestratorError(
+            "PROD_H1_PLAN_FIDELITY_REVIEWER_INVALID", "reviewer identity"
+        )
+    with context.store.lock():
+        (
+            latest, workspace, reviewed_workspace, pending, plan_manifest,
+            fragment_manifest, sessions, active_qualification,
+        ) = _current_h1_plan_fidelity_material(context)
+        try:
+            persisted_candidate = context.store.load_document(
+                candidate_report.reference
+            )
+        except ProductionStoreError as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", "candidate not sealed"
+            ) from error
+        if persisted_candidate.data != candidate_report.data:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_FAILURE_INVALID", "candidate drift"
+            )
+        producer_identities = [session.data.get("identity") for session in sessions]
+        if any(
+            not isinstance(identity, Mapping)
+            or reviewer.get("task_id") == identity.get("task_id")
+            or reviewer.get("thread_id") == identity.get("thread_id")
+            for identity in producer_identities
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_REVIEW_NOT_INDEPENDENT",
+                "producer identity reused",
+            )
+        _require_fresh_active_h1_reviewer(
+            context,
+            reviewer,
+            error_code="PROD_H1_PLAN_FIDELITY_REVIEW_NOT_INDEPENDENT",
+        )
+        body = {
+            "schema_version": "1.0",
+            "kind": "internal-h1-plan-fidelity-review-assignment",
+            "run_id": latest.data["run_id"],
+            "state": dict(latest.reference),
+            "h1_workspace": dict(workspace.reference),
+            "review_workspace": dict(reviewed_workspace.reference),
+            "pending_work_order": dict(pending.reference),
+            "plan_manifest": dict(plan_manifest.reference),
+            "fragment_manifest": dict(fragment_manifest.reference),
+            "candidate_report": dict(candidate_report.reference),
+            "reviewer": copy.deepcopy(dict(reviewer)),
+            "producer_sessions": [dict(session.reference) for session in sessions],
+            "active_return": (
+                dict(context.active_return.reference)
+                if context.active_return is not None else None
+            ),
+            "active_return_qualification": (
+                dict(active_qualification.reference)
+                if active_qualification is not None else None
+            ),
+            "status": "assigned",
+        }
+        assignment_id = canonical_sha256(body)[:24]
+        assignment = SealedDocument(
+            data={**body, "assignment_id": assignment_id},
+            reference={
+                "path": (
+                    "orchestration/h1-fidelity-review-assignments/"
+                    f"{assignment_id}.json"
+                ),
+                "sha256": canonical_sha256({**body, "assignment_id": assignment_id}),
+            },
+        )
+        context.store._persist_h1_fidelity_authority_document(assignment)
+    return assignment
+
+
+def record_internal_h1_plan_fidelity_failure(
+    context: ProductionContext,
+    *,
+    assignment: SealedDocument,
+    candidate_report: SealedDocument,
+    fidelity_failure: SealedDocument,
+    actor: str,
+) -> SealedDocument:
+    """Seal one reviewer-owned revise verdict under a precommitted assignment."""
+
+    if actor != "novel-conception-presentation-fidelity-reviewer":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    with context.store.lock():
+        (
+            latest, workspace, reviewed_workspace, pending, plan_manifest,
+            fragment_manifest, sessions, active_qualification,
+        ) = _current_h1_plan_fidelity_material(context)
+        try:
+            persisted_assignment = context.store.load_document(assignment.reference)
+        except ProductionStoreError as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_ASSIGNMENT_INVALID", str(error)
+            ) from error
+        expected_assignment = {
+            "state": latest.reference,
+            "h1_workspace": workspace.reference,
+            "review_workspace": reviewed_workspace.reference,
+            "pending_work_order": pending.reference,
+            "plan_manifest": plan_manifest.reference,
+            "fragment_manifest": fragment_manifest.reference,
+            "candidate_report": candidate_report.reference,
+            "producer_sessions": [session.reference for session in sessions],
+            "active_return": (
+                context.active_return.reference
+                if context.active_return is not None else None
+            ),
+            "active_return_qualification": (
+                active_qualification.reference
+                if active_qualification is not None else None
+            ),
+        }
+        if (
+            persisted_assignment.data != assignment.data
+            or assignment.data.get("kind")
+            != "internal-h1-plan-fidelity-review-assignment"
+            or assignment.data.get("status") != "assigned"
+            or any(
+                assignment.data.get(field) != value
+                for field, value in expected_assignment.items()
+            )
+            or fidelity_failure.data.get("reviewer")
+            != assignment.data.get("reviewer")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_ASSIGNMENT_INVALID",
+                str(assignment.data.get("assignment_id", "")),
+            )
+        _validate_internal_h1_plan_fidelity_failure(
+            context,
+            fidelity_failure,
+            candidate_report=candidate_report,
+            workspace=reviewed_workspace,
+            plan_manifest=plan_manifest,
+            fragment_manifest=fragment_manifest,
+            require_persisted=False,
+        )
+        body = {
+            "schema_version": "1.0",
+            "kind": "internal-h1-plan-fidelity-review-completion",
+            "run_id": latest.data["run_id"],
+            "assignment": dict(assignment.reference),
+            "review": dict(fidelity_failure.reference),
+            "candidate_report": dict(candidate_report.reference),
+            "state": dict(latest.reference),
+            "h1_workspace": dict(workspace.reference),
+            "review_workspace": dict(reviewed_workspace.reference),
+            "active_return": (
+                dict(context.active_return.reference)
+                if context.active_return is not None else None
+            ),
+            "active_return_qualification": (
+                dict(active_qualification.reference)
+                if active_qualification is not None else None
+            ),
+            "status": "complete",
+        }
+        completion_id = canonical_sha256(body)[:24]
+        completion = SealedDocument(
+            data={**body, "completion_id": completion_id},
+            reference={
+                "path": (
+                    "orchestration/h1-fidelity-review-completions/"
+                    f"{completion_id}.json"
+                ),
+                "sha256": canonical_sha256({**body, "completion_id": completion_id}),
+            },
+        )
+        context.store.preflight_immutable_documents((fidelity_failure, completion))
+        context.store._persist_h1_fidelity_authority_document(fidelity_failure)
+        context.store._persist_h1_fidelity_authority_document(completion)
+    return completion
+
+
+def apply_internal_h1_plan_return(
+    context: ProductionContext,
+    *,
+    fidelity_failure: SealedDocument,
+    candidate_report: SealedDocument,
+    review_completion: SealedDocument,
+    request: SealedDocument,
+    actor: str,
+) -> tuple[
+    SealedDocument,
+    ProductionContext,
+    SealedDocument,
+    SealedDocument,
+    SealedDocument,
+]:
+    """Return a fidelity-rejected pre-assembly H1 to a fresh H1-A plan.
+
+    The rejected plan, fragments, candidate report, review, and assembly order
+    remain immutable evidence.  Only a current, independent ``revise`` review
+    bound to their exact hashes may create this append-only edge.
+    """
+
+    if actor != "production-orchestrator":
+        raise ProductionOrchestratorError("PROD_WORK_ACTOR_MISMATCH", actor)
+    with context.store.lock():
+        latest = context.store.latest_state()
+        _require_context_current(context, latest)
+        if (
+            latest.data.get("author_decision") is not None
+            or "H1" in latest.data.get("current_stage_completions", {})
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "pre-assembly H1"
+            )
+        qualification = _validate_current_contract_qualification(
+            context.store,
+            context.store.current_contract_upgrade(),
+            scope="internal-h1-plan-return",
+        )
+        (
+            material_state,
+            workspace,
+            reviewed_workspace,
+            pending,
+            plan_manifest,
+            fragment_manifest,
+            producer_sessions,
+            active_return_qualification,
+        ) = _current_h1_plan_fidelity_material(context)
+        if material_state.reference != latest.reference or (
+            active_return_qualification is not None
+            and active_return_qualification.reference != qualification.reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "review material ancestry"
+            )
+        old_return = context.active_return
+        if (old_return is None) != (latest.data.get("active_return") is None) or (
+            old_return is not None
+            and old_return.reference != latest.data.get("active_return")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_STATE_INVALID", "active return binding"
+            )
+        plan_session, fragment_session = _validate_internal_h1_plan_fidelity_failure(
+            context,
+            fidelity_failure,
+            candidate_report=candidate_report,
+            workspace=reviewed_workspace,
+            plan_manifest=plan_manifest,
+            fragment_manifest=fragment_manifest,
+        )
+        if (
+            plan_session.reference != producer_sessions[0].reference
+            or fragment_session.reference != producer_sessions[1].reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_AUTHORITY_INVALID", "producer sessions"
+            )
+        prior_fragment_session_invalidation: SealedDocument | None = None
+        if active_return_qualification is not None:
+            try:
+                matching_invalidations = []
+                for reference in active_return_qualification.data[
+                    "session_invalidation_receipts"
+                ]:
+                    invalidation = context.store.load_document(reference)
+                    if invalidation.data.get("session") == fragment_session.reference:
+                        matching_invalidations.append(invalidation)
+            except (KeyError, TypeError, ProductionStoreError) as error:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_PLAN_RETURN_STATE_INVALID",
+                    f"fragment invalidation ancestry: {error}",
+                ) from error
+            if len(matching_invalidations) != 1:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_PLAN_RETURN_STATE_INVALID",
+                    "fragment invalidation ancestry",
+                )
+            prior_fragment_session_invalidation = matching_invalidations[0]
+        try:
+            persisted_review_completion = context.store.load_document(
+                review_completion.reference
+            )
+            assignment = context.store.load_document(
+                review_completion.data["assignment"]
+            )
+        except (KeyError, TypeError, ProductionStoreError) as error:
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_AUTHORITY_INVALID", str(error)
+            ) from error
+        if (
+            persisted_review_completion.data != review_completion.data
+            or review_completion.data.get("kind")
+            != "internal-h1-plan-fidelity-review-completion"
+            or review_completion.data.get("status") != "complete"
+            or review_completion.data.get("run_id") != latest.data.get("run_id")
+            or review_completion.data.get("review") != fidelity_failure.reference
+            or review_completion.data.get("candidate_report")
+            != candidate_report.reference
+            or review_completion.data.get("state") != latest.reference
+            or review_completion.data.get("h1_workspace") != workspace.reference
+            or review_completion.data.get("review_workspace")
+            != reviewed_workspace.reference
+            or review_completion.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
+            or review_completion.data.get("active_return_qualification")
+            != (
+                active_return_qualification.reference
+                if active_return_qualification is not None else None
+            )
+            or assignment.data.get("state") != latest.reference
+            or assignment.data.get("h1_workspace") != workspace.reference
+            or assignment.data.get("review_workspace")
+            != reviewed_workspace.reference
+            or assignment.data.get("active_return")
+            != (old_return.reference if old_return is not None else None)
+            or assignment.data.get("active_return_qualification")
+            != (
+                active_return_qualification.reference
+                if active_return_qualification is not None else None
+            )
+            or assignment.data.get("reviewer") != fidelity_failure.data.get("reviewer")
+            or assignment.data.get("pending_work_order") != pending.reference
+            or assignment.data.get("plan_manifest") != plan_manifest.reference
+            or assignment.data.get("fragment_manifest")
+            != fragment_manifest.reference
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_FIDELITY_AUTHORITY_INVALID",
+                str(review_completion.data.get("completion_id", "")),
+            )
+        for path in (
+            context.store.root / "orchestration" / "contract-upgrades"
+        ).glob("*.json"):
+            try:
+                prior = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, json.JSONDecodeError) as error:
+                raise ProductionOrchestratorError(
+                    "PROD_CONTRACT_QUALIFICATION_STALE", str(error)
+                ) from error
+            if prior.get("stale_identity", {}).get(
+                "fidelity_failure"
+            ) == fidelity_failure.reference:
+                raise ProductionOrchestratorError(
+                    "PROD_H1_PLAN_FIDELITY_FAILURE_REUSED",
+                    fidelity_failure.reference["sha256"],
+                )
+        if (
+            request.data.get("origin_kind") != "stage"
+            or request.data.get("origin_stage") != "H1"
+            or request.data.get("return_kind") != "local_revision"
+            or request.data.get("calculated_owner") != "H1-A"
+            or request.data.get("target_stage") != "H1"
+            or request.data.get("resume_stage") != "H1"
+            or request.data.get("resume_point") != "H1-A-plan"
+            or request.data.get("invalidated_stages") != ["H1"]
+            or request.data.get("invalidated_h1_artifacts")
+            != ["plan", "fragments", "assembly", "html", "completion"]
+            or request.data.get("invalidate_author_decision") is not False
+            or request.data.get("invalidate_conception_completion") is not False
+            or request.data.get("evidence_ids")
+            != [fidelity_failure.reference["sha256"]]
+            or request.reference.get("path")
+            != f"returns/{request.data.get('return_id', '')}/return-request.json"
+            or canonical_sha256(request.data) != request.reference.get("sha256")
+        ):
+            raise ProductionOrchestratorError(
+                "PROD_H1_PLAN_RETURN_ROUTE_INVALID",
+                str(request.data.get("return_id", "")),
+            )
+        pending_intent = context.store._load_commit_intent(pending)
+        fresh = ProductionCoordinator.from_snapshot(
+            copy.deepcopy(latest.data),
+            copy.deepcopy(latest.reference),
+            active_return_request=old_return,
+            runtime=context.store.runtime,
+        )
+        try:
+            if old_return is None:
+                transition = fresh.apply_return_request(
+                    request=request,
+                    next_state_path=(
+                        f"state/revision-{latest.data['revision'] + 1:03d}.json"
+                    ),
+                )
+            else:
+                transition = fresh.refresh_active_stage_return(
+                    request=request,
+                    next_state_path=(
+                        f"state/revision-{latest.data['revision'] + 1:03d}.json"
+                    ),
+                )
+        except CoordinatorError as error:
+            raise ProductionOrchestratorError(error.code, str(error)) from error
+        successor = _sealed(transition)
+        session_id = f"H1-PLAN-FIDELITY-{canonical_sha256(request.reference)[:20]}"
+        workspace_data = {
+            "schema_version": "2.0",
+            "run_id": successor.data["run_id"],
+            "stage": "H1",
+            "session_id": session_id,
+            "state": "initialized",
+            "p1_completion": copy.deepcopy(
+                successor.data["current_stage_completions"]["P1"]
+            ),
+            "previous_state_sha256": None,
+            "artifacts": {},
+        }
+        initialized = SealedDocument(
+            data=workspace_data,
+            reference={
+                "path": f"H1/{session_id}/workspace-initialized.json",
+                "sha256": canonical_sha256(workspace_data),
+            },
+        )
+        gate = fresh.build_input_gate(
+            "H1",
+            f"orchestration/input-gates/revision-{successor.data['revision']:03d}-H1-A-plan/input-gate.json",
+            active_return_request=request,
+        )
+        p1_root = context.store.resolve_completion_package_root(
+            successor.data["current_stage_completions"]["P1"], expected_stage="P1"
+        )
+        authoritative_inputs = {"p1_package": str(p1_root)}
+        order_body = {
+            "schema_version": "2.0",
+            "run_id": successor.data["run_id"],
+            "action": "H1-A-plan",
+            "state": dict(successor.reference),
+            "input_gate": dict(gate.reference),
+            "h1_workspace": dict(initialized.reference),
+            "required_actor": ACTION_CONTRACT["H1-A-plan"][1],
+            "inputs": authoritative_inputs,
+            "status": "pending",
+        }
+        work_id = canonical_sha256(order_body)[:24]
+        order = SealedDocument(
+            data={**order_body, "work_id": work_id},
+            reference={
+                "path": f"orchestration/work-orders/{work_id}.json",
+                "sha256": canonical_sha256({**order_body, "work_id": work_id}),
+            },
+        )
+        # A protected H1-B -> H1-A-plan escalation inherits the exact fragment
+        # session invalidation from the active H1-B qualification.  Reissuing a
+        # second receipt for that same session would collide with its immutable
+        # receipt path.  Only the still-live plan session is newly invalidated;
+        # the inherited receipt remains byte-for-byte evidence in stale_identity.
+        newly_invalidated_sessions = [dict(plan_session.reference)]
+        if prior_fragment_session_invalidation is None:
+            newly_invalidated_sessions.append(dict(fragment_session.reference))
+        inventory = {
+            "session_references": newly_invalidated_sessions,
+            "work_order_references": [dict(pending.reference)],
+            "completion_references": [],
+            "pending_work_order": dict(pending.reference),
+            "pending_commit_intent": (
+                dict(pending_intent.reference) if pending_intent is not None else None
+            ),
+        }
+        production_versions = {
+            stage: CURRENT_CONCEPTION_PRODUCTION_CONTRACT[stage][
+                "model_schema_version"
+            ]
+            for stage in ("E1", "T1")
+        }
+        generation = qualification.data.get("refresh_generation", 0) + 1
+        migration_id = canonical_sha256([
+            latest.reference,
+            request.reference,
+            qualification.data["new_contract_digest"],
+            CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
+        ])[:24]
+        stale_identity = {
+            "stage": "H1",
+            "origin_action": pending.data["action"],
+            "resume_point": "H1-A-plan",
+            "pending_work_order": dict(pending.reference),
+            "current_workspace": dict(workspace.reference),
+            "review_workspace": dict(reviewed_workspace.reference),
+            "initialized_workspace": dict(initialized.reference),
+            "plan_manifest": dict(plan_manifest.reference),
+            "fragment_manifest": dict(fragment_manifest.reference),
+            "candidate_report": dict(candidate_report.reference),
+            "fidelity_failure": dict(fidelity_failure.reference),
+            "review_assignment": dict(assignment.reference),
+            "review_completion": dict(review_completion.reference),
+            "evidence_ids": list(request.data["evidence_ids"]),
+        }
+        if old_return is not None:
+            stale_identity["superseded_return"] = dict(old_return.reference)
+        if active_return_qualification is not None:
+            stale_identity["active_return_qualification"] = dict(
+                active_return_qualification.reference
+            )
+            stale_identity["prior_fragment_session_invalidation"] = dict(
+                prior_fragment_session_invalidation.reference
+            )
+        post_documents = [
+            {"data": copy.deepcopy(initialized.data), "reference": dict(initialized.reference)},
+            {"data": copy.deepcopy(gate.data), "reference": dict(gate.reference)},
+            {"data": copy.deepcopy(order.data), "reference": dict(order.reference)},
+        ]
+        plan_body = {
+            "schema_version": "1.0",
+            "migration_id": migration_id,
+            "reason": "contract_upgrade",
+            "predecessor_state": dict(latest.reference),
+            "successor_state": dict(successor.reference),
+            "successor_snapshot": copy.deepcopy(successor.data),
+            "return_request": dict(request.reference),
+            "old_contract_digest": qualification.data["new_contract_digest"],
+            "new_contract_digest": CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256,
+            "invalidated_stages": ["H1"],
+            "production_versions": production_versions,
+            **inventory,
+            "transition_mode": (
+                "internal_h1_plan_return"
+                if old_return is None
+                else "active_stage_return_refresh"
+            ),
+            "refresh_generation": generation,
+            "prior_qualification": dict(qualification.reference),
+            "target_stage": "H1",
+            "stale_identity": stale_identity,
+            "production_contract": copy.deepcopy(
+                CURRENT_CONCEPTION_PRODUCTION_CONTRACT
+            ),
+            "inventory_sha256": canonical_sha256(inventory),
+            "superseded_return": (
+                None if old_return is None else dict(old_return.reference)
+            ),
+            "post_upgrade_documents": post_documents,
+            "post_upgrade_work_order": dict(order.reference),
+            "post_upgrade_inputs": copy.deepcopy(authoritative_inputs),
+            "status": "prepared",
+        }
+        plan = context.store.build_contract_upgrade_plan(plan_body)
+        receipt, derived = context.store.build_contract_upgrade_completion(
+            plan, successor=successor
+        )
+        context.store.preflight_immutable_documents(
+            (
+                candidate_report,
+                fidelity_failure,
+                request,
+                plan,
+                successor,
+                *derived,
+                receipt,
+            )
+        )
+        context.store.preflight_contract_upgrade_transaction(
+            request=request,
+            plan=plan,
+            successor=successor,
+            complete_receipt=receipt,
+        )
+        context.store.persist_document(request)
+        context.store.persist_document(plan)
+        context.store.persist_state(successor)
+        receipt = context.store.complete_contract_upgrade(plan, successor=successor)
+    return (
+        receipt,
+        ProductionContext(context.store, fresh, successor, request),
+        initialized,
         gate,
         order,
     )
@@ -5445,10 +8085,14 @@ __all__ = [
     "CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256",
     "H1_ACTION_STATES",
     "commit_h1_workspace",
+    "assign_internal_h1_fragment_fidelity_review",
+    "assign_internal_h1_plan_fidelity_review",
     "apply_active_return_escalation",
+    "apply_compatible_qualification_refresh",
     "apply_contract_upgrade",
     "apply_internal_h1_implementation_refresh",
     "apply_internal_h1_fragment_return",
+    "apply_internal_h1_plan_return",
     "apply_internal_h1_readability_return",
     "apply_internal_h1_html_readability_return",
     "apply_stage_return",
@@ -5456,6 +8100,9 @@ __all__ = [
     "refresh_active_stage_return",
     "execute_stage_work",
     "initialize_production_run",
+    "build_authority_revision_review_material",
+    "initialize_conception_revision_run",
+    "validate_conception_revision_run",
     "initialize_h1_workspace",
     "issue_stage_work",
     "publish_final_transaction",
@@ -5463,6 +8110,8 @@ __all__ = [
     "recover_h1_workspace",
     "recover_stage_admission",
     "record_author_transaction",
+    "record_internal_h1_fragment_fidelity_failure",
+    "record_internal_h1_plan_fidelity_failure",
     "resume_production_run",
     "resume_production_run_for_contract_upgrade",
 ]

@@ -4,7 +4,7 @@ The coordinator is the only control-plane writer. It issues one work order at a 
 
 ## Bootstrap and forward topology
 
-`init-staged` accepts one staged `hld-run-request.json` plus the exact HB0 allowlist, writes `states/revision-000.json`, and issues HB0. A ready top-level result is accepted only when its work-order identity, state-before reference, manifest, validation, completion, upstream bindings and package profile all revalidate. The only forward topology is HB0 → HA1 → HS1 → HC1 → HI1 → HR1 → HK1 → HQ1 → HP1 → HQ2 → HH1 → HF1.
+`init-staged` accepts one staged `hld-run-request.json` plus the exact HB0 allowlist, writes `states/revision-000.json`, and issues HB0. A ready top-level result is accepted only when its work-order identity, state-before reference, manifest, validation, completion, upstream bindings and package profile all revalidate. The only forward topology is HB0 → HA1 → HS1 → HC1 → HI1 → HR1 → HK1 → HD1 → HQ1 → HP1 → HQ2 → HH1 → HF1.
 
 HQ2 and HH1 are isolated composites. The coordinator issues their internal tasks in the declared order and issues the sole composite publisher only after the prefix is complete or the first internal non-ready result occurs. Only the publisher can create a top-level HQ2/HH1 completion.
 
@@ -36,4 +36,14 @@ Every pointer is a workspace-relative path plus SHA-256. Existing snapshots, acc
 
 ## CLI
 
-`runtime/run_coordinator.py` exposes `init-staged`, `accept-result`, `accept-author-answer`, `accept-author-decision`, and `supersede-active-group`. A successful command prints the new ledger path; contract or transition failures return exit code 2 without issuing a new legal work order.
+`runtime/run_coordinator.py` exposes `init-staged`, `accept-result`, `accept-author-answer`, `accept-author-decision`, `supersede-active-group`, `reissue-active`, and the narrowly scoped `migrate-topology`. A successful command prints the new ledger path; contract or transition failures return exit code 2 without issuing a new legal work order.
+
+## Legacy HD1 topology migration
+
+`migrate-topology --missing-stage HD1` is permitted only for an idle legacy run that is waiting for an author decision and whose accepted chain is exactly the former topology without HD1. It revalidates every accepted artifact, preserves HB0 through HK1, removes the obsolete HQ1 through HH1 suffix only from the successor state's accepted set, derives a schema-identical source index that adds HD1 access without changing any source value or locator, and issues one HD1 work order. Old states, ledgers, packages, results, and author events remain immutable.
+
+The migration publishes immutable source-index, migration-event, successor-state, input-gate, work-order, and ledger documents. The coordinator pointer is replaced last with compare-and-swap semantics. Exact orphan bytes from an interrupted attempt may be adopted; any byte mismatch, stale pointer, existing HD1 output, or unconsumed stage result fails closed. The old author decision cannot be reused after the suffix is rebuilt.
+
+An active result that fails an independent acceptance review is not deleted or admitted. `reissue-active` first verifies that the unaccepted result still binds the active work order and that its manifest, validation, and optional completion references exist. The replacement work order receives a sequence-qualified output directory, while the old result and output directory remain byte-preserved and are bound by the append-only reissue record.
+
+Reissue is authority-preserving rather than authority-reconstructing. A stage introduced by a sealed topology migration continues to use that migration's exact `source_index_after_ref` on every reissue; an ordinary stage continues to use the single source index sealed by its superseded order. The coordinator preflights the complete immutable gate/order/reissue write set before publishing any member, so a collision cannot leave a partial replacement or advance the current pointer.

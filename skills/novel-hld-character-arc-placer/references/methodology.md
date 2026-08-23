@@ -30,6 +30,34 @@ consequence establishes a new state. Do not treat an arc as a label such as
 7. **Action feasibility** — separately test capability, actual knowledge,
    permission/access, and available opportunity. Desire alone does not confer
    ability or information.
+8. **Chapter agency** — for every HA1 chapter shell, state separately who may
+   carry the reader's viewpoint, which named person or source-bound institution
+   may make a consequential choice, who may bear its cost, and who is
+   unavailable. Give every legal focal character one
+   exact information-acquisition path. Unconscious, absent, or memory-only
+   characters may remain affected subjects or cost bearers, but cannot perceive
+   later events or make decisions for rescuers, police, institutions, or other
+   people. When an institution acts, record its concrete responsibility and
+   authority limit rather than borrowing a convenient character identity.
+9. **Responsibility/state separation** — the participation register answers in
+   natural Chinese what each role is responsible for. Every item begins with
+   `负责`, contains no unexplained
+   English prose and never narrates whether somebody died, survived, lost
+   consciousness, recovered, or returned. Single-letter story names such as C,
+   M, and R-07 remain legal. Put changing lifecycle facts in the ordered
+   chapter-agency contracts so current HA1/HS1 continuity, not stale baseline
+   wording, controls downstream design.
+   Treat the deterministic syntax and lexical checks as an early guard, not a
+   substitute for fresh semantic review of euphemisms and authority conflicts.
+10. **In-world duty** — write what the person or institution must do, protect,
+    decide, verify, prevent, or deliver inside the story world. Do not turn a
+    narrative function into a responsibility: nobody is responsible for moving
+    the plot, creating suspense, maintaining a failure path, or paying off a
+    setup. Translate such notes into the actor's concrete goal and authority.
+11. **Return coverage** — when HC1 is resolving a sealed return, treat its
+    affected participation IDs as an exact ordered set. Preserve every stable
+    ID and its character identity; a shorter “main cast” list is not a valid
+    substitute for complete requested coverage.
 
 ## Semantic anchors
 

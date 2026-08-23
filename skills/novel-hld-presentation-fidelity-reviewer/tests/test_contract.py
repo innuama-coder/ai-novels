@@ -200,7 +200,7 @@ class HH1BPublicRuntimeTests(unittest.TestCase):
         context=B.load_context(work,B.SPEC,B.impl_hash(),B._catalog());_,_,report,producer=B.admit(context)
         review=json.loads((draft/"canonical.json").read_text(encoding="utf-8"));binding_index=producer["binding_index"]
         elements=B._all_elements(report);all_ids={item["id"] for item in elements}
-        relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions")
+        relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions","chapter_definitions")
         dimension_ids={"fact_fidelity":all_ids,"coverage_fidelity":all_ids,"structure_and_relation_fidelity":{item["id"] for section in relation_sections for item in report[section]},"authority_and_open_item_fidelity":{item["id"] for item in report["open_items_constraints_and_lld_boundary"]},"visual_data_fidelity":set()}
         for name,ids in dimension_ids.items():
             sources,locators=B._evidence_for(report,binding_index,ids);review[name]["report_element_ids"]=sorted(ids);review[name]["source_ids"]=sorted(sources);review[name]["locators"]=sorted(locators)
@@ -223,6 +223,19 @@ class HH1BPublicRuntimeTests(unittest.TestCase):
             victim=report["character_definitions"].pop();report["source_bindings"]=[item for item in report["source_bindings"] if item["report_element_id"]!=victim["id"]]
         report=reseal_a_report(fixture,work,gate,draft,mutate);self.assertEqual(report["character_definitions"],[])
         code,result=B.execute(work,draft);self.assertEqual((code,result["result"]),(2,"blocked"))
+
+    def test_definition_card_accepts_same_entity_current_model_supplement_without_moving_primary_domain(self):
+        path="canonical-models/character-arc-placement.json";locator=f"{path}#/character_participation_register/0"
+        card={"id":"HRE-CHAR-01","element_kind":"character_definition","source_ids":["CHR-01","HAS-PARTICIPATION-01"],"locators":["novel-hld-package.json#/baseline_controls/0",locator]}
+        report={"character_definitions":[card],"environment_definitions":[]};binding_index={("HAS-PARTICIPATION-01",locator):{"model_path":path,"locator":"/character_participation_register/0"}};documents={path:{"character_participation_register":[{"source_refs":["CHR-01"]}]}}
+        B._validate_definition_supplements(report,binding_index,documents)
+        self.assertEqual(B._primary_locators(card),["novel-hld-package.json#/baseline_controls/0"])
+
+    def test_definition_card_rejects_unrelated_current_model_supplement(self):
+        path="canonical-models/character-arc-placement.json";locator=f"{path}#/character_participation_register/0"
+        report={"character_definitions":[{"id":"HRE-CHAR-01","source_ids":["CHR-01","HAS-PARTICIPATION-02"],"locators":["novel-hld-package.json#/baseline_controls/0",locator]}],"environment_definitions":[]};binding_index={("HAS-PARTICIPATION-02",locator):{"model_path":path,"locator":"/character_participation_register/0"}};documents={path:{"character_participation_register":[{"source_refs":["CHR-02"]}]}}
+        with self.assertRaises(B.InternalCondition) as raised:B._validate_definition_supplements(report,binding_index,documents)
+        self.assertEqual(raised.exception.code,"HH1B_DEFINITION_SUPPLEMENT_INVALID")
 
     def test_resealed_missing_world_environment_scope_is_blocked(self):
         fixture, work, order, gate, draft, _ = self.build()

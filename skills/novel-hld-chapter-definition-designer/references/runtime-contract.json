@@ -1,0 +1,27 @@
+{
+  "artifact_role":"chapter_definition_architecture",
+  "canonical_file":"chapter-definition-architecture.json",
+  "canonical_schema":"hd1-canonical.schema.json",
+  "decision_prefix":"HDDES-HD1-",
+  "deterministic_checks":[
+    "public work-order/input-gate identity and ordered HB0-HK1 topology",
+    "exact HA1 shell and HS1 chapter-storyline coverage",
+    "exact HI1 chapter POV plus HC1-authorized focal, choice-actor, and cost-bearer binding per chapter",
+    "complete dramatic information continuity and LLD handoff fields per chapter",
+    "consecutive chapter-chain coverage without reset",
+    "full nonlinear-memory contract wherever memory is used",
+    "exact public ready revise or blocked envelope"
+  ],
+  "display_name":"Novel HLD Chapter Definition Designer",
+  "forbidden_keys":["beats","scene_beats","action_order","dialogue","prose","imagery","sensory_detail","props","exact_memory_text","shot","camera","new_event","new_character","new_environment","new_relationship"],
+  "model_required":["chapter_definitions","chapter_chain","coverage_summary"],
+  "next_stage":"HQ1",
+  "object_arrays":{"chapter_definitions":"HDF-","chapter_chain":"HDC-"},
+  "preview_file":"chapter-definition-architecture.md",
+  "ready_capabilities":["complete_chapter_contracts","continuous_chapter_chain","nonlinear_memory_governed","lld_chapter_design_ready"],
+  "public_entrypoint":{"path":"skills/novel-hld-chapter-definition-designer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
+  "runtime_version":"1.0.0",
+  "skill":"novel-hld-chapter-definition-designer",
+  "stage":"HD1",
+  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1"]
+}

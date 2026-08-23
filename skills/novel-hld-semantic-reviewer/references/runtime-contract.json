@@ -10,7 +10,8 @@
     "skills/novel-hld-character-arc-placer/schemas/hc1-canonical.schema.json",
     "skills/novel-hld-information-architect/schemas/hi1-canonical.schema.json",
     "skills/novel-hld-rhythm-continuity-architect/schemas/hr1-canonical.schema.json",
-    "skills/novel-hld-key-scene-function-planner/schemas/hk1-canonical.schema.json"
+    "skills/novel-hld-key-scene-function-planner/schemas/hk1-canonical.schema.json",
+    "skills/novel-hld-chapter-definition-designer/schemas/hd1-canonical.schema.json"
   ],
   "additional_implementation_paths":["harnesses/novel-hld-autonomous/runtime/review_stage_runtime.py"],
   "implementation_closure":{
@@ -26,12 +27,13 @@
       "skills/novel-hld-information-architect/schemas/hi1-canonical.schema.json",
       "skills/novel-hld-rhythm-continuity-architect/schemas/hr1-canonical.schema.json",
       "skills/novel-hld-key-scene-function-planner/schemas/hk1-canonical.schema.json",
+      "skills/novel-hld-chapter-definition-designer/schemas/hd1-canonical.schema.json",
       "harnesses/novel-hld-autonomous/runtime/review_stage_runtime.py"
     ]
   },
   "decision_prefix":"HFN-",
   "deterministic_checks":[
-    "public work-order/input-gate identity and exact HB0-HK1 topology",
+    "public work-order/input-gate identity and exact HB0-HD1 topology",
     "all upstream package profiles manifests completions canonical and validations reverified",
     "semantic actual reads equal the isolated verdict allowlist",
     "source locator and value hash reverified",
@@ -51,5 +53,5 @@
   "runtime_version":"1.0.0",
   "skill":"novel-hld-semantic-reviewer",
   "stage":"HQ1",
-  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1"]
+  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1"]
 }

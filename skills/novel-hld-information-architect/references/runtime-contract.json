@@ -7,15 +7,17 @@
     "public work-order/input-gate identity and ordered HB0-HC1 topology",
     "exact allowlist reads and stage-scoped HDD coverage before candidate",
     "authority-preserving POV and knowledge provenance",
+    "exact chapter POV binding to HC1 agency availability and information paths",
     "information-node legality and suspense setup-probe-reveal-payoff closure",
     "exact public ready/revise/blocked profiles and external result envelope"
   ],
   "display_name": "Novel HLD Information Architect",
   "forbidden_keys": ["clue_wording", "dialogue", "inner_monologue", "memory_text", "scene_actions", "sensory_detail", "prose", "new_event", "new_character", "new_relationship", "new_environment", "new_story_fact"],
-  "model_required": ["pov_policy", "unit_pov_assignments", "knowledge_states", "reader_information_states", "suspense_chains", "information_nodes", "reveal_payoff_matrix", "concealment_and_inference_rules"],
+  "model_required": ["pov_policy", "unit_pov_assignments", "chapter_pov_assignments", "knowledge_states", "reader_information_states", "suspense_chains", "information_nodes", "reveal_payoff_matrix", "concealment_and_inference_rules"],
   "next_stage": "HR1",
   "object_arrays": {
     "unit_pov_assignments": "HPV-",
+    "chapter_pov_assignments": "HPV-",
     "knowledge_states": "HKS-",
     "reader_information_states": "HKS-",
     "suspense_chains": "HSP-",

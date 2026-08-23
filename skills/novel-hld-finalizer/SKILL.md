@@ -14,7 +14,7 @@ Read [input-output-contract.md](references/input-output-contract.md), [sop.md](r
 ## Execution
 
 1. Run `python scripts/run_skill.py preflight --work-order <work-order.json> --input-gate <input-gate.json>`.
-2. Require exact upstream `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HQ1,HP1,HQ2,HH1]`, current run/revision, exact allowlist roles, no active return, and no pending/superseded revision plan.
+2. Require exact upstream `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HD1,HQ1,HP1,HQ2,HH1]`, current run/revision, exact allowlist roles, no active return, and no pending/superseded revision plan.
 3. Verify every completion, manifest, validation, canonical artifact and allowlisted input by SHA-256. Verify the external author decision is current, unconsumed, and binds HP1, HQ2, HH1 and HTML byte-for-byte.
 4. For `approved`, revalidate HQ2 pass and current `lld-handoff.json`, then run `execute` to produce the approved package and sole top-level HF1 completion.
 5. For `revise`, validate every target against cross-index/render registry and losslessly project the event into an external-author-request revise result. For `rejected`, emit author-rejected blocked evidence.

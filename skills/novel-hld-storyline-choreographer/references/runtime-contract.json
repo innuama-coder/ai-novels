@@ -10,6 +10,7 @@
     "stage-scoped HDD coverage before candidate",
     "authority/ownership separation and stable IDs",
     "storyline disposition totality, segment placement, and connection integrity",
+    "chapter plan exact coverage, role-to-segment consistency, and contiguous chapter order",
     "exact package profile and external parent result envelope"
   ],
   "display_name": "Novel HLD Storyline Choreographer",
@@ -27,6 +28,7 @@
   "model_required": [
     "semantic_storyline_register",
     "storyline_segments",
+    "chapter_storyline_plan",
     "unit_storyline_matrix",
     "storyline_connections",
     "convergence_and_split_points",
@@ -41,6 +43,7 @@
     "semantic_storyline_register": "HTS-",
     "storyline_connections": "HTC-",
     "storyline_segments": "HTS-",
+    "chapter_storyline_plan": "HCD-",
     "unit_storyline_matrix": "HTS-",
     "activation_disposition": "HTS-"
   },
@@ -50,6 +53,7 @@
     "complete_storyline_disposition",
     "unit_level_storyline_placement",
     "typed_storyline_connections",
+    "chapter_level_storyline_design",
     "subject_reconstruction_evidence"
   ],
   "public_entrypoint": {"path":"skills/novel-hld-storyline-choreographer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},

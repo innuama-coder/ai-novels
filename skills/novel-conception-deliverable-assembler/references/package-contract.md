@@ -11,7 +11,7 @@ workspace roots; unique flat legacy roots remain supported.
 
 ## Projection-aware Q1 quality admission
 
-For T1 schema 2.2 through 2.4, P1 recomputes Q1 quality targets with the same
+For T1 schema 2.2 through 2.5, P1 recomputes Q1 quality targets with the same
 narrow projection pairs used by the sealed review: planned events map to major
 events through the event-field map and changed-subject normalization; planned
 propositions map through the formal proposition fields; planned causal edges
@@ -20,6 +20,11 @@ internally unique ID sets. Their six top-level registries are excluded from the
 remaining recursive index, while a third source, missing counterpart, or field
 conflict fails closed. P1 then requires both Q1 `required_objects` and the
 covered-object projection to equal that recomputed universe value-for-value.
+For T1 2.5 only, the event projection additionally binds
+`consumes_token_instance_ids` and `lifecycle_effects`; changing either side
+fails closed before the canonical representative is hashed. T1 2.2 through
+2.4 keep their frozen projection field set and do not require those 2.5-only
+fields, so their canonical representative bytes and hashes remain unchanged.
 T1 schema 2.0 and 2.1 retain the legacy recursive-ID rule.
 
 ## Schema/path-aware cross-model identities

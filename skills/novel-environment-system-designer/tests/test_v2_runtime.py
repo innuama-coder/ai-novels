@@ -51,10 +51,12 @@ def agent_environment_proposal(
     baseline: dict[str, object],
     storyline: dict[str, object],
     world: dict[str, object],
+    environment_specs: Mapping[str, Mapping[str, object]] | None = None,
 ) -> dict[str, object]:
     """A test Agent's authored E1 model; production never synthesizes it."""
 
     demands = copy.deepcopy(world["environment_demands"])
+    environment_specs = environment_specs or {}
     storyline_environment_requirements = copy.deepcopy(
         storyline["environment_requirements"]
     )
@@ -100,6 +102,7 @@ def agent_environment_proposal(
     environment_meta = []
 
     for index, demand in enumerate(demands, 1):
+        spec = environment_specs.get(demand["id"], {})
         world_requirement_id = next(
             item for item in demand["source_ids"] if item in world_requirements
         )
@@ -123,19 +126,46 @@ def agent_environment_proposal(
         hosting_id = f"COV-E1-{index:03d}"
         affordance_id = f"AFF-{index:03d}"
         transition_id = f"TRANS-{index:03d}"
-        action = f"Perform the bounded capability declared by {demand['id']}."
-        from_state = f"available for {demand['id']}"
-        to_state = f"restricted after an attempted action for {demand['id']}"
+        action = str(
+            spec.get(
+                "action",
+                f"Perform the bounded capability declared by {demand['id']}.",
+            )
+        )
+        from_state = str(
+            spec.get("from_state", f"available for {demand['id']}")
+        )
+        to_state = str(
+            spec.get(
+                "to_state",
+                f"restricted after an attempted action for {demand['id']}",
+            )
+        )
 
         decisions.append(
             {
                 "id": decision_id,
-                "gap": f"Choose a reusable environment duty for {marker}.",
-                "options": [
-                    f"Create a controlled host for {marker}.",
-                    f"Use an incidental one-use location for {marker}.",
-                ],
-                "selection": f"Create a controlled host for {marker}.",
+                "gap": str(
+                    spec.get(
+                        "decision_gap",
+                        f"Choose a reusable environment duty for {marker}.",
+                    )
+                ),
+                "options": copy.deepcopy(
+                    spec.get(
+                        "decision_options",
+                        [
+                            f"Create a controlled host for {marker}.",
+                            f"Use an incidental one-use location for {marker}.",
+                        ],
+                    )
+                ),
+                "selection": str(
+                    spec.get(
+                        "decision_selection",
+                        f"Create a controlled host for {marker}.",
+                    )
+                ),
                 "owner": "E1",
                 "authority_basis": f"E1 owns concrete carrying conditions for {demand['id']}.",
                 "compatibility": f"Expands W1 without changing its rule: {marker}",
@@ -148,26 +178,63 @@ def agent_environment_proposal(
         )
         environment = {
             "id": environment_id,
-            "scope": f"A bounded operational environment for line {line_id}.",
-            "narrative_responsibility": f"Own the reusable interface {environment_id}.",
-            "features": [
-                f"Control surfaces expose the bounded interface for {demand['id']}.",
-                "Boundaries make local operating limits observable.",
-            ],
-            "sensory_conditions": [
-                "Actors can perceive access status and resource pressure."
-            ],
-            "access_rules": [
-                f"Only {assignment_id} may authorize this bounded interface."
-            ],
-            "resources": [
-                f"Resources explicitly support the interface for {demand['id']}."
-            ],
-            "allowed_actions": [action],
-            "hazards": [f"{hazard_id} can block or worsen the local action."],
+            "scope": str(
+                spec.get(
+                    "scope", f"A bounded operational environment for line {line_id}."
+                )
+            ),
+            "narrative_responsibility": str(
+                spec.get(
+                    "narrative_responsibility",
+                    f"Own the reusable interface {environment_id}.",
+                )
+            ),
+            "features": copy.deepcopy(
+                spec.get(
+                    "features",
+                    [
+                        f"Control surfaces expose the bounded interface for {demand['id']}.",
+                        "Boundaries make local operating limits observable.",
+                    ],
+                )
+            ),
+            "sensory_conditions": copy.deepcopy(
+                spec.get(
+                    "sensory_conditions",
+                    ["Actors can perceive access status and resource pressure."],
+                )
+            ),
+            "access_rules": copy.deepcopy(
+                spec.get(
+                    "access_rules",
+                    [f"Only {assignment_id} may authorize this bounded interface."],
+                )
+            ),
+            "resources": copy.deepcopy(
+                spec.get(
+                    "resources",
+                    [f"Resources explicitly support the interface for {demand['id']}."],
+                )
+            ),
+            "allowed_actions": list(
+                dict.fromkeys(
+                    [action, *[str(item) for item in spec.get("additional_actions", [])]]
+                )
+            ),
+            "hazards": copy.deepcopy(
+                spec.get(
+                    "environment_hazards",
+                    [f"{hazard_id} can block or worsen the local action."],
+                )
+            ),
             "zone_ids": [zone_id],
             "connections": [],
-            "blockers": ["Failed permission or exhausted resources block the action."],
+            "blockers": copy.deepcopy(
+                spec.get(
+                    "blockers",
+                    ["Failed permission or exhausted resources block the action."],
+                )
+            ),
             "state_vocabulary": [from_state, to_state],
             "allowed_transitions": [transition_id],
             "storyline_stage_ids": [
@@ -181,21 +248,35 @@ def agent_environment_proposal(
             {
                 "id": zone_id,
                 "environment_id": environment_id,
-                "responsibility": (
-                    f"Expose the action interface for {marker} and "
-                    f"{storyline_marker}."
+                "responsibility": str(
+                    spec.get(
+                        "zone_responsibility",
+                        f"Expose the action interface for {marker} and {storyline_marker}.",
+                    )
                 ),
-                "features": [
-                    f"Observable controls support {marker} and {storyline_marker}."
-                ],
+                "features": copy.deepcopy(
+                    spec.get(
+                        "zone_features",
+                        [f"Observable controls support {marker} and {storyline_marker}."],
+                    )
+                ),
                 "access_rules": [
                     *copy.deepcopy(demand["constraints"]),
                     *copy.deepcopy(
                         storyline_environment_requirement["constraints"]
                     ),
                 ],
-                "resources": [f"Bounded resource access for {marker}."],
-                "constraints": [f"The zone cannot decide an event result for {marker}."],
+                "resources": copy.deepcopy(
+                    spec.get(
+                        "zone_resources", [f"Bounded resource access for {marker}."]
+                    )
+                ),
+                "constraints": copy.deepcopy(
+                    spec.get(
+                        "zone_constraints",
+                        [f"The zone cannot decide an event result for {marker}."],
+                    )
+                ),
             }
         )
         assignments.append(
@@ -246,17 +327,26 @@ def agent_environment_proposal(
             {
                 "id": hazard_id,
                 "environment_id": environment_id,
-                "trigger": (
-                    "Permission, resource, or information failure during "
-                    f"{marker} or {storyline_marker}."
+                "trigger": str(
+                    spec.get(
+                        "hazard_trigger",
+                        "Permission, resource, or information failure during "
+                        f"{marker} or {storyline_marker}.",
+                    )
                 ),
-                "effect": (
-                    "The attempted action is blocked or becomes costlier for "
-                    f"{marker} and {storyline_marker}."
+                "effect": str(
+                    spec.get(
+                        "hazard_effect",
+                        "The attempted action is blocked or becomes costlier for "
+                        f"{marker} and {storyline_marker}.",
+                    )
                 ),
-                "mitigation_limits": [
-                    f"Mitigation cannot remove W1 constraints for {marker}."
-                ],
+                "mitigation_limits": copy.deepcopy(
+                    spec.get(
+                        "mitigation_limits",
+                        [f"Mitigation cannot remove W1 constraints for {marker}."],
+                    )
+                ),
             }
         )
         source_bindings = [
@@ -272,6 +362,7 @@ def agent_environment_proposal(
             ),
         ]
         local_projections = []
+        projection_clauses = list(spec.get("projection_clauses", []))
         for binding in source_bindings:
             tokens = [
                 ("responsibility", binding["responsibility_sha256"]),
@@ -281,9 +372,22 @@ def agent_environment_proposal(
                 ],
             ]
             for token_index, (token_kind, token_sha256) in enumerate(tokens, 1):
-                environment["features"].append(
-                    f"Local {token_kind} clause {token_index} for {binding['source_id']}."
-                )
+                if projection_clauses:
+                    projection_index = len(local_projections)
+                    clause_count = len(projection_clauses)
+                    primary = str(projection_clauses[projection_index % clause_count])
+                    secondary = str(
+                        projection_clauses[
+                            (projection_index + projection_index // clause_count + 1)
+                            % clause_count
+                        ]
+                    )
+                    projection_value = f"{primary}；同时，{secondary}"
+                else:
+                    projection_value = (
+                        f"Local {token_kind} clause {token_index} for {binding['source_id']}."
+                    )
+                environment["features"].append(projection_value)
                 pointer = f"/features/{len(environment['features']) - 1}"
                 projected_value = e1._resolve_hosting_projection(
                     environment, pointer
@@ -484,7 +588,38 @@ def agent_environment_proposal(
         output_fact_id = f"CF-OUT-{line_index:03d}"
         actor_binding_id = f"AAB-{line_index:03d}"
         occurrence_id = f"COR-{line_index:03d}"
-        actor_slot_id = line["actor_slot_ids"][0]
+        # A storyline participant is not automatically the holder of every
+        # real-world permission exposed by its environment.  Formal authored
+        # proposals may therefore name the exact functional actor and the
+        # exact W1 authority sources for this bounded capability.  The legacy
+        # defaults remain unchanged for the generic contract fixtures.
+        spec = environment_specs.get(
+            next(
+                demand["id"]
+                for demand in demands
+                if demand["id"] in environment["storyline_stage_ids"]
+            ),
+            {},
+        )
+        actor_slot_id = str(
+            spec.get("capability_actor_slot_id", line["actor_slot_ids"][0])
+        )
+        authority_source_ids = copy.deepcopy(
+            spec.get("capability_authority_source_ids", assignment["evidence_ids"])
+        )
+        capability_constraints = [
+            str(item) for item in spec.get("capability_constraints", [])
+        ]
+        capability_modes = [
+            str(item)
+            for item in spec.get(
+                "capability_supported_modes",
+                ["enact", "observe", "communicate", "constrain"],
+            )
+        ]
+        capability_repeatability = str(
+            spec.get("capability_repeatability", "repeatable")
+        )
         facts.extend(
             [
                 {
@@ -542,15 +677,13 @@ def agent_environment_proposal(
             ]
         )
         actor_claim_id = "CLAIM-E1-AUTH-" + runtime.canonical_sha256(
-            [actor_binding_id, assignment["evidence_ids"], affordance["allowed_actions"]]
+            [actor_binding_id, authority_source_ids, affordance["allowed_actions"]]
         )[:20]
         actor_bindings.append(
             {
                 "id": actor_binding_id,
                 "actor_slot_id": actor_slot_id,
-                "world_authority_source_ids": copy.deepcopy(
-                    assignment["evidence_ids"]
-                ),
+                "world_authority_source_ids": authority_source_ids,
                 "semantic_review_claim_id": actor_claim_id,
                 "e1_access_assignment_id": assignment["id"],
                 "environment_id": environment["id"],
@@ -558,7 +691,10 @@ def agent_environment_proposal(
                 "requires_token_fact_ids": [],
                 "produces_token_fact_ids": [],
                 "forbidden_token_kinds": [],
-                "scope_constraints": copy.deepcopy(assignment["constraints"]),
+                "scope_constraints": [
+                    *copy.deepcopy(assignment["constraints"]),
+                    *capability_constraints,
+                ],
             }
         )
         steps.append(
@@ -575,10 +711,13 @@ def agent_environment_proposal(
                 "requires_token_kinds": [],
                 "produces_token_kinds": [],
                 "forbidden_token_kinds": [],
-                "supported_modes": ["enact", "observe", "communicate", "constrain"],
-                "repeatability": "repeatable",
+                "supported_modes": capability_modes,
+                "repeatability": capability_repeatability,
                 "source_ids": [line_id, event_by_line[line_id]["id"]],
-                "constraints": copy.deepcopy(affordance["constraints"]),
+                "constraints": [
+                    *copy.deepcopy(affordance["constraints"]),
+                    *capability_constraints,
+                ],
             }
         )
         occurrences.append(
@@ -599,7 +738,7 @@ def agent_environment_proposal(
         descriptor = {
             "support_kind": "process_host",
             "environment_ids": [environment["id"]],
-            "required_modes": ["enact"],
+            "required_modes": [capability_modes[0]],
             "required_fact_kinds": ["story_state_anchor"],
             "topology_requirement": "none",
             "authority_required": True,
@@ -653,7 +792,7 @@ def agent_environment_proposal(
                     "support_claims": [
                         {
                             "step_id": step_id,
-                            "support_mode": "enact",
+                            "support_mode": capability_modes[0],
                             "source_ids": [line_id, event_by_line[line_id]["id"]],
                             "boundary": "The step can enact a bounded change but does not assert that the story transition occurs.",
                         }
@@ -790,7 +929,11 @@ def agent_environment_proposal(
                 source_transition["support_claims"].append(
                     {
                         "step_id": source_endpoint_step_id,
-                        "support_mode": "communicate",
+                        "support_mode": (
+                            "communicate"
+                            if "communicate" in source_step["supported_modes"]
+                            else source_step["supported_modes"][0]
+                        ),
                         "source_ids": [connection["id"], source_line],
                         "boundary": "This endpoint exposes only the declared source-anchor transfer.",
                     }
@@ -829,29 +972,29 @@ def agent_environment_proposal(
                 "This endpoint step is used only when the causal connection reaches its target anchor.",
             ]
             steps.append(target_step)
-            if connection["to_state_index"] == 0:
-                # State-zero realization is assembled below from the line's
-                # base step; causal fixtures intentionally target a reached
-                # state so that the endpoint is a transition-local capability.
-                raise AssertionError("causal connection fixture targets state zero")
-            target_transition_id = transition_support_by_key[
-                (target_line, connection["to_state_index"] - 1)
-            ]
-            target_transition = next(
-                item
-                for item in transition_support
-                if item["id"] == target_transition_id
-            )
-            target_transition["support_claims"].append(
-                {
-                    "step_id": target_endpoint_step_id,
-                    "support_mode": "enact",
-                    "source_ids": [connection["id"], target_line],
-                    "boundary": "This endpoint can enact only the target-anchor-local handoff; it does not establish earlier target-line states.",
-                }
-            )
-            if transfer_fact_id not in target_transition["required_fact_ids"]:
-                target_transition["required_fact_ids"].append(transfer_fact_id)
+            if connection["to_state_index"] > 0:
+                target_transition_id = transition_support_by_key[
+                    (target_line, connection["to_state_index"] - 1)
+                ]
+                target_transition = next(
+                    item
+                    for item in transition_support
+                    if item["id"] == target_transition_id
+                )
+                target_transition["support_claims"].append(
+                    {
+                        "step_id": target_endpoint_step_id,
+                        "support_mode": (
+                            "enact"
+                            if "enact" in target_step["supported_modes"]
+                            else target_step["supported_modes"][0]
+                        ),
+                        "source_ids": [connection["id"], target_line],
+                        "boundary": "This endpoint can enact only the target-anchor-local handoff; it does not establish earlier target-line states.",
+                    }
+                )
+                if transfer_fact_id not in target_transition["required_fact_ids"]:
+                    target_transition["required_fact_ids"].append(transfer_fact_id)
             for fact_id in target_step["requires_fact_ids"]:
                 required_fact = next(item for item in facts if item["id"] == fact_id)
                 if target_endpoint_step_id not in required_fact["consumer_step_ids"]:
@@ -1001,10 +1144,19 @@ def agent_environment_proposal(
             for connection, readiness in zip(
                 storyline["connections"], connection_readiness
             )
-            if connection["from_storyline_id"] == line_id
-            and connection["from_state_index"] == 0
-            for step_id in readiness["source_endpoint_step_ids"]
+            for step_id in (
+                readiness["source_endpoint_step_ids"]
+                if connection["from_storyline_id"] == line_id
+                and connection["from_state_index"] == 0
+                else readiness["target_endpoint_step_ids"]
+                if connection["to_storyline_id"] == line_id
+                and connection["to_state_index"] == 0
+                else []
+            )
         }
+        initial_step_ids = sorted(
+            {step_by_line[line_id], *initial_connection_steps}
+        )
         initial_realizations.append(
             {
                 "id": realization_id,
@@ -1013,10 +1165,15 @@ def agent_environment_proposal(
                 "support_option_id": option_id,
                 "capability_demand_id": demand_id,
                 "descriptor_sha256": runtime.canonical_sha256(descriptor),
-                "capability_fact_ids": [root_fact_by_line[line_id]],
-                "capability_step_ids": sorted(
-                    {step_by_line[line_id], *initial_connection_steps}
+                "capability_fact_ids": sorted(
+                    {
+                        fact_id
+                        for step in steps
+                        if step["id"] in initial_step_ids
+                        for fact_id in step["requires_fact_ids"]
+                    }
                 ),
+                "capability_step_ids": initial_step_ids,
                 "ambient_context_host_ids": [],
                 "topology_path_ids": [],
                 "realized_environment_ids": [environment["id"]],

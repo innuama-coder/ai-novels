@@ -38,6 +38,15 @@
     "source_interview_state": {
       "$ref": "common-defs.schema.json#/$defs/artifactReference"
     },
+    "source_kind": {
+      "enum": ["native", "compatibility_migration", "authority_revision"]
+    },
+    "authority_revision": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+      ]
+    },
     "current_stage_completions": {
       "type": "object",
       "additionalProperties": false,

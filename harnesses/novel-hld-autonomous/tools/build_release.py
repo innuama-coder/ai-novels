@@ -44,8 +44,8 @@ def sha256(path: Path) -> str:
 def registered_skills(root: Path = ROOT) -> tuple[str, ...]:
     registry = json.loads((root / "references/public-runtime-registry.json").read_text(encoding="utf-8"))["entries"]
     names = tuple(sorted({entry["skill"] for entry in registry.values() if not entry["skill"].startswith("harness-core/")}))
-    if len(names) != 14 or not all(name.startswith("novel-hld-") for name in names) or LEGACY_SKILLS.intersection(names):
-        raise RuntimeError(f"release skill closure is not the exact 14-skill public registry: {names}")
+    if len(names) != 15 or not all(name.startswith("novel-hld-") for name in names) or LEGACY_SKILLS.intersection(names):
+        raise RuntimeError(f"release skill closure is not the exact 15-skill public registry: {names}")
     return names
 
 
@@ -131,9 +131,9 @@ def main() -> int:
     validate_zip(source_zip, required);validate_zip(codex_zip, required);post_install_validate(codex_zip)
     artifacts = [{"target":target,"path":path.relative_to(output).as_posix(),"sha256":sha256(path),"size":path.stat().st_size} for path,target in ((source_zip,"source"),(codex_zip,"codex"))]
     status,qualification=release_state()
-    manifest = {"schema_version":"1.0","name":NAME,"version":VERSION,"status":status,"agentic_qualification":qualification,"bundle_layout":"repository-root","registered_skill_count":14,"post_install_validation":"pass","artifacts":artifacts,"validation":"pass"}
+    manifest = {"schema_version":"1.0","name":NAME,"version":VERSION,"status":status,"agentic_qualification":qualification,"bundle_layout":"repository-root","registered_skill_count":15,"post_install_validation":"pass","artifacts":artifacts,"validation":"pass"}
     (output / "release-manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n",encoding="utf-8",newline="")
-    yaml_lines=["schema_version: '1.0'",f"name: {NAME}",f"version: {VERSION}",f"status: {status}",f"agentic_qualification: {qualification}","bundle_layout: repository-root","registered_skill_count: 14","post_install_validation: pass","validation: pass","artifacts:"]
+    yaml_lines=["schema_version: '1.0'",f"name: {NAME}",f"version: {VERSION}",f"status: {status}",f"agentic_qualification: {qualification}","bundle_layout: repository-root","registered_skill_count: 15","post_install_validation: pass","validation: pass","artifacts:"]
     for artifact in artifacts:yaml_lines.extend((f"  - target: {artifact['target']}",f"    path: {artifact['path']}",f"    sha256: {artifact['sha256']}",f"    size: {artifact['size']}"))
     (output / "release-manifest.yaml").write_text("\n".join(yaml_lines)+"\n",encoding="utf-8",newline="")
     print(json.dumps(manifest,ensure_ascii=False,indent=2));return 0

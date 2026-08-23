@@ -6,7 +6,7 @@
 4. **Establish initial ledgers.** Create initial character and reader knowledge states with source evidence. Distinguish fact, belief, suspicion, ignorance, and misbelief.
 5. **Map information nodes.** For each material fact/question, set source, eligible knower, acquisition path, earliest legal unit, forbidden leak units, and downstream consequence.
 6. **Generate options.** Compare at least two genuinely different POV/reveal arrangements when freedom exists. If only one arrangement is legal, record eliminated alternatives and the constraining evidence.
-7. **Choose POV policy.** Fix narrator/focalizer rules, unit assignments, allowed switches, prohibited assignments, and transition obligations without paragraph-level direction.
+7. **Choose POV policy.** Fix narrator/focalizer rules and one ordered assignment for every unit and every chapter shell. Treat the chapter assignment as effective: bind the exact HC1 chapter-agency contract, choose only one of its legal focal characters, copy its acquisition modes and limit exactly, keep switches at chapter boundaries, and record transition obligations without paragraph-level direction.
 8. **Close suspense chains.** Link setup, probes, reveal, and payoff or an authorized-open terminal. Verify fair inference and retrospective consistency.
 9. **Project decisions.** Add only selected decisions to canonical objects; keep source projections, HLD decisions, preserved opens, and LLD freedoms disjoint.
 10. **Adversarial review.** Challenge POV leakage, unearned knowledge, forced ignorance, unsupported reveal, unspent setup, fake red herrings, premature answer, and LLD leakage.

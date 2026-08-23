@@ -18,6 +18,11 @@ description: 将已批准的完整小说构思访谈结果生产化为 V2 小说
   "manifest_name": "novel-conception-autonomous",
   "entrypoint": "runtime.production_orchestrator:initialize_production_run",
   "resume_entrypoint": "runtime.production_orchestrator:resume_production_run",
+  "authority_revision_entrypoint": "runtime.production_orchestrator:initialize_conception_revision_run",
+  "authority_revision_review_material_entrypoint": "runtime.production_orchestrator:build_authority_revision_review_material",
+  "h1_plan_return_entrypoint": "runtime.production_orchestrator:apply_internal_h1_plan_return",
+  "h1_plan_fidelity_review_assignment_entrypoint": "runtime.production_orchestrator:assign_internal_h1_plan_fidelity_review",
+  "h1_plan_fidelity_review_record_entrypoint": "runtime.production_orchestrator:record_internal_h1_plan_fidelity_failure",
   "ordered_steps": [
     {"order": 1, "id": "verify-approved-interview-input"},
     {"order": 2, "id": "initialize-or-resume-production-run"},
@@ -44,6 +49,10 @@ description: 将已批准的完整小说构思访谈结果生产化为 V2 小说
 
 1. 验证 I0–I5 完成记录、V1/V2 批准、作者批准和访谈状态属于同一当前基线。 (`verify-approved-interview-input`)
 2. 新运行调用 `runtime.production_orchestrator.initialize_production_run`；已有运行只能调用 `resume_production_run`，不得从记忆重建状态。 (`initialize-or-resume-production-run`)
+   已批准的构思权威修订必须调用 `initialize_conception_revision_run` 建立只读父版本的
+   新运行；先用 `build_authority_revision_review_material` 生成不落盘的确定性候选摘要，
+   再由独立任务封存逐项语义审阅。初始化只验证并复制外部审阅文件，不得自行生成
+   `pass`，不得原地修改旧运行，也不得把旧作者批准解释为批准新字节。
 3. 调用 `issue_stage_work` 取得唯一工作单，并严格按 `dependency-spec.json` 调用 owner 的受控 start/submit/run API；提交的 `actor` 必须等于工作单 `required_actor`，禁止备用技能和手写 completion。 (`dispatch-exact-stage-owner`)
 4. 通过 `execute_stage_work(actor=...)` 或 `commit_h1_workspace(actor=...)` 提交正式 receipt；失败后重新加载，包孤儿只能在 owner validator 通过并携带同一 actor 后走 recovery API。 (`persist-and-revalidate-transaction`)
 5. H1-C 后先单独发布 H1 并进入 `waiting_author`；只转发外部密封的 `approved / revise / rejected`，不得生成作者决定。 (`forward-external-author-decision`)

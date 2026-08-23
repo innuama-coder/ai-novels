@@ -142,7 +142,7 @@ class ContractRuntime:
         self,
         schema_dir: str | Path = DEFAULT_SCHEMA_DIRECTORY,
         *,
-        expected_schema_count: int | None = 24,
+        expected_schema_count: int | None = 32,
     ):
         self.schema_dir = Path(schema_dir).resolve()
         self.expected_schema_count = expected_schema_count

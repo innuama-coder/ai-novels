@@ -34,6 +34,36 @@ def validate_stage_model(model: dict[str, Any], _contract: Mapping[str, Any]) ->
             raise CandidateError(f"HS1 active/background storyline {line_id} has no auditable carrier segment")
         if disposition in {"optional-not-activated", "preserved-open"} and line_id in segment_lines:
             raise CandidateError(f"HS1 inactive/open storyline {line_id} cannot masquerade as a placed segment")
+    segments_by_line = {item["source_storyline_id"]: item for item in model["storyline_segments"]}
+    chapters = model["chapter_storyline_plan"]
+    chapter_ids = [item["chapter_id"] for item in chapters]
+    plan_ids = [item["id"] for item in chapters]
+    if len(chapter_ids) != len(set(chapter_ids)) or len(plan_ids) != len(set(plan_ids)):
+        raise CandidateError("HS1 chapter plan IDs must be unique")
+    if [item["chapter_number"] for item in chapters] != list(range(1, len(chapters) + 1)):
+        raise CandidateError("HS1 chapter plan numbers must be contiguous and ordered")
+    carried_shells = {shell_id for segment in model["storyline_segments"] for shell_id in segment["chapter_shell_ids"]}
+    if set(chapter_ids) != carried_shells:
+        raise CandidateError("HS1 chapter plan must exactly cover carried HA1 chapter shells")
+    for chapter in chapters:
+        assigned = [
+            chapter["primary_storyline_id"],
+            *chapter["supporting_storyline_ids"],
+            *chapter["background_storyline_ids"],
+            *chapter["preserved_open_storyline_ids"],
+        ]
+        if len(assigned) != len(set(assigned)):
+            raise CandidateError(f"{chapter['id']}: storyline roles overlap")
+        if set(assigned) - set(register):
+            raise CandidateError(f"{chapter['id']}: unknown storyline assignment")
+        active = [chapter["primary_storyline_id"], *chapter["supporting_storyline_ids"], *chapter["background_storyline_ids"]]
+        for line_id in active:
+            segment = segments_by_line.get(line_id)
+            if segment is None or chapter["chapter_id"] not in segment["chapter_shell_ids"]:
+                raise CandidateError(f"{chapter['id']}: active storyline lacks chapter carrier")
+        for line_id in chapter["preserved_open_storyline_ids"]:
+            if dispositions[line_id] not in {"optional-not-activated", "preserved-open"}:
+                raise CandidateError(f"{chapter['id']}: preserved-open storyline is active")
     connection_ids = {item["id"] for item in model["storyline_connections"]}
     for point in model["convergence_and_split_points"]:
         if not set(point.get("connection_ids", [])).issubset(connection_ids):

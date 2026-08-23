@@ -21,13 +21,14 @@ MODEL_ROLES={
  "hld_model_ha1":"canonical-models/narrative-architecture.json","hld_model_hs1":"canonical-models/storyline-choreography.json",
  "hld_model_hc1":"canonical-models/character-arc-placement.json","hld_model_hi1":"canonical-models/narrative-information-architecture.json",
  "hld_model_hr1":"canonical-models/rhythm-continuity-architecture.json","hld_model_hk1":"canonical-models/key-scene-function-map.json",
+ "hld_model_hd1":"canonical-models/chapter-definition-architecture.json",
 }
 HP1_PACKAGE_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/novel-hld-package.schema.json"
 HP1_CROSS_INDEX_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/hld-cross-index.schema.json"
 REQUIRED_ROLES=("hb0_completion","hb0_manifest","hld_control_baseline","hp1_completion","hp1_manifest","hp1_validation","novel_hld_package","hld_cross_index","hld_traceability_matrix","hld_spec",*MODEL_ROLES,"hq2_completion","hq2_manifest","hq2_validation","lld_handoff_acceptance")
 SPEC=Spec(SKILL,VERSION,"HH1.A","hld-human-review-report.json","human_review_report","generation-session.json","report-assembly-execution.json","hh1-a-validation.schema.json",REQUIRED_ROLES,True)
-DOMAIN_BY_ROLE={"hld_model_ha1":"overall_narrative_architecture","hld_model_hs1":"storyline_choreography","hld_model_hc1":"character_arc_placement","hld_model_hi1":"pov_information_suspense","hld_model_hr1":"time_space_pacing_tension","hld_model_hk1":"key_scene_functions"}
-DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary")
+DOMAIN_BY_ROLE={"hld_model_ha1":"overall_narrative_architecture","hld_model_hs1":"storyline_choreography","hld_model_hc1":"character_arc_placement","hld_model_hi1":"pov_information_suspense","hld_model_hr1":"time_space_pacing_tension","hld_model_hk1":"key_scene_functions","hld_model_hd1":"chapter_definitions"}
+DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","chapter_definitions","open_items_constraints_and_lld_boundary")
 WORLD_ENVIRONMENT_SCOPES={"city_and_region","local_people_and_daily_life","social_order_and_public_atmosphere","technology_and_infrastructure","climate_and_physical_environment"}
 IDENTITY_FIELDS={"schema_version","skill","stage","hld_run_id","status","input_gate_ref","source_artifacts","derivation_claims","decision_dependencies"}
 CJK=re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]");LATIN=re.compile(r"\b[A-Za-z]+(?:['’][A-Za-z]+)*\b")
@@ -217,12 +218,26 @@ def _world_authority_projection(admitted:Mapping[str,Any])->dict[str,Any]:
 
 def _validate_definition_sections(report:Mapping[str,Any],admitted:Mapping[str,Any])->None:
     material=material_locator_map(admitted)
+    model_documents={MODEL_ROLES[role]:value for role,value in admitted["models"].items()}
+
+    def validate_current_supplements(item:Mapping[str,Any],base_source:str)->None:
+        for pair in list(zip(item["source_ids"],item["locators"]))[1:]:
+            entry=admitted["binding_index"].get(pair)
+            if entry is None or entry["model_path"] not in model_documents:
+                raise InternalCondition("revise","HH1A_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not a current canonical HLD model",[item["id"]])
+            value=json_pointer(model_documents[entry["model_path"]],entry["locator"])
+            direct_refs=set(value.get("source_refs",[])) if isinstance(value,Mapping) else set()
+            authority_refs={ref.get("source_id") for ref in value.get("source_authority_refs",[]) if isinstance(ref,Mapping)} if isinstance(value,Mapping) else set()
+            if base_source not in direct_refs|authority_refs:
+                raise InternalCondition("revise","HH1A_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not derived from {base_source}",[item["id"]])
+
     for section,kind in (("character_definitions","character_definition"),("environment_definitions","environment_definition")):
         expected=admitted["definitions"][section];items=report[section];actual=[item["source_ids"][0] for item in items]
         if len(actual)!=len(set(actual)) or set(actual)!=set(expected):raise InternalCondition("revise","HH1A_DEFINITION_COVERAGE_DRIFT",f"{section} must contain exactly one card for every sealed baseline definition",sorted(set(expected)-set(actual)))
         for item in items:
             source=item["source_ids"][0];locator=item["locators"][0]
             if item["element_kind"]!=kind or material.get(locator)!=section:raise InternalCondition("revise","HH1A_DEFINITION_BINDING_DRIFT",f"{item['id']} is not bound to its exact definition domain",[item["id"]])
+            validate_current_supplements(item,source)
             visible=" ".join(_definition_visible_values(item))
             if re.search(r"(?:\[CLASS:|\[DEMAND|\[/DEMAND|\b(?:CHR|ENV|SL|HRE|HVG)-|\b(?:HLD|LLD)\b)",visible,re.I):raise InternalCondition("revise","HH1A_DEFINITION_VISIBLE_JARGON",f"{item['id']} exposes machine-facing vocabulary",[item["id"]])
     world_items=report["world_environment_definitions"]
@@ -312,12 +327,17 @@ def validate_draft(context:Context,draft:Path,admitted:Mapping[str,Any])->tuple[
     actual_list=[(item["report_element_id"],item["source_id"],item["locator"]) for item in report["source_bindings"]]
     if len(actual_list)!=len(set(actual_list)) or actual_list!=expected_list:raise InternalCondition("revise","HH1A_SOURCE_BINDING_DRIFT","source_bindings must be the unique ordered expansion of all outer element pairs")
     actual_bindings=set(actual_list)
-    material=material_locator_map(admitted);primary_covered={locator for section in DOMAIN_SECTIONS for item in report[section] for locator in item["locators"] if locator in material}
+    material=material_locator_map(admitted)
+    def primary_locators(item:Mapping[str,Any])->list[str]:
+        if item.get("element_kind") in {"character_definition","environment_definition"}:
+            return list(item["locators"][:1])
+        return list(item["locators"])
+    primary_covered={locator for section in DOMAIN_SECTIONS for item in report[section] for locator in primary_locators(item) if locator in material}
     missing=set(material)-primary_covered
     wrong_domain=[]
     for section in DOMAIN_SECTIONS:
         for item in report[section]:
-            wrong_domain.extend(locator for locator in item["locators"] if locator in material and material[locator]!=section)
+            wrong_domain.extend(locator for locator in primary_locators(item) if locator in material and material[locator]!=section)
     if missing:raise InternalCondition("revise","HH1A_REPORT_MATERIAL_OMISSION",f"uncovered material locators: {sorted(missing)}",missing)
     if wrong_domain:raise InternalCondition("revise","HH1A_DOMAIN_MISPLACEMENT",f"locators placed in wrong domain: {sorted(set(wrong_domain))}",wrong_domain)
     domain_coverage={section:{"expected_locators":sorted(locator for locator,owner in material.items() if owner==section),"covered_locators":sorted(locator for locator in primary_covered if material[locator]==section),"uncovered_locators":sorted(locator for locator,owner in material.items() if owner==section and locator not in primary_covered)} for section in DOMAIN_SECTIONS}

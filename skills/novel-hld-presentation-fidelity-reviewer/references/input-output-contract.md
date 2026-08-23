@@ -11,6 +11,7 @@ Hard gates:
 - report `hp1_content_binding` equals the current HP1 package hash;
 - allowlist excludes chat, old reports, HTML, render registries, templates, CSS, SVG, and raw conception.
 - allowlist excludes sample chapters and all novel prose; prose realization is outside this review's comparison boundary.
+- a character or concrete-place definition card keeps its first source/locator as the exact sealed baseline definition; any later source/locator is accepted only when it is a current canonical HLD object that explicitly cites that same baseline entity. Supplemental bindings remain fidelity evidence but do not move the canonical object out of its original HLD domain or satisfy missing primary-domain coverage.
 
 ## Canonical review
 

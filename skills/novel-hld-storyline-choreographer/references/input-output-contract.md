@@ -24,7 +24,8 @@ chat, old HLD, or presentation documents.
 ## Canonical invariants
 
 - register entries represent actual authoritative storyline objects, not
-  baseline inventory rows;
+  baseline inventory rows, and retain a natural-language `reader_name` for
+  author-facing reports;
 - each line has exactly one of `placed`, `background-carried`,
   `optional-not-activated`, or `preserved-open`, with authorization evidence;
 - every `placed` or `background-carried` line has at least one auditable `HTS-`
@@ -33,6 +34,12 @@ chat, old HLD, or presentation documents.
   cannot masquerade as placed segments;
 - every segment refers to valid HA1 units/chapter shells and explicit entry and
   exit states;
+- `chapter_storyline_plan[]` covers the carried HA1 chapter shells exactly once,
+  keeps contiguous reading order, and states each chapter's human-readable
+  working title, core content, primary/supporting/background/open storylines,
+  content obligations, and chapter-end change;
+- an active chapter storyline must have a segment that actually carries that
+  chapter shell; a preserved-open storyline cannot be presented as active;
 - every `HTC-` connection names existing endpoints and a typed causal,
   information, emotional, or thematic function;
 - the subject reconstruction test cites object evidence and passes;

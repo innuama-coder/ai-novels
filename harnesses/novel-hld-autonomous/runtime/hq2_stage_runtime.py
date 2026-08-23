@@ -245,7 +245,7 @@ def load_context(skill_root: Path, work_order_path: Path) -> Context:
 
 
 def _iter_evidence(model: Mapping[str, Any]) -> Iterable[dict[str, Any]]:
-    groups = ("storyline_trace_tests","character_arc_trace_tests","key_function_consumption_tests") if model["mode"] == "consumer_test" else ("obligation_coverage_tests","classification_fidelity_tests")
+    groups = ("storyline_trace_tests","character_arc_trace_tests","key_function_consumption_tests","chapter_definition_consumption_tests") if model["mode"] == "consumer_test" else ("obligation_coverage_tests","classification_fidelity_tests")
     for group in groups:
         for test in model[group]:
             yield from test["evidence"]
@@ -359,6 +359,13 @@ def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     story_ids = _consumer_storyline_ids(handoff, units, unit_ids)
     character_ids = {value for item in units for value in item["character_ids"]}
     key_ids = unit_ids | {value for item in units for value in item["hkf_ids"]}
+    chapter_refs=handoff.get("chapter_definition_refs")
+    if not isinstance(chapter_refs,list) or not chapter_refs:
+        raise CandidateError("consumer handoff lacks chapter definitions")
+    chapter_definition_ids={item.get("id") for item in chapter_refs}
+    chapter_ids={item.get("chapter_id") for item in chapter_refs}
+    if None in chapter_definition_ids or len(chapter_definition_ids)!=len(chapter_refs) or None in chapter_ids or len(chapter_ids)!=len(chapter_refs):
+        raise CandidateError("consumer handoff chapter definition identities are incomplete or duplicated")
     if set(model["reconstruction_results"]["lld_work_order"]) != unit_ids:
         raise CandidateError("consumer reconstruction omits or invents LLD work units")
     states = {item["work_unit_id"]:(item["entry_state"],item["exit_state"]) for item in model["reconstruction_results"]["entry_exit_states"]}
@@ -367,14 +374,15 @@ def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     _check_test_identity(model["storyline_trace_tests"], story_ids, "storyline tests")
     _check_test_identity(model["character_arc_trace_tests"], character_ids, "character tests", allow_empty=True)
     _check_test_identity(model["key_function_consumption_tests"], key_ids, "key-function tests")
+    _check_test_identity(model["chapter_definition_consumption_tests"], chapter_definition_ids, "chapter-definition tests")
     constraint = model["constraint_open_elaboration_freedom_test"]
     if set(constraint["input_ids"]) != unit_ids:
         raise CandidateError("classification test does not exactly cover work units")
-    primary = [*model["storyline_trace_tests"],*model["character_arc_trace_tests"],*model["key_function_consumption_tests"],constraint]
+    primary = [*model["storyline_trace_tests"],*model["character_arc_trace_tests"],*model["key_function_consumption_tests"],*model["chapter_definition_consumption_tests"],constraint]
     primary_evidence = {evidence["object_id"] for test in primary for evidence in test["evidence"] if evidence["role"] == "lld_handoff"}
-    if primary_evidence != unit_ids:
-        raise CandidateError("consumer first-order evidence does not cover every handoff work unit")
-    known = unit_ids | story_ids | character_ids | key_ids
+    if primary_evidence != unit_ids|chapter_definition_ids:
+        raise CandidateError("consumer first-order evidence does not cover every work unit and chapter definition")
+    known = unit_ids | story_ids | character_ids | key_ids | chapter_definition_ids | chapter_ids
     _validate_dimensions(model, known)
     findings = [*model["missing_guesswork"],*model["findings"]]
     _verdict(model, primary, findings)

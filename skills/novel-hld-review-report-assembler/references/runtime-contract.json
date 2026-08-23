@@ -5,7 +5,7 @@
   "stage": "HH1",
   "task_profile": "HH1.A",
   "public_entrypoint": {"argv": ["python", "scripts/run_skill.py", "<work-order.json>", "<draft-directory>"], "success_exit": 0, "nonready_exit": 2, "runtime_error_exit": 1},
-  "required_allowlist_roles_ordered": ["hb0_completion", "hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "hp1_validation", "novel_hld_package", "hld_cross_index", "hld_traceability_matrix", "hld_spec", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "hq2_completion", "hq2_manifest", "hq2_validation", "lld_handoff_acceptance"],
+  "required_allowlist_roles_ordered": ["hb0_completion", "hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "hp1_validation", "novel_hld_package", "hld_cross_index", "hld_traceability_matrix", "hld_spec", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "hld_model_hd1", "hq2_completion", "hq2_manifest", "hq2_validation", "lld_handoff_acceptance"],
   "forbidden_input_classes": ["raw_conception", "chat", "prior_report", "sample_chapter", "novel_prose", "html", "svg", "css", "dom_registry"],
   "draft_profile": ["canonical.json", "generation-session.json", "generation-evidence/00-material-inventory.json", "generation-evidence/01-organization.json", "generation-evidence/02-adversarial-review.json"],
   "ready_package_profile": ["hld-human-review-report.json", "generation-session.json", "generation-evidence/00-material-inventory.json", "generation-evidence/01-organization.json", "generation-evidence/02-adversarial-review.json", "report-assembly-execution.json", "validation.json", "package-manifest.json"],

@@ -111,6 +111,51 @@ class HH1APublicRuntimeTests(unittest.TestCase):
         self.assertEqual((code, result["result"]), (2, "revise"))
         self.assertFalse((fixture.workspace / order["output_directory"] / A.SPEC.canonical_name).exists())
 
+    def test_definition_card_accepts_current_model_ref_derived_from_same_entity(self):
+        fixture, work, order, _, draft, report = self.build()
+        target = report["character_definitions"][0]
+        source = target["source_ids"][0]
+        context = A.load_context(work, A.SPEC, A.impl_hash(), A._catalog())
+        admitted = A.admit(context)
+        supplemental = None
+        for entry in admitted["cross_entries"]:
+            if entry["model_path"] not in A.MODEL_ROLES.values():
+                continue
+            role = next(role for role, name in A.MODEL_ROLES.items() if name == entry["model_path"])
+            value = A.json_pointer(admitted["models"][role], entry["locator"])
+            if isinstance(value, dict):
+                value["source_refs"] = [source]
+                supplemental = (entry["id"], f"{entry['model_path']}#{entry['locator']}")
+                break
+        self.assertIsNotNone(supplemental)
+        target["source_ids"].append(supplemental[0])
+        target["locators"].append(supplemental[1])
+        context.catalog.validate(report, "hld-human-review-report.schema.json")
+        A._validate_definition_sections(report, admitted)
+
+    def test_definition_card_rejects_unrelated_current_model_ref(self):
+        fixture, work, order, _, draft, report = self.build()
+        target = report["character_definitions"][0]
+        context = A.load_context(work, A.SPEC, A.impl_hash(), A._catalog())
+        admitted = A.admit(context)
+        unrelated = None
+        for entry in admitted["cross_entries"]:
+            if entry["model_path"] not in A.MODEL_ROLES.values():
+                continue
+            role = next(role for role, name in A.MODEL_ROLES.items() if name == entry["model_path"])
+            value = A.json_pointer(admitted["models"][role], entry["locator"])
+            if isinstance(value, dict):
+                value["source_refs"] = ["CHR-UNRELATED"]
+                unrelated = (entry["id"], f"{entry['model_path']}#{entry['locator']}")
+                break
+        self.assertIsNotNone(unrelated)
+        target["source_ids"].append(unrelated[0])
+        target["locators"].append(unrelated[1])
+        context.catalog.validate(report, "hld-human-review-report.schema.json")
+        with self.assertRaises(A.InternalCondition) as raised:
+            A._validate_definition_sections(report, admitted)
+        self.assertEqual(raised.exception.code, "HH1A_DEFINITION_SUPPLEMENT_INVALID")
+
     def test_definition_entity_sets_come_from_hc1_and_hk1_not_domain_wide_controls(self):
         fixture, _, _, _, _, report = self.build()
         ws = fixture.workspace

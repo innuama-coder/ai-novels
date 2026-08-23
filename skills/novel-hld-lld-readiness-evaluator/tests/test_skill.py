@@ -50,14 +50,16 @@ def dimensions(ids:set[str],proof:list[dict])->list[dict]:
 
 def draft_for(workspace:Path,work_path:Path,mode:str)->Path:
     work=read_json(work_path);actual=work["file_allowlist"];by_role={item["role"]:item for item in actual};handoff=read_json(workspace/by_role["lld_handoff"]["path"])
-    units=handoff["work_units"];unit_ids={x["id"] for x in units};story={v for x in units for v in x["storyline_ids"]};chars={v for x in units for v in x["character_ids"]};keys=unit_ids|{v for x in units for v in x["hkf_ids"]}
+    units=handoff["work_units"];unit_ids={x["id"] for x in units};story={v for x in units for v in x["storyline_ids"]};chars={v for x in units for v in x["character_ids"]};keys=unit_ids|{v for x in units for v in x["hkf_ids"]};chapter_defs={x["id"] for x in handoff["chapter_definition_refs"]}
     unit_proof=[evidence("lld_handoff",handoff,f"/work_units/{index}") for index in range(len(units))]
     if mode=="consumer_test":
         story_tests=[test_item("HQT-STORY-001",story,unit_proof)]
         char_tests=[] if not chars else [test_item("HQT-CHAR-001",chars,unit_proof)]
         key_tests=[test_item("HQT-KEY-001",keys,unit_proof)]
+        chapter_proof=[evidence("lld_handoff",handoff,f"/chapter_definition_refs/{index}") for index in range(len(handoff["chapter_definition_refs"]))]
+        chapter_tests=[test_item("HQT-CHAPTER-001",chapter_defs,chapter_proof)]
         constraint=test_item("HQT-CLASS-001",unit_ids,unit_proof)
-        model={"schema_version":"1.0","skill":"novel-hld-lld-readiness-evaluator","stage":"HQ2","mode":mode,"hld_run_id":work["hld_run_id"],"task_id":work["task_id"],"source_artifacts":actual,"reconstruction_results":{"lld_work_order":sorted(unit_ids),"boundary":["HLD fixes obligations and prohibitions; LLD chooses scene realization"],"startup_conditions":["current HP1 handoff is sealed and ready"],"entry_exit_states":[{"work_unit_id":x["id"],"entry_state":x["entry_state"],"exit_state":x["exit_state"]} for x in units]},"storyline_trace_tests":story_tests,"character_arc_trace_tests":char_tests,"key_function_consumption_tests":key_tests,"constraint_open_elaboration_freedom_test":constraint,"missing_guesswork":[],"findings":[],"evidence_dimensions":dimensions(unit_ids,unit_proof),"verdict":"pass","defect_origin":"none"}
+        model={"schema_version":"1.0","skill":"novel-hld-lld-readiness-evaluator","stage":"HQ2","mode":mode,"hld_run_id":work["hld_run_id"],"task_id":work["task_id"],"source_artifacts":actual,"reconstruction_results":{"lld_work_order":sorted(unit_ids),"boundary":["HLD fixes obligations and prohibitions; LLD chooses scene realization"],"startup_conditions":["current HP1 handoff is sealed and ready"],"entry_exit_states":[{"work_unit_id":x["id"],"entry_state":x["entry_state"],"exit_state":x["exit_state"]} for x in units]},"storyline_trace_tests":story_tests,"character_arc_trace_tests":char_tests,"key_function_consumption_tests":key_tests,"chapter_definition_consumption_tests":chapter_tests,"constraint_open_elaboration_freedom_test":constraint,"missing_guesswork":[],"findings":[],"evidence_dimensions":dimensions(unit_ids|chapter_defs,unit_proof+chapter_proof),"verdict":"pass","defect_origin":"none"}
         sealed_task=None;canonical="handoff-consumption-test.json"
     else:
         trace=read_json(workspace/by_role["traceability"]["path"]);records=trace["records"];trace_proof=[evidence("traceability",trace,f"/records/{index}") for index in range(len(records))];proof=unit_proof+trace_proof

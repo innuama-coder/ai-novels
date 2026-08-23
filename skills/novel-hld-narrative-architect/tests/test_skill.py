@@ -119,7 +119,7 @@ def build_hb0(workspace: Path, *, must_ask: bool = False) -> tuple[dict, dict[st
             {"source_id": row["source_id"], "domain": "intent", "object_type": "string", "schema_discriminator": None,
              "source": {"fixture": "intent"}, "workspace_source_ref": row["workspace_source_ref"],
              "locator": row["locator"], "value_sha256": row["source_value_sha256"],
-             "allowed_stages": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1"]}
+             "allowed_stages": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1"]}
             for row in (free, opened)
         ],
     }
@@ -178,7 +178,38 @@ def build_design_upstream(workspace: Path, stage: str, prior: list[dict]) -> dic
     package = workspace / "upstream" / stage / "package"
     package.mkdir(parents=True)
     main = package / canonical_name
-    write_json(main, {"schema_version": "1.0", "skill": SKILLS[stage], "stage": stage, "hld_run_id": RUN_ID, "status": "ready"})
+    upstream_model = {"schema_version": "1.0", "skill": SKILLS[stage], "stage": stage, "hld_run_id": RUN_ID, "status": "ready"}
+    if stage == "HA1":
+        upstream_model.update({
+            "narrative_units": [{"id": "HNU-001"}],
+            "chapter_shells": [{"id": "HCH-001", "parent_unit_id": "HNU-001"}],
+        })
+    elif stage == "HS1":
+        upstream_model["chapter_storyline_plan"] = [{
+            "chapter_id": "HCH-001", "parent_unit_id": "HNU-001",
+            "source_refs": ["SRC-001"],
+        }]
+    elif stage == "HC1":
+        upstream_model["character_participation_register"] = [{"id": "HAS-001", "character_id": "CHR-001"}]
+        upstream_model["chapter_agency_contracts"] = [{
+            "id": "HAS-AGENCY-001", "chapter_id": "HCH-001", "parent_unit_id": "HNU-001",
+            "focal_character_ids": ["CHR-001"], "choice_actor_ids": ["CHR-001"],
+            "institutional_choice_actors": [],
+            "cost_bearer_ids": ["CHR-001"], "unavailable_character_ids": [],
+            "information_paths": [{
+                "character_id": "CHR-001", "acquisition_modes": ["perceived"],
+                "limit": "只允许人物当时能够感知或合法获知的信息",
+            }],
+        }]
+    elif stage == "HI1":
+        upstream_model["chapter_pov_assignments"] = [{
+            "id": "HPV-CHAPTER-001", "chapter_id": "HCH-001", "parent_unit_id": "HNU-001",
+            "hc1_agency_contract_id": "HAS-AGENCY-001",
+            "pov_character_id": "CHR-001", "focalization_mode": "第三人称限知",
+            "knowledge_acquisition_modes": ["perceived"],
+            "perception_limits": ["只允许人物当时能够感知或合法获知的信息"],
+        }]
+    write_json(main, upstream_model)
     write_json(package / "generation-session.json", {"schema_version": "1.0", "stage": stage})
     write_json(package / "generation-evidence" / "00.json", {"schema_version": "1.0", "stage": stage})
     write_json(package / "execution-record.json", {"schema_version": "1.0", "stage": stage})
@@ -271,8 +302,9 @@ def stage_model(stage: str, input_gate_ref: dict, actual_reads: list[dict]) -> d
         model["world_setting_architecture"]["intercity_routes"].append({"route_id":"HST-ROUTE-CAPITAL-M","from_city_id":"HST-CITY-C-CAPITAL","to_city_id":"HST-CITY-M-NORTH","travel_time":"several hours by direct flight","physical_route":"delegations and technical liaisons travel under separate authority","information_route":"the meeting channel confirms permission without exposing the experiment","custody_rule":"each country retains original records and exchanges authenticated conclusions","story_function":"political permission and local physical action remain separate"})
     elif stage == "HS1":
         model.update({
-            "semantic_storyline_register": [element("HTS-REG-001", source_storyline_id="SL-MAIN-001", line_type="main", driver="goal", goal="result", conflict="obstacle", turn="EV-001", payoff="END-001")],
+            "semantic_storyline_register": [element("HTS-REG-001", source_storyline_id="SL-MAIN-001", reader_name="追查真相的主线", line_type="main", driver="goal", goal="result", conflict="obstacle", turn="EV-001", payoff="END-001")],
             "storyline_segments": [element("HTS-SEG-001", source_storyline_id="SL-MAIN-001", unit_ids=["HNU-001"], chapter_shell_ids=["HCH-001"], entry_state_ref="STATE-0", exit_state_ref="STATE-1")],
+            "chapter_storyline_plan": [element("HCD-001", chapter_id="HCH-001", chapter_number=1, working_title="第一章：迫近的选择", parent_unit_id="HNU-001", core_content="人物在迫近压力中确认线索并承担第一次不可撤回的代价", primary_storyline_id="SL-MAIN-001", supporting_storyline_ids=[], background_storyline_ids=[], preserved_open_storyline_ids=[], content_obligations=["让人物目标、阻力与代价同时进入可见状态"], chapter_end_change="人物失去原有安全退路，下一章必须处理暴露后的后果", prohibitions=["不得以巧合解决阻力"])],
             "unit_storyline_matrix": [element("HTS-MAT-001", unit_id="HNU-001", segment_ids=["HTS-SEG-001"])],
             "storyline_connections": [element("HTC-001", connection_type="causal", from_segment_id="HTS-SEG-001", to_segment_id="HTS-SEG-001", function="event changes line")],
             "convergence_and_split_points": [element("HTC-POINT-001", connection_ids=["HTC-001"], unit_id="HNU-001", point_type="convergence")],
@@ -283,13 +315,23 @@ def stage_model(stage: str, input_gate_ref: dict, actual_reads: list[dict]) -> d
     else:
         roles = ["start", "pressure", "choice", "cost", "result"]
         model.update({
-            "character_participation_register": [element("HAS-PART-001", character_id="CHR-001", importance="core", storyline_segment_ids=["HTS-SEG-001"], responsibilities=["carry result"], absence_reason=None)],
+            "character_participation_register": [element("HAS-PART-001", character_id="CHR-001", importance="core", storyline_segment_ids=["HTS-SEG-001"], responsibilities=["负责落实关键结果"], absence_reason=None)],
             "arc_state_models": [element("HAS-MODEL-001", character_id="CHR-001", start_state={"goal": "G0"}, end_state={"goal": "G1"})],
             "arc_steps": [element(f"HAS-STEP-{i:03d}", character_id="CHR-001", role=role, pressure=f"p-{role}", choice=f"c-{role}", cost=f"k-{role}", consequence=f"r-{role}", unit_id="HNU-001", event_id="EV-001", storyline_segment_id="HTS-SEG-001") for i, role in enumerate(roles, 1)],
             "relationship_steps": [element("HRS-001", relationship_id="REL-001", character_ids=["CHR-001", "CHR-002"], state_before={"CHR-001": "distant", "CHR-002": "uncertain"}, state_after={"CHR-001": "trusting", "CHR-002": "committed"}, unit_id="HNU-001", event_id="EV-001")],
             "choice_cost_consequence_links": [element("HAS-CCC-001", character_id="CHR-001", choice_step_id="HAS-STEP-003", cost_step_id="HAS-STEP-004", result_step_id="HAS-STEP-005")],
             "event_character_alignment": [element("HAS-EVT-001", event_id="EV-001", responsible_character_ids=["CHR-001"], result="authorized")],
             "capability_information_permission_checks": [element("HAS-CHECK-001", character_id="CHR-001", event_id="EV-001", capability_ref="CAP-001", information_ref="KNOW-001", permission_ref="PERM-001", verdict="supported")],
+            "chapter_agency_contracts": [element(
+                "HAS-AGENCY-001", chapter_id="HCH-001", parent_unit_id="HNU-001",
+                focal_character_ids=["CHR-001"], choice_actor_ids=["CHR-001"],
+                institutional_choice_actors=[],
+                cost_bearer_ids=["CHR-001"], unavailable_character_ids=[],
+                information_paths=[{
+                    "character_id": "CHR-001", "acquisition_modes": ["perceived"],
+                    "limit": "只允许人物当时能够感知或合法获知的信息",
+                }], constraints=["角色清醒并能在本章直接感知事件"],
+            )],
         })
     owned = []
     for name in CONTRACT["object_arrays"]:

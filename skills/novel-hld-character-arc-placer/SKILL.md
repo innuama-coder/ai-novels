@@ -24,10 +24,55 @@ Use [references/sources.md](references/sources.md) only to audit provenance.
 ## Hard boundary
 
 Own participation, arc state models, arc/relationship steps,
-choice-cost-consequence links, event alignment, and
-capability-information-permission checks. Place only character facts already
+choice-cost-consequence links, event alignment,
+capability-information-permission checks, and one explicit character-agency
+contract for every HA1 chapter shell. Each chapter contract separates legal
+focal characters, named decision makers, source-bound institutional decision
+makers, cost bearers, unavailable characters, and
+the information paths available to each focal character. Place only character facts already
 defined by conception authority. Do not complete missing appearance, biography,
 social circle, relation, feeling, skill, knowledge, or new character slots.
+Participation `responsibilities[]` states only what a role is responsible for,
+as a natural-Chinese duty sentence beginning with `负责` that an author can read
+directly. It must not contain
+unexplained English prose or restate death, survival, consciousness, recovery,
+or other lifecycle status. Single-letter story names such as C, M, and R-07
+remain legal. Chapter availability and lifecycle limits belong only in the
+ordered chapter-agency contracts, where current HA1/HS1 structure can govern
+them without stale baseline prose leaking back into the design.
+Each duty is stated from inside the story world: what the person or institution
+must do, protect, decide, verify, prevent, or deliver. Never substitute an
+out-of-world narrative function such as moving the plot, creating suspense,
+maintaining conflict, preserving a failure path, or paying off a setup.
+For a return-resolution work order, the sealed return binding is the exact
+coverage contract. A participation target group contains only
+`HAS-PARTICIPATION-*` IDs; every affected ID appears once, in the sealed order,
+and keeps its exact `CHR-*` identity. A chapter-agency target group contains
+only `HAS-AGENCY-*` IDs; every affected contract must exist once and appear in
+the sealed chapter order. When one upstream defect spans a chapter's
+information authority and the character-arc step that uses it, HC1 also
+accepts one narrowly defined combined group: ordered `HAS-AGENCY-*` targets
+followed by ordered `HAS-ARC-*` targets. The combined form requires a sealed
+accepted HC1 return base, and only those exact semantic objects may change.
+The authority partition stays exact. Derivation-claim count, order, stable ID,
+and target locator also stay exact; only a claim already targeting
+`/chapter_agency_contracts` or `/arc_steps` may refresh its source refs and
+value hash to prove the changed target collection, and the public source/hash
+checks still apply. Every other derivation claim remains exact.
+Participation mixed with any other family, reverse family order, missing,
+renamed, reordered, duplicated, or unknown targets fail before output. Never
+replace a requested stable object with a convenient role or a different
+chapter contract.
+When an HC1 package was previously accepted, the return work order also seals
+that package as the return base. Only the affected target objects may change;
+every unaffected chapter agency contract and every unrelated semantic array
+must remain byte-for-value equivalent to that accepted base. A first-attempt
+local revision has no accepted base and therefore carries no return-base refs;
+a partial base is always invalid.
+The deterministic gate checks this duty form and explicit lifecycle wording;
+fresh semantic review must still reject euphemisms, hidden state claims, or a
+duty that smuggles in design language or contradicts current HA1/HS1 authority.
+Producer validation alone is not semantic acceptance.
 
 Do not assume every character must transform. A flat or steadfast arc is legal
 when authorized, but it still needs pressure, choice, cost, and an observable
@@ -59,5 +104,10 @@ adversarial review and HQ1 own that evidence-based judgment.
 Every core character has an authorized start -> pressure -> choice -> cost ->
 result path, every change is tied to existing events and lines, relationships
 show both parties' states, key results have responsible actors, and capability,
-information, and permission support action. Candidate faults revise; missing
+information, and permission support action. Every HA1 chapter has one ordered
+agency contract. A public-service, professional, or collective action may use
+an institutional actor only when its role, responsibility, authority limit,
+and chapter-local source refs are explicit. It must never be coerced into an
+unrelated named character. An unconscious or absent character cannot be listed
+as a focal character or decision maker. Candidate faults revise; missing
 author authority blocks without candidate or completion.

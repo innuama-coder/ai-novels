@@ -20,6 +20,15 @@ DIMS = {
 
 
 class ContractAssetTests(unittest.TestCase):
+    def test_chapter_plan_is_a_closed_first_class_contract(self):
+        schema = json.loads((ROOT / "schemas" / "hs1-canonical.schema.json").read_text(encoding="utf-8"))
+        self.assertIn("chapter_storyline_plan", schema["required"])
+        self.assertEqual(schema["properties"]["chapter_storyline_plan"]["items"]["$ref"], "#/$defs/chapterPlan")
+        self.assertFalse(schema["$defs"]["chapterPlan"]["additionalProperties"])
+        self.assertIn("reader_name", schema["$defs"]["register"]["required"])
+        self.assertIn("chapter_storyline_plan", CONTRACT["model_required"])
+        self.assertEqual(CONTRACT["object_arrays"]["chapter_storyline_plan"], "HCD-")
+
     def test_independent_research_has_ten_or_more_sources(self):
         text = (ROOT / "references" / "sources.md").read_text(encoding="utf-8")
         urls = re.findall(r"https://[^\s|]+", text)

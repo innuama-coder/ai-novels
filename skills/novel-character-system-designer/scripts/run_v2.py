@@ -16,6 +16,9 @@ from typing import Any, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 s1_runtime = importlib.import_module(
     "skills.novel-storyline-architecture-designer.scripts.run_v2"
 )
@@ -214,38 +217,16 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/run_v2.py": _HERE,
         "skill/SKILL.md": _SKILL / "SKILL.md",
         "skill/runtime-contract.md": _SKILL / "references" / "runtime-contract.md",
-        "upstream/S1-run_v2.py": _S1_SKILL / "scripts" / "run_v2.py",
-        "upstream/S1-runtime-contract.md": (
-            _S1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/W1-run_v2.py": _W1_SKILL / "scripts" / "run_v2.py",
-        "upstream/W1-runtime-contract.md": (
-            _W1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/E1-run_v2.py": _E1_SKILL / "scripts" / "run_v2.py",
-        "upstream/E1-runtime-contract.md": (
-            _E1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/T1-run_v2.py": _T1_SKILL / "scripts" / "run_v2.py",
-        "upstream/T1-runtime-contract.md": (
-            _T1_SKILL / "references" / "runtime-contract.md"
-        ),
     }
     for name in (
         "canonical.py",
         "contracts.py",
         "coordinator.py",
-        "baseline.py",
-        "b0_completion.py",
+        "stage_implementation_identity.py",
     ):
         values[f"runtime/{name}"] = runtime_dir / name
     for name in (
         "character-system.schema.json",
-        "event-timeline.schema.json",
-        "environment-system.schema.json",
-        "world-model.schema.json",
-        "storyline-architecture.schema.json",
-        "author-control-baseline.schema.json",
         "canonical-common.schema.json",
         "common-defs.schema.json",
         "input-gate.schema.json",
@@ -1974,9 +1955,11 @@ def _check_package_boundary(root: Path) -> None:
         f"generation-evidence/{index:02d}-{phase}.json"
         for index, phase in enumerate(PHASES, 1)
     }
+    execution = _read(root / "execution-record.json", "C1_EXECUTION_INVALID")
     allowed_implementation = {
-        f"implementation/{identity}"
-        for identity in _implementation_paths()
+        f"implementation/{item['identity']}"
+        for item in execution.get("implementation_catalog", [])
+        if isinstance(item, Mapping) and isinstance(item.get("identity"), str)
     }
     for path in root.rglob("*"):
         if not path.is_file():
@@ -2118,6 +2101,17 @@ def validate_c1_package(
         item["identity"]: item["artifact"]
         for item in execution.get("implementation_catalog", [])
     }
+    try:
+        _, catalog = stage_identity.validate_stage_catalog(
+            stage="C1",
+            records=execution.get("implementation_catalog"),
+            package_root=root,
+            current_paths=_implementation_paths(),
+            verify_artifact_reference=rt.verify_artifact_reference,
+            sha256_file=rt.sha256_file,
+        )
+    except stage_identity.StageImplementationIdentityError as error:
+        _fail("C1_IMPLEMENTATION_STALE", str(error))
     expected_implementation_refs = {
         rt.canonical_json(
             rt.artifact_reference(
@@ -2125,11 +2119,10 @@ def validate_c1_package(
                 root=root,
             )
         )
-        for identity in _implementation_paths()
+        for identity in catalog
     }
     if (
-        set(catalog) != set(_implementation_paths())
-        or {
+        {
             rt.canonical_json(item)
             for item in execution.get("implementation", [])
         }
@@ -2147,16 +2140,6 @@ def validate_c1_package(
             "C1_IMPLEMENTATION_STALE",
             "implementation files, catalog, execution, and manifest differ",
         )
-    for identity, current in _implementation_paths().items():
-        reference = catalog.get(identity)
-        if reference is None:
-            _fail("C1_IMPLEMENTATION_STALE", identity)
-        try:
-            rt.verify_artifact_reference(reference, root=root)
-        except Exception as error:
-            _fail("C1_IMPLEMENTATION_STALE", str(error))
-        if reference["sha256"] != rt.sha256_file(current):
-            _fail("C1_IMPLEMENTATION_STALE", identity)
     if require_completion:
         completion = _read(
             root / "stage-completion.json", "C1_COMPLETION_MISSING"

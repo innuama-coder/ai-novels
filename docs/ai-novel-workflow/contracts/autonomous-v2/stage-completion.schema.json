@@ -21,6 +21,17 @@
     "run_id": {"type": "string", "minLength": 1},
     "stage": {"$ref": "common-defs.schema.json#/$defs/stageId"},
     "status": {"const": "ready"},
+    "source_kind": {
+      "enum": ["native", "compatibility_migration", "authority_revision"]
+    },
+    "authority_revision": {
+      "$ref": "common-defs.schema.json#/$defs/artifactReference"
+    },
+    "base_source_kind": {"enum": ["native", "compatibility_migration"]},
+    "base_migration_finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "validation": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
@@ -50,6 +61,17 @@
     {
       "if": {"properties": {"stage": {"const": "B0"}}, "required": ["stage"]},
       "then": {"properties": {"previous_stage_completions": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"stage": {"const": "B0"}, "source_kind": {"const": "authority_revision"}}, "required": ["stage", "source_kind"]},
+      "then": {
+        "description": "Completion admission requires the baseline current run_state to equal the coordinator revision-000 source_interview_state exactly, including path and hash.",
+        "required": ["authority_revision", "base_source_kind"]
+      }
+    },
+    {
+      "if": {"properties": {"stage": {"const": "B0"}, "base_source_kind": {"const": "compatibility_migration"}}, "required": ["stage", "base_source_kind"]},
+      "then": {"required": ["base_migration_finalization", "parent_b0_baseline", "parent_b0_completion", "parent_b0_manifest"]}
     },
     {
       "if": {"properties": {"stage": {"const": "S1"}}, "required": ["stage"]},

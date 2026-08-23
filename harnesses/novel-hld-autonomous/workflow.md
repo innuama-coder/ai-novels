@@ -4,11 +4,15 @@
 
 ```text
 request -> revision-000 -> HB0 -> HA1 -> HS1 -> HC1 -> HI1 -> HR1
-        -> HK1 -> HQ1 -> HP1 -> HQ2(consumer,fidelity,publisher)
+        -> HK1 -> HD1 -> HQ1 -> HP1 -> HQ2(consumer,fidelity,publisher)
         -> HH1(A,B,C,publisher) -> author gate -> HF1 -> lld_ready
 ```
 
-HA1 through HK1 are sequential. HQ2 and HH1 are composite stages whose internal results can be consumed only by their deterministic publisher. Only the publisher emits a top-level result. The router is the only parent consumer and the only component that writes a successor run state.
+HA1 through HD1 are sequential. HD1 turns every accepted chapter shell into a complete chapter contract before semantic review. HQ2 and HH1 are composite stages whose internal results can be consumed only by their deterministic publisher. Only the publisher emits a top-level result. The router is the only parent consumer and the only component that writes a successor run state.
+
+Runs created before HD1 existed may use the coordinator's one-time `migrate-topology --missing-stage HD1` transaction. The transaction keeps the accepted HB0–HK1 prefix, invalidates the old HQ1–HH1 suffix in the new state, extends the sealed source index only with HD1 read permission, and starts HD1. It never edits the legacy state or packages, and the rebuilt suffix requires a fresh author decision.
+
+If the migrated HD1 result must be reissued, the replacement order inherits the migration's exact derived source index. It must not fall back to the legacy HB0 source index. Reissue publishes its gate, work order, and audit record as one preflighted append-only write set and preserves every rejected output byte.
 
 ## Stage input rule
 
@@ -23,11 +27,12 @@ Each work order binds one sealed `input-gate.json`, one pre-state, a strictly or
 | HI1 | `[HB0,HA1,HS1,HC1]` |
 | HR1 | `[HB0,HA1,HS1,HC1,HI1]` |
 | HK1 | `[HB0,HA1,HS1,HC1,HI1,HR1]` |
-| HQ1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1]` |
-| HP1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HQ1]` |
+| HD1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1]` |
+| HQ1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HD1]` |
+| HP1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HD1,HQ1]` |
 | HQ2 | `[HB0,HP1]` |
 | HH1 | `[HB0,HP1,HQ2]` |
-| HF1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HQ1,HP1,HQ2,HH1]` |
+| HF1 | `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HD1,HQ1,HP1,HQ2,HH1]` |
 
 ## Result routing
 
@@ -42,7 +47,7 @@ Each work order binds one sealed `input-gate.json`, one pre-state, a strictly or
 
 ## Decision-dependency protocol
 
-HB0 only registers unresolved controls. The harness projects every non-quality unresolved source to every HA1-HK1 stage authorized by the source matrix, and every quality unresolved source only to HQ1. The recipient creates `HDD-<stage>-<source_id>` before candidates or verdicts. `required_now` stops the work order before candidate generation. HQ1 checks coverage; HP1 may only aggregate proven dispositions.
+HB0 only registers unresolved controls. The harness projects every non-quality unresolved source to every HA1-HD1 stage authorized by the source matrix, and every quality unresolved source only to HQ1. The recipient creates `HDD-<stage>-<source_id>` before candidates or verdicts. `required_now` stops the work order before candidate generation. HQ1 checks coverage; HP1 may only aggregate proven dispositions.
 
 ## Revision protocol
 

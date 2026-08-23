@@ -19,7 +19,7 @@ from typing import Any, Iterable, Mapping
 from .author_gate import resolve_author_answer, revision_retarget_question, source_resolution_question
 from .canonical import ContractError, canonical_bytes, canonical_sha256, read_json, resolve_inside, verify_file_ref
 from .composite_publisher import PUBLISHER, TASK_CONTRACT, TASK_ORDER
-from .contracts import HARNESS, READY_PACKAGE_PROFILES, SKILLS, STAGES, UPSTREAM, next_stage, owner_for_id
+from .contracts import HARNESS, READY_PACKAGE_PROFILES, SKILLS, SOURCE_ACCESS_MATRIX, STAGES, UPSTREAM, next_stage, owner_for_id
 from .package_envelope import validate_completion_bindings, validate_manifest, validate_ready_profile, validate_result_envelope
 from .revision import build_revision_plan, initial_plan_state, transition_plan_state
 from .schema_catalog import SchemaCatalog
@@ -33,12 +33,14 @@ PRIMARY_ROLE = {
     "HB0":"control_baseline","HA1":"narrative_architecture","HS1":"storyline_choreography",
     "HC1":"character_arc_placement","HI1":"narrative_information_architecture",
     "HR1":"rhythm_continuity_architecture","HK1":"key_scene_function_map","HQ1":"semantic_review",
+    "HD1":"chapter_definition_architecture",
     "HP1":"novel_hld_package","HQ2":"lld_handoff_acceptance","HH1":"human_review_report","HF1":"hld_completion",
 }
 PRIMARY_FILE = {
     "HB0":"hld-control-baseline.json","HA1":"narrative-architecture.json","HS1":"storyline-choreography.json",
     "HC1":"character-arc-placement.json","HI1":"narrative-information-architecture.json",
     "HR1":"rhythm-continuity-architecture.json","HK1":"key-scene-function-map.json","HQ1":"hld-semantic-review.json",
+    "HD1":"chapter-definition-architecture.json",
     "HP1":"novel-hld-package.json","HQ2":"lld-handoff-acceptance.json","HH1":"hld-human-review-report.json","HF1":"hld-completion.json",
 }
 
@@ -56,12 +58,47 @@ def _write(path: Path, value: Mapping[str, Any]) -> None:
     path.write_bytes(canonical_bytes(value))
 
 
+def _write_immutable(path: Path, value: Mapping[str, Any]) -> None:
+    """Publish a coordinator document without ever replacing different bytes."""
+    _preflight_immutable(path, value)
+    expected = canonical_bytes(value)
+    if path.exists():return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.tmp")
+    temporary.write_bytes(expected)
+    os.replace(temporary, path)
+
+
+def _preflight_immutable(path: Path, value: Mapping[str, Any]) -> None:
+    expected = canonical_bytes(value)
+    if path.exists() and path.read_bytes() != expected:
+        raise CoordinatorFailure(f"immutable coordinator document collision: {path.name}")
+    temporary = path.with_name(f".{path.name}.tmp")
+    if temporary.exists() and temporary.read_bytes() != expected:
+        raise CoordinatorFailure(f"immutable coordinator temporary collision: {path.name}")
+
+
+def _publish_immutable_batch(documents: Iterable[tuple[Path, Mapping[str, Any]]]) -> None:
+    """Preflight an append-only write set before publishing any member."""
+    planned=list(documents)
+    for path,value in planned:_preflight_immutable(path,value)
+    for path,value in planned:_write_immutable(path,value)
+
+
 def _hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _ref(path: Path, workspace: Path, role: str) -> dict[str, str]:
     path=path.resolve(strict=True);return {"role":role,"path":path.relative_to(workspace.resolve(strict=True)).as_posix(),"sha256":_hash(path)}
+
+
+def _planned_ref(path: Path, workspace: Path, role: str, value: Mapping[str, Any]) -> dict[str, str]:
+    return {
+        "role": role,
+        "path": path.relative_to(workspace).as_posix(),
+        "sha256": hashlib.sha256(canonical_bytes(value)).hexdigest(),
+    }
 
 
 def _stage_asset(workspace: Path, source: Path) -> Path:
@@ -109,7 +146,7 @@ def _owner_binding(stage: str, task_kind: str | None=None) -> tuple[str,str,str]
     return resolve_public_owner(stage,task_kind,expected_skill=expected)
 
 
-def _gate_and_order(workspace: Path, state_ref: Mapping[str,Any], state: Mapping[str,Any], *, stage: str, timestamp: str, allowlist: list[dict[str,str]], upstreams: list[dict[str,str]], task_kind: str|None=None, mode: str="forward", return_binding: Mapping[str,Any]|None=None, plan_ref: Mapping[str,Any]|None=None, plan_state_ref: Mapping[str,Any]|None=None, composite_state_ref: Mapping[str,Any]|None=None, after_sequence:int|None=None, supplemental_source_refs:Iterable[Mapping[str,Any]]=()) -> tuple[Path,dict[str,Any]]:
+def _gate_and_order(workspace: Path, state_ref: Mapping[str,Any], state: Mapping[str,Any], *, stage: str, timestamp: str, allowlist: list[dict[str,str]], upstreams: list[dict[str,str]], task_kind: str|None=None, mode: str="forward", return_binding: Mapping[str,Any]|None=None, plan_ref: Mapping[str,Any]|None=None, plan_state_ref: Mapping[str,Any]|None=None, composite_state_ref: Mapping[str,Any]|None=None, after_sequence:int|None=None, supplemental_source_refs:Iterable[Mapping[str,Any]]=(), source_index_override:Mapping[str,Any]|None=None, immutable:bool=False, unique_output:bool=False, deferred_immutable_documents:list[tuple[Path,Mapping[str,Any]]]|None=None) -> tuple[Path,dict[str,Any]]:
     for artifact in upstreams:_verify_artifact_reference(workspace,artifact)
     sequence=max(int(state["event_sequence"]),after_sequence or 0)+1
     if composite_state_ref is not None:
@@ -118,18 +155,23 @@ def _gate_and_order(workspace: Path, state_ref: Mapping[str,Any], state: Mapping
     token=task_kind or stage;slug=token.replace("_","-")
     binding_ref=None
     if return_binding is not None:
-        _catalog().validate(return_binding,"return-binding.schema.json");binding_path=workspace/"return-bindings"/f"binding-{sequence:06d}-{return_binding['group_id']}.json";_write(binding_path,return_binding);binding_ref=_ref(binding_path,workspace,"return_binding")
+        _catalog().validate(return_binding,"return-binding.schema.json");binding_path=workspace/"return-bindings"/f"binding-{sequence:06d}-{return_binding['group_id']}.json"
+        binding_ref=_planned_ref(binding_path,workspace,"return_binding",return_binding) if immutable else None
+        if not immutable:_write(binding_path,return_binding);binding_ref=_ref(binding_path,workspace,"return_binding")
+    protocol_refs=[dict(item) for item in (binding_ref,plan_ref,plan_state_ref) if item is not None]
+    allowlist=[*allowlist,*protocol_refs]
     gate={"schema_version":"1.0","harness":HARNESS,"hld_run_id":state["hld_run_id"],"stage":stage,"mode":mode,"state_before_ref":dict(state_ref),"hb0_completion_ref":upstreams[0] if upstreams else None,"upstream_completions":upstreams,"baseline_manifest_ref":None,"baseline_validation_ref":None,"source_lineage_refs":[],"exact_owner_skill":skill,"owner_version":version,"implementation_sha256":implementation,"return_binding":binding_ref,"unresolved_projection":[],"revision_plan_ref":dict(plan_ref) if plan_ref else None,"revision_plan_state_ref":dict(plan_state_ref) if plan_state_ref else None,"file_allowlist":allowlist}
     if stage=="HB0":
         by_role={item["role"]:item for item in allowlist}
         gate["baseline_manifest_ref"]=by_role["baseline_manifest"]
         gate["baseline_validation_ref"]=by_role["baseline_validation"]
         gate["source_lineage_refs"]=[item for item in allowlist if item["role"].startswith("source::")]
-    if stage in {"HA1","HS1","HC1","HI1","HR1","HK1","HQ1"}:
+    if stage in {"HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"}:
         hb0=upstreams[0];gate["baseline_manifest_ref"]={"role":"baseline_manifest","path":hb0["manifest_path"],"sha256":hb0["manifest_sha256"]}
         completion=read_json(workspace/hb0["completion_path"]);validation=completion["validation_ref"];gate["baseline_validation_ref"]={"role":"baseline_validation","path":validation["path"],"sha256":validation["sha256"]}
-        source_index=next((x for x in completion["canonical_artifacts"] if x["role"]=="source_index"),None)
+        source_index=dict(source_index_override) if source_index_override is not None else next((x for x in completion["canonical_artifacts"] if x["role"]=="source_index"),None)
         if source_index:
+            verify_file_ref(source_index,workspace,expected_role="source_index")
             gate["source_lineage_refs"]=[dict(source_index)]
             index=read_json(workspace/source_index["path"])
             for item in index["entries"]:
@@ -139,9 +181,20 @@ def _gate_and_order(workspace: Path, state_ref: Mapping[str,Any], state: Mapping
         control=read_json(workspace/hb0["path"])
         from .hdd import project_unresolved
         gate["unresolved_projection"]=project_unresolved(control["unresolved_register"]).get(stage,[])
-    gate_path=workspace/f"input-gate-{sequence:06d}-{slug}.json";_write(gate_path,gate)
-    order={"schema_version":"1.0","harness":HARNESS,"hld_run_id":state["hld_run_id"],"revision":state["revision"],"work_order_id":f"WO-{sequence:06d}-{slug}","task_id":f"TASK-{sequence:06d}-{slug}","stage":stage,"action":"execute","exact_owner_skill":skill,"owner_version":version,"implementation_sha256":implementation,"event_sequence":sequence,"result_timestamp":timestamp,"input_gate_ref":_ref(gate_path,workspace,"input_gate"),"state_before_ref":dict(state_ref),"upstream_completions":upstreams,"file_allowlist":allowlist,"unresolved_projection":gate["unresolved_projection"],"mode":mode,"return_binding":binding_ref,"revision_plan_ref":dict(plan_ref) if plan_ref else None,"revision_plan_state_ref":dict(plan_state_ref) if plan_state_ref else None,"output_directory":f"{stage}-r{state['revision']:04d}-{slug}-package","submission_status":"open"}
-    order_path=workspace/f"work-order-{sequence:06d}-{slug}.json";_write(order_path,order);return order_path,order
+    gate_path=workspace/f"input-gate-{sequence:06d}-{slug}.json"
+    gate_ref=_planned_ref(gate_path,workspace,"input_gate",gate) if immutable else None
+    if not immutable:_write(gate_path,gate);gate_ref=_ref(gate_path,workspace,"input_gate")
+    output_slug=f"{slug}-attempt-{sequence:06d}" if unique_output else slug
+    order={"schema_version":"1.0","harness":HARNESS,"hld_run_id":state["hld_run_id"],"revision":state["revision"],"work_order_id":f"WO-{sequence:06d}-{slug}","task_id":f"TASK-{sequence:06d}-{slug}","stage":stage,"action":"execute","exact_owner_skill":skill,"owner_version":version,"implementation_sha256":implementation,"event_sequence":sequence,"result_timestamp":timestamp,"input_gate_ref":gate_ref,"state_before_ref":dict(state_ref),"upstream_completions":upstreams,"file_allowlist":allowlist,"unresolved_projection":gate["unresolved_projection"],"mode":mode,"return_binding":binding_ref,"revision_plan_ref":dict(plan_ref) if plan_ref else None,"revision_plan_state_ref":dict(plan_state_ref) if plan_state_ref else None,"output_directory":f"{stage}-r{state['revision']:04d}-{output_slug}-package","submission_status":"open"}
+    order_path=workspace/f"work-order-{sequence:06d}-{slug}.json"
+    if immutable:
+        documents=[]
+        if return_binding is not None:documents.append((binding_path,return_binding))
+        documents.extend(((gate_path,gate),(order_path,order)))
+        if deferred_immutable_documents is not None:deferred_immutable_documents.extend(documents)
+        else:_publish_immutable_batch(documents)
+    else:_write(order_path,order)
+    return order_path,order
 
 
 def initialize_staged(workspace: Path, run_request_path: Path, hb0_allowlist: list[dict[str,str]], timestamp: str) -> Path:
@@ -164,7 +217,27 @@ def _accepted_artifacts(workspace: Path, state: Mapping[str,Any]) -> dict[str,di
     return values
 
 
-def _basic_allowlist(workspace: Path, state_ref: Mapping[str,Any], stage: str, upstreams: list[dict[str,str]], supplemental_source_refs:Iterable[Mapping[str,Any]]=()) -> list[dict[str,str]]:
+def _return_base_refs(workspace: Path, state: Mapping[str,Any], stage: str) -> list[dict[str,str]]:
+    """Recover the last accepted owner package without making it current again."""
+    current=dict(state);visited:set[str]=set()
+    while True:
+        for artifact in current["accepted_completions"]:
+            main,manifest,completion,_,completion_doc=_verify_artifact_reference(workspace,artifact)
+            if completion_doc["stage"]==stage:
+                return [
+                    _ref(main,workspace,f"return_base::{stage}::main"),
+                    _ref(manifest,workspace,f"return_base::{stage}::manifest"),
+                    _ref(completion,workspace,f"return_base::{stage}::completion"),
+                ]
+        previous=current.get("previous_state_ref")
+        if previous is None:break
+        key=f"{previous.get('path')}:{previous.get('sha256')}"
+        if key in visited:raise CoordinatorFailure("run-state ancestry contains a cycle")
+        visited.add(key);current=read_json(verify_file_ref(previous,workspace))
+    return []
+
+
+def _basic_allowlist(workspace: Path, state_ref: Mapping[str,Any], stage: str, upstreams: list[dict[str,str]], supplemental_source_refs:Iterable[Mapping[str,Any]]=(), source_index_override:Mapping[str,Any]|None=None) -> list[dict[str,str]]:
     roles:dict[str,Path]={}
     if stage=="HF1":
         roles["run_state"]=workspace/state_ref["path"]
@@ -176,9 +249,10 @@ def _basic_allowlist(workspace: Path, state_ref: Mapping[str,Any], stage: str, u
         hq2=artifacts["HQ2"];roles["hq2_acceptance"]=workspace/hq2["path"]
         hh1=artifacts["HH1"];hh1_manifest_path=workspace/hh1["manifest_path"];hh1_manifest=read_json(hh1_manifest_path);roles.update({"hh1_manifest":hh1_manifest_path,"hh1_html":hh1_manifest_path.parent/hh1_manifest["artifact_roles"]["human_review_html"]["path"],"render_target_registry":hh1_manifest_path.parent/hh1_manifest["artifact_roles"]["render_target_registry"]["path"]})
         return [_ref(path,workspace,role) for role,path in sorted(roles.items())]
-    if stage in {"HA1","HS1","HC1","HI1","HR1","HK1","HQ1"}:
+    if stage in {"HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"}:
         hb0=upstreams[0];completion=read_json(workspace/hb0["completion_path"]);baseline_manifest={"role":"baseline_manifest","path":hb0["manifest_path"],"sha256":hb0["manifest_sha256"]};validation=completion["validation_ref"];baseline_validation={"role":"baseline_validation","path":validation["path"],"sha256":validation["sha256"]}
-        source_index=next(x for x in completion["canonical_artifacts"] if x["role"]=="source_index");source_refs=[source_index];index=read_json(workspace/source_index["path"])
+        source_index=dict(source_index_override) if source_index_override is not None else next(x for x in completion["canonical_artifacts"] if x["role"]=="source_index")
+        verify_file_ref(source_index,workspace,expected_role="source_index");source_refs=[source_index];index=read_json(workspace/source_index["path"])
         for item in index["entries"]:
             if stage in item["allowed_stages"] and item["workspace_source_ref"] not in source_refs:source_refs.append(item["workspace_source_ref"])
         for item in supplemental_source_refs:
@@ -312,6 +386,8 @@ def _issue_forward(workspace:Path,state_ref:Mapping[str,Any],state:Mapping[str,A
     if binding is not None:
         plan_state=read_json(verify_file_ref(plan_state_ref,workspace));retarget=next((x for x in reversed(plan_state["retarget_bindings"]) if x["group_id"]==binding["group_id"]),None)
         if retarget:binding={**binding,"affected_ids":[retarget["new_target_id"]]}
+        for item in _return_base_refs(workspace,state,stage):
+            if item not in supplements:supplements.append(item)
     allow=_basic_allowlist(workspace,state_ref,stage,upstreams,supplements)
     order,_=_gate_and_order(workspace,state_ref,state,stage=stage,timestamp=timestamp,allowlist=allow,upstreams=upstreams,mode=mode,return_binding=binding,plan_ref=plan_ref,plan_state_ref=plan_state_ref,supplemental_source_refs=supplements)
     return order,stage,None
@@ -563,23 +639,31 @@ def accept_author_answer(workspace:Path,answer_path:Path,timestamp:str,resolutio
 
 
 def reissue_active_work_order(workspace:Path,timestamp:str,reason:str)->Path:
-    """Supersede an unexecuted invalid top-level work order without changing run state."""
+    """Supersede an invalid or independently rejected work order without changing run state."""
     workspace=workspace.resolve(strict=True);_,ledger=load_current(workspace)
     if not reason.strip():raise CoordinatorFailure("reissue reason is required")
     if ledger["active_work_order_ref"] is None:raise CoordinatorFailure("no active work order")
     old_path=verify_file_ref(ledger["active_work_order_ref"],workspace,expected_role="work_order");old=read_json(old_path)
-    if old["mode"] not in {"forward","return_resolution"}:raise CoordinatorFailure("only an unexecuted forward or return-resolution work order can be reissued")
-    if (workspace/old["output_directory"]).exists() or (workspace/"stage-result.json").exists():raise CoordinatorFailure("active work order has execution output and cannot be reissued")
+    if old["mode"] not in {"forward","return_resolution"}:raise CoordinatorFailure("only a forward or return-resolution work order can be reissued")
+    if (workspace/"stage-result.json").exists():raise CoordinatorFailure("workspace has an unconsumed root stage-result.json")
+    superseded_result_ref=None;old_output=workspace/old["output_directory"]
+    if old_output.exists():
+        result_path=old_output/"stage-result.json"
+        if not result_path.is_file():raise CoordinatorFailure("active output exists without its stage-result.json")
+        result=read_json(result_path);_catalog().validate(result,"stage-result.schema.json");validate_result_envelope(result,old)
+        verify_file_ref(result["result_manifest_ref"],workspace);verify_file_ref(result["validation_ref"],workspace)
+        if result["completion_ref"] is not None:verify_file_ref(result["completion_ref"],workspace)
+        superseded_result_ref=_ref(result_path,workspace,"stage_result")
     state=read_json(verify_file_ref(ledger["current_state_ref"],workspace));kind=state["current_stage"]
     if kind is None and ledger["active_task_kind"]=="HF1" and state["status"]=="waiting_author_decision":
         kind="HF1"
-    artifacts=_accepted_artifacts(workspace,state)
+    artifacts=_accepted_artifacts(workspace,state);documents:list[tuple[Path,Mapping[str,Any]]]=[]
     if ledger["active_task_kind"] in TASK_CONTRACT:
         kind=ledger["active_task_kind"]
         if state["current_stage"] not in COMPOSITES or old["stage"]!=state["current_stage"] or ledger.get("composite_state_ref") is None:
             raise CoordinatorFailure("reissue changed active composite topology")
         composite_ref=ledger["composite_state_ref"];composite=read_json(verify_file_ref(composite_ref,workspace,expected_role="composite_workspace_state"));previous={item["task_kind"]:item for item in composite["issued_tasks"]};upstreams=[artifacts[name] for name in UPSTREAM[state["current_stage"]]];allow=_internal_allowlist(workspace,state["current_stage"],kind,upstreams,previous);mode,binding,plan_ref,plan_state_ref=_task_return_context(workspace,state,kind)
-        order,_=_gate_and_order(workspace,ledger["current_state_ref"],state,stage=state["current_stage"],timestamp=timestamp,allowlist=allow,upstreams=upstreams,task_kind=kind,composite_state_ref=composite_ref,mode=mode,return_binding=binding,plan_ref=plan_ref,plan_state_ref=plan_state_ref,after_sequence=ledger["event_sequence"])
+        order,order_value=_gate_and_order(workspace,ledger["current_state_ref"],state,stage=state["current_stage"],timestamp=timestamp,allowlist=allow,upstreams=upstreams,task_kind=kind,composite_state_ref=composite_ref,mode=mode,return_binding=binding,plan_ref=plan_ref,plan_state_ref=plan_state_ref,after_sequence=ledger["event_sequence"],unique_output=True,immutable=True,deferred_immutable_documents=documents)
     elif ledger["active_task_kind"]=="publisher":
         if kind not in COMPOSITES or old["stage"]!=kind or ledger.get("composite_state_ref") is None:
             raise CoordinatorFailure("reissue changed active publisher topology")
@@ -587,14 +671,27 @@ def reissue_active_work_order(workspace:Path,timestamp:str,reason:str)->Path:
         composite=read_json(verify_file_ref(composite_ref,workspace,expected_role="composite_workspace_state"))
         upstreams=[artifacts[name] for name in UPSTREAM[kind]]
         allow=_publisher_allowlist(workspace,kind,upstreams,composite,composite_ref)
-        order,_=_gate_and_order(
+        order,order_value=_gate_and_order(
             workspace,ledger["current_state_ref"],state,stage=kind,timestamp=timestamp,
             allowlist=allow,upstreams=upstreams,task_kind="publisher",
-            composite_state_ref=composite_ref,after_sequence=ledger["event_sequence"],
+            composite_state_ref=composite_ref,after_sequence=ledger["event_sequence"],unique_output=True,immutable=True,deferred_immutable_documents=documents,
         )
     else:
         if kind!=ledger["active_task_kind"] or kind in COMPOSITES:raise CoordinatorFailure("reissue changed active task topology")
-        upstreams=[artifacts[name] for name in UPSTREAM[kind]];allow=_basic_allowlist(workspace,ledger["current_state_ref"],kind,upstreams)
+        source_index_override=None
+        if kind in {"HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"}:
+            current_result=state.get("current_result_ref")
+            if current_result is not None and current_result.get("role")=="topology_migration":
+                migration=read_json(verify_file_ref(current_result,workspace,expected_role="topology_migration"));_catalog().validate(migration,"topology-migration.schema.json")
+                if migration["missing_stage"]==kind:source_index_override=dict(migration["source_index_after_ref"])
+            if source_index_override is None:
+                sealed=[dict(item) for item in old["file_allowlist"] if item.get("role")=="source_index"]
+                if len(sealed)!=1:raise CoordinatorFailure("reissue requires exactly one sealed source index")
+                source_index_override=sealed[0]
+            verify_file_ref(source_index_override,workspace,expected_role="source_index")
+        supplements=[]
+        if old["mode"]=="return_resolution":supplements=_return_base_refs(workspace,state,kind)
+        upstreams=[artifacts[name] for name in UPSTREAM[kind]];allow=_basic_allowlist(workspace,ledger["current_state_ref"],kind,upstreams,supplements,source_index_override=source_index_override)
         if kind=="HF1":
             author_ref=next((dict(item) for item in old["file_allowlist"] if item.get("role")=="author_decision"),None)
             if author_ref is None:raise CoordinatorFailure("HF1 reissue lacks sealed author decision")
@@ -604,15 +701,253 @@ def reissue_active_work_order(workspace:Path,timestamp:str,reason:str)->Path:
         if old["mode"]=="return_resolution":
             if state["status"]!="return_active" or not old.get("return_binding"):raise CoordinatorFailure("return-resolution reissue lacks active revision binding")
             binding=read_json(verify_file_ref(old["return_binding"],workspace,expected_role="return_binding"))
-        order,_=_gate_and_order(
+        order,order_value=_gate_and_order(
             workspace,ledger["current_state_ref"],state,stage=kind,timestamp=timestamp,
             allowlist=allow,upstreams=upstreams,mode=old["mode"],return_binding=binding,
             plan_ref=old.get("revision_plan_ref"),plan_state_ref=old.get("revision_plan_state_ref"),
-            after_sequence=ledger["event_sequence"],
+            after_sequence=ledger["event_sequence"],supplemental_source_refs=supplements,source_index_override=source_index_override,unique_output=True,immutable=True,deferred_immutable_documents=documents,
         )
-    event=read_json(order)["event_sequence"];record={"schema_version":"1.0","harness":HARNESS,"hld_run_id":state["hld_run_id"],"event_sequence":event,"reason":reason.strip(),"superseded_work_order_ref":dict(ledger["active_work_order_ref"]),"replacement_work_order_ref":_ref(order,workspace,"work_order"),"timestamp":timestamp}
-    rpath=workspace/"reissues"/f"reissue-{event:06d}-{kind}.json";_write(rpath,record)
+    event=order_value["event_sequence"];replacement_ref=_planned_ref(order,workspace,"work_order",order_value);record={"schema_version":"1.0","harness":HARNESS,"hld_run_id":state["hld_run_id"],"event_sequence":event,"reason":reason.strip(),"superseded_work_order_ref":dict(ledger["active_work_order_ref"]),"superseded_result_ref":superseded_result_ref,"superseded_output_directory":old["output_directory"] if superseded_result_ref else None,"replacement_work_order_ref":replacement_ref,"timestamp":timestamp}
+    rpath=workspace/"reissues"/f"reissue-{event:06d}-{kind}.json";documents.append((rpath,record));_publish_immutable_batch(documents)
     return _snapshot(workspace,{**ledger,"ledger_revision":ledger["ledger_revision"]+1,"event_sequence":event,"active_work_order_ref":_ref(order,workspace,"work_order")})
+
+
+def _snapshot_migration(
+    workspace: Path,
+    ledger: Mapping[str, Any],
+    expected_pointer: bytes,
+) -> Path:
+    """Publish a migration ledger with a compare-and-swap pointer update."""
+    path = workspace / "coordinator" / f"ledger-{ledger['ledger_revision']:04d}.json"
+    _catalog().validate(ledger, "coordinator-ledger.schema.json")
+    planned = _planned_ref(path, workspace, "coordinator_ledger", ledger)
+    next_pointer = canonical_bytes({"ledger_ref": planned})
+    pointer = workspace / "coordinator-current.json"
+    current = pointer.read_bytes()
+    if current == next_pointer:
+        _write_immutable(path, ledger)
+        return path
+    if current != expected_pointer:
+        raise CoordinatorFailure("coordinator pointer changed during topology migration")
+    _write_immutable(path, ledger)
+    if pointer.read_bytes() != expected_pointer:
+        raise CoordinatorFailure("coordinator pointer changed before topology migration commit")
+    temporary = workspace / ".coordinator-current.topology-migration.tmp"
+    if temporary.exists() and temporary.read_bytes() != next_pointer:
+        raise CoordinatorFailure("topology migration pointer temporary collision")
+    temporary.write_bytes(next_pointer)
+    os.replace(temporary, pointer)
+    return path
+
+
+def _derive_topology_source_index(
+    source_index: Mapping[str, Any],
+    missing_stage: str,
+) -> dict[str, Any]:
+    """Add one stage authorization without changing any source fact or locator."""
+    if missing_stage != "HD1":
+        raise CoordinatorFailure("only the HD1 topology insertion is supported")
+    derived = json.loads(json.dumps(source_index, ensure_ascii=False))
+    changed = 0
+    for entry in derived["entries"]:
+        allowed = list(entry["allowed_stages"])
+        if missing_stage in allowed:
+            raise CoordinatorFailure(f"source index already authorizes {missing_stage}: {entry['source_id']}")
+        if entry["domain"] not in SOURCE_ACCESS_MATRIX[missing_stage]:
+            continue
+        insertion = next(
+            (index for index, stage in enumerate(allowed) if STAGES.index(stage) > STAGES.index(missing_stage)),
+            len(allowed),
+        )
+        allowed.insert(insertion, missing_stage)
+        entry["allowed_stages"] = allowed
+        changed += 1
+    if changed == 0:
+        raise CoordinatorFailure("topology migration did not authorize any source entry")
+    _catalog().validate(derived, "hld-source-index.schema.json")
+    return derived
+
+
+def migrate_missing_stage(
+    workspace: Path,
+    missing_stage: str,
+    timestamp: str,
+    reason: str,
+) -> Path:
+    """Append HD1 to a completed legacy topology and issue its first work order.
+
+    The transaction preserves the accepted HB0..HK1 prefix, invalidates the
+    obsolete HQ1..HH1 suffix in the successor state, and never edits old state,
+    package, result, or author-event documents.
+    """
+    workspace = workspace.resolve(strict=True)
+    reason = reason.strip()
+    if not reason:
+        raise CoordinatorFailure("topology migration reason is required")
+    if missing_stage != "HD1":
+        raise CoordinatorFailure("only the HD1 topology insertion is supported")
+    pointer_path = workspace / "coordinator-current.json"
+    pointer_before = pointer_path.read_bytes()
+    ledger_path, ledger = load_current(workspace)
+    state_path = verify_file_ref(ledger["current_state_ref"], workspace, expected_role="state_before")
+    state = read_json(state_path)
+    _catalog().validate(state, "run-state.schema.json")
+    if ledger["active_work_order_ref"] is not None or ledger["active_task_kind"] is not None:
+        raise CoordinatorFailure("topology migration requires no active work order")
+    if ledger["composite_state_ref"] is not None or ledger["terminal_status"] is not None:
+        raise CoordinatorFailure("topology migration requires an idle non-terminal coordinator")
+    if (
+        state["status"] != "waiting_author_decision"
+        or state["current_stage"] is not None
+        or state["revision_plan_ref"] is not None
+        or state["revision_plan_state_ref"] is not None
+        or state["waiting_transaction_ref"] is not None
+    ):
+        raise CoordinatorFailure("topology migration requires an unmodified legacy author-wait state")
+
+    accepted: list[tuple[str, dict[str, str]]] = []
+    seen: set[str] = set()
+    for artifact in state["accepted_completions"]:
+        *_, completion = _verify_artifact_reference(workspace, artifact)
+        stage = completion["stage"]
+        if stage in seen:
+            raise CoordinatorFailure(f"legacy accepted completion stage is duplicated: {stage}")
+        seen.add(stage)
+        accepted.append((stage, dict(artifact)))
+    old_topology = tuple(stage for stage in STAGES if stage != missing_stage)
+    expected_accepted = old_topology[:-1]
+    if tuple(stage for stage, _ in accepted) != expected_accepted:
+        raise CoordinatorFailure("accepted completion chain is not the exact legacy topology")
+
+    split = STAGES.index(missing_stage)
+    preserved_stages = STAGES[:split]
+    invalidated_stages = tuple(stage for stage in expected_accepted if STAGES.index(stage) > split)
+    preserved = [artifact for stage, artifact in accepted if stage in preserved_stages]
+    invalidated = [artifact for stage, artifact in accepted if stage in invalidated_stages]
+    if tuple(stage for stage, _ in accepted[: len(preserved_stages)]) != preserved_stages:
+        raise CoordinatorFailure("legacy completion prefix does not match the current public topology")
+
+    hb0 = preserved[0]
+    hb0_completion = read_json(workspace / hb0["completion_path"])
+    source_before = next(
+        (dict(item) for item in hb0_completion["canonical_artifacts"] if item["role"] == "source_index"),
+        None,
+    )
+    if source_before is None:
+        raise CoordinatorFailure("legacy HB0 completion has no source index")
+    source_before_path = verify_file_ref(source_before, workspace, expected_role="source_index")
+    source_before_value = read_json(source_before_path)
+    _catalog().validate(source_before_value, "hld-source-index.schema.json")
+    source_after_value = _derive_topology_source_index(source_before_value, missing_stage)
+
+    migration_sequence = int(ledger["event_sequence"]) + 1
+    next_revision = int(state["revision"]) + 1
+    order_sequence = migration_sequence + 1
+    migration_dir = workspace / "topology-migrations"
+    migration_path = migration_dir / f"migration-{migration_sequence:06d}-{missing_stage}.json"
+    source_after_path = migration_dir / f"source-index-{migration_sequence:06d}-{missing_stage}.json"
+    state_after_path = workspace / "states" / f"revision-{next_revision:03d}.json"
+    gate_path = workspace / f"input-gate-{order_sequence:06d}-{missing_stage}.json"
+    order_path = workspace / f"work-order-{order_sequence:06d}-{missing_stage}.json"
+    next_ledger_path = workspace / "coordinator" / f"ledger-{ledger['ledger_revision'] + 1:04d}.json"
+    if (workspace / f"{missing_stage}-r{next_revision:04d}-{missing_stage}-package").exists():
+        raise CoordinatorFailure("HD1 migration output directory already exists")
+    if (workspace / "stage-result.json").exists():
+        raise CoordinatorFailure("topology migration refuses an unconsumed stage-result.json")
+
+    source_after_ref = _planned_ref(source_after_path, workspace, "source_index", source_after_value)
+    skill, version, implementation = _owner_binding(missing_stage)
+    stage_contract = REPO / "skills" / skill / "references" / "runtime-contract.json"
+    migration = {
+        "schema_version": "1.0",
+        "harness": HARNESS,
+        "hld_run_id": state["hld_run_id"],
+        "migration_id": f"MIG-{migration_sequence:06d}-{missing_stage}",
+        "event_sequence": migration_sequence,
+        "timestamp": timestamp,
+        "reason": reason,
+        "missing_stage": missing_stage,
+        "state_before_ref": dict(ledger["current_state_ref"]),
+        "ledger_before_ref": _ref(ledger_path, workspace, "coordinator_ledger"),
+        "pointer_before_sha256": hashlib.sha256(pointer_before).hexdigest(),
+        "old_topology": list(old_topology),
+        "new_topology": list(STAGES),
+        "source_index_before_ref": source_before,
+        "source_index_after_ref": source_after_ref,
+        "preserved_completions": preserved,
+        "invalidated_completions": invalidated,
+        "owner_binding": {
+            "skill": skill,
+            "version": version,
+            "implementation_sha256": implementation,
+        },
+        "runtime_bindings": {
+            "contracts_sha256": _hash(ROOT / "runtime" / "contracts.py"),
+            "public_runtime_registry_sha256": _hash(ROOT / "references" / "public-runtime-registry.json"),
+            "stage_contract_sha256": _hash(stage_contract),
+        },
+    }
+    _catalog().validate(migration, "topology-migration.schema.json")
+    migration_ref = _planned_ref(migration_path, workspace, "topology_migration", migration)
+    next_state = {
+        "schema_version": "1.0",
+        "harness": HARNESS,
+        "hld_run_id": state["hld_run_id"],
+        "revision": next_revision,
+        "event_sequence": migration_sequence,
+        "status": "running",
+        "current_stage": missing_stage,
+        "accepted_completions": preserved,
+        "current_result_ref": migration_ref,
+        "previous_state_ref": dict(ledger["current_state_ref"]),
+        "revision_plan_ref": None,
+        "revision_plan_state_ref": None,
+        "waiting_transaction_ref": None,
+    }
+    _catalog().validate(next_state, "run-state.schema.json")
+
+    # Every migration document is immutable.  Exact orphan bytes from a crash
+    # are adopted; any differing byte stops the transaction before pointer CAS.
+    _write_immutable(source_after_path, source_after_value)
+    _write_immutable(migration_path, migration)
+    _write_immutable(state_after_path, next_state)
+    state_after_ref = _ref(state_after_path, workspace, "state_before")
+    upstreams = [dict(item) for item in preserved]
+    allowlist = _basic_allowlist(
+        workspace,
+        state_after_ref,
+        missing_stage,
+        upstreams,
+        source_index_override=source_after_ref,
+    )
+    issued_path, issued = _gate_and_order(
+        workspace,
+        state_after_ref,
+        next_state,
+        stage=missing_stage,
+        timestamp=timestamp,
+        allowlist=allowlist,
+        upstreams=upstreams,
+        source_index_override=source_after_ref,
+        immutable=True,
+    )
+    if issued_path != order_path or verify_file_ref(issued["input_gate_ref"], workspace) != gate_path:
+        raise CoordinatorFailure("topology migration issued unexpected gate/order paths")
+    _catalog().validate(read_json(gate_path), "input-gate.schema.json")
+    _catalog().validate(issued, "work-order.schema.json")
+    next_ledger = {
+        **ledger,
+        "ledger_revision": int(ledger["ledger_revision"]) + 1,
+        "event_sequence": issued["event_sequence"],
+        "current_state_ref": state_after_ref,
+        "active_work_order_ref": _ref(issued_path, workspace, "work_order"),
+        "active_task_kind": missing_stage,
+        "composite_state_ref": None,
+        "terminal_status": None,
+    }
+    if next_ledger_path.exists() and next_ledger_path.read_bytes() != canonical_bytes(next_ledger):
+        raise CoordinatorFailure("topology migration ledger collision")
+    return _snapshot_migration(workspace, next_ledger, pointer_before)
 
 
 def _main(argv:list[str]|None=None)->int:
@@ -624,6 +959,7 @@ def _main(argv:list[str]|None=None)->int:
     answer=sub.add_parser("accept-author-answer");answer.add_argument("workspace",type=Path);answer.add_argument("answer",type=Path);answer.add_argument("--timestamp",required=True);answer.add_argument("--resolution-kind",required=True,choices=["hld_local_resolution","revision_target_resolution","conception_authority_change"])
     supersede=sub.add_parser("supersede-active-group");supersede.add_argument("workspace",type=Path);supersede.add_argument("original_target");supersede.add_argument("lineage_change");supersede.add_argument("allowed_targets",type=Path);supersede.add_argument("question_text")
     reissue=sub.add_parser("reissue-active");reissue.add_argument("workspace",type=Path);reissue.add_argument("--timestamp",required=True);reissue.add_argument("--reason",required=True)
+    migrate=sub.add_parser("migrate-topology");migrate.add_argument("workspace",type=Path);migrate.add_argument("--missing-stage",required=True,choices=["HD1"]);migrate.add_argument("--timestamp",required=True);migrate.add_argument("--reason",required=True)
     args=parser.parse_args(argv)
     try:
         if args.command=="init-staged":
@@ -633,7 +969,8 @@ def _main(argv:list[str]|None=None)->int:
         elif args.command=="accept-author-decision":path=accept_author_decision(args.workspace,args.decision,args.timestamp)
         elif args.command=="accept-author-answer":path=accept_author_answer(args.workspace,args.answer,args.timestamp,args.resolution_kind)
         elif args.command=="supersede-active-group":path=supersede_active_group(args.workspace,args.original_target,args.lineage_change,read_json(args.allowed_targets)["allowed_new_target_ids"],args.question_text)
-        else:path=reissue_active_work_order(args.workspace,args.timestamp,args.reason)
+        elif args.command=="reissue-active":path=reissue_active_work_order(args.workspace,args.timestamp,args.reason)
+        else:path=migrate_missing_stage(args.workspace,args.missing_stage,args.timestamp,args.reason)
         print(json.dumps({"status":"ok","ledger":str(path)},ensure_ascii=False));return 0
     except (CoordinatorFailure,ContractError,ValueError,OSError,KeyError) as error:
         print(json.dumps({"status":"error","error":str(error)},ensure_ascii=False),file=sys.stderr);return 2

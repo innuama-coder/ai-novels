@@ -82,6 +82,17 @@ class CandidateError(ContractError):
     """The Agent-owned draft violates its semantic or stage boundary contract."""
 
 
+class UpstreamDefect(CandidateError):
+    """A sealed upstream HLD model must change before this stage can be truthful."""
+
+    def __init__(self, evidence: str, affected_ids: list[str], required_action: str) -> None:
+        super().__init__(evidence)
+        self.affected_ids = list(dict.fromkeys(affected_ids))
+        if not self.affected_ids:
+            raise ValueError("upstream defect requires affected stable IDs")
+        self.required_action = required_action
+
+
 class AuthorRequired(CandidateError):
     def __init__(self, assessments: list[dict[str, Any]]) -> None:
         ordered = sorted(
@@ -110,12 +121,11 @@ class AuthorRequired(CandidateError):
         self.affected_ids = source_ids
         self.affected_obligation_ids = sorted(affected_obligations)
         self.required_action = (
-            "Author must resolve the cited source-control conflicts explicitly: "
+            "请明确处理以下构思资料中的冲突："
             + ", ".join(source_ids)
-            + ". Affected HLD obligations: "
-            + (", ".join(self.affected_obligation_ids) or "none")
-            + ". Use the evidence to choose or amend the authoritative conception value; "
-              "the HLD stage must not invent a local interpretation."
+            + "。受影响的设计内容："
+            + (", ".join(self.affected_obligation_ids) or "无（仅需澄清构思来源）")
+            + "。请根据证据决定保留哪项事实、修订哪项事实；后续设计不能替你猜测。"
         )
 
 
@@ -138,9 +148,14 @@ class AuthorityConflictRequired(CandidateError):
         super().__init__(evidence)
         choices = " | ".join(f"{item['id']}: {item['author_choice_required']}" for item in ordered)
         self.required_action = (
-            "Author must resolve the sealed conception-authority conflicts explicitly. "
+            "已确认的构思资料彼此矛盾，需要你决定如何修正。"
+            + "涉及的构思来源："
+            + ", ".join(self.affected_ids)
+            + "。受影响的设计内容："
+            + (", ".join(self.affected_obligation_ids) or "无（仅需澄清构思来源）")
+            + "。需要确认的事项："
             + choices
-            + ". HLD must not choose, reorder, or reinterpret the locked source values."
+            + "。在你确认前，后续设计不能自行改写、重排或解释这些事实。"
         )
 
 
@@ -304,6 +319,7 @@ def derive_file_allowlist(
     source_lineage_refs: list[Mapping[str, Any]],
     upstream: list[Mapping[str, Any]],
     stages: tuple[str, ...],
+    protocol_refs: tuple[Mapping[str, Any], ...] = (),
 ) -> list[dict[str, str]]:
     """Derive the exact file-read closure, including upstream control/package files.
 
@@ -349,6 +365,8 @@ def derive_file_allowlist(
             absolute = resolve_inside(manifest_path.parent, item["path"])
             relative = absolute.relative_to(root).as_posix()
             add(f"upstream::{stage}::content::{item['role']}", relative, item["sha256"])
+    for item in protocol_refs:
+        add(item["role"], item["path"], item["sha256"])
     return expected
 
 
@@ -379,6 +397,14 @@ def load_context(skill_root: Path, work_order_path: Path, *, require_new_output:
         for field in ("return_binding", "revision_plan_ref", "revision_plan_state_ref")
     ):
         raise GateError("forward work-order contains return/revision bindings")
+    for field, expected_role in (
+        ("return_binding", "return_binding"),
+        ("revision_plan_ref", "revision_plan"),
+        ("revision_plan_state_ref", "revision_plan_state"),
+    ):
+        ref = work_order[field]
+        if ref is not None and ref.get("role") != expected_role:
+            raise GateError(f"{field} uses a non-canonical protocol role")
     upstream_refs = work_order["upstream_completions"]
     stages = tuple(contract["upstream_stages"])
     if len(upstream_refs) != len(stages):
@@ -413,6 +439,7 @@ def load_context(skill_root: Path, work_order_path: Path, *, require_new_output:
         (gate["baseline_manifest_ref"], "baseline_manifest"),
         (gate["baseline_validation_ref"], "baseline_validation"),
         *((item, f"source_lineage:{item['role']}") for item in source_refs),
+        *((work_order[field], field) for field in ("return_binding", "revision_plan_ref", "revision_plan_state_ref") if work_order[field] is not None),
     ):
         require_pre_authorized(item["path"], item["sha256"], label)
     for stage, artifact in zip(stages, upstream_refs):
@@ -423,6 +450,7 @@ def load_context(skill_root: Path, work_order_path: Path, *, require_new_output:
     expected_allowlist = derive_file_allowlist(
         workspace, gate["state_before_ref"], gate["baseline_manifest_ref"], gate["baseline_validation_ref"],
         gate["source_lineage_refs"], upstream_refs, stages,
+        tuple(work_order[field] for field in ("return_binding", "revision_plan_ref", "revision_plan_state_ref") if work_order[field] is not None),
     )
     if work_order["file_allowlist"] != expected_allowlist:
         raise GateError("allowlist is not the exact public role/path/hash closure")
@@ -879,27 +907,39 @@ def _publish_nonready(
     _validate_and_write_result(context, result)
 
 
-def publish_blocked(
+def _author_required_gate(
     context: Context,
-    errors: list[str],
-    affected_ids: list[str],
-    required_action: str = "resolve the named source IDs externally",
-) -> None:
-    gate = {
+    error: AuthorRequired | AuthorityConflictRequired,
+) -> dict[str, Any]:
+    affected_ids = list(error.affected_ids)
+    if not affected_ids:
+        raise ValueError("author-required result needs at least one source control ID")
+    return {
         "schema_version": "1.0", "hld_run_id": context.work_order["hld_run_id"],
         "stage": context.contract["stage"], "failed_gate": "AUTHOR_REQUIRED",
-        "evidence": errors[0], "affected_ids": affected_ids,
+        "evidence": str(error), "affected_ids": affected_ids,
+        "source_control_id": affected_ids[0],
+        "question_text": error.required_action,
     }
+
+
+def publish_blocked(
+    context: Context,
+    error: AuthorRequired | AuthorityConflictRequired,
+) -> None:
+    gate = _author_required_gate(context, error)
+    affected_ids = gate["affected_ids"]
+    evidence = gate["evidence"]
     report = {
         "schema_version": "1.0", "skill": context.contract["skill"], "stage": context.contract["stage"],
         "hld_run_id": context.work_order["hld_run_id"], "status": "blocked",
         "blocker_class": "author_required", "code": "AUTHOR_REQUIRED",
-        "evidence": errors[0], "required_action": required_action,
+        "evidence": evidence, "required_action": error.required_action,
     }
     validation = {
         "schema_version": "1.0", "skill": context.contract["skill"], "stage": context.contract["stage"],
         "hld_run_id": context.work_order["hld_run_id"], "status": "blocked",
-        "deterministic_checks": context.contract["deterministic_checks"], "errors": errors,
+        "deterministic_checks": context.contract["deterministic_checks"], "errors": [evidence],
         "semantic_quality_claim": "not_evaluated_author_input_required", "semantic_review_ref": None,
     }
     _publish_nonready(
@@ -913,6 +953,40 @@ def publish_blocked(
             "gate_data_ref": file_ref(paths["gate_data"], root=context.workspace, role="gate_data"),
             "blocked_report_ref": file_ref(paths["blocked_report"], root=context.workspace, role="blocked_report"),
             "blocker_class": "author_required", "affected_ids": affected_ids,
+        },
+    )
+
+
+def publish_upstream_defect(context: Context, error: UpstreamDefect) -> None:
+    evidence = str(error)
+    gate = {
+        "schema_version": "1.0", "hld_run_id": context.work_order["hld_run_id"],
+        "stage": context.contract["stage"], "failed_gate": "UPSTREAM_DEFECT",
+        "evidence": evidence, "affected_ids": error.affected_ids,
+    }
+    report = {
+        "schema_version": "1.0", "skill": context.contract["skill"], "stage": context.contract["stage"],
+        "hld_run_id": context.work_order["hld_run_id"], "status": "blocked",
+        "blocker_class": "upstream_defect", "code": "UPSTREAM_DEFECT",
+        "evidence": evidence, "required_action": error.required_action,
+    }
+    validation = {
+        "schema_version": "1.0", "skill": context.contract["skill"], "stage": context.contract["stage"],
+        "hld_run_id": context.work_order["hld_run_id"], "status": "blocked",
+        "deterministic_checks": context.contract["deterministic_checks"], "errors": [evidence],
+        "semantic_quality_claim": "not_evaluated_upstream_correction_required", "semantic_review_ref": None,
+    }
+    _publish_nonready(
+        context, "blocked",
+        {
+            "gate_data": ("gate-data.json", gate, "design-gate-data.schema.json"),
+            "blocked_report": ("blocked-report.json", report, "design-blocked-report.schema.json"),
+            "validation": ("validation.json", validation, "design-validation.schema.json"),
+        },
+        lambda paths: {
+            "gate_data_ref": file_ref(paths["gate_data"], root=context.workspace, role="gate_data"),
+            "blocked_report_ref": file_ref(paths["blocked_report"], root=context.workspace, role="blocked_report"),
+            "blocker_class": "upstream_defect", "affected_ids": error.affected_ids,
         },
     )
 
@@ -986,14 +1060,13 @@ def execute(skill_root: Path, work_order_path: Path, draft_dir: Path, stage_vali
         return 3, None
     try:
         model, session, evidence = validate_draft(context, draft_dir.resolve(strict=True), stage_validator)
+    except UpstreamDefect as error:
+        context.output.mkdir(parents=True, exist_ok=False)
+        publish_upstream_defect(context, error)
+        return 2, read_json(context.output / "stage-result.json")
     except (AuthorRequired, AuthorityConflictRequired) as error:
         context.output.mkdir(parents=True, exist_ok=False)
-        publish_blocked(
-            context,
-            [str(error)],
-            error.affected_ids,
-            error.required_action,
-        )
+        publish_blocked(context, error)
         return 2, read_json(context.output / "stage-result.json")
     except (OSError, ValueError, ContractError) as error:
         context.output.mkdir(parents=True, exist_ok=False)

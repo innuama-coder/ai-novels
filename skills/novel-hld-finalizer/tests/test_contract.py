@@ -11,7 +11,7 @@ CATALOG=SchemaCatalog(HARNESS/"schemas")
 SPEC=importlib.util.spec_from_file_location("v",ROOT/"scripts/validate_package.py")
 V=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(V)
 
-CANONICAL={"HB0":"hld-control-baseline.json","HA1":"narrative-architecture.json","HS1":"storyline-choreography.json","HC1":"character-arc-placement.json","HI1":"narrative-information-architecture.json","HR1":"rhythm-continuity-architecture.json","HK1":"key-scene-function-map.json","HQ1":"hld-semantic-review.json","HP1":"novel-hld-package.json","HQ2":"lld-handoff-acceptance.json","HH1":"hld-human-review-report.html"}
+CANONICAL={"HB0":"hld-control-baseline.json","HA1":"narrative-architecture.json","HS1":"storyline-choreography.json","HC1":"character-arc-placement.json","HI1":"narrative-information-architecture.json","HR1":"rhythm-continuity-architecture.json","HK1":"key-scene-function-map.json","HD1":"chapter-definition-architecture.json","HQ1":"hld-semantic-review.json","HP1":"novel-hld-package.json","HQ2":"lld-handoff-acceptance.json","HH1":"hld-human-review-report.html"}
 CONTENT={
     "HB0":["hld-control-baseline.json","hld-source-index.json","hb0-execution.json","validation.json"],
     "HA1":["narrative-architecture.json","generation-session.json","execution-record.json","narrative-architecture.md","validation.json","generation-evidence/evidence.json"],
@@ -20,9 +20,10 @@ CONTENT={
     "HI1":["narrative-information-architecture.json","generation-session.json","execution-record.json","narrative-information-architecture.md","validation.json","generation-evidence/evidence.json"],
     "HR1":["rhythm-continuity-architecture.json","generation-session.json","execution-record.json","rhythm-continuity-architecture.md","validation.json","generation-evidence/evidence.json"],
     "HK1":["key-scene-function-map.json","generation-session.json","execution-record.json","key-scene-function-map.md","validation.json","generation-evidence/evidence.json"],
+    "HD1":["chapter-definition-architecture.json","generation-session.json","execution-record.json","chapter-definition-architecture.md","validation.json","generation-evidence/evidence.json"],
     "HQ1":["hld-semantic-review.json","review-session.json","review-execution.json","validation.json"],
     "HP1":["novel-hld-package.json","novel-hld-spec.md","hld-cross-index.json","hld-traceability-matrix.json","hld-traceability-matrix.md","lld-handoff.json","assembly-execution.json","validation.json",
-           "canonical-models/narrative-architecture.json","canonical-models/storyline-choreography.json","canonical-models/character-arc-placement.json","canonical-models/narrative-information-architecture.json","canonical-models/rhythm-continuity-architecture.json","canonical-models/key-scene-function-map.json","canonical-models/hld-semantic-review.json"],
+           "canonical-models/narrative-architecture.json","canonical-models/storyline-choreography.json","canonical-models/character-arc-placement.json","canonical-models/narrative-information-architecture.json","canonical-models/rhythm-continuity-architecture.json","canonical-models/key-scene-function-map.json","canonical-models/chapter-definition-architecture.json","canonical-models/hld-semantic-review.json"],
     "HQ2":["lld-handoff-acceptance.json","publisher-execution.json","validation.json"],
     "HH1":["hld-human-review-report.html","render-target-registry.json","publisher-execution.json","validation.json"],
 }
@@ -117,7 +118,7 @@ class FinalizerTest(unittest.TestCase):
         root,ws,w,g,packs,arts=self.build();self.addCleanup(shutil.rmtree,root)
         for index,stage in enumerate(V.CHAIN):
             package=packs[stage];manifest=read(package["manifest"]);completion=read(package["completion"]);manifest["revision"]=index;completion["revision"]=index
-            if stage in {"HA1","HS1","HI1","HK1","HQ1","HP1","HH1"}:
+            if stage in {"HA1","HS1","HI1","HK1","HD1","HQ1","HP1","HH1"}:
                 binding=ws/f"return-bindings/{stage}.json";write(binding,{"stage":stage,"accepted":True});completion["return_binding"]=wsref("return_binding",binding,ws)
             write(package["manifest"],manifest);write(package["completion"],completion)
         self.reseal_chain(ws,w,g,packs,arts);V.execute(w,g,ws);self.assertEqual([],V.validate_output(w,g,ws));self.assertTrue((ws/"package/hld-completion.json").is_file())

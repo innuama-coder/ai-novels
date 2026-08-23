@@ -15,6 +15,9 @@ from typing import Any, Callable, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 s1_runtime = importlib.import_module(
     "skills.novel-storyline-architecture-designer.scripts.run_v2"
 )
@@ -32,6 +35,9 @@ t1_contract_23 = importlib.import_module(
 )
 t1_contract_24 = importlib.import_module(
     "skills.novel-event-timeline-designer.scripts.contract_24"
+)
+t1_contract_25 = importlib.import_module(
+    "skills.novel-event-timeline-designer.scripts.contract_25"
 )
 _HERE = Path(__file__).resolve()
 _REPO = _HERE.parents[3]
@@ -72,6 +78,8 @@ PHASE_FIELDS = {
         "obligation_event_plan",
         "capability_occurrence_event_cover",
         "authority_token_instance_ledger",
+        "lifecycle_scope",
+        "lifecycle_contract_registry",
     ),
     "event-and-causality-model": (
         "proposition_registry",
@@ -207,9 +215,9 @@ _CAUSAL_CONDITION = re.compile(
     r"^\[PRECONDITION_SHA256:([0-9a-f]{64})\]\s+(.+)$"
 )
 
-CURRENT_MODEL_SCHEMA_VERSION = "2.4"
-LEGACY_MODEL_SCHEMA_VERSIONS = frozenset({"2.0", "2.1", "2.2", "2.3"})
-T1_PLAN_REVIEW_PROTOCOL = "t1-initial-event-plan-semantics-v4"
+CURRENT_MODEL_SCHEMA_VERSION = "2.5"
+LEGACY_MODEL_SCHEMA_VERSIONS = frozenset({"2.0", "2.1", "2.2", "2.3", "2.4"})
+T1_PLAN_REVIEW_PROTOCOL = "t1-initial-event-plan-semantics-v5"
 _TRUSTED_LEGACY_IMPLEMENTATION_PAIRS = {
     "2.0": frozenset(
         {
@@ -242,6 +250,7 @@ _TRUSTED_LEGACY_IMPLEMENTATION_PAIRS = {
             )
         }
     ),
+    "2.4": frozenset(),
 }
 _TRUSTED_LEGACY_IMPLEMENTATION_BINDING_SETS = {
     "2.3": frozenset(
@@ -293,6 +302,7 @@ _TRUSTED_LEGACY_PACKAGE_IDENTITIES = {
     "2.1": frozenset(),
     "2.2": frozenset(),
     "2.3": frozenset(),
+    "2.4": frozenset(),
 }
 
 
@@ -361,7 +371,7 @@ def _require_generation_schema(model: Mapping[str, Any]) -> None:
     if model.get("schema_version") != CURRENT_MODEL_SCHEMA_VERSION:
         _fail(
             "T1_LEGACY_GENERATION_FORBIDDEN",
-            "T1 schemas 2.0/2.1/2.2/2.3 are read-only; only exact trusted ready package identities replay",
+            "T1 schemas 2.0/2.1/2.2/2.3/2.4 are read-only; only exact trusted ready package identities replay",
         )
 
 
@@ -483,36 +493,20 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/contract_22.py": _SKILL / "scripts" / "contract_22.py",
         "skill/contract_23.py": _SKILL / "scripts" / "contract_23.py",
         "skill/contract_24.py": _SKILL / "scripts" / "contract_24.py",
+        "skill/contract_25.py": _SKILL / "scripts" / "contract_25.py",
         "skill/SKILL.md": _SKILL / "SKILL.md",
         "skill/runtime-contract.md": _SKILL / "references" / "runtime-contract.md",
         "skill/openai.yaml": _SKILL / "agents" / "openai.yaml",
-        "upstream/S1-run_v2.py": _S1_SKILL / "scripts" / "run_v2.py",
-        "upstream/S1-runtime-contract.md": (
-            _S1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/W1-run_v2.py": _W1_SKILL / "scripts" / "run_v2.py",
-        "upstream/W1-runtime-contract.md": (
-            _W1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/E1-run_v2.py": _E1_SKILL / "scripts" / "run_v2.py",
-        "upstream/E1-runtime-contract.md": (
-            _E1_SKILL / "references" / "runtime-contract.md"
-        ),
     }
     for name in (
         "canonical.py",
         "contracts.py",
         "coordinator.py",
-        "baseline.py",
-        "b0_completion.py",
+        "stage_implementation_identity.py",
     ):
         values[f"runtime/{name}"] = runtime_dir / name
     for name in (
         "event-timeline.schema.json",
-        "environment-system.schema.json",
-        "world-model.schema.json",
-        "storyline-architecture.schema.json",
-        "author-control-baseline.schema.json",
         "canonical-common.schema.json",
         "common-defs.schema.json",
         "input-gate.schema.json",
@@ -1201,6 +1195,34 @@ def _causally_reaches(
     return False
 
 
+def _topological_order_index(
+    events: set[str], pairs: set[tuple[str, str]]
+) -> dict[str, int]:
+    """Return a deterministic DAG order used only to break world-time ties."""
+
+    incoming = {event_id: 0 for event_id in events}
+    adjacency = {event_id: set() for event_id in events}
+    for left, right in pairs:
+        if right not in adjacency[left]:
+            adjacency[left].add(right)
+            incoming[right] += 1
+    ready = sorted(
+        event_id for event_id, count in incoming.items() if count == 0
+    )
+    order: dict[str, int] = {}
+    while ready:
+        current = ready.pop(0)
+        order[current] = len(order)
+        for target in sorted(adjacency[current]):
+            incoming[target] -= 1
+            if incoming[target] == 0:
+                ready.append(target)
+                ready.sort()
+    if len(order) != len(events):
+        _fail("T1_CAUSAL_CYCLE", "event graph is cyclic")
+    return order
+
+
 def _validate_proposition_contract(
     model: Mapping[str, Any],
     storyline: Mapping[str, Any],
@@ -1322,7 +1344,7 @@ def _validate_proposition_contract(
                 continue
             if not any(
                 source_id != event_id
-                and event_times[source_id] < event_times[event_id]
+                and event_times[source_id] <= event_times[event_id]
                 and _causally_reaches(source_id, event_id, edge_pairs)
                 for source_id in producers[proposition_id]
             ):
@@ -1561,20 +1583,161 @@ def _validate_terminal_state_event(
     line_type: str,
     transition_ledgers: Sequence[Mapping[str, Any]],
     event_ids: Sequence[str],
+    *,
+    current_schema: bool = False,
+    transition_spans: Sequence[Sequence[str]] | None = None,
+    events: Mapping[str, Mapping[str, Any]] | None = None,
+    connections: Mapping[str, Mapping[str, Any]] | None = None,
+    connection_event_paths: Sequence[Mapping[str, Any]] = (),
+    connection_path_readiness: Sequence[Mapping[str, Any]] = (),
+    edge_pairs: set[tuple[str, str]] | None = None,
 ) -> None:
-    """Require the terminal nonoptional event to perform the end-state transition."""
+    """Close a line at its final transition, with one narrow SEND-tail exception.
 
-    if (
-        line_type != "optional_melody"
-        and (
-            not transition_ledgers
-            or transition_ledgers[-1]["trigger_ids"][0] != event_ids[-1]
-        )
-    ):
+    Historical schemas keep the original last-event rule.  In the current
+    schema, a source line may retain post-terminal connection bridges only
+    when E1 readiness and the exact source-anchor-to-target path already own
+    them.  Such bridges transport a completed state; they cannot change it.
+    """
+
+    if line_type == "optional_melody":
+        return
+    if not transition_ledgers or not event_ids:
         _fail(
             "T1_STORYLINE_TERMINAL_STATE_EVENT_MISMATCH",
             line_id,
         )
+    terminal_event_id = (
+        transition_spans[-1][-1]
+        if current_schema and transition_spans
+        else transition_ledgers[-1]["trigger_ids"][0]
+    )
+    if terminal_event_id not in event_ids:
+        _fail("T1_STORYLINE_TERMINAL_STATE_EVENT_MISMATCH", line_id)
+    if len(event_ids) != len(set(event_ids)):
+        _fail("T1_POST_TERMINAL_EVENT_DUPLICATE", line_id)
+    terminal_index = event_ids.index(terminal_event_id)
+    tail_ids = list(event_ids[terminal_index + 1 :])
+    if not tail_ids:
+        return
+    if not current_schema:
+        _fail("T1_STORYLINE_TERMINAL_STATE_EVENT_MISMATCH", line_id)
+    if (
+        not transition_spans
+        or events is None
+        or connections is None
+        or edge_pairs is None
+    ):
+        _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", line_id)
+
+    span_ids = [event_id for span in transition_spans for event_id in span]
+    if (
+        len(span_ids) != len(set(span_ids))
+        or any(event_id not in event_ids for event_id in span_ids)
+        or any(event_id in tail_ids for event_id in span_ids)
+        or any(event_ids.index(event_id) > terminal_index for event_id in span_ids)
+    ):
+        _fail("T1_POST_TERMINAL_STATE_CHANGE", line_id)
+
+    paths: dict[str, Mapping[str, Any]] = {}
+    for path in connection_event_paths:
+        connection_id = path["connection_id"]
+        if connection_id in paths:
+            _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", connection_id)
+        paths[connection_id] = path
+    readiness: dict[str, Mapping[str, Any]] = {}
+    for record in connection_path_readiness:
+        connection_id = record["connection_id"]
+        if connection_id in readiness:
+            _fail(
+                "T1_POST_TERMINAL_CONNECTION_READINESS_MISMATCH",
+                connection_id,
+            )
+        readiness[connection_id] = record
+
+    terminal_state_index = len(transition_ledgers)
+    expected_tail_ids: set[str] = set()
+    bridge_owners: dict[str, str] = {}
+    relevant_paths: list[tuple[Mapping[str, Any], list[str]]] = []
+    for connection_id, path in paths.items():
+        connection = connections.get(connection_id)
+        if (
+            connection is None
+            or connection.get("relation") != "causal"
+            or connection.get("from_storyline_id") != line_id
+            or connection.get("from_state_index") != terminal_state_index
+            or path.get("source_event_id") != terminal_event_id
+        ):
+            continue
+        ready = readiness.get(connection_id)
+        bridge_ids = list(path["bridge_event_ids"])
+        predecessor_path = list(path["predecessor_path_event_ids"])
+        if (
+            path.get("relation") != "causal"
+            or ready is None
+            or ready.get("relation") != "causal"
+            or len(bridge_ids) != len(set(bridge_ids))
+            or predecessor_path
+            != [terminal_event_id, *bridge_ids, path["target_event_id"]]
+            or any(
+                (left, right) not in edge_pairs
+                for left, right in zip(predecessor_path, predecessor_path[1:])
+            )
+        ):
+            _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", connection_id)
+
+        flattened_transport_steps: list[str] = []
+        source_bridge_ids: list[str] = []
+        source_segment_open = True
+        for bridge_id in bridge_ids:
+            bridge = events.get(bridge_id)
+            if bridge is None:
+                _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", connection_id)
+            bridge_kind = bridge.get("event_kind", bridge.get("kind"))
+            subject_id = bridge.get(
+                "subject_id", bridge.get("changed_subject", {}).get("subject_id")
+            )
+            subject_kind = bridge.get(
+                "subject_kind", bridge.get("changed_subject", {}).get("subject_kind")
+            )
+            if (
+                bridge_kind != "connection_bridge"
+                or subject_kind == "state"
+                or subject_id == line_id
+                or bridge.get("lifecycle_effects", [])
+            ):
+                _fail("T1_POST_TERMINAL_STATE_CHANGE", bridge_id)
+            flattened_transport_steps.extend(bridge["e1_capability_step_ids"])
+            belongs_to_source = line_id in bridge["storyline_ids"]
+            if belongs_to_source:
+                if not source_segment_open:
+                    _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", connection_id)
+                source_bridge_ids.append(bridge_id)
+                previous_owner = bridge_owners.setdefault(bridge_id, connection_id)
+                if previous_owner != connection_id:
+                    _fail("T1_POST_TERMINAL_EVENT_DUPLICATE", bridge_id)
+                expected_tail_ids.add(bridge_id)
+            else:
+                source_segment_open = False
+        if (
+            len(flattened_transport_steps) != len(set(flattened_transport_steps))
+            or set(flattened_transport_steps) != set(ready["transport_step_ids"])
+        ):
+            _fail(
+                "T1_POST_TERMINAL_CONNECTION_READINESS_MISMATCH",
+                connection_id,
+            )
+        relevant_paths.append((path, source_bridge_ids))
+
+    if len(tail_ids) != len(expected_tail_ids) or set(tail_ids) != expected_tail_ids:
+        _fail("T1_POST_TERMINAL_EVENT_INVALID", line_id)
+    tail_positions = {event_id: index for index, event_id in enumerate(tail_ids)}
+    for _path, source_bridge_ids in relevant_paths:
+        if any(
+            tail_positions[left] >= tail_positions[right]
+            for left, right in zip(source_bridge_ids, source_bridge_ids[1:])
+        ):
+            _fail("T1_POST_TERMINAL_CONNECTION_PATH_INVALID", line_id)
 
 
 def _validate_connection_realizations(
@@ -1935,22 +2098,22 @@ def _validate_model(
         if not isinstance(e1_source, Mapping):
             _fail("T1_SOURCE_ARTIFACT_MISMATCH", "E1 canonical source")
         try:
-            t1_contract_24.validate_p1_digests(
+            t1_contract_25.validate_p1_digests(
                 model,
                 environment,
                 source_path="sources/E1/environment-system.json",
                 source_sha256=e1_source["sha256"],
                 canonical_sha256=rt.canonical_sha256,
             )
-            t1_contract_24.validate_p2_plan(
+            t1_contract_25.validate_p2_plan(
                 model,
                 storyline,
                 environment,
                 rt.canonical_sha256,
                 sealed_value=sealed_value,
             )
-            t1_contract_24.validate_p3_exact(model, model)
-        except t1_contract_24.Contract24Error as error:
+            t1_contract_25.validate_p3_exact(model, model)
+        except t1_contract_25.Contract25Error as error:
             _fail(error.code, str(error))
     partition = model["authority_partition"]
     _validate_authority_disjoint(partition)
@@ -2163,8 +2326,12 @@ def _validate_model(
     if not _is_acyclic(set(events), edge_pairs):
         _fail("T1_CAUSAL_CYCLE", "event graph is cyclic")
     for left, right in edge_pairs:
-        if event_times[left] >= event_times[right]:
+        if event_times[left] > event_times[right]:
             _fail("T1_CAUSAL_TIME_CONTRADICTION", f"{left}->{right}")
+    topological_order = _topological_order_index(set(events), edge_pairs)
+
+    def effective_order_key(event_id: str) -> tuple[int, int]:
+        return event_times[event_id], topological_order[event_id]
 
     timing = _unique_by_id(
         model["narrative_timing_constraints"], "T1_TIMING_DUPLICATE"
@@ -2209,7 +2376,14 @@ def _validate_model(
         event_ids = sequence["event_ids"]
         if any(item not in events for item in event_ids):
             _fail("T1_SEQUENCE_EVENT_DANGLING", line_id)
-        if event_ids != sorted(event_ids, key=lambda item: event_times[item]):
+        if any(
+            event_times[left] > event_times[right]
+            or (
+                event_times[left] == event_times[right]
+                and not _causally_reaches(left, right, edge_pairs)
+            )
+            for left, right in zip(event_ids, event_ids[1:])
+        ):
             _fail("T1_SEQUENCE_TIME_CONTRADICTION", line_id)
         if any(line_id not in events[item]["storyline_ids"] for item in event_ids):
             _fail("T1_SEQUENCE_MEMBERSHIP_MISMATCH", line_id)
@@ -2358,10 +2532,19 @@ def _validate_model(
     for subject, subject_ledgers in by_ledger_subject.items():
         ordered = sorted(
             subject_ledgers,
-            key=lambda item: event_times[item["trigger_ids"][0]],
+            key=lambda item: effective_order_key(item["trigger_ids"][0]),
         )
         if any(
             left["to_state"] != right["from_state"]
+            or (
+                event_times[left["trigger_ids"][0]]
+                == event_times[right["trigger_ids"][0]]
+                and not _causally_reaches(
+                    left["trigger_ids"][0],
+                    right["trigger_ids"][0],
+                    edge_pairs,
+                )
+            )
             for left, right in zip(ordered, ordered[1:])
         ):
             _fail("T1_LEDGER_CONTINUITY_BROKEN", subject)
@@ -2421,6 +2604,17 @@ def _validate_model(
             line["type"],
             transition_ledgers,
             sequence_by_line[line_id]["event_ids"],
+            current_schema=(
+                model.get("schema_version") == CURRENT_MODEL_SCHEMA_VERSION
+            ),
+            transition_spans=transition_spans,
+            events=events,
+            connections=connections,
+            connection_event_paths=model.get("connection_event_paths", []),
+            connection_path_readiness=environment.get(
+                "connection_path_readiness", []
+            ),
+            edge_pairs=edge_pairs,
         )
         state_anchor_by_line_index.update(
             _state_anchors_for_line(
@@ -2490,10 +2684,10 @@ def _validate_model(
             _fail("T1_INFORMATION_BIDIRECTIONAL_MISMATCH", event_id)
     if model.get("schema_version") == CURRENT_MODEL_SCHEMA_VERSION:
         try:
-            t1_contract_24.validate_information_projection(
+            t1_contract_25.validate_information_projection(
                 model, storyline, environment, events
             )
-        except t1_contract_24.Contract24Error as error:
+        except t1_contract_25.Contract25Error as error:
             _fail(error.code, str(error))
     by_info_subject: dict[str, list[Mapping[str, Any]]] = {}
     for change in information.values():
@@ -2501,10 +2695,19 @@ def _validate_model(
     for subject, changes in by_info_subject.items():
         ordered = sorted(
             changes,
-            key=lambda item: min(event_times[event_id] for event_id in item["event_ids"]),
+            key=lambda item: effective_order_key(item["event_ids"][0]),
         )
         if any(
             left["after"] != right["before"]
+            or (
+                event_times[left["event_ids"][0]]
+                == event_times[right["event_ids"][0]]
+                and not _causally_reaches(
+                    left["event_ids"][0],
+                    right["event_ids"][0],
+                    edge_pairs,
+                )
+            )
             for left, right in zip(ordered, ordered[1:])
         ):
             _fail("T1_INFORMATION_CONTINUITY_BROKEN", subject)
@@ -2552,6 +2755,15 @@ def _validate_model(
     if model.get("schema_version") == CURRENT_MODEL_SCHEMA_VERSION:
         owned_entities.update(
             {item["id"]: item for item in model["process_state_subject_registry"]}
+        )
+        owned_entities[model["lifecycle_scope"]["id"]] = model[
+            "lifecycle_scope"
+        ]
+        owned_entities.update(
+            {
+                item["id"]: item
+                for item in model["lifecycle_contract_registry"]
+            }
         )
         owned_entities.update(
             {
@@ -2908,7 +3120,7 @@ def _plan_review_paths(
 
 
 def _plan_review_claims(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
-    return t1_contract_24.semantic_claim_records(payload, rt.canonical_sha256)
+    return t1_contract_25.semantic_claim_records(payload, rt.canonical_sha256)
 
 
 def _expected_plan_review_request(
@@ -2983,7 +3195,7 @@ def start_t1_plan_semantic_review(
     ).exists():
         _fail("T1_PHASE_ORDER_INVALID", "review requires sealed P1 and open P2")
     p1 = _sealed_phase_payload(root, sequence=1, phase="event-demand-scan")
-    t1_contract_24.validate_p1_digests(
+    t1_contract_25.validate_p1_digests(
         p1,
         environment,
         source_path="sources/E1/environment-system.json",
@@ -2994,7 +3206,7 @@ def start_t1_plan_semantic_review(
         canonical_sha256=rt.canonical_sha256,
     )
     try:
-        t1_contract_24.validate_p2_plan(
+        t1_contract_25.validate_p2_plan(
             body,
             storyline,
             environment,
@@ -3007,7 +3219,7 @@ def start_t1_plan_semantic_review(
                 environment_package=environment_package,
             ),
         )
-    except t1_contract_24.Contract24Error as error:
+    except t1_contract_25.Contract25Error as error:
         _fail(error.code, str(error))
     candidate_sha256 = rt.canonical_sha256(body)
     candidate_path, request_path, _task_output_path, review_path, _validation_path, _manifest_path = (
@@ -3389,7 +3601,7 @@ def submit_t1_phase(
         if body["event_demands"] != storyline["event_requirements"]:
             _fail("T1_DEMAND_PROJECTION_MISMATCH", "P1 event demands")
         try:
-            t1_contract_24.validate_p1_digests(
+            t1_contract_25.validate_p1_digests(
                 body,
                 environment,
                 source_path="sources/E1/environment-system.json",
@@ -3399,11 +3611,11 @@ def submit_t1_phase(
                 ),
                 canonical_sha256=rt.canonical_sha256,
             )
-        except t1_contract_24.Contract24Error as error:
+        except t1_contract_25.Contract25Error as error:
             _fail(error.code, str(error))
     if phase == "global-timeline":
         try:
-            t1_contract_24.validate_p2_plan(
+            t1_contract_25.validate_p2_plan(
                 body,
                 storyline,
                 environment,
@@ -3416,7 +3628,7 @@ def submit_t1_phase(
                     environment_package=environment_package,
                 ),
             )
-        except t1_contract_24.Contract24Error as error:
+        except t1_contract_25.Contract25Error as error:
             _fail(error.code, str(error))
         semantic_review_reference = _validated_plan_review(
             root, session=session, payload=body
@@ -3425,8 +3637,8 @@ def submit_t1_phase(
         plan = _sealed_phase_payload(root, sequence=2, phase="global-timeline")
         provisional = {**copy.deepcopy(plan), **copy.deepcopy(body)}
         try:
-            t1_contract_24.validate_p3_exact(plan, provisional)
-        except t1_contract_24.Contract24Error as error:
+            t1_contract_25.validate_p3_exact(plan, provisional)
+        except t1_contract_25.Contract25Error as error:
             _fail(error.code, str(error))
     if phase == "cross-line-state-test":
         provisional_model = {
@@ -3642,6 +3854,7 @@ def _validation(run_id: str) -> dict[str, Any]:
             "initial-anchor-option-and-plan-review-closure",
             "planned-event-transition-milestone-connection-obligation-closure",
             "capability-occurrence-and-authority-instance-closure",
+            "typed-lifecycle-effective-time-and-single-use-consumption-closure",
             "P2-to-P3-exact-realization",
             "storyline-chain-and-state-closure",
             "causal-DAG-and-world-time-closure",
@@ -3684,9 +3897,11 @@ def _check_package_boundary(root: Path) -> None:
         f"generation-evidence/{index:02d}-{phase}.json"
         for index, phase in enumerate(PHASES, 1)
     }
+    execution = _read(root / "execution-record.json", "T1_EXECUTION_INVALID")
     allowed_implementation = {
-        f"implementation/{identity}"
-        for identity in _implementation_paths()
+        f"implementation/{item['identity']}"
+        for item in execution.get("implementation_catalog", [])
+        if isinstance(item, Mapping) and isinstance(item.get("identity"), str)
     }
     for path in root.rglob("*"):
         if not path.is_file():
@@ -3735,6 +3950,19 @@ def validate_t1_package(
         item["identity"]: item["artifact"]
         for item in execution.get("implementation_catalog", [])
     }
+    identity_mode = "pre-versioned-model"
+    if current_model:
+        try:
+            identity_mode, catalog = stage_identity.validate_stage_catalog(
+                stage="T1",
+                records=execution.get("implementation_catalog"),
+                package_root=root,
+                current_paths=_implementation_paths(),
+                verify_artifact_reference=rt.verify_artifact_reference,
+                sha256_file=rt.sha256_file,
+            )
+        except stage_identity.StageImplementationIdentityError as error:
+            _fail("T1_IMPLEMENTATION_STALE", str(error))
     if not current_model:
         _validate_trusted_legacy_model_schema(root, model, catalog)
     b0 = root / "sources" / "B0"
@@ -3941,7 +4169,15 @@ def validate_t1_package(
         "phases": list(PHASES),
     }
     if current_model:
-        expected_session["implementation_bindings"] = _implementation_bindings()
+        expected_session["implementation_bindings"] = (
+            _implementation_bindings()
+            if identity_mode
+            == stage_identity.STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION
+            else [
+                {"identity": identity, "sha256": reference["sha256"]}
+                for identity, reference in sorted(catalog.items())
+            ]
+        )
         expected_session["plan_review_protocol"] = T1_PLAN_REVIEW_PROTOCOL
         expected_session["upstream_package_bindings"] = _upstream_package_bindings(
             b0, s1, w1, e1
@@ -3977,9 +4213,7 @@ def validate_t1_package(
         ],
     }:
         _fail("T1_EVIDENCE_INVALID", "evidence index is stale")
-    implementation_identities = (
-        set(_implementation_paths()) if current_model else set(catalog)
-    )
+    implementation_identities = set(catalog)
     expected_implementation_refs = {
         rt.canonical_json(
             rt.artifact_reference(
@@ -4009,19 +4243,6 @@ def validate_t1_package(
             "T1_IMPLEMENTATION_STALE",
             "implementation files, catalog, execution, and manifest differ",
         )
-    for identity in implementation_identities:
-        current = _implementation_paths().get(identity)
-        reference = catalog.get(identity)
-        if reference is None:
-            _fail("T1_IMPLEMENTATION_STALE", identity)
-        try:
-            rt.verify_artifact_reference(reference, root=root)
-        except Exception as error:
-            _fail("T1_IMPLEMENTATION_STALE", str(error))
-        if current_model and (
-            current is None or reference["sha256"] != rt.sha256_file(current)
-        ):
-            _fail("T1_IMPLEMENTATION_STALE", identity)
     if require_completion:
         completion = _read(
             root / "stage-completion.json", "T1_COMPLETION_MISSING"

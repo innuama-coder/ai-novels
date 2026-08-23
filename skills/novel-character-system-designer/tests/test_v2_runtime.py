@@ -878,18 +878,46 @@ class C1RuntimeTests(unittest.TestCase):
         self.upstream = t1_test.T1RuntimeTests("test_happy_path_and_exact_package")
         self.upstream.setUp()
         proposal = self.upstream.proposal
-        event = proposal["major_events"][0]
-        slot = event["participant_slot_ids"][0]
+        # The shared T1 fixture deliberately has no disclosures.  Add one
+        # schema-2.5 disclosure through an actual communication-capable E1
+        # occurrence so C1 has a stable information-binding attack target.
+        steps = {
+            item["id"]: item
+            for item in self.upstream.environment["capability_step_registry"]
+        }
+        event, occurrence, visibility_ids = next(
+            (event, occurrence, visibility_ids)
+            for event in proposal["major_events"]
+            for occurrence in event["capability_step_occurrences"]
+            if "communicate" in steps[occurrence["step_id"]]["supported_modes"]
+            if (
+                visibility_ids := sorted(
+                    set(event["participant_slot_ids"])
+                    & set(steps[occurrence["step_id"]]["actor_slot_ids"])
+                )
+            )
+        )
+        proposition_id = event["produces_proposition_ids"][0]
         change = {
             "id": "INFO-T1-C1",
-            "subject_id": event["storyline_ids"][0],
+            "subject_id": visibility_ids[0],
+            "proposition_id": proposition_id,
             "before": "The character lacks the event result.",
             "after": "The character knows the event result.",
             "event_ids": [event["id"]],
-            "visibility_ids": [slot],
+            "source_occurrence_id": occurrence["occurrence_id"],
+            "source_obligation_ids": [],
+            "visibility_ids": visibility_ids,
         }
         proposal["information_changes"] = [change]
+        event["discloses_proposition_ids"] = [proposition_id]
         event["information_changes"] = [change["id"]]
+        planned_event = next(
+            item
+            for item in proposal["planned_event_registry"]
+            if item["id"] == event["id"]
+        )
+        planned_event["discloses_proposition_ids"] = [proposition_id]
         proposal["authority_partition"]["autonomous_owned"].append(change["id"])
         event_claim = next(
             item
@@ -1088,6 +1116,52 @@ class C1RuntimeTests(unittest.TestCase):
         bad["agency_matrix"][0]["available_choices"][0] = bad["agency_matrix"][0]["chosen_action"]
         with self.assertRaisesRegex(c1.C1Error, "C1_AGENCY_ACTION_BINDING_MISMATCH"):
             self._validate_bad(bad)
+
+    def test_embedded_t1_fixture_uses_current_information_contract(self):
+        self.assertEqual(
+            t1_test.t1.CURRENT_MODEL_SCHEMA_VERSION,
+            self.timeline["schema_version"],
+        )
+        change = next(
+            item
+            for item in self.timeline["information_changes"]
+            if item["id"] == "INFO-T1-C1"
+        )
+        self.assertTrue(change["subject_id"].startswith("SLOT-"))
+        self.assertTrue(change["proposition_id"].startswith("PROP-"))
+        self.assertTrue(change["source_occurrence_id"].startswith("CSO-"))
+        self.assertIn("source_obligation_ids", change)
+        event = next(
+            item
+            for item in self.timeline["major_events"]
+            if item["id"] == change["event_ids"][0]
+        )
+        occurrence = next(
+            item
+            for item in event["capability_step_occurrences"]
+            if item["occurrence_id"] == change["source_occurrence_id"]
+        )
+        step = next(
+            item
+            for item in self.environment["capability_step_registry"]
+            if item["id"] == occurrence["step_id"]
+        )
+        self.assertIn("communicate", step["supported_modes"])
+        self.assertIn(change["subject_id"], change["visibility_ids"])
+        self.assertLessEqual(
+            set(change["visibility_ids"]),
+            set(event["participant_slot_ids"]) & set(step["actor_slot_ids"]),
+        )
+        self.assertIn(change["proposition_id"], event["discloses_proposition_ids"])
+        planned_event = next(
+            item
+            for item in self.timeline["planned_event_registry"]
+            if item["id"] == event["id"]
+        )
+        self.assertEqual(
+            planned_event["discloses_proposition_ids"],
+            event["discloses_proposition_ids"],
+        )
 
     def test_information_token_cannot_name_fake_change(self):
         bad = copy.deepcopy(self.model)

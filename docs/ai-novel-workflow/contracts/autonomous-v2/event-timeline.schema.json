@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schema_version", "skill", "stage", "run_id", "status", "input_gate", "source_artifacts", "authority_partition", "design_decisions", "derivation_claims", "event_demands", "event_span", "timeline_axes", "proposition_registry", "major_events", "causal_edges", "storyline_event_sequences", "connection_realization", "obligation_realizations", "environment_placement", "state_ledger", "information_changes", "event_coverage_ledger", "narrative_timing_constraints", "open_items"],
   "properties": {
-    "schema_version": {"enum": ["2.0", "2.1", "2.2", "2.3", "2.4"]}, "skill": {"const": "novel-event-timeline-designer"}, "stage": {"const": "T1"}, "run_id": {"type": "string", "minLength": 1}, "status": {"const": "ready"}, "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "schema_version": {"enum": ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5"]}, "skill": {"const": "novel-event-timeline-designer"}, "stage": {"const": "T1"}, "run_id": {"type": "string", "minLength": 1}, "status": {"const": "ready"}, "input_gate": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "source_artifacts": {"$ref": "canonical-common.schema.json#/$defs/sourceArtifacts"}, "authority_partition": {"$ref": "canonical-common.schema.json#/$defs/authorityPartition"}, "design_decisions": {"$ref": "canonical-common.schema.json#/$defs/designDecisions"}, "derivation_claims": {"$ref": "canonical-common.schema.json#/$defs/derivationClaims"},
     "event_demands": {"$ref": "canonical-common.schema.json#/$defs/eventRequirements"},
     "e1_universe_digest_bundle": {"$ref": "#/$defs/e1Digest"},
@@ -26,6 +26,8 @@
     "obligation_event_plan": {"type": "array", "items": {"$ref": "#/$defs/obligationEventPlan"}},
     "capability_occurrence_event_cover": {"type": "array", "items": {"$ref": "#/$defs/occurrenceCover"}},
     "authority_token_instance_ledger": {"type": "array", "items": {"$ref": "#/$defs/tokenInstance"}},
+    "lifecycle_scope": {"$ref": "#/$defs/lifecycleScope"},
+    "lifecycle_contract_registry": {"type": "array", "items": {"$ref": "#/$defs/lifecycleContract"}},
     "proposition_registry": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/proposition"}},
     "major_events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/event"}},
     "causal_edges": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/causalEdge"}},
@@ -84,6 +86,21 @@
         "required": ["e1_universe_digest_bundle", "e1_capability_graph_digest", "e1_occurrence_requirement_digest", "initial_condition_registry", "initial_anchor_option_selection_ledger", "planned_event_registry", "process_state_subject_registry", "planned_proposition_registry", "planned_causal_edges", "transition_event_cover", "milestone_event_buckets", "connection_event_paths", "obligation_event_plan", "capability_occurrence_event_cover", "authority_token_instance_ledger"],
         "properties": {
           "major_events": {"items": {"$ref": "#/$defs/event22"}},
+          "proposition_registry": {"items": {"$ref": "#/$defs/proposition22"}},
+          "transition_event_cover": {"items": {"$ref": "#/$defs/transitionCover23"}},
+          "causal_edges": {"items": {"$ref": "#/$defs/causalEdge24"}},
+          "planned_causal_edges": {"items": {"$ref": "#/$defs/causalEdge24"}},
+          "information_changes": {"items": {"$ref": "#/$defs/informationChange24"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "2.5"}}, "required": ["schema_version"]},
+      "then": {
+        "required": ["e1_universe_digest_bundle", "e1_capability_graph_digest", "e1_occurrence_requirement_digest", "initial_condition_registry", "initial_anchor_option_selection_ledger", "planned_event_registry", "process_state_subject_registry", "planned_proposition_registry", "planned_causal_edges", "transition_event_cover", "milestone_event_buckets", "connection_event_paths", "obligation_event_plan", "capability_occurrence_event_cover", "authority_token_instance_ledger", "lifecycle_scope", "lifecycle_contract_registry"],
+        "properties": {
+          "major_events": {"items": {"$ref": "#/$defs/event25"}},
+          "planned_event_registry": {"items": {"$ref": "#/$defs/plannedEvent25"}},
           "proposition_registry": {"items": {"$ref": "#/$defs/proposition22"}},
           "transition_event_cover": {"items": {"$ref": "#/$defs/transitionCover23"}},
           "causal_edges": {"items": {"$ref": "#/$defs/causalEdge24"}},
@@ -171,7 +188,9 @@
         "requires_capability_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
         "produces_capability_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
         "requires_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "consumes_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
         "produces_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "lifecycle_effects": {"type": "array", "items": {"$ref": "#/$defs/lifecycleEffect"}},
         "initial_anchor_refs": {"type": "array", "items": {"$ref": "#/$defs/initialAnchorComponentRef"}, "uniqueItems": true},
         "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
         "atomicity_reason": {"type": "string", "minLength": 1}
@@ -187,6 +206,12 @@
             "after_state": {"minProperties": 1, "maxProperties": 1}
           }
         }
+      ]
+    },
+    "event25": {
+      "allOf": [
+        {"$ref": "#/$defs/event22"},
+        {"required": ["consumes_token_instance_ids", "lifecycle_effects"]}
       ]
     },
     "informationChange24": {
@@ -453,10 +478,75 @@
         "e1_capability_step_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}, "capability_step_occurrences": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stepOccurrence"}},
         "requires_capability_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"}, "produces_capability_fact_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
         "requires_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true}, "produces_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "consumes_token_instance_ids": {"type": "array", "items": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "lifecycle_effects": {"type": "array", "items": {"$ref": "#/$defs/lifecycleEffect"}},
         "requires_proposition_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"}, "produces_proposition_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}, "discloses_proposition_ids": {"$ref": "canonical-common.schema.json#/$defs/idSet"},
         "initial_anchor_refs": {"type": "array", "items": {"$ref": "#/$defs/initialAnchorComponentRef"}, "uniqueItems": true}, "predecessor_event_ids": {"type": "array", "items": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
         "preconditions": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyStrings"}, "direct_result": {"type": "string", "minLength": 1}, "next_pressure": {"type": "string", "minLength": 1},
         "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"}, "atomicity_reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "plannedEvent25": {
+      "allOf": [
+        {"$ref": "#/$defs/plannedEvent"},
+        {"required": ["consumes_token_instance_ids", "lifecycle_effects"]}
+      ]
+    },
+    "lifecycleEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lifecycle_contract_id", "transition_kind", "from_state", "to_state"],
+      "properties": {
+        "lifecycle_contract_id": {"type": "string", "pattern": "^LFC-[A-Za-z0-9._-]+$"},
+        "transition_kind": {"enum": ["startup", "shutdown"]},
+        "from_state": {"enum": ["NOT_STARTED", "ACTIVE"]},
+        "to_state": {"enum": ["ACTIVE", "SHUTDOWN"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"transition_kind": {"const": "startup"}}},
+          "then": {"properties": {"from_state": {"const": "NOT_STARTED"}, "to_state": {"const": "ACTIVE"}}},
+          "else": {"properties": {"from_state": {"const": "ACTIVE"}, "to_state": {"const": "SHUTDOWN"}}}
+        }
+      ]
+    },
+    "lifecycleScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "applicability", "source_ids", "lifecycle_contract_ids", "semantic_review_claim_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^LFS-[A-Za-z0-9._-]+$"},
+        "applicability": {"enum": ["applicable", "not_applicable"]},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "lifecycle_contract_ids": {"type": "array", "items": {"type": "string", "pattern": "^LFC-[A-Za-z0-9._-]+$"}, "uniqueItems": true},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"applicability": {"const": "applicable"}}},
+          "then": {"properties": {"lifecycle_contract_ids": {"minItems": 1}}},
+          "else": {"properties": {"lifecycle_contract_ids": {"maxItems": 0}}}
+        }
+      ]
+    },
+    "lifecycleContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject_id", "initial_state", "active_state", "terminal_state", "acceptance_event_id", "acceptance_proposition_id", "permit_producer_event_id", "permit_token_instance_id", "startup_event_id", "shutdown_event_id", "source_ids", "semantic_review_claim_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^LFC-[A-Za-z0-9._-]+$"},
+        "subject_id": {"type": "string", "pattern": "^PSS-[A-Za-z0-9._-]+$"},
+        "initial_state": {"const": "NOT_STARTED"},
+        "active_state": {"const": "ACTIVE"},
+        "terminal_state": {"const": "SHUTDOWN"},
+        "acceptance_event_id": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"},
+        "acceptance_proposition_id": {"type": "string", "pattern": "^PROP-[A-Za-z0-9._-]+$"},
+        "permit_producer_event_id": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"},
+        "permit_token_instance_id": {"type": "string", "pattern": "^ATI-[A-Za-z0-9._-]+$"},
+        "startup_event_id": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"},
+        "shutdown_event_id": {"type": "string", "pattern": "^EV-[A-Za-z0-9._-]+$"},
+        "source_ids": {"$ref": "canonical-common.schema.json#/$defs/nonEmptyIdSet"},
+        "semantic_review_claim_id": {"type": "string", "minLength": 1}
       }
     },
     "processSubject": {

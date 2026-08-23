@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "authority-revision-bootstrap-intent.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "source_kind", "parent_run", "material_sha256", "target_name", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "authority-revision-bootstrap-intent"},
+    "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "source_kind": {"const": "authority_revision"},
+    "parent_run": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "identity_sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "identity_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}
+      }
+    },
+    "material_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+    "target_name": {"type": "string", "minLength": 1},
+    "status": {"const": "prepared"}
+  }
+}

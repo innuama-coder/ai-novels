@@ -34,6 +34,12 @@ SLOT_TO_CHARACTER = {
     "SLOT-FUTURE-CUSTODIAN": "CHR-FUTURE-CUSTODIAN",
 }
 
+# Story-specific callers may provide exact author-open text copied from the
+# sealed B0 control projections.  The baseline registry itself intentionally
+# carries only the artifact reference and value hash, so the generic fallback
+# can preserve identity but not reconstruct the author's wording.
+OPEN_ITEM_QUESTIONS: dict[str, str] = {}
+
 
 PROFILE_SEMANTICS = {
     "CHR-R07": {
@@ -82,7 +88,7 @@ PROFILE_SEMANTICS = {
     },
     "CHR-CHENG-YUAN": {
         "name": "程予安",
-        "responsibility": "作为顾衡仍在世的妻子，承担遗属、记忆同意与人格连续性争议的现实重量。",
+        "responsibility": "作为顾衡生前的妻子，她在顾衡去世后承担遗属、记忆同意与人格连续性争议的现实重量。",
         "value": "爱与哀悼不能被机构便利地征用为技术许可。",
         "blind": "她掌握顾衡的生活连续性，却无法观察 R-07 启动后形成的新意识。",
         "pressure": "在保密、失去与被动卷入之间要求区分顾衡遗产和 R-07 权利。",
@@ -278,7 +284,7 @@ PERSONAL_DEFINITIONS = {
         "occupation_and_daily_life": "临床医生，习惯在证据不足时保留判断；值班、患者和失去伴侣后的家庭事务构成她的日常。",
         "social_circle": "与顾衡的亲属及少量同事保持联系，对项目团队只有有限接触；她与 R-07 没有自动成立的夫妻关系。",
         "embodied_or_interface_constraints": "她拥有顾衡生活连续性的经验，却无法直接观察 R-07 启动后形成的新意识，因此不能替两者裁决同一性。",
-        "entry_function": "作为顾衡仍在世的妻子进入记忆使用与同意争议，让技术路径付出私人代价。",
+        "entry_function": "作为顾衡生前的妻子，她在顾衡去世后进入记忆使用与同意争议，让技术路径付出私人代价。",
         "ongoing_function": "区分顾衡遗产、机构权限和 R-07 权利，抵抗把婚姻关系转化为所有权。",
         "ending_function": "成为未来身份连续性、资料使用和可能重载时必须重新取得意见的现实见证者。",
     },
@@ -443,6 +449,11 @@ RELATION_SPECS = (
     ("TANG-FUTURE", "CHR-TANG-LI", "CHR-FUTURE-CUSTODIAN", "aftermath", "当前技术见证与未来记录保管", "材料被封存为不可执行记录而非活动备份"),
 )
 
+# Story-specific assemblers may bind a relationship to the full set of real
+# change events that establishes its end state.  Falling back to the first
+# shared event is retained only for older fixtures.
+RELATION_EVENT_OVERRIDES: Mapping[str, tuple[str, ...]] = {}
+
 
 def _distance(core: str, adjacency: Mapping[str, set[str]]) -> dict[str, int]:
     distances = {core: 0}
@@ -519,8 +530,15 @@ def build_c1_model(
         for slot in event["participant_slot_ids"]:
             character_id = slot_to_char[slot]
             character_events[character_id].add(event_id)
+            environment_access = PROFILE_SEMANTICS[character_id].get(
+                "environment_access",
+                "能按冻结准入条件在 {environment_id} 履行事件职责。",
+            )
             capabilities[character_id].add(
-                f"[ENV_ACCESS:{event['environment_id']}] 能按冻结准入条件在 {event['environment_id']} 履行事件职责。"
+                f"[ENV_ACCESS:{event['environment_id']}] "
+                + environment_access.format(
+                    environment_id=event["environment_id"]
+                )
             )
         for slot in event["counter_slot_ids"]:
             character_id = slot_to_char[slot]
@@ -547,17 +565,51 @@ def build_c1_model(
     incident: dict[str, set[str]] = defaultdict(set)
     for slug, left, right, kind, start_state, end_state in RELATION_SPECS:
         relation_id = f"REL-{slug}"
-        event_id = relation_event(left, right)
+        event_ids = list(
+            RELATION_EVENT_OVERRIDES.get(slug, (relation_event(left, right),))
+        )
+        missing_relation_events = sorted(set(event_ids) - set(maps["events"]))
+        if missing_relation_events:
+            raise ValueError(
+                f"{relation_id} references unknown change events: "
+                f"{missing_relation_events}"
+            )
+        passive_endpoints = [
+            PROFILE_SEMANTICS[character_id]["name"]
+            for character_id in (left, right)
+            if PROFILE_SEMANTICS[character_id].get(
+                "passive_relationship_endpoint", False
+            )
+        ]
+        if passive_endpoints:
+            passive_text = "、".join(passive_endpoints)
+            function = (
+                f"[FUNCTION:{kind}] {start_state} 只改变现实行动方的选择、照护、"
+                f"权利责任或记录边界，并把后果传向 {end_state}；"
+                f"被动端 {passive_text} 不获得选择、压力体验或行动。"
+            )
+            boundaries = [
+                f"关系不得把被动端 {passive_text} 写成能够选择、回应、签名、"
+                "拒绝或承担不可委托行动的当前主体。"
+            ]
+        else:
+            function = (
+                f"[FUNCTION:{kind}] {start_state} 在压力中改变双方可选行动，"
+                f"并把后果传向 {end_state}。"
+            )
+            boundaries = [
+                "关系只能施加压力、提供支持或改变信息，不能替任一方作不可委托选择。"
+            ]
         relationships.append(
             {
                 "id": relation_id,
                 "from_character_id": left,
                 "to_character_id": right,
-                "function": f"[FUNCTION:{kind}] {start_state} 在压力中改变双方可选行动，并把后果传向 {end_state}。",
+                "function": function,
                 "start_state": start_state,
-                "change_event_ids": [event_id],
+                "change_event_ids": event_ids,
                 "end_state": end_state,
-                "boundaries": ["关系只能施加压力、提供支持或改变信息，不能替任一方作不可委托选择。"],
+                "boundaries": boundaries,
             }
         )
         adjacency[left].add(right)
@@ -617,9 +669,15 @@ def build_c1_model(
             f"{maps['demands'][demand_id]['responsibility']}[/DEMAND]"
             for demand_id in demand_ids
         )
+        goal_effect = semantics.get(
+            "goal_effect",
+            "以自己的选择完成‘{responsibility}’，并承担可见代价。",
+        )
         goals = [
             f"[DEMAND_EFFECT:{demand_id}:{c1_runtime._c1_demand_digest(maps['demands'][demand_id])}:goal] "
-            f"以自己的选择完成‘{maps['demands'][demand_id]['responsibility']}’，并承担可见代价。"
+            + goal_effect.format(
+                responsibility=maps["demands"][demand_id]["responsibility"]
+            )
             for demand_id in demand_ids
         ]
         boundaries = [f"[TYPE:blind-spot] {semantics['blind']}"]
@@ -671,12 +729,32 @@ def build_c1_model(
                 "boundaries": boundaries,
                 "capabilities": sorted(capabilities[character_id]),
                 "authorities": sorted(providers[character_id]),
-                "information_limits": unknown_tokens or ["只知道冻结事件通过其角色槽可见的信息，不拥有其他角色的决定性内心或未公开原因层。"],
+                "information_limits": unknown_tokens or [
+                    semantics.get(
+                        "information_limit",
+                        "只知道冻结事件通过其角色槽可见的信息，不拥有其他角色的决定性内心或未公开原因层。",
+                    )
+                ],
                 "pressure_behavior": semantics["pressure"],
-                "agency_choices": [semantics["choice"], "拒绝既定选择并承担冻结事件定义的失败或关系代价。"],
+                "agency_choices": list(
+                    semantics.get(
+                        "agency_choices",
+                        [
+                            semantics["choice"],
+                            semantics.get(
+                                "agency_alternative",
+                                "拒绝既定选择并承担冻结事件定义的失败或关系代价。",
+                            ),
+                        ],
+                    )
+                ),
                 "non_delegable_choices": [semantics["nondelegable"]],
                 "relationship_levers": [
-                    f"[REL:{relation_id}] 该关系改变可获得的支持、信息或阻力。"
+                    f"[REL:{relation_id}] "
+                    + semantics.get(
+                        "relationship_lever",
+                        "该关系改变可获得的支持、信息或阻力。",
+                    )
                     for relation_id in sorted(incident[character_id])
                 ],
                 "arc_direction": semantics["arc"],
@@ -758,7 +836,13 @@ def build_c1_model(
             {
                 "id": f"ASG-C1-{index:03d}",
                 "subject_id": character_id,
-                "responsibility": f"[KIND:{obligation['kind']}][SLOT:{slot}] 由 {PROFILE_SEMANTICS[character_id]['name']} 亲自承担该结构职责。",
+                "responsibility": (
+                    f"[KIND:{obligation['kind']}][SLOT:{slot}] "
+                    + PROFILE_SEMANTICS[character_id].get(
+                        "structural_responsibility",
+                        f"由 {PROFILE_SEMANTICS[character_id]['name']} 亲自承担该结构职责。",
+                    )
+                ),
                 "evidence_ids": evidence_ids,
                 "constraints": constraints,
             }
@@ -770,25 +854,41 @@ def build_c1_model(
         event_ids = sorted(initiated[character_id] | countered[character_id])
         duty_digest = canonical_sha256(profile_by_id[character_id]["story_responsibility"])
         tokens = []
+        readable_actions = []
         for event_id in event_ids:
             event = maps["events"][event_id]
             if event_id in initiated[character_id]:
                 tokens.append(f"[INIT_ACTION:{event_id}:{canonical_sha256(event['initiating_action'])}]")
+                readable_actions.append(
+                    f"在 {event_id} 中：{event['initiating_action']}"
+                )
             if event_id in countered[character_id]:
                 tokens.append(f"[COUNTER_PRESSURE:{event_id}:{canonical_sha256(event['complication'])}]")
+                readable_actions.append(
+                    f"在 {event_id} 中施加冻结阻力：{event['complication']}"
+                )
+        agency_semantics = PROFILE_SEMANTICS[character_id]
         chosen = (
             "".join(tokens)
             + f"[DUTY_SHA256:{duty_digest}] "
-            + f"{PROFILE_SEMANTICS[character_id]['name']} 按冻结角色职责完成这些事件选择，并接受结果不能被关系或机构代替。"
+            + f"{agency_semantics['name']} 的选择是：{agency_semantics['choice']} "
+            + "对应的冻结行动为："
+            + "；".join(readable_actions)
         )
         agencies.append(
             {
                 "id": f"AGY-C1-{index:03d}",
                 "character_id": character_id,
                 "event_ids": event_ids,
-                "available_choices": [chosen, "拒绝执行，并承担事件失败、关系破裂或公共风险扩大的明确代价。"],
+                "available_choices": [
+                    chosen,
+                    agency_semantics["agency_alternative"],
+                ],
                 "chosen_action": chosen,
-                "cost": f"[DUTY_SHA256:{duty_digest}] 该选择让人物承担专业、伦理、生命、关系或政治后果，不能用情节便利抹除。",
+                "cost": (
+                    f"[DUTY_SHA256:{duty_digest}] "
+                    + agency_semantics["agency_cost"]
+                ),
             }
         )
 
@@ -916,10 +1016,28 @@ def build_c1_model(
         {
             "id": f"DEV-C1-{index:03d}",
             "subject_ids": [profile["id"]],
-            "scope": "在不改变角色控制信息的前提下开发具体场景表达。",
-            "allowed_variations": ["可变化动作、对白节奏、感官细节、局部社交习惯和场景中的显性程度。"],
-            "forbidden_changes": ["不得改变目标、价值、盲点、硬边界、权限、信息限制、不可委托选择、关系变化或冻结事件结果。"],
-            "acceptance_checks": ["场景行为可追溯到该 profile、事件角色与关系杠杆，且没有获得未授权信息或能力。"],
+            "scope": PROFILE_SEMANTICS[profile["id"]].get(
+                "development_scope",
+                "在不改变角色控制信息的前提下开发具体场景表达。",
+            ),
+            "allowed_variations": [
+                PROFILE_SEMANTICS[profile["id"]].get(
+                    "development_allowed",
+                    "可变化动作、对白节奏、感官细节、局部社交习惯和场景中的显性程度。",
+                )
+            ],
+            "forbidden_changes": [
+                PROFILE_SEMANTICS[profile["id"]].get(
+                    "development_forbidden",
+                    "不得改变目标、价值、盲点、硬边界、权限、信息限制、不可委托选择、关系变化或冻结事件结果。",
+                )
+            ],
+            "acceptance_checks": [
+                PROFILE_SEMANTICS[profile["id"]].get(
+                    "development_check",
+                    "场景行为可追溯到该 profile、事件角色与关系杠杆，且没有获得未授权信息或能力。",
+                )
+            ],
             "source_ids": [profile["id"]],
         }
         for index, profile in enumerate(profiles, 1)
@@ -973,7 +1091,10 @@ def build_c1_model(
     open_items = [
         {
             "id": f"OPEN-C1-{index:03d}",
-            "question": f"保持作者开放控制 {control_id}，角色设计不代为裁决。",
+            "question": OPEN_ITEM_QUESTIONS.get(
+                control_id,
+                f"保持作者开放控制 {control_id}，角色设计不代为裁决。",
+            ),
             "source_ids": [control_id],
             "status": "author_open",
         }

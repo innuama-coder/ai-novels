@@ -1642,6 +1642,7 @@ def validate_review_plan(
     _validate_fragment_brief_contracts(value, source_inventory)
     _validate_presentation_bindings(value, source_inventory)
     _validate_human_presentation(value)
+    validate_human_visible_strings(_human_visible_plan_strings(value))
     _validate_world_review_completeness(value, source_inventory)
     _validate_character_review_completeness(value, source_inventory)
     path = value["review_path"]
@@ -2613,12 +2614,135 @@ def _assemble_report(
     return report
 
 
-_VISIBLE_COPY_FORBIDDEN = re.compile(
-    r"(?:\b(?:MOD|DCTRL|SRC|PROJ)-|Responsibility|Review scope|"
-    r"Review path|\bAllowed\b|decision-control|evidence index|JSON Pointer|"
-    r"可核验|来源材料|制度链|验证用途|评审用途|《《|》》)",
+_VISIBLE_INTERNAL_ID = re.compile(
+    r"(?<![A-Za-z0-9])(?:"
+    r"MOD|DCTRL|SRC|PROJ|VIS|FRAG|PROMPT|ENV|SL|SLC|SLOT|DEMAND|CHR|"
+    r"AFF|INST|TPH|MS|NM|EV|CONN|STATE|STEP|BIND|OBL|CLAIM|SEQ|UNIT|"
+    r"ATOM|FACT|SYS|DEC|REL|COV|ARC|WR|IF|RF|TOK|DEP|CHD"
+    r"|ACTOR|AUTH|ROLE|TOKEN|LIFECYCLE|PERMIT|INIT"
+    r")-[A-Za-z0-9][A-Za-z0-9._-]*",
     re.IGNORECASE,
 )
+_VISIBLE_STAGE_ID = re.compile(
+    r"(?<![A-Za-z0-9])(?:B0|S1|W1|E1|T1|C1|Q1|P1|H1(?:-[ABC])?)"
+    r"(?![A-Za-z0-9])"
+)
+_VISIBLE_INTERNAL_STATUS = re.compile(
+    r"(?<![A-Za-z0-9_])(?:NOT_STARTED|ACTIVE|SHUTDOWN|PENDING|READY|"
+    r"SUPERSEDED|INVALIDATED|UNISSUED|ISSUED|UNCONSUMED|CONSUMED|"
+    r"AVAILABLE|LOCKED|AUTHORIZED)(?![A-Za-z0-9_])"
+)
+_VISIBLE_HASH = re.compile(r"(?<![A-Fa-f0-9])[A-Fa-f0-9]{64}(?![A-Fa-f0-9])")
+_VISIBLE_AUDIT_JARGON = re.compile(
+    r"(?:Responsibility|Review scope|Review path|\bAllowed\b|"
+    r"decision-control|evidence index|JSON Pointer|sha-?256|source[_ -]?anchor|"
+    r"验证用途|评审用途|《《|》》|\[/?DEMAND(?::|\]))",
+    re.IGNORECASE,
+)
+_VISIBLE_COPY_FORBIDDEN = re.compile(
+    "|".join(
+        (
+            f"(?i:{_VISIBLE_INTERNAL_ID.pattern})",
+            f"(?:{_VISIBLE_STAGE_ID.pattern})",
+            f"(?:{_VISIBLE_INTERNAL_STATUS.pattern})",
+            f"(?:{_VISIBLE_HASH.pattern})",
+            f"(?i:{_VISIBLE_AUDIT_JARGON.pattern})",
+        )
+    )
+)
+
+
+def _append_visible(values: list[str], value: Any) -> None:
+    if isinstance(value, str):
+        values.append(value)
+    elif isinstance(value, Sequence) and not isinstance(
+        value, (str, bytes, bytearray)
+    ):
+        values.extend(item for item in value if isinstance(item, str))
+
+
+def _human_visible_visual_strings(visual: Mapping[str, Any]) -> list[str]:
+    values: list[str] = []
+    for field in ("title", "review_purpose"):
+        _append_visible(values, visual.get(field))
+    for collection, fields in (
+        (
+            "groups",
+            ("label", "summary", "kind", "lane", "tier", "temporal_label"),
+        ),
+        ("nodes", ("label", "summary", "kind", "lane", "tier", "temporal_label")),
+        (
+            "edges",
+            ("relation_label", "summary", "kind", "lane", "tier", "temporal_label"),
+        ),
+        ("text_equivalents", ("text",)),
+    ):
+        for item in visual.get(collection, []):
+            if not isinstance(item, Mapping):
+                continue
+            for field in fields:
+                _append_visible(values, item.get(field))
+    return values
+
+
+def _human_visible_plan_strings(plan: Mapping[str, Any]) -> list[str]:
+    """Return every natural-language plan field that can reach report or brief copy."""
+
+    values: list[str] = []
+    work_identity = plan.get("work_identity", {})
+    if isinstance(work_identity, Mapping):
+        for field in ("work_title", "report_title"):
+            _append_visible(values, work_identity.get(field))
+    scope = plan.get("review_scope_contract", {})
+    if isinstance(scope, Mapping):
+        _append_visible(values, scope.get("semantic_disclaimer"))
+    for control in plan.get("decision_controls", []):
+        if not isinstance(control, Mapping):
+            continue
+        for field in ("statement", "must_hold", "must_not_imply"):
+            _append_visible(values, control.get(field))
+    for step in plan.get("review_path", []):
+        if isinstance(step, Mapping):
+            for field in ("title", "review_question"):
+                _append_visible(values, step.get(field))
+    for section in plan.get("sections", []):
+        if not isinstance(section, Mapping):
+            continue
+        for field in ("title", "review_goal"):
+            _append_visible(values, section.get(field))
+        for module in section.get("modules", []):
+            if not isinstance(module, Mapping):
+                continue
+            for field in (
+                "title", "definition", "responsibility", "must_hold", "must_not_imply"
+            ):
+                _append_visible(values, module.get(field))
+    for visual in plan.get("visual_models", []):
+        if isinstance(visual, Mapping):
+            values.extend(_human_visible_visual_strings(visual))
+    for brief in plan.get("fragment_briefs", []):
+        if not isinstance(brief, Mapping):
+            continue
+        for field in ("title", "review_purpose"):
+            _append_visible(values, brief.get(field))
+        limits = brief.get("information_limits", {})
+        if isinstance(limits, Mapping):
+            for field in ("may_present", "must_not_present_as_known"):
+                _append_visible(values, limits.get(field))
+        _append_visible(values, brief.get("allowed_perception_channels"))
+        scene = brief.get("scene_contract", {})
+        if isinstance(scene, Mapping):
+            for field in (
+                "before_state", "immediate_goal", "pressure", "obstacle",
+                "required_choice", "direct_consequence", "after_state",
+            ):
+                _append_visible(values, scene.get(field))
+        for field in ("required_demonstrations", "forbidden_additions"):
+            _append_visible(values, brief.get(field))
+    for prompt in plan.get("decision_prompts", []):
+        if isinstance(prompt, Mapping):
+            _append_visible(values, prompt.get("question"))
+    return values
 
 
 def _human_visible_report_strings(report: Mapping[str, Any]) -> list[str]:
@@ -2628,17 +2752,13 @@ def _human_visible_report_strings(report: Mapping[str, Any]) -> list[str]:
         report["title"],
         report["review_scope_contract"]["semantic_disclaimer"],
     ]
+    for control in report.get("decision_controls", []):
+        for field in ("statement", "must_hold", "must_not_imply"):
+            _append_visible(values, control.get(field))
     for step in report["review_path"]:
         values.extend((step["title"], step["review_question"]))
     for visual in report["visual_models"]:
-        values.extend((visual["title"], visual["review_purpose"]))
-        for group in visual["groups"]:
-            values.extend((group["label"], group["summary"]))
-        for node in visual["nodes"]:
-            values.extend((node["label"], node["summary"]))
-        for edge in visual["edges"]:
-            values.extend((edge["relation_label"], edge["summary"]))
-        values.extend(item["text"] for item in visual["text_equivalents"])
+        values.extend(_human_visible_visual_strings(visual))
     for section_name in ("world", "storylines", "characters"):
         section = report[section_name]
         for key, item in section.items():

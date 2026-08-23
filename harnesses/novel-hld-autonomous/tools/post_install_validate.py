@@ -20,13 +20,13 @@ def main()->int:
     if errors:raise RuntimeError("unpacked harness validation failed: "+"; ".join(errors))
     registry=importlib.import_module("harnesses.novel-hld-autonomous.runtime.owner_registry")
     entries=json.loads(registry.REGISTRY_PATH.read_text(encoding="utf-8"))["entries"]
-    ordinary={"HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HF1"};resolved=[]
+    ordinary={"HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","HF1"};resolved=[]
     for token in sorted(entries):
         entry=entries[token];skill,version,digest=registry.resolve_public_owner(entry["stage"],None if token in ordinary else token)
         if skill!=entry["skill"] or version!=entry["version"] or len(digest)!=64:raise RuntimeError(f"public runtime binding failed: {token}")
         resolved.append(token)
     skills={entry["skill"] for entry in entries.values() if not entry["skill"].startswith("harness-core/")}
-    if len(resolved)!=17 or len(skills)!=14 or "novel-hld-writer" in skills:raise RuntimeError("unpacked registry topology is not exact")
+    if len(resolved)!=18 or len(skills)!=15 or "novel-hld-writer" in skills:raise RuntimeError("unpacked registry topology is not exact")
     runtime_manifest=(HARNESS_ROOT/"MANIFEST.runtime.yaml").read_text(encoding="utf-8")
     operation=HARNESS_ROOT/"adapters/codex/operation.md"
     if not operation.is_file():raise RuntimeError("Codex operation contract is unavailable")

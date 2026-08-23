@@ -10,6 +10,7 @@
     "run_id",
     "source_run_id",
     "status",
+    "source_kind",
     "run_state",
     "design_artifacts",
     "v1_completion",
@@ -26,7 +27,13 @@
     "run_id": {"type": "string", "minLength": 1},
     "source_run_id": {"type": "string", "minLength": 1},
     "status": {"const": "ready"},
-    "run_state": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "source_kind": {
+      "enum": ["native", "compatibility_migration", "authority_revision"]
+    },
+    "run_state": {
+      "description": "Current source-state authority. For authority_revision this must equal finalization.parent_run and the bootstrap revision-000 source_interview_state; a migrated base state remains only in parent B0 ancestry.",
+      "$ref": "common-defs.schema.json#/$defs/artifactReference"
+    },
     "design_artifacts": {
       "type": "array",
       "minItems": 6,
@@ -53,6 +60,24 @@
     "v2_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "v2_author_approval": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "migration_finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "authority_revision_finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "base_source_kind": {"enum": ["native", "compatibility_migration"]},
+    "base_migration_finalization": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_baseline": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "parent_b0_manifest": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "base_design_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+    },
+    "effective_design_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}
+    },
     "fact_dependency_register": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
     "control_registry": {
       "type": "array",
@@ -85,6 +110,34 @@
     }
   },
   "allOf": [
+    {
+      "if": {"properties": {"source_kind": {"enum": ["native", "compatibility_migration"]}}, "required": ["source_kind"]},
+      "then": {"not": {"anyOf": [{"required": ["base_source_kind"]}, {"required": ["base_migration_finalization"]}, {"required": ["parent_b0_baseline"]}, {"required": ["parent_b0_completion"]}, {"required": ["parent_b0_manifest"]}]}}
+    },
+    {
+      "if": {"properties": {"source_kind": {"const": "native"}}, "required": ["source_kind"]},
+      "then": {"not": {"anyOf": [{"required": ["migration_finalization"]}, {"required": ["authority_revision_finalization"]}]}}
+    },
+    {
+      "if": {"properties": {"source_kind": {"const": "compatibility_migration"}}, "required": ["source_kind"]},
+      "then": {"required": ["migration_finalization"], "not": {"required": ["authority_revision_finalization"]}}
+    },
+    {
+      "if": {"properties": {"source_kind": {"const": "authority_revision"}}, "required": ["source_kind"]},
+      "then": {
+        "description": "Runtime validation also requires run_state to equal authority_revision_finalization.parent_run and the authority bootstrap source_interview_state.",
+        "required": ["authority_revision_finalization", "base_source_kind", "base_design_artifacts", "effective_design_artifacts"],
+        "not": {"required": ["migration_finalization"]}
+      }
+    },
+    {
+      "if": {"properties": {"source_kind": {"const": "authority_revision"}, "base_source_kind": {"const": "compatibility_migration"}}, "required": ["source_kind", "base_source_kind"]},
+      "then": {"required": ["base_migration_finalization", "parent_b0_baseline", "parent_b0_completion", "parent_b0_manifest"]}
+    },
+    {
+      "if": {"properties": {"source_kind": {"const": "authority_revision"}, "base_source_kind": {"const": "native"}}, "required": ["source_kind", "base_source_kind"]},
+      "then": {"not": {"anyOf": [{"required": ["base_migration_finalization"]}, {"required": ["parent_b0_baseline"]}, {"required": ["parent_b0_completion"]}, {"required": ["parent_b0_manifest"]}]}}
+    },
     {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I0"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
     {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I1"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},
     {"properties": {"design_artifacts": {"contains": {"properties": {"domain": {"const": "I2"}}, "required": ["domain"]}, "minContains": 1, "maxContains": 1}}},

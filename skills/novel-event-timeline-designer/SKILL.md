@@ -9,7 +9,7 @@ description: 将已验收的 B0/S1/W1/E1 构思包转化为可验证的小说事
 
 把故事线架构落实为一套完整、可执行、可审计的事件模型：每个故事状态变化都有事件承载，每个事件都有环境能力、因果前提、时间位置和下游结果，所有故事线连接与叙事义务都能从输入追溯到输出。
 
-当前生产模型固定使用 T1 schema `2.4`，只接受 E1 `2.4`。T1 `2.0`–`2.3` 仅按各自冻结的实现与发布包 identity 做只读历史验证；不得新建、重封或把当前结果降标为历史版本。2.3 仅有受信的完整实现绑定快照，没有发布过 ready package，因此可审计其实现 provenance，但完整 package replay 必须因 package identity inventory 为空而关闭。T1 2.4 把叙事因果边与 capability/proposition/token/sequencing 依赖边分型；只有 `narrative_causal` 可实现 S1 causal connection 或触发 associative connection 的因果禁令。
+当前生产模型固定使用 T1 schema `2.5`，语义审查协议固定为 `t1-initial-event-plan-semantics-v5`，只接受 E1 `2.4`。T1 `2.0`–`2.4` 仅按各自冻结的实现与发布包 identity 做只读历史验证；不得新建、重封或把当前结果降标为历史版本。2.3 仅有受信的完整实现绑定快照，没有发布过 ready package，因此可审计其实现 provenance，但完整 package replay 必须因 package identity inventory 为空而关闭。T1 2.4 把叙事因果边与 capability/proposition/token/sequencing 依赖边分型；2.5 在此基础上增加显式生命周期、有效发生顺序和权限实例消费闭环。只有 `narrative_causal` 可实现 S1 causal connection 或触发 associative connection 的因果禁令。
 
 ## 开始前
 
@@ -42,9 +42,9 @@ description: 将已验收的 B0/S1/W1/E1 构思包转化为可验证的小说事
 ## 五阶段执行
 
 1. `event-demand-scan`：逐对象复制 S1 `event_requirements`，并从密封 E1 canonical 重新计算 universe、capability graph 和 occurrence 三个 digest。
-2. `global-timeline`：提交完整 P2 计划，包括初态原子命题与分类、支持选项选择、计划事件/命题/因果边、process subject、转移 exact cover、里程碑 bucket、连接路径、义务、occurrence cover 和 authority-token instance ledger。先调用 `start_t1_plan_semantic_review()`；不同 reviewer thread 必须先用 `seal_t1_review_task_output()` 封存真实任务输出及 receipt，再把该 receipt 原样交给 `submit_t1_plan_semantic_review()`。只有 candidate/request/review-task-output/review/validation 五件套完整、全部 claim 通过、零 blocking finding 且 package replay 通过才能继续。
+2. `global-timeline`：提交完整 P2 计划，包括初态原子命题与分类、支持选项选择、计划事件/命题/因果边、process subject、转移 exact cover、里程碑 bucket、连接路径、义务、occurrence cover、authority-token instance ledger，以及 lifecycle scope/contract registry。先调用 `start_t1_plan_semantic_review()`；不同 reviewer thread 必须先用 `seal_t1_review_task_output()` 封存真实任务输出及 receipt，再把该 receipt 原样交给 `submit_t1_plan_semantic_review()`。只有 candidate/request/review-task-output/review/validation 五件套完整、全部 claim 通过、零 blocking finding 且 package replay 通过才能继续。
 3. `event-and-causality-model`：精确复制 P2 已冻结事件、命题和因果边，只补充属于 T1 的人类可读事件字段与 environment placement；任何计划字段漂移都失败。
-4. `cross-line-state-test`：补全序列、连接 realization、obligation realization、state/information ledger、EVD coverage、authority partition、derivation 和 open items。运行时先组装完整 provisional 2.4 模型并通过全量验证，之后才允许写 P4 evidence。
+4. `cross-line-state-test`：补全序列、连接 realization、obligation realization、state/information ledger、EVD coverage、authority partition、derivation 和 open items。运行时先组装完整 provisional 2.5 模型并通过全量验证，之后才允许写 P4 evidence。
 5. `final-event-model`：精确组装最终模型；随后生成 validation、manifest、completion，并只读重验公开包。
 
 每阶段使用 `submit_t1_phase()`；在已有受控会话中可用 `run_t1()` 顺序提交剩余阶段。不得回填 evidence、复用 stale review receipt，或让 Python 自动创作事件语义。
@@ -57,14 +57,17 @@ description: 将已验收的 B0/S1/W1/E1 构思包转化为可验证的小说事
 - 每个事件声明精确 E1 capability step occurrence；环境、affordance、action、required/produced facts 必须与步骤逐字段闭合。非 root fact 必须来自严格的 producer ancestor。
 - 每个 E1 occurrence requirement 遵守 min/max、distinct group 与 share policy；E1 明确归属于 direct obligation 的 occurrence，还必须落在其 `obligation_occurrence_bindings` 指定的 transition、initial option 或 connection support 事件上，不能用另一个恰好调用同一步骤的事件替代。
 - authority fact 是类型，不是可消费实例。每个生产/消费 occurrence 必须映射到确定性的 token instance；single-use、multi-use、non-consumable 与 issuer/consumer scope 均须重算。
+- 每个模型必须显式声明 lifecycle 是否适用；适用时，生命周期只能按 `NOT_STARTED → ACTIVE → SHUTDOWN` 推进，启动和关停各恰好一次。正式接受必须先于许可生产，许可生产必须先于启动；这两段关系只能由 `narrative_causal`、`capability_dependency` 或 `token_dependency` 的有向路径证明，并允许多跳。
+- 生命周期比较以世界发生时间为主；同一发生时点必须由事件 DAG 定序。章节位置、披露位置和倒叙不改变发生顺序，因此启动后披露更早的“未启动”记忆是合法的，但启动后的当前状态不得回写 `NOT_STARTED`。
+- single-use 权限除 `requires_token_instance_ids` 外还必须写入 `consumes_token_instance_ids`；事件消费声明与 authority-token instance ledger 精确互逆，且只能消费一次。
 - P3 的事件 ID 集合、冻结字段、命题和因果边必须与 P2 完全相同。
 - 每个 milestone bucket 只投影 S1 milestone 控制信息并完整拥有其事件；有 first-arrival、connection 或强制 occurrence 的 milestone 不得为空。
 - 每个 causal connection 有连续的 predecessor/causal path、E1 endpoint steps、transfer fact 和 topology；每条跨线因果边只归一个 causal SLC。associative connection 不得拥有或暗含因果路径。
 - 每个 S1 story obligation 必须恰好有一个实现；causes、requires_all、strict_before、not_before 仍绑定状态边界，first_disclosure 与 must_remain_unknown 可把目标 arrival span 内的精确事件作为 witness，并与 occurrence step 和 proposition 闭合，不能由解释文字代替。
-- 每个非 optional 故事线具有单调的 `[RESP:...]` 责任链，最终事件同时承担 result/aftermath 并实现 end-state。
+- 每个非 optional 故事线具有单调的 `[RESP:...]` 责任链，序列最终事件同时承担 result/aftermath。通常它也提交 end-state；唯一例外是终态锚点之后仍须完成 causal SEND 的源故事线。此时终态 `story_transition` 必须仍是该线最后一个 transition-span／状态变化事件，后续只能是属于该源线的非状态 `connection_bridge`。这些 bridge 必须由 E1 `connection_path_readiness` 精确授权，按完整 `source anchor → ordered bridges → target anchor` 路径执行，并对该连接的 `transport_step_ids` 做无重复 exact cover；任何 lifecycle effect、错线／外来、重复、绕过端点、目标之后或无归属的尾随动作都失败。
 - `predecessor_event_ids` 与 causal edges 双向一致，图无环，世界时间不逆行；每个 root 都有 background 责任与明确的独立/并发 timing 说明。
 - 所有命题生产、需求与披露都通过 ID registry 表达；禁止扫描 prose 推断。
-- 当前 2.4 的每个披露 `(event, proposition)` 必须在 P4 产生至少一个原子信息变化；该记录把接收角色槽、事件、命题、事件内可通信 E1 occurrence，以及适用的 S1 `first_disclosure`/E1 obligation occurrence 精确闭合并双向回链。无披露时才允许信息账本为空。
+- 当前 2.5 的每个披露 `(event, proposition)` 必须在 P4 产生至少一个原子信息变化；该记录把接收角色槽、事件、命题、事件内可通信 E1 occurrence，以及适用的 S1 `first_disclosure`/E1 obligation occurrence 精确闭合并双向回链。无披露时才允许信息账本为空。
 
 ## 交付物
 

@@ -5,7 +5,7 @@
 3. Verify the ordered eight-stage upstream artifact triples against the work-order.
 4. For each package, validate common manifest/completion schemas, public ready profile, complete manifest closure, completion bindings, current run/revision readiness and passing validation.
 5. Require HQ1 `pass` with zero findings; require identical HB0-derived authority partitions across design stages.
-6. Copy all six design models and HQ1 review byte-for-byte into `canonical-models/`.
+6. Copy all seven design models, including the complete HD1 chapter-definition architecture, and the HQ1 review byte-for-byte into `canonical-models/`.
 7. Project HB0 registry/source-index entries into immutable baseline controls; build a global stable-ID cross-index and reject collisions.
 8. Aggregate HDD dispositions with the closed decision table; preserve open values as canonical JSON plus value hash.
 9. Read HK1 `LWR-*` requirements, validate every required field and produce the suffix-preserving `LWK-*` bijection.

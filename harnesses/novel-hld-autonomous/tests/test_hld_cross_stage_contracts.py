@@ -71,12 +71,31 @@ class NarrativeCausalityAndThreatTests(unittest.TestCase):
 class StorylineCarrierTests(unittest.TestCase):
     def model(self) -> dict:
         return {
-            "semantic_storyline_register": [{"source_storyline_id": "SL-BG"}, {"source_storyline_id": "SL-OPEN"}],
+            "semantic_storyline_register": [
+                {"source_storyline_id": "SL-MAIN"},
+                {"source_storyline_id": "SL-BG"},
+                {"source_storyline_id": "SL-OPEN"},
+            ],
             "activation_disposition": [
+                {"source_storyline_id": "SL-MAIN", "disposition": "placed"},
                 {"source_storyline_id": "SL-BG", "disposition": "background-carried"},
                 {"source_storyline_id": "SL-OPEN", "disposition": "preserved-open"},
             ],
-            "storyline_segments": [{"source_storyline_id": "SL-BG"}],
+            "storyline_segments": [
+                {"id": "HTS-MAIN", "source_storyline_id": "SL-MAIN", "chapter_shell_ids": ["HCH-01-01"]},
+                {"id": "HTS-BG", "source_storyline_id": "SL-BG", "chapter_shell_ids": ["HCH-01-01"]},
+            ],
+            "chapter_storyline_plan": [
+                {
+                    "id": "HCD-01-01",
+                    "chapter_id": "HCH-01-01",
+                    "chapter_number": 1,
+                    "primary_storyline_id": "SL-MAIN",
+                    "supporting_storyline_ids": [],
+                    "background_storyline_ids": ["SL-BG"],
+                    "preserved_open_storyline_ids": ["SL-OPEN"],
+                }
+            ],
             "storyline_connections": [], "convergence_and_split_points": [],
             "subject_reconstruction_test": {"verdict": "pass"},
         }
@@ -90,7 +109,10 @@ class StorylineCarrierTests(unittest.TestCase):
             hs1.validate_stage_model(model, {})
 
     def test_preserved_open_cannot_masquerade_as_placed(self) -> None:
-        model = self.model(); model["storyline_segments"].append({"source_storyline_id": "SL-OPEN"})
+        model = self.model()
+        model["storyline_segments"].append(
+            {"id": "HTS-OPEN", "source_storyline_id": "SL-OPEN", "chapter_shell_ids": ["HCH-01-01"]}
+        )
         with self.assertRaisesRegex(hs1.CandidateError, "masquerade"):
             hs1.validate_stage_model(model, {})
 

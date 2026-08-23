@@ -27,7 +27,7 @@ CATALOG = SchemaCatalog(HARNESS / "schemas")
 CONTRACT = json.loads((SKILL / "references/runtime-contract.json").read_text(encoding="utf-8"))
 RUNTIME = SKILL / "scripts/run_skill.py"
 RUN_ID = "RUN-PUBLIC-001"
-STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1")
+STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1")
 FILES = {
     "HA1": ("narrative-architecture.json", "narrative-architecture.md", "narrative_architecture"),
     "HS1": ("storyline-choreography.json", "storyline-choreography.md", "storyline_choreography"),
@@ -35,6 +35,7 @@ FILES = {
     "HI1": ("narrative-information-architecture.json", "narrative-information-architecture.md", "narrative_information_architecture"),
     "HR1": ("rhythm-continuity-architecture.json", "rhythm-continuity-architecture.md", "rhythm_continuity_architecture"),
     "HK1": ("key-scene-function-map.json", "key-scene-function-map.md", "key_scene_function_map"),
+    "HD1": ("chapter-definition-architecture.json", "chapter-definition-architecture.md", "chapter_definition_architecture"),
 }
 
 
@@ -54,6 +55,7 @@ STAGE_MODULES = {
     "HI1": load_module("hq1_hi", REPO / "skills/novel-hld-information-architect/tests/test_skill.py"),
     "HR1": load_module("hq1_hr", REPO / "skills/novel-hld-rhythm-continuity-architect/tests/test_skill.py"),
     "HK1": load_module("hq1_hk", REPO / "skills/novel-hld-key-scene-function-planner/tests/test_skill.py"),
+    "HD1": load_module("hq1_hd", REPO / "skills/novel-hld-chapter-definition-designer/tests/test_skill.py"),
 }
 
 
@@ -110,7 +112,7 @@ def build_design_package(root: Path, stage: str, prior: list[dict], source_refs:
 
 def walk_objects(value, stage, locator=""):
     out={}
-    prefixes={"HA1":("HST-","HNU-","HCH-"),"HS1":("HTS-","HTC-"),"HC1":("HAS-","HRS-"),"HI1":("HPV-","HKS-","HSP-","HIN-"),"HR1":("HTM-","HPC-","HTN-"),"HK1":("HKF-","LWR-")}[stage]
+    prefixes={"HA1":("HST-","HNU-","HCH-"),"HS1":("HTS-","HTC-","HCD-"),"HC1":("HAS-","HRS-"),"HI1":("HPV-","HKS-","HSP-","HIN-"),"HR1":("HTM-","HPC-","HTN-"),"HK1":("HKF-","LWR-"),"HD1":("HDF-","HDC-")}[stage]
     if isinstance(value,dict):
         if isinstance(value.get("id"),str) and value["id"].startswith(prefixes):out[value["id"]]=(locator,value)
         for key,child in value.items():out.update(walk_objects(child,stage,f"{locator}/{key.replace('~','~0').replace('/','~1')}"))
@@ -146,7 +148,7 @@ def build_case(root: Path, defect: str = "none"):
         return [{"stage":stage,"object_id":identifier,"object_locator":locator,"actual_value":value,"contract_anchor":"the exact canonical object carries the claimed obligation"}]
     by_stage={stage:[identifier for identifier,(owner,_locator,_value) in objects.items() if owner==stage] for stage in STAGES}
     domain=[{"check_id":name,"status":"pass","evidence":[item for identifier in by_stage[stage] for item in ev(identifier)],"reason":"every object-level state and obligation in this producer is checked"} for name,stage in zip(DOMAIN_CHECKS,STAGES)]
-    cross_stage_sets=(("HA1","HS1"),("HS1","HC1"),("HA1","HS1","HC1","HR1"),("HI1","HR1","HK1"))
+    cross_stage_sets=(("HA1","HS1"),("HS1","HC1"),("HA1","HS1","HC1","HR1"),("HI1","HR1","HK1","HD1"))
     cross=[{"check_id":name,"status":"pass","evidence":[item for stage in stage_set for item in ev(by_stage[stage][0])],"reason":"cross-stage references preserve cause, state, derivation and responsibility"} for name,stage_set in zip(CROSS_CHECKS,cross_stage_sets)]
     authority={"check_id":"authority_and_open_items","status":"pass","evidence":ev(first_ids[0]),"reason":"authority and open items remain within the admitted baseline"}
     challenges=[{"check_id":f"HQC-{i:02d}","dimension":dimension,"status":"pass","evidence":ev(first_ids[(i+10)%len(first_ids)]),"reason":"the adversarial challenge is answered by an exact canonical value"} for i,dimension in enumerate(CHALLENGES,1)]
@@ -247,7 +249,7 @@ class HQ1PublicRuntimeTests(unittest.TestCase):
                 elif role=="manifest":path=root/upstream[-1]["manifest_path"]
                 elif role=="completion":path=root/upstream[-1]["completion_path"]
                 else:
-                    work_order=read_json(order);path=root/next(item["path"] for item in work_order["file_allowlist"] if item["role"]=="upstream::HK1::validation")
+                    work_order=read_json(order);last_stage=STAGES[-1];path=root/next(item["path"] for item in work_order["file_allowlist"] if item["role"]==f"upstream::{last_stage}::validation")
                 value=read_json(path);value["tampered_after_seal"]=True;write_json(path,value)
                 completed=subprocess.run([sys.executable,str(RUNTIME),str(order),str(draft)],capture_output=True,text=True)
                 self.assertEqual(3,completed.returncode,completed.stderr);self.assertFalse(output.exists())

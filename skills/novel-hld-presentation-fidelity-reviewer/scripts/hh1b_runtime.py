@@ -16,15 +16,15 @@ from runtime.canonical import ContractError,canonical_sha256,json_pointer,read_j
 from runtime.composite_internal_runtime import (Context,InternalCondition,Spec,atomic_execute,catalog,finalize_condition,finalize_ready,finalize_runtime_error,implementation_sha256,load_context,sha256)  # noqa:E402
 
 SKILL="novel-hld-presentation-fidelity-reviewer";VERSION="1.0.0"
-MODEL_ROLES={"hld_model_ha1":"canonical-models/narrative-architecture.json","hld_model_hs1":"canonical-models/storyline-choreography.json","hld_model_hc1":"canonical-models/character-arc-placement.json","hld_model_hi1":"canonical-models/narrative-information-architecture.json","hld_model_hr1":"canonical-models/rhythm-continuity-architecture.json","hld_model_hk1":"canonical-models/key-scene-function-map.json"}
-DOMAIN_BY_PATH={"canonical-models/narrative-architecture.json":"overall_narrative_architecture","canonical-models/storyline-choreography.json":"storyline_choreography","canonical-models/character-arc-placement.json":"character_arc_placement","canonical-models/narrative-information-architecture.json":"pov_information_suspense","canonical-models/rhythm-continuity-architecture.json":"time_space_pacing_tension","canonical-models/key-scene-function-map.json":"key_scene_functions","novel-hld-package.json":"open_items_constraints_and_lld_boundary"}
-DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary")
+MODEL_ROLES={"hld_model_ha1":"canonical-models/narrative-architecture.json","hld_model_hs1":"canonical-models/storyline-choreography.json","hld_model_hc1":"canonical-models/character-arc-placement.json","hld_model_hi1":"canonical-models/narrative-information-architecture.json","hld_model_hr1":"canonical-models/rhythm-continuity-architecture.json","hld_model_hk1":"canonical-models/key-scene-function-map.json","hld_model_hd1":"canonical-models/chapter-definition-architecture.json"}
+DOMAIN_BY_PATH={"canonical-models/narrative-architecture.json":"overall_narrative_architecture","canonical-models/storyline-choreography.json":"storyline_choreography","canonical-models/character-arc-placement.json":"character_arc_placement","canonical-models/narrative-information-architecture.json":"pov_information_suspense","canonical-models/rhythm-continuity-architecture.json":"time_space_pacing_tension","canonical-models/key-scene-function-map.json":"key_scene_functions","canonical-models/chapter-definition-architecture.json":"chapter_definitions","novel-hld-package.json":"open_items_constraints_and_lld_boundary"}
+DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","chapter_definitions","open_items_constraints_and_lld_boundary")
 HP1_PACKAGE_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/novel-hld-package.schema.json"
 HP1_CROSS_INDEX_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/hld-cross-index.schema.json"
 REQUIRED_ROLES=("hb0_manifest","hld_control_baseline","hp1_completion","hp1_manifest","novel_hld_package","hld_cross_index",*MODEL_ROLES,"human_review_report","hh1_a_manifest","hh1_a_generation_session","hh1_a_work_order")
 SPEC=Spec(SKILL,VERSION,"HH1.B","presentation-fidelity-review.json","presentation_fidelity_review","review-session.json","fidelity-review-execution.json","hh1-b-validation.schema.json",REQUIRED_ROLES)
-QUESTIONS={"architecture_progression","world_environment_definitions","character_definitions","environment_definitions","mandatory_storyline_connections","core_arc_choices","pov_knowledge_boundaries","continuity_constraints","key_functions_and_climax","open_items_and_lld_boundary"}
-QUESTION_SECTIONS={"architecture_progression":"overall_narrative_architecture","world_environment_definitions":"world_environment_definitions","character_definitions":"character_definitions","environment_definitions":"environment_definitions","mandatory_storyline_connections":"storyline_choreography","core_arc_choices":"character_arc_placement","pov_knowledge_boundaries":"pov_information_suspense","continuity_constraints":"time_space_pacing_tension","key_functions_and_climax":"key_scene_functions","open_items_and_lld_boundary":"open_items_constraints_and_lld_boundary"}
+QUESTIONS={"architecture_progression","world_environment_definitions","character_definitions","environment_definitions","mandatory_storyline_connections","core_arc_choices","pov_knowledge_boundaries","continuity_constraints","key_functions_and_climax","chapter_definition_readiness","open_items_and_lld_boundary"}
+QUESTION_SECTIONS={"architecture_progression":"overall_narrative_architecture","world_environment_definitions":"world_environment_definitions","character_definitions":"character_definitions","environment_definitions":"environment_definitions","mandatory_storyline_connections":"storyline_choreography","core_arc_choices":"character_arc_placement","pov_knowledge_boundaries":"pov_information_suspense","continuity_constraints":"time_space_pacing_tension","key_functions_and_climax":"key_scene_functions","chapter_definition_readiness":"chapter_definitions","open_items_and_lld_boundary":"open_items_constraints_and_lld_boundary"}
 WORLD_ENVIRONMENT_SCOPES={"city_and_region","local_people_and_daily_life","social_order_and_public_atmosphere","technology_and_infrastructure","climate_and_physical_environment"}
 DIMENSIONS=("fact_fidelity","structure_and_relation_fidelity","coverage_fidelity","authority_and_open_item_fidelity","visual_data_fidelity")
 IDENTITY_FIELDS={"schema_version","skill","stage","hld_run_id","status","input_gate_ref","source_artifacts","derivation_claims","decision_dependencies"}
@@ -42,7 +42,7 @@ def _member(manifest:Mapping[str,Any],path:Path,package:Path)->bool:
     return sum(1 for item in manifest.get("files",[]) if item.get("path")==relative and item.get("sha256")==sha256(path))==1
 
 def _all_elements(report:Mapping[str,Any])->list[dict[str,Any]]:
-    names=("title_and_decision_scope","overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary","visual_models")
+    names=("title_and_decision_scope","overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","chapter_definitions","open_items_constraints_and_lld_boundary","visual_models")
     return [item for name in names for item in report.get(name,[]) if isinstance(item,dict)]
 
 def _definition_controls(baseline:Mapping[str,Any])->dict[str,set[str]]:
@@ -79,6 +79,26 @@ def _visual_pairs(visual:Mapping[str,Any],binding_index:Mapping[tuple[str,str],A
         result.update(_pairs(edge,binding_index,f"{visual['id']}:edge:{index}"))
     return result
 
+def _primary_locators(item:Mapping[str,Any])->list[str]:
+    if item.get("element_kind") in {"character_definition","environment_definition"}:
+        return list(item["locators"][:1])
+    return list(item["locators"])
+
+def _validate_definition_supplements(report:Mapping[str,Any],binding_index:Mapping[tuple[str,str],Any],documents:Mapping[str,Any])->None:
+    canonical_paths=set(MODEL_ROLES.values())
+    for section in ("character_definitions","environment_definitions"):
+        for item in report[section]:
+            base_source=item["source_ids"][0]
+            for pair in list(zip(item["source_ids"],item["locators"]))[1:]:
+                entry=binding_index.get(pair)
+                if entry is None or entry["model_path"] not in canonical_paths:
+                    raise InternalCondition("blocked","HH1B_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not a current canonical HLD model",[item["id"]])
+                value=json_pointer(documents[entry["model_path"]],entry["locator"])
+                direct_refs=set(value.get("source_refs",[])) if isinstance(value,Mapping) else set()
+                authority_refs={ref.get("source_id") for ref in value.get("source_authority_refs",[]) if isinstance(ref,Mapping)} if isinstance(value,Mapping) else set()
+                if base_source not in direct_refs|authority_refs:
+                    raise InternalCondition("blocked","HH1B_DEFINITION_SUPPLEMENT_INVALID",f"{item['id']} supplemental binding is not derived from {base_source}",[item["id"]])
+
 def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict[str,Any]]:
     machine=read_json(context.roles["novel_hld_package"]);report=read_json(context.roles["human_review_report"]);a_manifest=read_json(context.roles["hh1_a_manifest"]);a_session=read_json(context.roles["hh1_a_generation_session"]);a_work=read_json(context.roles["hh1_a_work_order"]);hp1_completion=read_json(context.roles["hp1_completion"]);hp1_manifest=read_json(context.roles["hp1_manifest"]);cross=read_json(context.roles["hld_cross_index"]);hb0_manifest=read_json(context.roles["hb0_manifest"]);baseline=read_json(context.roles["hld_control_baseline"])
     context.catalog.validate(report,"hld-human-review-report.schema.json");context.catalog.validate(a_manifest,"package-manifest.schema.json");context.catalog.validate(a_work,"work-order.schema.json");context.catalog.validate(hp1_completion,"stage-completion.schema.json");context.catalog.validate(hp1_manifest,"package-manifest.schema.json");context.catalog.validate(hb0_manifest,"package-manifest.schema.json");context.catalog.validate(baseline,"hld-control-baseline.schema.json")
@@ -96,6 +116,7 @@ def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict
         key=(item["id"],f"{item['model_path']}#{item['locator']}")
         if item["model_path"] not in documents or key in binding_index or canonical_sha256(json_pointer(documents[item["model_path"]],item["locator"]))!=item["value_sha256"]:raise InternalCondition("blocked","HH1B_CROSS_INDEX_VALUE_DRIFT",item["id"],[item["id"]])
         binding_index[key]=item
+    _validate_definition_supplements(report,binding_index,documents)
     elements=_all_elements(report);expected=[]
     for item in elements:expected.extend((item["id"],source,locator) for source,locator in _pairs(item,binding_index,item["id"]))
     actual=[(item["report_element_id"],item["source_id"],item["locator"]) for item in report["source_bindings"]]
@@ -108,7 +129,7 @@ def admit(context:Context)->tuple[dict[str,Any],dict[str,Any],dict[str,Any],dict
     city_network=by_scope["city_and_region"].get("city_network",{});cities=city_network.get("cities",[]);links=city_network.get("intercity_links",[]);portraits=by_scope["local_people_and_daily_life"].get("ordinary_people_portraits",[]);city_names={city.get("city_name") for city in cities}
     if len(cities)<4 or len(city_names)!=len(cities) or len(links)<4 or {portrait.get("city") for portrait in portraits}!=city_names or "season_profile" not in by_scope["climate_and_physical_environment"]:raise InternalCondition("blocked","HH1B_WORLD_ENVIRONMENT_PROFILE_SHALLOW","four-city network, city-wide ordinary-person coverage, and season profile are not complete",["HH1-A"])
     expected_domains={locator:("character_definitions" if item["id"] in character_ids else "environment_definitions" if item["id"] in environment_ids else "world_environment_definitions" if item["id"] in world_environment_ids else DOMAIN_BY_PATH[item["model_path"]]) for (source,locator),item in binding_index.items()}
-    primary={section:{locator for element in report[section] for locator in element["locators"]} for section in set(DOMAIN_BY_PATH.values())|{"world_environment_definitions","character_definitions","environment_definitions"}}
+    primary={section:{locator for element in report[section] for locator in _primary_locators(element)} for section in set(DOMAIN_BY_PATH.values())|{"world_environment_definitions","character_definitions","environment_definitions"}}
     if any(locator not in primary[section] for locator,section in expected_domains.items()) or any(locator in expected_domains and expected_domains[locator]!=section for section,locators in primary.items() for locator in locators):raise InternalCondition("blocked","HH1B_PRIMARY_DOMAIN_COVERAGE_DRIFT","title/visual references cannot replace exact nine-domain primary coverage",["HH1-A"])
     for visual in report["visual_models"]:_visual_pairs(visual,binding_index)
     return machine,models,report,{"a_manifest":a_manifest,"a_session":a_session,"a_work":a_work,"binding_index":binding_index}
@@ -165,7 +186,7 @@ def validate_draft(context:Context,draft:Path,machine:Mapping[str,Any],models:Ma
     if review["review_bindings"]!=expected_bindings or (review["hld_run_id"],review["revision"])!=(context.work_order["hld_run_id"],context.work_order["revision"]):raise InternalCondition("revise","HH1B_REVIEW_BINDING_DRIFT","canonical review identity/bindings mismatch")
     elements=_all_elements(report);element_ids={item["id"] for item in elements};source_bindings={(item["report_element_id"],item["source_id"],item["locator"]) for item in report["source_bindings"]};sources={source for _,source,_ in source_bindings};locators={locator for _,_,locator in source_bindings};binding_index=producer["binding_index"];required={locator for _,locator in binding_index}
     runtime_missing=required-locators
-    relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions")
+    relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions","chapter_definitions")
     dimension_ids={"fact_fidelity":element_ids,"coverage_fidelity":element_ids,"structure_and_relation_fidelity":{item["id"] for section in relation_sections for item in report[section]},"authority_and_open_item_fidelity":{item["id"] for item in report["open_items_constraints_and_lld_boundary"]},"visual_data_fidelity":{item["id"] for item in report["visual_models"]}}
     for dimension in DIMENSIONS:
         value=review[dimension];expected_ids=dimension_ids[dimension];expected_sources,expected_locators=_evidence_for(report,binding_index,expected_ids)

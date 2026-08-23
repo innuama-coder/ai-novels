@@ -36,6 +36,8 @@ Use [sources.md](references/sources.md) only when auditing why a method exists.
 - Do not change upstream canonical files, choose return owners, write run-state, or publish another stage's completion.
 - Do not claim the whole HLD does not need an unresolved answer; HI1 may only assess HI1 dependency.
 
+Every HA1 chapter shell must also receive one explicit `chapter_pov_assignments[]` entry. Unit POV is the broad narrative default; chapter POV is the effective downstream contract. Every chapter assignment must bind the exact HC1 chapter-agency contract, select one of its legal focal characters, and repeat that character's acquisition modes and limit exactly. A chapter may switch only at its boundary.
+
 ## Done
 
-Done means the deterministic validator passes, the semantic rubric passes, the parent can determine exactly one next action from the package plus external `stage-result.json`, and all three eval cases meet six dimensions at 2/2. Otherwise return `revise`, `blocked`, or `runtime_error` evidence without a ready completion.
+Done means the deterministic validator passes, every HA1 unit and chapter has one ordered POV assignment, the semantic rubric passes, the parent can determine exactly one next action from the package plus external `stage-result.json`, and all three eval cases meet six dimensions at 2/2. Otherwise return `revise`, `blocked`, or `runtime_error` evidence without a ready completion.

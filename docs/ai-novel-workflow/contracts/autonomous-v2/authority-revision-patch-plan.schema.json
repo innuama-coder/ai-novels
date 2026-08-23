@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "authority-revision-patch-plan.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "producer", "candidate_material_sha256", "allowset", "directive_binding", "edits", "artifacts", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "kind": {"const": "authority-revision-patch-plan"},
+    "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"}, "run_id": {"type": "string", "minLength": 1},
+    "producer": {"$ref": "#/$defs/identity"},
+    "candidate_material_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+    "allowset": {"type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true, "items": {"enum": ["CAU-AUDIT-BOUNDARY", "CAU-GLOBAL-SPINE", "CAU-MAJOR-NODES", "CHR-GU-HENG-MEMORY", "CHR-ROLE-TIERS", "NAR-FAIRNESS", "NAR-POV-ARCHITECTURE"]}},
+    "directive_binding": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "edits": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"$ref": "#/$defs/edit"}},
+    "artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifactPatch"}},
+    "status": {"const": "sealed"}
+  },
+  "$defs": {
+    "identity": {"type": "object", "additionalProperties": false, "required": ["actor_id", "session_id", "implementation_sha256"], "properties": {"actor_id": {"type": "string", "minLength": 1}, "session_id": {"type": "string", "minLength": 1}, "implementation_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}}},
+    "edit": {"type": "object", "additionalProperties": false, "required": ["source_id", "domain", "hardness", "title", "control_index", "parent_artifact", "parent_value_sha256", "effective_value_sha256", "start_byte", "end_byte", "old_text", "old_text_sha256", "new_text", "new_text_sha256", "directive_clause_refs"], "properties": {
+      "source_id": {"enum": ["CAU-AUDIT-BOUNDARY", "CAU-GLOBAL-SPINE", "CAU-MAJOR-NODES", "CHR-GU-HENG-MEMORY", "CHR-ROLE-TIERS", "NAR-FAIRNESS", "NAR-POV-ARCHITECTURE"]},
+      "domain": {"enum": ["I3", "I4", "I5"]}, "hardness": {"enum": ["author_locked", "autonomous_owned", "downstream_freedom", "author_open"]}, "title": {"type": "string", "minLength": 1}, "control_index": {"type": "integer", "minimum": 0},
+      "parent_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "parent_value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}, "effective_value_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+      "start_byte": {"type": "integer", "minimum": 0}, "end_byte": {"type": "integer", "minimum": 1}, "old_text": {"type": "string", "minLength": 1}, "old_text_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}, "new_text": {"type": "string", "minLength": 1}, "new_text_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+      "directive_clause_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+    }},
+    "artifactPatch": {"type": "object", "additionalProperties": false, "required": ["domain", "parent_artifact", "base_artifact", "effective_artifact", "target_ids", "parent_projection_sha256", "effective_projection_sha256"], "properties": {"domain": {"enum": ["I3", "I4", "I5"]}, "parent_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "base_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "effective_artifact": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "target_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}, "parent_projection_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}, "effective_projection_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"}}}
+  }
+}

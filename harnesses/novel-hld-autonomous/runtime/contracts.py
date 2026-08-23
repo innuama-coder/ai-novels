@@ -5,7 +5,7 @@ from __future__ import annotations
 HARNESS = "novel-hld-autonomous"
 VERSION = "0.1.0"
 
-STAGES = ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1", "HP1", "HQ2", "HH1", "HF1")
+STAGES = ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1", "HP1", "HQ2", "HH1", "HF1")
 
 SKILLS = {
     "HB0": "novel-hld-baseline-admitter",
@@ -15,6 +15,7 @@ SKILLS = {
     "HI1": "novel-hld-information-architect",
     "HR1": "novel-hld-rhythm-continuity-architect",
     "HK1": "novel-hld-key-scene-function-planner",
+    "HD1": "novel-hld-chapter-definition-designer",
     "HQ1": "novel-hld-semantic-reviewer",
     "HP1": "novel-hld-package-assembler",
     "HQ2": "novel-hld-lld-readiness-evaluator",
@@ -30,16 +31,17 @@ UPSTREAM = {
     "HI1": ("HB0", "HA1", "HS1", "HC1"),
     "HR1": ("HB0", "HA1", "HS1", "HC1", "HI1"),
     "HK1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1"),
-    "HQ1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1"),
-    "HP1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1"),
+    "HD1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1"),
+    "HQ1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1"),
+    "HP1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1"),
     "HQ2": ("HB0", "HP1"),
     "HH1": ("HB0", "HP1", "HQ2"),
-    "HF1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1", "HP1", "HQ2", "HH1"),
+    "HF1": ("HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1", "HP1", "HQ2", "HH1"),
 }
 
 NON_QUALITY_DOMAINS = ("intent", "storylines", "world", "environments", "events", "characters", "narrative", "cross-domain")
 ALL_SOURCE_DOMAINS = NON_QUALITY_DOMAINS + ("quality",)
-DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1")
+DESIGN_STAGES = ("HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1")
 
 SOURCE_ACCESS_MATRIX = {
     "HB0": ALL_SOURCE_DOMAINS,
@@ -50,11 +52,11 @@ SOURCE_ACCESS_MATRIX = {
 
 ID_OWNER_PREFIX = {
     "HST": "HA1", "HNU": "HA1", "HCH": "HA1",
-    "HTS": "HS1", "HTC": "HS1",
+    "HTS": "HS1", "HTC": "HS1", "HCD": "HS1",
     "HAS": "HC1", "HRS": "HC1",
     "HPV": "HI1", "HKS": "HI1", "HSP": "HI1", "HIN": "HI1",
     "HTM": "HR1", "HPC": "HR1", "HTN": "HR1",
-    "HKF": "HK1", "LWR": "HK1", "LWK": "HP1",
+    "HKF": "HK1", "LWR": "HK1", "HDF": "HD1", "HDC": "HD1", "LWK": "HP1",
     "HFN": "HQ1",
     "HRE": "HH1", "HVG": "HH1", "HUI": "HH1",
 }
@@ -74,6 +76,7 @@ READY_PACKAGE_PROFILES = {
         "canonical-models/narrative-architecture.json", "canonical-models/storyline-choreography.json",
         "canonical-models/character-arc-placement.json", "canonical-models/narrative-information-architecture.json",
         "canonical-models/rhythm-continuity-architecture.json", "canonical-models/key-scene-function-map.json",
+        "canonical-models/chapter-definition-architecture.json",
         "canonical-models/hld-semantic-review.json",
         "assembly-execution.json", "validation.json", "package-manifest.json", "stage-completion.json",
     ),
@@ -121,7 +124,7 @@ HLD_ASSIGNMENT = {
     "next_stage": "novel-hld",
     "responsibilities": (
         "overall-narrative-architecture", "multi-thread-choreography", "character-arc-placement",
-        "act-and-chapter-progression", "key-scene-functions",
+        "act-and-chapter-progression", "key-scene-functions", "complete-chapter-definitions",
         "suspense-setup-probe-reveal-payoff",
         "time-space-pacing-tension-pov-information-architecture",
         "hld-to-lld-handoff-and-acceptance",
@@ -129,7 +132,7 @@ HLD_ASSIGNMENT = {
     "required_capabilities": (
         "traceable-conception-inheritance", "complete-multi-thread-architecture",
         "character-arc-and-event-alignment", "time-space-pacing-pov-information-control",
-        "key-scene-function-coverage", "lld-ready-handoff-with-acceptance",
+        "key-scene-function-coverage", "chapter-definition-and-chain-coverage", "lld-ready-handoff-with-acceptance",
     ),
     "prohibitions": (
         "change-conception-authority", "resolve-author-owned-question",

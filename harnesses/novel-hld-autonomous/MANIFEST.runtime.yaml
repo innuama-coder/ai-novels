@@ -5,7 +5,7 @@ status: implementation-candidate
 entry: adapters/codex/system-prompt.md
 operation_contract: adapters/codex/operation.md
 portable_core: true
-registered_skill_count: 14
+registered_skill_count: 15
 agentic_qualification: not-run
 qualification_contract: docs/agentic-qualification-contract.md
 qualification_validator: tools/validate_agentic_acceptance.py

@@ -2,13 +2,13 @@
   "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"public-runtime-registry.schema.json","type":"object","additionalProperties":false,
   "required":["schema_version","entries"],
   "properties":{"schema_version":{"const":"1.0"},"entries":{"type":"object","additionalProperties":false,
-    "required":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","consumer_test","fidelity_test","HH1-A","HH1-B","HH1-C","publisher","HH1-publisher","HF1"],
+    "required":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","consumer_test","fidelity_test","HH1-A","HH1-B","HH1-C","publisher","HH1-publisher","HF1"],
     "properties":{
-      "HB0":{"$ref":"#/$defs/entry"},"HA1":{"$ref":"#/$defs/entry"},"HS1":{"$ref":"#/$defs/entry"},"HC1":{"$ref":"#/$defs/entry"},"HI1":{"$ref":"#/$defs/entry"},"HR1":{"$ref":"#/$defs/entry"},"HK1":{"$ref":"#/$defs/entry"},"HQ1":{"$ref":"#/$defs/entry"},"HP1":{"$ref":"#/$defs/entry"},
+      "HB0":{"$ref":"#/$defs/entry"},"HA1":{"$ref":"#/$defs/entry"},"HS1":{"$ref":"#/$defs/entry"},"HC1":{"$ref":"#/$defs/entry"},"HI1":{"$ref":"#/$defs/entry"},"HR1":{"$ref":"#/$defs/entry"},"HK1":{"$ref":"#/$defs/entry"},"HD1":{"$ref":"#/$defs/entry"},"HQ1":{"$ref":"#/$defs/entry"},"HP1":{"$ref":"#/$defs/entry"},
       "consumer_test":{"$ref":"#/$defs/entry"},"fidelity_test":{"$ref":"#/$defs/entry"},"HH1-A":{"$ref":"#/$defs/entry"},"HH1-B":{"$ref":"#/$defs/entry"},"HH1-C":{"$ref":"#/$defs/entry"},"publisher":{"$ref":"#/$defs/entry"},"HH1-publisher":{"$ref":"#/$defs/entry"},"HF1":{"$ref":"#/$defs/entry"}
     }}
   },
   "$defs":{"entry":{"type":"object","additionalProperties":false,"required":["stage","skill","version","public_entrypoint","digest_strategy"],
-    "properties":{"stage":{"enum":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HQ2","HH1","HF1"]},"skill":{"type":"string","minLength":1},"version":{"type":"string","pattern":"^[0-9]+\\.[0-9]+\\.[0-9]+$"},"public_entrypoint":{"type":"string","minLength":1},"digest_strategy":{"enum":["runtime_contract","closed_runtime_contract","module_callable"]},"module":{"type":"string","minLength":1},"digest_callable":{"type":"string","pattern":"^[A-Za-z_][A-Za-z0-9_]*$"},"contract_path":{"type":"string","minLength":1},"contract_schema":{"type":"string","minLength":1},"closure_paths_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}},
+    "properties":{"stage":{"enum":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","HQ2","HH1","HF1"]},"skill":{"type":"string","minLength":1},"version":{"type":"string","pattern":"^[0-9]+\\.[0-9]+\\.[0-9]+$"},"public_entrypoint":{"type":"string","minLength":1},"digest_strategy":{"enum":["runtime_contract","closed_runtime_contract","module_callable"]},"module":{"type":"string","minLength":1},"digest_callable":{"type":"string","pattern":"^[A-Za-z_][A-Za-z0-9_]*$"},"contract_path":{"type":"string","minLength":1},"contract_schema":{"type":"string","minLength":1},"closure_paths_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}},
     "allOf":[{"if":{"properties":{"digest_strategy":{"const":"module_callable"}},"required":["digest_strategy"]},"then":{"required":["module","digest_callable"]}},{"if":{"properties":{"digest_strategy":{"const":"closed_runtime_contract"}},"required":["digest_strategy"]},"then":{"required":["contract_path","contract_schema","closure_paths_sha256"]}}]}}
 }

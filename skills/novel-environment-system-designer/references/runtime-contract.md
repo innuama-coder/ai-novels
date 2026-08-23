@@ -23,7 +23,7 @@ does not template environment semantics.
 
 1. `start_e1_session()` accepts the current ready B0, S1, and W1 packages plus
    the coordinator-issued E1 gate. It requires `CODEX_THREAD_ID` and freezes
-   the exact implementation catalog; any runtime, schema, skill, or upstream
+   the exact stage-owned implementation catalog; any owned runtime, schema, skill, or review
    validator change invalidates the session before another phase can seal.
 2. The session freezes the exact three completions, gate, pre-stage state,
    source hashes, B0 controls, S1 storylines, complete S1 environment and event

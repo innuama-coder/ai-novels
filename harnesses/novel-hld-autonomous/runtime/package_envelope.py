@@ -36,11 +36,12 @@ def validate_ready_profile(package_dir: Path, profile: str) -> None:
         generation = profile == "HH1.A"
         _match_profile(actual, INTERNAL_READY_PACKAGE_PROFILES[profile], generation_evidence=generation)
         return
-    if profile in {"HA1", "HS1", "HC1", "HI1", "HR1", "HK1"}:
+    if profile in {"HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1"}:
         canonical = {
             "HA1": "narrative-architecture.json", "HS1": "storyline-choreography.json",
             "HC1": "character-arc-placement.json", "HI1": "narrative-information-architecture.json",
             "HR1": "rhythm-continuity-architecture.json", "HK1": "key-scene-function-map.json",
+            "HD1": "chapter-definition-architecture.json",
         }[profile]
         preview = canonical.removesuffix(".json") + ".md"
         required = (canonical, "generation-session.json", "execution-record.json", preview, "validation.json", "package-manifest.json", "stage-completion.json")

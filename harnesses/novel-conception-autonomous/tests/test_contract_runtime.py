@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import json
 import math
+import os
 import tempfile
 import unittest
 from copy import deepcopy
@@ -14,6 +15,9 @@ contracts = importlib.import_module(
 )
 canonical = importlib.import_module(
     "harnesses.novel-conception-autonomous.runtime.canonical"
+)
+production_store = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.production_store"
 )
 
 
@@ -67,10 +71,10 @@ class ContractRuntimeTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.runtime = contracts.ContractRuntime()
 
-    def test_all_24_authoritative_schemas_and_refs_self_check(self) -> None:
+    def test_all_32_authoritative_schemas_and_refs_self_check(self) -> None:
         checked = self.runtime.check_all_schemas()
 
-        self.assertEqual(24, len(checked))
+        self.assertEqual(32, len(checked))
         self.assertIn("common-defs.schema.json", checked)
         self.assertIn("world-model.schema.json", checked)
 
@@ -319,6 +323,71 @@ class CanonicalAndManifestTests(unittest.TestCase):
                 with self.subTest(alias=alias):
                     with self.assertRaises(canonical.ManifestIntegrityError):
                         canonical.resolve_artifact_path(alias, root=root)
+
+    def test_windows_extended_and_plain_paths_have_one_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            path = root / "nested" / "artifact.json"
+            path.parent.mkdir()
+            path.write_bytes(b'{"ok":true}')
+            plain_reference = canonical.artifact_reference(path, root=root)
+            if os.name == "nt":
+                extended_root = Path("\\\\?\\" + str(root))
+                extended_path = extended_root / "nested" / "artifact.json"
+                self.assertEqual(
+                    plain_reference,
+                    canonical.artifact_reference(extended_path, root=root),
+                )
+                self.assertEqual(
+                    plain_reference,
+                    canonical.artifact_reference(path, root=extended_root),
+                )
+                self.assertEqual(
+                    canonical.filesystem_identity(root),
+                    production_store.ProductionRunStore(extended_root).root,
+                )
+                canonical.verify_artifact_reference(
+                    plain_reference, root=extended_root
+                )
+            else:
+                self.assertEqual(root, canonical.filesystem_identity(root))
+
+    def test_store_path_identity_keeps_escape_checks_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+            root = Path(directory).resolve()
+            subject = production_store.ProductionRunStore(root)
+            for logical in (
+                "../outside.json",
+                "/absolute.json",
+                "C:/other-drive.json",
+                "D:/other-drive.json",
+                "nested\\alias.json",
+            ):
+                with self.subTest(logical=logical):
+                    with self.assertRaises(production_store.ProductionStoreError):
+                        subject._path(logical)
+
+            outside_root = Path(outside).resolve()
+            (outside_root / "artifact.json").write_text("outside", encoding="utf-8")
+            with self.assertRaises(production_store.ProductionStoreError) as caught:
+                subject.resolve_physical_path(outside_root / "artifact.json")
+            self.assertEqual("PROD_PATH_ESCAPE", caught.exception.code)
+            with self.assertRaises(canonical.ManifestIntegrityError):
+                canonical.artifact_reference(
+                    outside_root / "artifact.json", root=root
+                )
+            link = root / "linked-outside"
+            try:
+                link.symlink_to(outside_root, target_is_directory=True)
+            except OSError as error:
+                self.skipTest(f"symlink creation unavailable: {error}")
+            with self.assertRaises(production_store.ProductionStoreError) as caught:
+                subject._path("linked-outside/artifact.json")
+            self.assertEqual("PROD_PATH_ESCAPE", caught.exception.code)
+            with self.assertRaises(canonical.ManifestIntegrityError):
+                canonical.resolve_artifact_path(
+                    "linked-outside/artifact.json", root=root
+                )
 
     def test_manifest_schema_and_integrity_accept_bound_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

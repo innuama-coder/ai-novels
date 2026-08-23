@@ -220,3 +220,6 @@ implementation/
   `true`、`false`，其他值一律 fail closed。空的装饰性 `aria-hidden="true"`
   元素可以保留。
 - `data-*`、机器 JSON、脚本与样式内容不参与可见文案扫描；不可见追溯绑定保持原样。
+- H1-C 的实现目录必须绑定所复用的 H1-A 可见文案校验运行时及其
+  `review-plan-contract.md`。任一校验规则或契约字节变化都必须改变 H1-C
+  实现身份并使旧实现目录失效，禁止在同一实现身份下静默漂移可见文案语义。

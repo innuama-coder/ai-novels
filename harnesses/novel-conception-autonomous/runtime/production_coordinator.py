@@ -93,12 +93,48 @@ class ProductionCoordinator(AutonomousCoordinator):
         if request.data["run_id"] != self._state["run_id"]:
             _fail("COORD_RUN_ID_MISMATCH", "stage refresh belongs to another run")
         old_stage = old.data.get("resume_stage")
+        same_owner_refresh = request.data.get("resume_point") == old.data.get(
+            "resume_point"
+        ) and request.data.get("calculated_owner") == old.data.get(
+            "calculated_owner"
+        )
+        nested_h1_fragment_refresh = (
+            old_stage == "H1"
+            and spec.target_stage == "H1"
+            and spec.resume_stage == "H1"
+            and old.data.get("resume_point") in {"H1-A-plan", "H1-B"}
+            and old.data.get("calculated_owner") in {"H1-A", "H1-B"}
+            and request.data.get("resume_point") == "H1-B"
+            and request.data.get("calculated_owner") == "H1-B"
+            and request.data.get("invalidated_stages") == ["H1"]
+            and request.data.get("invalidated_h1_artifacts")
+            == ["fragments", "assembly", "html", "completion"]
+        )
+        protected_h1_plan_escalation = (
+            old_stage == "H1"
+            and spec.target_stage == "H1"
+            and spec.resume_stage == "H1"
+            and old.data.get("resume_point") == "H1-B"
+            and old.data.get("calculated_owner") == "H1-B"
+            and old.data.get("invalidated_stages") == ["H1"]
+            and old.data.get("invalidated_h1_artifacts")
+            == ["fragments", "assembly", "html", "completion"]
+            and request.data.get("resume_point") == "H1-A-plan"
+            and request.data.get("calculated_owner") == "H1-A"
+            and request.data.get("invalidated_stages") == ["H1"]
+            and request.data.get("invalidated_h1_artifacts")
+            == ["plan", "fragments", "assembly", "html", "completion"]
+        )
         if (
             request.data.get("origin_kind") != "stage"
             or request.data.get("origin_stage") != old_stage
             or spec.target_stage != old_stage
             or spec.resume_stage != old_stage
-            or request.data.get("resume_point") != old.data.get("resume_point")
+            or not (
+                same_owner_refresh
+                or nested_h1_fragment_refresh
+                or protected_h1_plan_escalation
+            )
         ):
             _fail(
                 "COORD_RETURN_STAGE_REFRESH_TARGET_MISMATCH",

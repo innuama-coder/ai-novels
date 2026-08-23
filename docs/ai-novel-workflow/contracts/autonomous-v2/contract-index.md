@@ -9,12 +9,12 @@
 | `autonomous-run-state.schema.json` | B0–H1 当前版本、不可变状态快照、return 和开发失效状态 |
 | `input-gate.schema.json` | 每个阶段冻结的输入门 |
 | `package-manifest.schema.json` | 不可变交付包 manifest |
-| `stage-completion.schema.json` | B0、S1–P1、H1 顶层阶段 completion |
+| `stage-completion.schema.json` | B0、S1–P1、H1 顶层阶段 completion；权威修订 B0 完成时精确核对当前父状态引用 |
 | `canonical-common.schema.json` | 五个设计模型共享的来源、权限、决定、派生和开放项结构 |
 | `storyline-architecture.schema.json` | S1 canonical 模型 |
 | `world-model.schema.json` | W1 canonical 模型 |
 | `environment-system.schema.json` | E1 canonical 模型 |
-| `event-timeline.schema.json` | T1 canonical 模型 |
+| `event-timeline.schema.json` | T1 canonical 模型；2.5 起包含按故事发生时间验证的主体生命周期、一次性许可消费与启动/关停因果闭包 |
 | `character-system.schema.json` | C1 canonical 模型 |
 | `conception-review.schema.json` | Q1 独立审查模型与任务隔离证据 |
 | `novel-conception-package.schema.json` | P1 机器构思包 |
@@ -23,12 +23,20 @@
 | `fragment-package.schema.json` | H1 非权威小说片段包 |
 | `human-review-report.schema.json` | H1 组装后的人审内容模型 |
 | `presentation-fidelity-review.schema.json` | P1 与候选人审内容逐元素的独立语义一致性审查 |
-| `author-control-baseline.schema.json` | B0 作者控制基线、六份权威产物和事实依赖 |
+| `author-control-baseline.schema.json` | B0 作者控制基线、六份权威产物和事实依赖；当前来源唯一，权威修订的当前状态绑定 finalization.parent_run，native 或迁移仅作为父基线 |
 | `h1-workspace-state.schema.json` | H1 内部复合阶段状态机 |
 | `author-decision.schema.json` | `approved / revise / rejected` 三种作者决定 |
 | `return-request.schema.json` | workflow 计算 owner 后生成的唯一活动 return |
 | `development-handoff.schema.json` | P1 交给小说开发的授权与边界 |
 | `conception-completion.schema.json` | 最终构思完成与开发准入 |
+| `authority-revision-bootstrap-intent.schema.json` | 已批准构思权威修订的新运行事务意图 |
+| `authority-revision-evidence-index.schema.json` | 父构思与后续作者指令的不可变证据索引 |
+| `author-directive-binding.schema.json` | 作者原话绑定；明确不批准系统生成的新字节 |
+| `authority-revision-patch-plan.schema.json` | 与确定性候选摘要绑定的七个允许控制项精确局部文本修订 |
+| `authority-revision-semantic-review.schema.json` | 外部任务封存、逐项通过且与改稿者三重身份隔离的语义复核 |
+| `authority-revision-finalization.schema.json` | 基础/生效权威材料及修订证据的最终绑定 |
+| `authority-revision-bootstrap-validation.schema.json` | 新运行建立前的完整验证结果 |
+| `authority-revision-bootstrap-completion.schema.json` | 权威修订新运行的建立凭证 |
 
 ## Finalization runtime boundary
 
@@ -41,6 +49,10 @@
   事件。`revise` 的 owner、恢复点与失效后缀由 workflow 计算；跨 owner 必须拆分。
 - `runtime/final_completion.py`：只允许 current `approved` 分支绑定九个顶层
   completion、P1、H1 HTML、作者决定和 development handoff 后授予开发准入。
+- `runtime/production_orchestrator.py:apply_internal_h1_plan_return`：在组装前
+  只接受与当前候选报告、P1、plan、fragment 和独立审查者身份精确绑定的
+  `presentation-fidelity-review.verdict=revise`，以仅追加事务退回 H1-A plan；
+  旧 plan、fragment 与 assemble 工作单不可修改或复用。
 - `skills/novel-conception-deliverable-assembler/scripts/run_v2.py`：P1 目标目录存在时
   只允许 exact existing crash recovery。runtime 必须重验既有包，并证明 coordinator
   状态、sealed gate、B0–Q1 来源集合和实现快照与包内绑定完全一致。执行前状态中的

@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import os
 import re
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
@@ -26,6 +27,28 @@ class CanonicalizationError(ValueError):
 
 class ManifestIntegrityError(ValueError):
     """Raised when a manifest reference is unsafe, stale, or unbound."""
+
+
+def filesystem_identity(path: str | Path) -> Path:
+    """Return one resolved path spelling for containment comparisons.
+
+    Windows exposes the same file through the normal namespace (``C:\\``) and
+    the extended namespace (``\\\\?\\C:\\`` or ``\\\\?\\UNC\\``).  The prefix
+    is an I/O spelling, not a different containment identity.  Symlinks and
+    ``..`` are resolved before the spelling is normalized, so callers may use
+    the result for strict root containment without weakening escape checks.
+    Other operating systems are returned unchanged after normal resolution.
+    """
+
+    resolved = Path(path).resolve()
+    if os.name != "nt":
+        return resolved
+    raw = str(resolved)
+    if raw.startswith("\\\\?\\UNC\\"):
+        return Path("\\\\" + raw[8:])
+    if raw.startswith("\\\\?\\"):
+        return Path(raw[4:])
+    return resolved
 
 
 def canonical_json(value: Any) -> str:
@@ -90,9 +113,11 @@ def resolve_artifact_path(path: str, *, root: str | Path) -> Path:
 
     relative = _safe_relative_path(path)
     root_path = Path(root).resolve()
+    root_identity = filesystem_identity(root_path)
     candidate = root_path.joinpath(*relative.parts).resolve()
+    candidate_identity = filesystem_identity(candidate)
     try:
-        candidate.relative_to(root_path)
+        candidate_identity.relative_to(root_identity)
     except ValueError as error:
         raise ManifestIntegrityError(
             f"artifact path escapes package root: {path!r}"
@@ -104,12 +129,14 @@ def artifact_reference(path: str | Path, *, root: str | Path) -> dict[str, str]:
     """Create a relative POSIX path and exact byte hash for an existing file."""
 
     root_path = Path(root).resolve()
+    root_identity = filesystem_identity(root_path)
     candidate = Path(path)
     if not candidate.is_absolute():
         candidate = root_path / candidate
     candidate = candidate.resolve()
+    candidate_identity = filesystem_identity(candidate)
     try:
-        relative = candidate.relative_to(root_path)
+        relative = candidate_identity.relative_to(root_identity)
     except ValueError as error:
         raise ManifestIntegrityError(
             f"artifact is outside package root: {candidate}"

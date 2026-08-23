@@ -61,7 +61,7 @@ def validate(root: Path, *, require_test_anchors: bool = True) -> list[str]:
     runtime_manifest_path=root/"MANIFEST.runtime.yaml";acceptance_path=root/"releases/0.1.0-acceptance.json";checklist_path=root/"docs/release-checklist.md";registry_path=root/"references/public-runtime-registry.json"
     if runtime_manifest_path.is_file():
         runtime_manifest=runtime_manifest_path.read_text(encoding="utf-8")
-        for needle in ("runtime: codex", "operation_contract: adapters/codex/operation.md", "registered_skill_count: 14"):
+        for needle in ("runtime: codex", "operation_contract: adapters/codex/operation.md", "registered_skill_count: 15"):
             if needle not in runtime_manifest:fail(errors,f"runtime manifest missing: {needle}")
         expected_qualification="agentic_qualification: qualified" if manifest_status=="release-candidate" else "agentic_qualification: not-run"
         if f"status: {manifest_status}" not in runtime_manifest or expected_qualification not in runtime_manifest:fail(errors,"portable and runtime manifest status drift")
@@ -71,7 +71,7 @@ def validate(root: Path, *, require_test_anchors: bool = True) -> list[str]:
             actual_skills={entry["skill"] for entry in registry.values() if not entry["skill"].startswith("harness-core/")}
             expected_cases=[f"HLD-COORDINATOR-{suffix}" for suffix in ("P01","N01","B01","R01","R02")]
             if acceptance.get("status")!=manifest_status or acceptance.get("version")!="0.1.0" or acceptance.get("stable_major") is not False:fail(errors,"release acceptance status/version/stability drift")
-            if acceptance.get("registered_skill_count")!=len(actual_skills) or len(actual_skills)!=14 or acceptance.get("registry_token_count")!=len(registry) or len(registry)!=17:fail(errors,"release acceptance registry counts drift")
+            if acceptance.get("registered_skill_count")!=len(actual_skills) or len(actual_skills)!=15 or acceptance.get("registry_token_count")!=len(registry) or len(registry)!=18:fail(errors,"release acceptance registry counts drift")
             if acceptance.get("structural_executable_eval_cases")!=expected_cases:fail(errors,"release acceptance structural eval set drift")
             if set(acceptance.get("forbidden_skills",[])).intersection(actual_skills):fail(errors,"release acceptance includes a forbidden legacy skill")
             if acceptance.get("archive_layout")!="repository-root" or acceptance.get("post_install_validation")!="required":fail(errors,"release acceptance portability contract drift")

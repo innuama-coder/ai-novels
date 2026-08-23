@@ -1,7 +1,7 @@
 # T1 V2 runtime contract
 
-New production output uses T1 model schema `2.4` and consumes only E1 `2.4`.
-Schemas `2.0` through `2.3` are read-only historical branches. `2.0` is accepted
+New production output uses T1 model schema `2.5` and consumes only E1 `2.4`.
+Schemas `2.0` through `2.4` are read-only historical branches. `2.0` is accepted
 only for its exact trusted implementation pair and released package identity;
 the exhaustive `2.1` trusted identity inventory is empty. T1 `2.2` retains its
 previous exact implementation-pair policy. T1 `2.3` has one trusted full
@@ -13,7 +13,9 @@ be audited, but complete package replay remains fail-closed. Each historical
 package that does exist replays its own schema, phase table, lineage and
 semantics. Relabels, full reseals and new legacy generation sessions are
 rejected; an implementation snapshot is never sufficient to invent a package
-identity.
+identity. T1 `2.4` likewise has explicit empty implementation-pair and package-
+identity inventories, so the upgrade does not silently authorize a historical
+artifact that production never sealed into those inventories.
 
 `scripts/run_v2.py` is the sole T1 production runtime. Python may start a
 controlled session, accept phase submissions, validate them, seal a package,
@@ -56,7 +58,7 @@ The Agent submits exactly five phases:
 5. `final-event-model`: the exact assembled canonical model.
 
 Before P2 may be sealed, deterministic validation must pass and a different
-reviewer thread must complete `t1-initial-event-plan-semantics-v4`. Its request
+reviewer thread must complete `t1-initial-event-plan-semantics-v5`. Its request
 binds session, input gate, P1 evidence, candidate payload, all upstream
 manifest/completion identities, both E1 semantic reviews, implementation,
 schema and protocol hashes, and every deterministic claim. Any missing claim,
@@ -69,7 +71,7 @@ the exact ordered five-artifact set candidate/request/review-task-output/review/
 validation. Every event declares which propositions it requires, produces, and
 discloses; prose is never scanned to infer these facts.
 Before phase 4 evidence is written, the runtime assembles the complete
-provisional 2.4 model from sealed phases 1-3 plus the phase-4 candidate and
+provisional 2.5 model from sealed phases 1-3 plus the phase-4 candidate and
 runs full validation. Final submission and package validation recompute it.
 
 Each evidence file binds the frozen session, phase payload hash, and preceding
@@ -124,8 +126,19 @@ Backfilled evidence and a one-shot Python-generated semantic model are invalid.
   number of events may be used.
 - Across a non-optional line, responsibility ranks are monotonic; a long chain
   may repeat or extend the current rank but cannot return to an earlier rank.
-  Its final event contains both result and aftermath, and that same event
-  performs the final transition into the S1 end state.
+  Its final sequence event contains both result and aftermath. Normally that
+  event also performs the final transition into the S1 end state. The sole
+  exception is a causal SEND tail that must finish after the source line has
+  reached its terminal anchor: the terminal `story_transition` remains the
+  line's last transition-span and state-changing event, and every later event
+  must be a non-state `connection_bridge` belonging to that source line.
+  Each such bridge is owned exactly once by an E1-ready causal connection; its
+  complete path is exactly `source anchor -> ordered bridges -> target anchor`,
+  its capability steps are an injective exact cover of that connection's
+  `transport_step_ids`, and its lifecycle effects are empty. Foreign,
+  duplicate, non-bridge, off-path, post-target, state-changing, lifecycle-
+  changing, or trailing action events are rejected. Empty tails, optional
+  melodies, and historical schemas retain their prior behavior.
 - Every line sequence has the exact S1 entry and exit state. Its
   `state_ledger` transitions for the storyline subject exactly implement
   `start_state -> state_changes[] -> end_state`.
@@ -171,6 +184,20 @@ Backfilled evidence and a one-shot Python-generated semantic model are invalid.
   The model declares exactly the world, background, event, and narrative
   disclosure axes. Memory, analepsis, concurrency, convergence, and association are
   represented only when used, by controlled `[REL:...]` values.
+- A lifecycle contract is an explicit source-bound state machine, never a
+  word inferred from prose or chapter order. Its only states are
+  `NOT_STARTED -> ACTIVE -> SHUTDOWN`: one startup, one shutdown, and no return
+  to `NOT_STARTED` after startup in effective world occurrence order.
+- Formal acceptance occurs before startup. The accepted proposition's producer
+  is reachable from the acceptance event, and startup is reachable from that
+  producer, through a typed DAG containing only `narrative_causal`,
+  `capability_dependency`, and `token_dependency` edges. Multi-hop paths are
+  valid. For equal world times, DAG reachability supplies the deterministic
+  tie-break; presentation and disclosure order never changes occurrence order.
+- A single-use lifecycle permit is a formal token instance produced after
+  acceptance. Startup both requires and explicitly lists that exact instance
+  in `consumes_token_instance_ids`; the token ledger and event claim are exact
+  inverses and name exactly one consuming event.
 
 ### Propositions and S1 story obligations
 
@@ -180,7 +207,7 @@ Backfilled evidence and a one-shot Python-generated semantic model are invalid.
   at least one producer.
 - Every event has at least one produced proposition. A required non-initial
   proposition must be produced strictly earlier by a causal ancestor. A
-  disclosure cannot precede production. In the current 2.4 contract, every
+  disclosure cannot precede production. In the current 2.5 contract, every
   event's required, produced, and disclosed proposition-reference list is
   checked for duplicates before any set projection; an empty produced list or
   duplicate reference rejects P2 before review artifacts or phase evidence are
@@ -211,7 +238,7 @@ Backfilled evidence and a one-shot Python-generated semantic model are invalid.
 
 - Every event has exactly one E1 environment placement and one or more
   affordances from that same environment.
-- Current schema 2.3 rejects P2 before semantic-review artifacts or phase
+- Current schema 2.5 rejects P2 before semantic-review artifacts or phase
   evidence are written unless every selected affordance serves at least one of
   the event's declared storylines through exact S1 event-requirement IDs. A
   causal-connection bridge must additionally retain every endpoint line
@@ -260,7 +287,7 @@ matches it. Negative example: an authority ledger whose subject is not a
 formal W1/E1 authority object, or that has no matching event key, is rejected.
 
 Information changes are optional only when the model has no disclosure. In
-current 2.4, every `(EV, PROP)` in `discloses_proposition_ids` has at least one
+current 2.5, every `(EV, PROP)` in `discloses_proposition_ids` has at least one
 atomic information record. Each record names exactly one disclosed proposition,
 one event, and one communication-capable E1 `CSO` occurrence from that event.
 Its subject is one visible participating S1 slot, and all visibility slots are
@@ -274,8 +301,9 @@ receives only the explicit character-slot visibility declared by this ledger.
 ## Authority, boundary, and package
 
 Author-locked/open sets equal B0. T1 owns the ID-bearing event model and
-decisions; downstream freedom is exactly the S1 slot set. Events and sequences
-have current derivation hashes.
+decisions, including `LFS-*` lifecycle scopes and `LFC-*` lifecycle contracts;
+downstream freedom is exactly the S1 slot set. Events and sequences have
+current derivation hashes.
 
 The four local authority classes are pairwise-disjoint. Any overlap is rejected
 before deeper semantic validation; each class must then equal its exact B0,
@@ -289,3 +317,10 @@ the exact implementation catalog, and the unmodified formal B0/S1/W1/E1 source
 trees. `validate_t1_package()` is
 read-only and recomputes schema, semantics, evidence, implementation, manifest,
 completion, and coordinator lineage.
+
+This terminal SEND-tail correction does not change the JSON shape, model
+schema, phase protocol, or semantic-review claim universe, so the public model
+remains `2.5` and the review protocol remains
+`t1-initial-event-plan-semantics-v5`. The runtime and contract-document hashes
+do change and are therefore captured by the existing exact implementation
+identity; an already opened session cannot silently adopt the correction.

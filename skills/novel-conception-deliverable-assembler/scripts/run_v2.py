@@ -16,6 +16,9 @@ from typing import Any, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 _HERE = Path(__file__).resolve()
 _REPO = _HERE.parents[3]
 _SKILL = _HERE.parents[1]
@@ -303,7 +306,12 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/SKILL.md": _SKILL / "SKILL.md",
         "skill/package-contract.md": _SKILL / "references" / "package-contract.md",
     }
-    for name in ("canonical.py", "contracts.py", "coordinator.py"):
+    for name in (
+        "canonical.py",
+        "contracts.py",
+        "coordinator.py",
+        "stage_implementation_identity.py",
+    ):
         values[f"runtime/{name}"] = runtime_dir / name
     for name in (
         "common-defs.schema.json",
@@ -337,6 +345,10 @@ _T1_EVENT_PROJECTION_MAP = {
     "preconditions": "preconditions", "direct_result": "direct_result",
     "next_pressure": "next_pressure", "source_ids": "source_ids",
     "atomicity_reason": "atomicity_reason",
+}
+_T1_EVENT_PROJECTION_MAP_25 = {
+    "consumes_token_instance_ids": "consumes_token_instance_ids",
+    "lifecycle_effects": "lifecycle_effects",
 }
 _T1_PROPOSITION_PROJECTION_FIELDS = (
     "id", "statement", "source_ids", "audience", "initially_true",
@@ -395,9 +407,16 @@ def _quality_registry(model: Mapping[str, Any], field: str) -> dict[str, Mapping
 
 
 def _quality_validate_event_projection(
-    identifier: str, planned: Mapping[str, Any], canonical: Mapping[str, Any]
+    identifier: str,
+    planned: Mapping[str, Any],
+    canonical: Mapping[str, Any],
+    *,
+    schema_version: Any,
 ) -> None:
-    for source_field, target_field in _T1_EVENT_PROJECTION_MAP.items():
+    projection_map = dict(_T1_EVENT_PROJECTION_MAP)
+    if schema_version == "2.5":
+        projection_map.update(_T1_EVENT_PROJECTION_MAP_25)
+    for source_field, target_field in projection_map.items():
         if source_field not in planned or planned[source_field] != canonical.get(target_field):
             _quality_projection_fail(f"T1:{identifier}.{source_field}")
     changed = planned.get("changed_subject")
@@ -463,7 +482,12 @@ def _collect_t1_projection_quality_objects(
         for identifier in sorted(canonical):
             source, target = planned[identifier], canonical[identifier]
             if kind == "event":
-                _quality_validate_event_projection(identifier, source, target)
+                _quality_validate_event_projection(
+                    identifier,
+                    source,
+                    target,
+                    schema_version=model.get("schema_version"),
+                )
             elif kind == "proposition":
                 try:
                     source_projection = {
@@ -502,7 +526,7 @@ def _expected_quality_objects(
     output = []
     output.extend(_collect_quality_objects(models["S1"], stage="S1"))
     t1 = models["T1"]
-    if t1.get("schema_version") in {"2.2", "2.3", "2.4"}:
+    if t1.get("schema_version") in {"2.2", "2.3", "2.4", "2.5"}:
         output.extend(_collect_t1_projection_quality_objects(t1))
     else:
         output.extend(_collect_quality_objects(t1, stage="T1"))
@@ -1837,13 +1861,17 @@ def validate_p1_package(
         for item in execution.get("implementation_catalog", [])
         if isinstance(item, Mapping)
     }
-    if set(catalog) != set(_implementation_paths()):
-        _fail("P1_IMPLEMENTATION_STALE", "implementation catalog")
-    for identity, current in _implementation_paths().items():
-        ref = catalog[identity]
-        path = rt.verify_artifact_reference(ref, root=root)
-        if ref["sha256"] != rt.sha256_file(current) or path.read_bytes() != current.read_bytes():
-            _fail("P1_IMPLEMENTATION_STALE", identity)
+    try:
+        _, catalog = stage_identity.validate_stage_catalog(
+            stage="P1",
+            records=execution.get("implementation_catalog"),
+            package_root=root,
+            current_paths=_implementation_paths(),
+            verify_artifact_reference=rt.verify_artifact_reference,
+            sha256_file=rt.sha256_file,
+        )
+    except stage_identity.StageImplementationIdentityError as error:
+        _fail("P1_IMPLEMENTATION_STALE", str(error))
     implementation_refs = [catalog[key] for key in sorted(catalog)]
     actual_implementation_paths = {
         path.relative_to(root).as_posix()

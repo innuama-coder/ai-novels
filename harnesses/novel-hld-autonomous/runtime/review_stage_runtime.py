@@ -21,10 +21,11 @@ STAGE_SCHEMAS = {
     "HA1": "ha1-canonical.schema.json", "HS1": "hs1-canonical.schema.json",
     "HC1": "hc1-canonical.schema.json", "HI1": "hi1-canonical.schema.json",
     "HR1": "hr1-canonical.schema.json", "HK1": "hk1-canonical.schema.json",
+    "HD1": "hd1-canonical.schema.json",
 }
 DOMAIN_CHECKS = (
     "narrative_architecture", "storyline_choreography", "character_arc_placement",
-    "information_architecture", "rhythm_continuity", "key_scene_functions",
+    "information_architecture", "rhythm_continuity", "key_scene_functions", "chapter_definitions",
 )
 CROSS_CHECKS = (
     "subject_and_storyline_coverage", "world_environment_event_character_derivation",
@@ -267,7 +268,7 @@ def validate_review(context: Context, draft: Path) -> tuple[dict[str, Any], dict
         CROSS_CHECKS[0]: {"HA1", "HS1"},
         CROSS_CHECKS[1]: {"HS1", "HC1"},
         CROSS_CHECKS[2]: {"HA1", "HS1", "HC1", "HR1"},
-        CROSS_CHECKS[3]: {"HI1", "HR1", "HK1"},
+        CROSS_CHECKS[3]: {"HI1", "HR1", "HK1", "HD1"},
     }
     for check in review["cross_domain_checks"]:
         if not required_cross_stages[check["check_id"]].issubset({item["stage"] for item in check["evidence"]}):
@@ -277,7 +278,7 @@ def validate_review(context: Context, draft: Path) -> tuple[dict[str, Any], dict
     if len(check_ids) != len(set(check_ids)):
         raise CandidateError("review check IDs are not unique")
     if set(review["coverage_summary"]["checked_object_ids"]) != set(objects):
-        raise CandidateError("coverage_summary does not exactly cover all six canonical object sets")
+        raise CandidateError("coverage_summary does not exactly cover all seven canonical object sets")
     reviewed_object_ids = {
         evidence["object_id"] for evidence in _iter_primary_evidence(review)
         if evidence["stage"] in STAGE_SCHEMAS

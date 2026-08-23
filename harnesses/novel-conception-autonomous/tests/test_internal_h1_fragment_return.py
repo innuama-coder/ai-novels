@@ -66,7 +66,15 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
             )
             generation_session = persist_json(
                 "generation-session.json",
-                {"schema_version": "1.0", "kind": "generation-session"},
+                {
+                    "schema_version": "1.0",
+                    "kind": "generation-session",
+                    "identity": {
+                        "task_id": "/root/h1-b-producer",
+                        "thread_id": "THREAD-H1-B-PRODUCER",
+                        "independence_basis": "assigned-stage-owner",
+                    },
+                },
             )
             workspace_completion = persist_json(
                 "session-workspace-completion.json",
@@ -139,7 +147,15 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
             )
 
         item = rt.seal_document(
-            {"schema_version": "1.0", "kind": profile},
+            {
+                "schema_version": "1.0",
+                "kind": profile,
+                "identity": {
+                    "task_id": "/root/h1-a-producer",
+                    "thread_id": "THREAD-H1-A-PRODUCER",
+                    "independence_basis": "assigned-stage-owner",
+                },
+            },
             f"H1/{workspace.data['session_id']}/{profile}/artifact.json",
         )
         context.store.persist_document(item)
@@ -252,14 +268,16 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
         context.store.mark_work_order_consumed(fragment_order, successor=ready)
         return context, planned, ready, fragment_order, fragment_manifest
 
-    def _failure(self, context, ready, manifest, marker="001"):
+    def _failure_document(
+        self, context, ready, consumed, manifest, marker="001", *, reviewer=None
+    ):
         body = {
             "schema_version": "1.0",
             "kind": "internal-h1-fragment-fidelity-failure",
             "run_id": "RUN-PROD-1",
             "h1_session_id": ready.data["session_id"],
             "review_id": f"H1-B-FIDELITY-{marker}",
-            "reviewer": {
+            "reviewer": reviewer or {
                 "task_id": "/root/independent-review",
                 "thread_id": f"THREAD-{marker}",
                 "independence_basis": "separate-task-no-producer-context",
@@ -280,8 +298,35 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
         failure = rt.seal_document(
             body, f"reviews/h1-fragment-fidelity/{body['review_id']}.json"
         )
-        context.store.persist_document(failure)
         return failure
+
+    def _failure(
+        self, context, ready, consumed, manifest, marker="001", *, reviewer=None
+    ):
+        failure = self._failure_document(
+            context,
+            ready,
+            consumed,
+            manifest,
+            marker,
+            reviewer=reviewer,
+        )
+        assignment = prod.assign_internal_h1_fragment_fidelity_review(
+            context,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            reviewer=failure.data["reviewer"],
+            actor="production-orchestrator",
+        )
+        completion = prod.record_internal_h1_fragment_fidelity_failure(
+            context,
+            assignment=assignment,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            fidelity_failure=failure,
+            actor="novel-conception-presentation-fidelity-reviewer",
+        )
+        return failure, completion
 
     def _request(self, failure):
         body = rt.route_return(
@@ -311,13 +356,14 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
             ),
             ready.reference["path"],
         )
-        failure = self._failure(context, ready, manifest)
+        failure, completion = self._failure(context, ready, consumed, manifest)
         request = self._request(failure)
         upstream = copy.deepcopy(context.state.data["current_stage_completions"])
         receipt, returned, gate, order = prod.apply_internal_h1_fragment_return(
             context,
             consumed_work_order=consumed,
             fidelity_failure=failure,
+            review_completion=completion,
             request=request,
             actor="production-orchestrator",
             inputs={},
@@ -341,14 +387,273 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
         self.assertEqual(order.reference, resumed.store.pending_work_order().reference)
         self.assertEqual(planned.reference, resumed.store.latest_workspace().reference)
 
+    def test_fragment_producer_cannot_review_its_own_first_return(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        reviewer = {
+                "task_id": "/root/h1-b-producer",
+                "thread_id": "THREAD-H1-B-PRODUCER",
+                "independence_basis": "separate-task-no-producer-context",
+        }
+        before = self.fixture._run_inventory()
+        with self.assertRaisesRegex(
+            prod.ProductionOrchestratorError,
+            "PROD_H1_FRAGMENT_FIDELITY_REVIEW_NOT_INDEPENDENT",
+        ):
+            prod.assign_internal_h1_fragment_fidelity_review(
+                context,
+                consumed_work_order=consumed,
+                fragment_manifest=manifest,
+                reviewer=reviewer,
+                actor="production-orchestrator",
+            )
+        self.assertEqual(before, self.fixture._run_inventory())
+
+    def test_fragment_authority_apis_are_public_and_direct_writes_are_blocked(self):
+        self.assertIs(
+            rt.assign_internal_h1_fragment_fidelity_review,
+            prod.assign_internal_h1_fragment_fidelity_review,
+        )
+        self.assertIs(
+            rt.record_internal_h1_fragment_fidelity_failure,
+            prod.record_internal_h1_fragment_fidelity_failure,
+        )
+        for logical in (
+            "reviews/h1-fragment-fidelity/FORGED.json",
+            "orchestration/h1-fragment-fidelity-review-assignments/FORGED.json",
+            "orchestration/h1-fragment-fidelity-review-completions/FORGED.json",
+        ):
+            with self.subTest(path=logical):
+                forged = rt.seal_document(
+                    {"schema_version": "1.0", "kind": "forged-review"},
+                    logical,
+                )
+                before = self.fixture._run_inventory()
+                with self.assertRaisesRegex(
+                    store_module.ProductionStoreError,
+                    "PROD_REVIEW_AUTHORITY_REQUIRED",
+                ):
+                    store_module.ProductionRunStore(self.root).persist_document(
+                        forged
+                    )
+                self.assertEqual(before, self.fixture._run_inventory())
+
+    def test_fragment_record_rejects_reviewer_drift_without_write(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        reviewer = {
+            "task_id": "/root/independent-review",
+            "thread_id": "THREAD-ASSIGNED",
+            "independence_basis": "separate-task-no-producer-context",
+        }
+        assignment = prod.assign_internal_h1_fragment_fidelity_review(
+            context,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            reviewer=reviewer,
+            actor="production-orchestrator",
+        )
+        failure = self._failure_document(
+            context,
+            ready,
+            consumed,
+            manifest,
+            "reviewer-drift",
+            reviewer={**reviewer, "thread_id": "THREAD-FOREIGN"},
+        )
+        before = self.fixture._run_inventory()
+        with self.assertRaisesRegex(
+            prod.ProductionOrchestratorError,
+            "PROD_H1_FRAGMENT_FIDELITY_ASSIGNMENT_INVALID",
+        ):
+            prod.record_internal_h1_fragment_fidelity_failure(
+                context,
+                assignment=assignment,
+                consumed_work_order=consumed,
+                fragment_manifest=manifest,
+                fidelity_failure=failure,
+                actor="novel-conception-presentation-fidelity-reviewer",
+            )
+        self.assertEqual(before, self.fixture._run_inventory())
+
+    def test_fragment_record_second_write_exception_rolls_back_pair(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        failure = self._failure_document(
+            context, ready, consumed, manifest, "pair-rollback"
+        )
+        assignment = prod.assign_internal_h1_fragment_fidelity_review(
+            context,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            reviewer=failure.data["reviewer"],
+            actor="production-orchestrator",
+        )
+        original = context.store._persist_h1_fidelity_authority_document
+        calls = 0
+
+        def fail_second(document):
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                raise RuntimeError("second authority write crashed")
+            return original(document)
+
+        before = self.fixture._run_inventory()
+        with mock.patch.object(
+            context.store,
+            "_persist_h1_fidelity_authority_document",
+            side_effect=fail_second,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "second authority write"):
+                prod.record_internal_h1_fragment_fidelity_failure(
+                    context,
+                    assignment=assignment,
+                    consumed_work_order=consumed,
+                    fragment_manifest=manifest,
+                    fidelity_failure=failure,
+                    actor="novel-conception-presentation-fidelity-reviewer",
+                )
+        self.assertEqual(before, self.fixture._run_inventory())
+
+    def test_fragment_record_postwrite_exception_rolls_back_full_write_set(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        failure = self._failure_document(
+            context, ready, consumed, manifest, "pair-postwrite-rollback"
+        )
+        assignment = prod.assign_internal_h1_fragment_fidelity_review(
+            context,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            reviewer=failure.data["reviewer"],
+            actor="production-orchestrator",
+        )
+        original = context.store._persist_h1_fidelity_authority_document
+        calls = 0
+
+        def fail_after_second(document):
+            nonlocal calls
+            calls += 1
+            path = original(document)
+            if calls == 2:
+                raise RuntimeError("second authority write returned late")
+            return path
+
+        before = self.fixture._run_inventory()
+        with mock.patch.object(
+            context.store,
+            "_persist_h1_fidelity_authority_document",
+            side_effect=fail_after_second,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "returned late"):
+                prod.record_internal_h1_fragment_fidelity_failure(
+                    context,
+                    assignment=assignment,
+                    consumed_work_order=consumed,
+                    fragment_manifest=manifest,
+                    fidelity_failure=failure,
+                    actor="novel-conception-presentation-fidelity-reviewer",
+                )
+        self.assertEqual(before, self.fixture._run_inventory())
+
+    def test_fragment_record_process_interrupt_recovers_pair_on_resume(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        failure = self._failure_document(
+            context, ready, consumed, manifest, "pair-recovery"
+        )
+        assignment = prod.assign_internal_h1_fragment_fidelity_review(
+            context,
+            consumed_work_order=consumed,
+            fragment_manifest=manifest,
+            reviewer=failure.data["reviewer"],
+            actor="production-orchestrator",
+        )
+        original = context.store._persist_h1_fidelity_authority_document
+        calls = 0
+
+        def interrupt_second(document):
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                raise KeyboardInterrupt("simulated process loss")
+            return original(document)
+
+        with mock.patch.object(
+            context.store,
+            "_persist_h1_fidelity_authority_document",
+            side_effect=interrupt_second,
+        ):
+            with self.assertRaisesRegex(KeyboardInterrupt, "simulated process"):
+                prod.record_internal_h1_fragment_fidelity_failure(
+                    context,
+                    assignment=assignment,
+                    consumed_work_order=consumed,
+                    fragment_manifest=manifest,
+                    fidelity_failure=failure,
+                    actor="novel-conception-presentation-fidelity-reviewer",
+                )
+        self.assertTrue((self.root / failure.reference["path"]).is_file())
+        self.assertFalse(list((
+            self.root
+            / "orchestration"
+            / "h1-fragment-fidelity-review-completions"
+        ).glob("*.json")))
+        resumed = prod.resume_production_run(self.root)
+        completion_path = next((
+            self.root
+            / "orchestration"
+            / "h1-fragment-fidelity-review-completions"
+        ).glob("*.json"))
+        completion = resumed.store.load_document({
+            "path": completion_path.relative_to(self.root).as_posix(),
+            "sha256": rt.sha256_file(completion_path),
+        })
+        request = self._request(failure)
+        receipt, _, _, _ = prod.apply_internal_h1_fragment_return(
+            resumed,
+            consumed_work_order=consumed,
+            fidelity_failure=failure,
+            review_completion=completion,
+            request=request,
+            actor="production-orchestrator",
+            inputs={},
+        )
+        self.assertEqual(
+            "internal_h1_fragment_return", receipt.data["transition_mode"]
+        )
+
+    def test_fragment_apply_requires_exact_protected_completion(self):
+        context, _planned, ready, consumed, manifest = self._advance_h1()
+        failure, completion = self._failure(context, ready, consumed, manifest)
+        request = self._request(failure)
+        forged = rt.SealedDocument(
+            data={**copy.deepcopy(completion.data), "status": "forged"},
+            reference=copy.deepcopy(completion.reference),
+        )
+        before = self.fixture._run_inventory()
+        with self.assertRaisesRegex(
+            prod.ProductionOrchestratorError,
+            "PROD_H1_FRAGMENT_FIDELITY_AUTHORITY_INVALID",
+        ):
+            prod.apply_internal_h1_fragment_return(
+                context,
+                consumed_work_order=consumed,
+                fidelity_failure=failure,
+                review_completion=forged,
+                request=request,
+                actor="production-orchestrator",
+                inputs={},
+            )
+        self.assertEqual(before, self.fixture._run_inventory())
+
     def _returned_fragment_attempt(self):
         context, planned, old_ready, consumed, old_manifest = self._advance_h1()
-        failure = self._failure(context, old_ready, old_manifest, "fresh-path")
+        failure, completion = self._failure(
+            context, old_ready, consumed, old_manifest, "fresh-path"
+        )
         request = self._request(failure)
         _, returned, _, replacement = prod.apply_internal_h1_fragment_return(
             context,
             consumed_work_order=consumed,
             fidelity_failure=failure,
+            review_completion=completion,
             request=request,
             actor="production-orchestrator",
             inputs={},
@@ -452,12 +757,15 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
         context, planned, old_ready, consumed, old_manifest = self._advance_h1(
             legacy_fragment_path=True
         )
-        failure = self._failure(context, old_ready, old_manifest, "legacy-path")
+        failure, completion = self._failure(
+            context, old_ready, consumed, old_manifest, "legacy-path"
+        )
         request = self._request(failure)
         _, returned, _, replacement = prod.apply_internal_h1_fragment_return(
             context,
             consumed_work_order=consumed,
             fidelity_failure=failure,
+            review_completion=completion,
             request=request,
             actor="production-orchestrator",
             inputs={},
@@ -611,17 +919,18 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                 context, _, ready, consumed, manifest = self._advance_h1(
                     fragment_manifest_mutator=mutator
                 )
-                failure = self._failure(context, ready, manifest, name)
-                request = self._request(failure)
                 before = self.fixture._run_inventory()
                 with self.assertRaises(prod.ProductionOrchestratorError) as caught:
-                    prod.apply_internal_h1_fragment_return(
+                    prod.assign_internal_h1_fragment_fidelity_review(
                         context,
                         consumed_work_order=consumed,
-                        fidelity_failure=failure,
-                        request=request,
+                        fragment_manifest=manifest,
+                        reviewer={
+                            "task_id": "/root/independent-review",
+                            "thread_id": f"THREAD-{name}",
+                            "independence_basis": "separate-task-no-producer-context",
+                        },
                         actor="production-orchestrator",
-                        inputs={},
                     )
                 self.assertEqual(
                     "PROD_H1_FRAGMENT_PACKAGE_INVALID", caught.exception.code
@@ -674,17 +983,18 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                 context, _, ready, consumed, manifest = self._advance_h1(
                     fragment_package_mutator=mutator
                 )
-                failure = self._failure(context, ready, manifest, name)
-                request = self._request(failure)
                 before = self.fixture._run_inventory()
                 with self.assertRaises(prod.ProductionOrchestratorError) as caught:
-                    prod.apply_internal_h1_fragment_return(
+                    prod.assign_internal_h1_fragment_fidelity_review(
                         context,
                         consumed_work_order=consumed,
-                        fidelity_failure=failure,
-                        request=request,
+                        fragment_manifest=manifest,
+                        reviewer={
+                            "task_id": "/root/independent-review",
+                            "thread_id": f"THREAD-{name}",
+                            "independence_basis": "separate-task-no-producer-context",
+                        },
                         actor="production-orchestrator",
-                        inputs={},
                     )
                 self.assertEqual(
                     "PROD_H1_FRAGMENT_PACKAGE_INVALID", caught.exception.code
@@ -693,7 +1003,7 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
 
     def test_wrong_actor_route_state_and_collision_are_zero_write(self):
         context, _, ready, consumed, manifest = self._advance_h1()
-        failure = self._failure(context, ready, manifest)
+        failure, completion = self._failure(context, ready, consumed, manifest)
         request = self._request(failure)
         cases = [
             {"actor": "novel-conception-fragment-writer", "request": request},
@@ -712,6 +1022,7 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                     context,
                     consumed_work_order=consumed,
                     fidelity_failure=failure,
+                    review_completion=completion,
                     request=values["request"],
                     actor=values["actor"],
                     inputs={},
@@ -730,6 +1041,7 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                 context,
                 consumed_work_order=consumed,
                 fidelity_failure=failure,
+                review_completion=completion,
                 request=request,
                 actor="production-orchestrator",
                 inputs={},
@@ -741,12 +1053,15 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
         _, downstream = prod.issue_stage_work(
             context, action="H1-A-assemble", inputs={}
         )
-        failure = self._failure(context, ready, manifest, "downstream")
+        failure, completion = self._failure(
+            context, ready, consumed, manifest, "downstream"
+        )
         request = self._request(failure)
         _, returned, _, replacement = prod.apply_internal_h1_fragment_return(
             context,
             consumed_work_order=consumed,
             fidelity_failure=failure,
+            review_completion=completion,
             request=request,
             actor="production-orchestrator",
             inputs={},
@@ -772,7 +1087,9 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                     self.fixture.setUp()
                     self.root = self.fixture.root
                 context, planned, ready, consumed, manifest = self._advance_h1()
-                failure = self._failure(context, ready, manifest, boundary)
+                failure, completion = self._failure(
+                    context, ready, consumed, manifest, boundary
+                )
                 request = self._request(failure)
                 with mock.patch.object(
                     context.store,
@@ -784,6 +1101,7 @@ class InternalH1FragmentReturnTests(unittest.TestCase):
                             context,
                             consumed_work_order=consumed,
                             fidelity_failure=failure,
+                            review_completion=completion,
                             request=request,
                             actor="production-orchestrator",
                             inputs={},
