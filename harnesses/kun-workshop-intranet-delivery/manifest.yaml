@@ -1,0 +1,61 @@
+schema_version: 1
+name: kun-workshop-intranet-delivery
+version: 0.1.0
+kind: harness
+status: active
+mission: >-
+  Coordinate an AI delivery team that turns an interactive intranet prototype and
+  product documentation into a traceable, tested release candidate deployed to
+  an authorised pre-production environment.
+portable_core:
+  required_files:
+    - agent.md
+    - workflow.md
+    - rules.md
+    - docs/scope-definition.md
+    - docs/delivery-spec.md
+    - docs/development-process.md
+    - docs/application-spec.md
+    - docs/release-model.md
+    - docs/evaluation-rubric.md
+    - docs/using-harness-workflow-designer.md
+    - docs/team-definition.md
+    - docs/role-cards.md
+    - docs/capability-skills.md
+    - docs/semantic-review-0.1.0.md
+    - schemas/delivery-plan.schema.json
+    - schemas/stage-completion.schema.json
+    - schemas/decision-record.schema.json
+    - schemas/preproduction-evidence.schema.json
+    - schemas/semantic-review.schema.json
+adapters:
+  required:
+    - codex
+    - claude
+    - gemini
+    - openclaw
+    - hermas
+validators:
+  structural:
+    - validators/validate_harness.py
+release:
+  model: single_source_multi_runtime_builds
+  build_tool: tools/build_release.py
+  output_dir: dist
+  notes_dir: releases
+evaluation:
+  minimum_cases:
+    - positive
+    - negative
+    - boundary
+release_gates:
+  - manifest_is_present
+  - portable_core_files_exist
+  - every_required_adapter_has_install_doc
+  - every_required_adapter_has_entry_file
+  - handoff_schema_exists
+  - at_least_three_eval_cases_exist
+  - structural_validator_passes
+  - runtime_build_validation_passes
+  - semantic_review_gate_passes
+  - preproduction_evidence_is_present

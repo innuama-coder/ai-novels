@@ -1,0 +1,17 @@
+version: "2.0"
+name: "ai-novels-task-017"
+repo:
+  url: "https://github.com/innuama-coder/ai-novels.git"
+  branch: "main"
+task_dir: "tasks/development/v1.0.0-greeting-cli/TASK-017"
+executor: "codex"
+deliverables:
+  - path: "tasks/development/v1.0.0-greeting-cli/acceptance-report.md"
+    verify: "python -m unittest testing.test_conception_autonomous_v2_e2e"
+execution:
+  poll_interval_sec: 5
+  idle_timeout_sec: 120
+  max_duration_min: 120
+  max_nudge_count: 10
+  max_consecutive_escalate: 3
+

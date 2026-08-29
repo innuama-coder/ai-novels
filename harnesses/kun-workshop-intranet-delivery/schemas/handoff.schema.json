@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Harness Handoff Packet",
+  "type": "object",
+  "required": ["harness", "version", "runtime", "scope", "artifacts", "validation", "review", "status"],
+  "properties": {
+    "harness": {"type": "string"},
+    "version": {"type": "string"},
+    "runtime": {"type": "string"},
+    "scope": {"type": "object"},
+    "artifacts": {"type": "array"},
+    "validation": {"type": "object"},
+    "review": {"type": "object"},
+    "status": {"enum": ["complete", "partial", "blocked"]}
+  }
+}

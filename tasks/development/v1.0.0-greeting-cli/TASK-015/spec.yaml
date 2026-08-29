@@ -1,0 +1,26 @@
+version: "2.0"
+name: "ai-novels-task-015"
+repo:
+  url: "https://github.com/innuama-coder/ai-novels.git"
+  branch: "main"
+task_dir: "tasks/development/v1.0.0-greeting-cli/TASK-015"
+executor: "codex"
+deliverables:
+  - path: "harnesses/novel-conception-autonomous/manifest.yaml"
+    verify: "python harnesses/novel-conception-autonomous/validators/validate_harness.py"
+  - path: "harnesses/novel-conception-autonomous/workflow.md"
+    verify: "python harnesses/novel-conception-autonomous/validators/validate_harness.py"
+  - path: "harnesses/novel-conception-autonomous/adapters/codex/SKILL.md"
+    verify: "python harnesses/novel-conception-autonomous/validators/validate_harness.py"
+  - path: "harnesses/novel-conception-autonomous/validators/validate_harness.py"
+    verify: "python harnesses/novel-conception-autonomous/validators/validate_harness.py"
+  - path: "harnesses/novel-conception-autonomous/runtime/harness.py"
+    verify: "python -m unittest harnesses.novel-conception-autonomous.tests.test_harness_integration"
+  - path: "harnesses/novel-conception-autonomous/tools/build_release.py"
+    verify: "python harnesses/novel-conception-autonomous/tools/build_release.py"
+execution:
+  poll_interval_sec: 5
+  idle_timeout_sec: 120
+  max_duration_min: 120
+  max_nudge_count: 10
+  max_consecutive_escalate: 3

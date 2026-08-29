@@ -1,0 +1,21 @@
+version: "2.0"
+name: "ai-novels-task-006"
+repo:
+  url: "https://github.com/innuama-coder/ai-novels.git"
+  branch: "main"
+task_dir: "tasks/development/v1.0.0-greeting-cli/TASK-006"
+executor: "codex"
+deliverables:
+  - path: "skills/novel-environment-system-designer/scripts/run_v2.py"
+    verify: "python -m unittest skills.novel-environment-system-designer.tests.test_v2_runtime"
+  - path: "skills/novel-environment-system-designer/references/runtime-contract.md"
+    verify: "python -m unittest skills.novel-environment-system-designer.tests.test_v2_runtime"
+  - path: "skills/novel-environment-system-designer/tests/test_v2_runtime.py"
+    verify: "python -m unittest skills.novel-environment-system-designer.tests.test_v2_runtime"
+execution:
+  poll_interval_sec: 5
+  idle_timeout_sec: 120
+  max_duration_min: 120
+  max_nudge_count: 10
+  max_consecutive_escalate: 3
+
