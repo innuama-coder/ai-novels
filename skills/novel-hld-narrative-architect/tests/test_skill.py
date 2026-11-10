@@ -119,7 +119,7 @@ def build_hb0(workspace: Path, *, must_ask: bool = False) -> tuple[dict, dict[st
             {"source_id": row["source_id"], "domain": "intent", "object_type": "string", "schema_discriminator": None,
              "source": {"fixture": "intent"}, "workspace_source_ref": row["workspace_source_ref"],
              "locator": row["locator"], "value_sha256": row["source_value_sha256"],
-             "allowed_stages": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1"]}
+             "allowed_stages": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1"]}
             for row in (free, opened)
         ],
     }

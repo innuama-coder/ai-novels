@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Stage Completion Packet",
+  "type": "object",
+  "required": ["run_id", "stage", "owner_role", "status", "upstream", "artifacts", "validation", "open_items", "next_consumers"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "stage": {"enum": ["S0", "S1A", "S1B", "S1C", "G1", "S2", "S3", "S4", "G2", "S5", "G3", "S6", "G4"]},
+    "owner_role": {"type": "string"},
+    "status": {"enum": ["ready", "revise", "blocked", "failed"]},
+    "upstream": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+    "artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/ref"}},
+    "validation": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["command_or_method", "verdict", "evidence"], "properties": {"command_or_method": {"type": "string"}, "verdict": {"enum": ["pass", "fail", "not_run"]}, "evidence": {"$ref": "#/$defs/ref"}}, "additionalProperties": false}},
+    "open_items": {"type": "array", "items": {"type": "string"}},
+    "next_consumers": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {"ref": {"type": "object", "required": ["path", "sha256"], "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}}, "additionalProperties": false}},
+  "additionalProperties": false
+}

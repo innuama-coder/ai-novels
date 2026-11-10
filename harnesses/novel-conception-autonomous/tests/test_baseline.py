@@ -24,6 +24,9 @@ canonical = importlib.import_module(
 coordinator = importlib.import_module(
     "harnesses.novel-conception-autonomous.runtime.coordinator"
 )
+revision_runtime = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.conception_revision"
+)
 
 
 DOMAINS = ("I0", "I1", "I2", "I3", "I4", "I5")
@@ -59,7 +62,13 @@ def text_sha256(value: str) -> str:
 
 
 class SourceFixture:
-    def __init__(self, root: Path):
+    def __init__(
+        self,
+        root: Path,
+        *,
+        authority_revision_controls: bool = False,
+        authority_revision_non_target_controls: int = 0,
+    ):
         self.root = root
         self.run_id = "RUN-B0-001"
         self.completions: dict[str, Path] = {}
@@ -82,13 +91,60 @@ class SourceFixture:
             )
             artifact = directory / "design.md"
             hardness = "author_open" if domain == "I5" else "author_locked"
+            authority_specs = {
+                "I3": (
+                    ("CHR-GU-HENG-MEMORY", "author_locked", "顾衡的记忆"),
+                    ("CHR-ROLE-TIERS", "author_locked", "角色层级"),
+                ),
+                "I4": (
+                    ("CAU-AUDIT-BOUNDARY", "author_locked", "审计边界"),
+                    ("CAU-GLOBAL-SPINE", "author_locked", "全局主线"),
+                    ("CAU-MAJOR-NODES", "author_locked", "主要节点"),
+                ),
+                "I5": (
+                    ("NAR-FAIRNESS", "author_locked", "叙事公平"),
+                    ("NAR-POV-ARCHITECTURE", "author_locked", "视角结构"),
+                ),
+            }
+            if authority_revision_controls and authority_revision_non_target_controls:
+                distribution = {"I3": 7, "I4": 6, "I5": 6}
+                if authority_revision_non_target_controls != sum(distribution.values()):
+                    raise ValueError(
+                        "authority revision fixture supports exactly 19 non-target controls"
+                    )
+                authority_specs = {
+                    item_domain: item_specs
+                    + tuple(
+                        (
+                            f"{PREFIXES[item_domain]}-NON-TARGET-{index + 1:02d}",
+                            "author_locked",
+                            f"{item_domain} non-target {index + 1:02d}",
+                        )
+                        for index in range(distribution[item_domain])
+                    )
+                    for item_domain, item_specs in authority_specs.items()
+                }
+            specs = (
+                authority_specs[domain]
+                if authority_revision_controls and domain in authority_specs
+                else ((f"{PREFIXES[domain]}-001", hardness, f"{domain} exact control"),)
+            )
+            values = {
+                source_id: (
+                    f"old-{source_id}"
+                    if authority_revision_controls and domain in authority_specs
+                    else f"{domain} verbatim authoritative value."
+                )
+                for source_id, _, _ in specs
+            }
             artifact.parent.mkdir(parents=True, exist_ok=True)
+            sections = [
+                f"## [{source_id}][{item_hardness}] {title}\n\n{values[source_id]}"
+                for source_id, item_hardness, title in specs
+            ]
             artifact.write_text(
-                f"# {domain}\n\n"
-                f"## [{PREFIXES[domain]}-001][{hardness}] {domain} exact control\n\n"
-                f"{domain} verbatim authoritative value.\n",
-                encoding="utf-8",
-                newline="",
+                f"# {domain}\n\n" + "\n\n".join(sections) + "\n",
+                encoding="utf-8", newline="",
             )
             report_path = directory / "report.md"
             report_path.write_text(
@@ -97,9 +153,37 @@ class SourceFixture:
                 newline="",
             )
             projection_path = directory / "control-projection.json"
-            marked_heading = (
-                f"[{PREFIXES[domain]}-001][{hardness}] {domain} exact control"
-            )
+            controls = []
+            evidence_bindings = []
+            for index, (source_id, item_hardness, title) in enumerate(specs):
+                marked_heading = f"[{source_id}][{item_hardness}] {title}"
+                controls.append(
+                    {
+                        "id": source_id,
+                        "hardness": item_hardness,
+                        "heading": title,
+                        "value": values[source_id],
+                    }
+                )
+                evidence_bindings.append(
+                    {
+                        "control_id": source_id,
+                        "ranges": [
+                            {
+                                "start_line": 3 + index * 4,
+                                "end_line": (
+                                    6 + index * 4
+                                    if index < len(specs) - 1
+                                    else 5 + index * 4
+                                ),
+                                "text_sha256": text_sha256(
+                                    f"## {marked_heading}\n\n{values[source_id]}"
+                                    + ("\n" if index < len(specs) - 1 else "")
+                                ),
+                            }
+                        ],
+                    }
+                )
             write_json(
                 projection_path,
                 {
@@ -110,29 +194,8 @@ class SourceFixture:
                     "session_id": f"SESSION-{domain}",
                     "status": "ready",
                     "source_artifact": reference(projection_path, artifact),
-                    "controls": [
-                        {
-                            "id": f"{PREFIXES[domain]}-001",
-                            "hardness": hardness,
-                            "heading": f"{domain} exact control",
-                            "value": f"{domain} verbatim authoritative value.",
-                        }
-                    ],
-                    "evidence_bindings": [
-                        {
-                            "control_id": f"{PREFIXES[domain]}-001",
-                            "ranges": [
-                                {
-                                    "start_line": 3,
-                                    "end_line": 5,
-                                    "text_sha256": text_sha256(
-                                        f"## {marked_heading}\n\n"
-                                        f"{domain} verbatim authoritative value."
-                                    ),
-                                }
-                            ],
-                        }
-                    ],
+                    "controls": controls,
+                    "evidence_bindings": evidence_bindings,
                 },
             )
             self.projections[domain] = projection_path
@@ -358,6 +421,7 @@ class BaselineTests(unittest.TestCase):
         result = self.build()
 
         self.assertEqual("ready", result.validation["verdict"])
+        self.assertEqual("native", result.baseline["source_kind"])
         self.assertEqual(6, len(result.baseline["design_artifacts"]))
         self.assertEqual(
             {f"{PREFIXES[domain]}-001" for domain in DOMAINS},
@@ -383,6 +447,210 @@ class BaselineTests(unittest.TestCase):
             receipt.transition.snapshot["current_stage_completions"]["B0"],
         )
         self.assertTrue((self.package / "stage-completion.json").is_file())
+
+
+class AuthorityRevisionBaselineTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory(prefix="b0-authority-revision-")
+        self.work = Path(self.temporary.name)
+        self.sources = SourceFixture(
+            self.work / "sources", authority_revision_controls=True
+        )
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def test_completed_revision_fork_builds_mutually_exclusive_b0(self) -> None:
+        parent = self.work / "parent-run"
+        parent.mkdir()
+        hld = self.work / "hld"
+        hld.mkdir()
+        roots = {"source": self.sources.root, "parent": parent, "hld": hld}
+        bindings = {}
+        for label in sorted(revision_runtime.REQUIRED_EVIDENCE_LABELS):
+            if label == "parent_state":
+                bindings[label] = {
+                    "root": "source",
+                    "artifact": {
+                        "path": self.sources.state.relative_to(self.sources.root).as_posix(),
+                        "sha256": canonical.sha256_file(self.sources.state),
+                    },
+                }
+                continue
+            root_name = "parent" if label.startswith("parent_") else "hld"
+            path = roots[root_name] / f"{label}.json"
+            write_json(path, {"label": label})
+            bindings[label] = {
+                "root": root_name,
+                "artifact": {"path": path.name, "sha256": canonical.sha256_file(path)},
+            }
+        title_by_id = {
+            "CHR-GU-HENG-MEMORY": "顾衡的记忆",
+            "CHR-ROLE-TIERS": "角色层级",
+            "CAU-AUDIT-BOUNDARY": "审计边界",
+            "CAU-GLOBAL-SPINE": "全局主线",
+            "CAU-MAJOR-NODES": "主要节点",
+            "NAR-FAIRNESS": "叙事公平",
+            "NAR-POV-ARCHITECTURE": "视角结构",
+        }
+        edits = []
+        for domain in ("I3", "I4", "I5"):
+            projection = self.sources.projections[domain]
+            data = projection.read_bytes()
+            controls = baseline.extract_controls(projection, domain)
+            parent_ref = {
+                "path": projection.relative_to(self.sources.root).as_posix(),
+                "sha256": canonical.sha256_file(projection),
+            }
+            for index, control in enumerate(controls):
+                source_id = control["id"]
+                old_text = f"old-{source_id}"
+                new_text = f"new-{source_id}"
+                start = data.index(old_text.encode("utf-8"))
+                edits.append(
+                    {
+                        "source_id": source_id,
+                        "domain": domain,
+                        "hardness": control["hardness"],
+                        "title": title_by_id[source_id],
+                        "control_index": index,
+                        "parent_artifact": parent_ref,
+                        "parent_value_sha256": canonical.canonical_sha256(old_text),
+                        "effective_value_sha256": canonical.canonical_sha256(new_text),
+                        "start_byte": start,
+                        "end_byte": start + len(old_text.encode("utf-8")),
+                        "old_text": old_text,
+                        "old_text_sha256": text_sha256(old_text),
+                        "new_text": new_text,
+                        "new_text_sha256": text_sha256(new_text),
+                        "directive_clause_refs": ["DIR-001"],
+                    }
+                )
+        run_id = "RUN-B0-AUTHORITY-REVISION-001"
+        revision_root = self.work / "revision-run"
+        producer = {
+            "actor_id": "producer",
+            "session_id": "producer-session",
+            "implementation_sha256": "1" * 64,
+        }
+        clauses = [
+            {
+                "clause_id": "DIR-001",
+                "text": "修正七项，其他构思保持不变。",
+                "evidence_labels": ["author_event", "hld_answer", "hld_resolution"],
+            }
+        ]
+        author_text = "只修正指定的七项构思定义。"
+        review_material = revision_runtime.build_authority_revision_review_material(
+            run_id=run_id,
+            evidence_bindings=bindings,
+            author_text=author_text,
+            directive_clauses=clauses,
+            text_edits=edits,
+            producer_identity=producer,
+        )
+        review_root = self.work / "independent-review"
+        review_path = review_root / "semantic-review.json"
+        write_json(
+            review_path,
+            {
+                "schema_version": "1.0",
+                "kind": "authority-revision-semantic-review",
+                "review_id": "baseline-independent-review",
+                "transaction_id": review_material["candidate_material_sha256"][:24],
+                "run_id": run_id,
+                "candidate_material_sha256": review_material["candidate_material_sha256"],
+                "reviewer": {
+                    "actor_id": "reviewer",
+                    "session_id": "reviewer-session",
+                    "implementation_sha256": "2" * 64,
+                },
+                "producer": producer,
+                "covered_ids": sorted(revision_runtime.AUTHORITY_REVISION_ALLOWSET),
+                "item_reviews": [
+                    {"source_id": source_id, "verdict": "pass", "findings": []}
+                    for source_id in sorted(revision_runtime.AUTHORITY_REVISION_ALLOWSET)
+                ],
+                "reviewer_produced_patch": False,
+                "verdict": "pass",
+                "status": "sealed",
+            },
+        )
+        revision = revision_runtime.initialize_conception_revision_run(
+            parent,
+            revision_root,
+            run_id=run_id,
+            source_root=self.sources.root,
+            evidence_roots=roots,
+            evidence_bindings=bindings,
+            author_text=author_text,
+            directive_clauses=clauses,
+            text_edits=edits,
+            producer_identity=producer,
+            semantic_review_root=review_root,
+            semantic_review={
+                "path": review_path.name,
+                "sha256": canonical.sha256_file(review_path),
+            },
+        )
+        owner = coordinator.AutonomousCoordinator.from_snapshot(
+            revision.production.state.data,
+            revision.production.state.reference,
+        )
+        gate = owner.build_input_gate("B0", "B0/input-gate.json")
+        build_args = self.sources.build_args(self.work / "B0", gate)
+        package_root = build_args.pop("package_root")
+        build_args.update(
+            {
+                "run_id": run_id,
+            }
+        )
+        result = baseline.build_baseline_from_authority_revision(
+            package_root,
+            authority_revision_finalization=(
+                revision_root / "authority-revision" / "finalization.json"
+            ),
+            authority_source_run_id=self.sources.run_id,
+            **build_args,
+        )
+        self.assertEqual("authority_revision", result.baseline["source_kind"])
+        finalization = json.loads(
+            (revision_root / "authority-revision" / "finalization.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(finalization["parent_run"], result.baseline["run_state"])
+        self.assertIn("authority_revision_finalization", result.baseline)
+        self.assertNotIn("migration_finalization", result.baseline)
+        execution = json.loads(
+            (result.package_root / "baseline-execution.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertIn(
+            "runtime/conception_revision.py",
+            {
+                record["identity"]
+                for record in execution["implementation_catalog"]
+            },
+        )
+        self.assertEqual("ready", baseline.validate_baseline_package(result.package_root)["verdict"])
+        receipt = completion.complete_b0(
+            result.package_root,
+            coordinator=owner,
+            input_gate=gate,
+            logical_package_path="B0",
+            next_state_path="state/revision-001.json",
+        )
+        self.assertEqual("authority_revision", receipt.completion.data["source_kind"])
+        self.assertEqual(
+            result.baseline["authority_revision_finalization"],
+            receipt.completion.data["authority_revision"],
+        )
+
+
+class BaselineRemainingTests(BaselineTests):
+    test_approved_sources_build_lossless_package_and_advance_run_state = None
 
     def test_unapproved_source_is_blocked_without_candidate_package(self) -> None:
         approval = json.loads(self.sources.approval.read_text(encoding="utf-8"))
@@ -563,6 +831,269 @@ class BaselineTests(unittest.TestCase):
         with self.assertRaises(baseline.BaselineError) as implementation:
             baseline.validate_baseline_package(self.package)
         self.assertEqual("B0_IMPLEMENTATION_STALE", implementation.exception.code)
+
+    def test_b0_identity_excludes_export_aggregator_but_keeps_runtime_exact(self) -> None:
+        result = self.build()
+        execution = json.loads(
+            (result.package_root / "baseline-execution.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        identities = {
+            item["identity"] for item in execution["implementation_catalog"]
+        }
+        self.assertNotIn("runtime/__init__.py", identities)
+        self.assertEqual(
+            {f"runtime/{name}" for name in baseline.B0_REQUIRED_RUNTIME_FILES},
+            {identity for identity in identities if identity.startswith("runtime/")},
+        )
+
+        harness_manifest = json.loads(
+            (
+                Path(baseline.__file__).resolve().parents[1] / "manifest.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        contract = harness_manifest["b0_implementation_identity_contract"]
+        self.assertEqual(
+            sorted(f"runtime/{name}" for name in baseline.B0_REQUIRED_RUNTIME_FILES),
+            sorted(contract["required_runtime_files"]),
+        )
+        self.assertEqual(
+            list(baseline.B0_LEGACY_AGGREGATE_EXPORT_IDENTITIES),
+            contract["legacy_stored_extras"],
+        )
+        self.assertEqual(
+            sorted(baseline.TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256),
+            sorted(contract["trusted_legacy_catalog_sha256"]),
+        )
+        self.assertEqual(
+            sorted(baseline.TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES),
+            sorted(contract["trusted_legacy_missing_current_identities"]),
+        )
+        self.assertEqual(
+            baseline.TRUSTED_LEGACY_MISMATCH_BINDINGS,
+            contract["trusted_legacy_mismatch_bindings"],
+        )
+
+    def test_legacy_stored_export_aggregator_is_a_compatible_extra(self) -> None:
+        self.build()
+        aggregate_source = Path(baseline.__file__).resolve().parent / "__init__.py"
+        aggregate_copy = self.package / "implementation/runtime/__init__.py"
+        aggregate_copy.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(aggregate_source, aggregate_copy)
+        aggregate_reference = canonical.artifact_reference(
+            aggregate_copy, root=self.package
+        )
+
+        execution_path = self.package / "baseline-execution.json"
+        execution = json.loads(execution_path.read_text(encoding="utf-8"))
+        execution["implementation"].append(copy.deepcopy(aggregate_reference))
+        execution["implementation"].sort(key=lambda item: item["path"])
+        execution["implementation_catalog"].append(
+            {
+                "identity": "runtime/__init__.py",
+                "artifact": copy.deepcopy(aggregate_reference),
+            }
+        )
+        execution["implementation_catalog"].sort(
+            key=lambda item: item["identity"]
+        )
+        write_json(execution_path, execution)
+
+        manifest_path = self.package / "package-manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["files"].append(copy.deepcopy(aggregate_reference))
+        manifest["files"].sort(key=lambda item: item["path"])
+        manifest["implementation"].append(copy.deepcopy(aggregate_reference))
+        manifest["implementation"].sort(key=lambda item: item["path"])
+        write_json(manifest_path, manifest)
+        self._refresh_manifest_file("baseline-execution.json")
+
+        with mock.patch.object(
+            baseline,
+            "sha256_file",
+            wraps=baseline.sha256_file,
+        ) as digest:
+            self.assertEqual(
+                "ready", baseline.validate_baseline_package(self.package)["verdict"]
+            )
+        current_aggregate = aggregate_source.resolve()
+        self.assertFalse(
+            any(
+                Path(call.args[0]).resolve() == current_aggregate
+                for call in digest.call_args_list
+            )
+        )
+
+        identity = "runtime/b0_implementation_identity.py"
+        identity_copy = self.package / "implementation/runtime/b0_implementation_identity.py"
+        identity_reference = next(
+            item["artifact"]
+            for item in execution["implementation_catalog"]
+            if item["identity"] == identity
+        )
+        execution["implementation_catalog"] = [
+            item
+            for item in execution["implementation_catalog"]
+            if item["identity"] != identity
+        ]
+        execution["implementation"] = [
+            item
+            for item in execution["implementation"]
+            if item["path"] != identity_reference["path"]
+        ]
+        write_json(execution_path, execution)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["files"] = [
+            item
+            for item in manifest["files"]
+            if item["path"] != identity_reference["path"]
+        ]
+        manifest["implementation"] = [
+            item
+            for item in manifest["implementation"]
+            if item["path"] != identity_reference["path"]
+        ]
+        write_json(manifest_path, manifest)
+        self._refresh_manifest_file("baseline-execution.json")
+        identity_copy.unlink()
+
+        legacy_catalog = {
+            item["identity"]: item["artifact"]["sha256"]
+            for item in execution["implementation_catalog"]
+        }
+        legacy_digest = canonical.canonical_sha256(legacy_catalog)
+        current_baseline = Path(baseline.__file__).resolve()
+        real_sha256_file = canonical.sha256_file
+
+        def later_validator_hash(path: str | Path) -> str:
+            if Path(path).resolve() == current_baseline:
+                return "0" * 64
+            return real_sha256_file(path)
+
+        simulated_mismatch_binding = {
+            "runtime/baseline.py": {
+                "stored_sha256": legacy_catalog["runtime/baseline.py"],
+                "approved_current_sha256": "0" * 64,
+            }
+        }
+
+        with mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256",
+            frozenset({legacy_digest}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES",
+            frozenset({identity}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISMATCH_BINDINGS",
+            simulated_mismatch_binding,
+        ), mock.patch.object(
+            baseline, "sha256_file", side_effect=later_validator_hash
+        ):
+            self.assertEqual(
+                "ready", baseline.validate_baseline_package(self.package)["verdict"]
+            )
+
+        with mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256",
+            frozenset({legacy_digest}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES",
+            frozenset({identity}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISMATCH_BINDINGS",
+            {
+                "runtime/baseline.py": {
+                    **simulated_mismatch_binding["runtime/baseline.py"],
+                    "approved_current_sha256": "f" * 64,
+                }
+            },
+        ), mock.patch.object(
+            baseline, "sha256_file", side_effect=later_validator_hash
+        ):
+            with self.assertRaises(baseline.BaselineError) as future_validator:
+                baseline.validate_baseline_package(self.package)
+        self.assertEqual(
+            "B0_IMPLEMENTATION_STALE", future_validator.exception.code
+        )
+
+        schema_copy = self.work / "legacy-schema-mutants"
+        shutil.copytree(baseline.ContractRuntime().schema_dir, schema_copy)
+        owned_schema = schema_copy / "author-control-baseline.schema.json"
+        owned_schema.write_text(
+            owned_schema.read_text(encoding="utf-8") + "\n",
+            encoding="utf-8",
+            newline="",
+        )
+        with mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256",
+            frozenset({legacy_digest}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES",
+            frozenset({identity}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISMATCH_BINDINGS",
+            simulated_mismatch_binding,
+        ), mock.patch.object(
+            baseline, "sha256_file", side_effect=later_validator_hash
+        ):
+            with self.assertRaises(baseline.BaselineError) as schema_drift:
+                baseline.validate_baseline_package(
+                    self.package,
+                    runtime=baseline.ContractRuntime(schema_copy),
+                )
+        self.assertEqual("B0_IMPLEMENTATION_STALE", schema_drift.exception.code)
+
+        execution["implementation_catalog"] = [
+            item
+            for item in execution["implementation_catalog"]
+            if item["identity"] != "runtime/__init__.py"
+        ]
+        write_json(execution_path, execution)
+        self._refresh_manifest_file("baseline-execution.json")
+        with mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256",
+            frozenset({legacy_digest}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES",
+            frozenset({identity}),
+        ), mock.patch.object(
+            baseline,
+            "TRUSTED_LEGACY_MISMATCH_BINDINGS",
+            simulated_mismatch_binding,
+        ), mock.patch.object(
+            baseline, "sha256_file", side_effect=later_validator_hash
+        ):
+            with self.assertRaises(baseline.BaselineError) as caught:
+                baseline.validate_baseline_package(self.package)
+        self.assertEqual("B0_IMPLEMENTATION_STALE", caught.exception.code)
+
+    def test_missing_required_runtime_binding_still_fails_closed(self) -> None:
+        self.build()
+        execution_path = self.package / "baseline-execution.json"
+        execution = json.loads(execution_path.read_text(encoding="utf-8"))
+        execution["implementation_catalog"] = [
+            item
+            for item in execution["implementation_catalog"]
+            if item["identity"] != "runtime/canonical.py"
+        ]
+        write_json(execution_path, execution)
+        self._refresh_manifest_file("baseline-execution.json")
+
+        with self.assertRaises(baseline.BaselineError) as caught:
+            baseline.validate_baseline_package(self.package)
+        self.assertEqual("B0_IMPLEMENTATION_STALE", caught.exception.code)
 
     def test_stage_scoped_schema_dependencies_ignore_downstream_but_bind_b0(self) -> None:
         self.build()

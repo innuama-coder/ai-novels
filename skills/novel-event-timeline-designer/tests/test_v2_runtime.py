@@ -1132,7 +1132,7 @@ def _upgrade_agent_event_proposal_22(
             "to_event_id": right,
             "edge_kind": (
                 "narrative_causal"
-                if owner.startswith("SLC-")
+                if isinstance(owner, str) and owner.startswith("SLC-")
                 else "sequencing"
             ),
             "payload_ids": [],
@@ -1383,7 +1383,7 @@ def _upgrade_agent_event_proposal_22(
             {"requirement_id": requirement["id"], "occurrence_ids": selected_ids}
         )
 
-    # Current 2.4 information changes are authored from the exact disclosure
+    # Current 2.5 information changes are authored from the exact disclosure
     # event, proposition, communication-capable E1 occurrence and (when
     # applicable) the S1/E1 first-disclosure obligation binding.
     cover_by_requirement = {
@@ -1476,6 +1476,10 @@ def _upgrade_agent_event_proposal_22(
             subject_state[subject_id] = after
     model["information_changes"] = information_changes
 
+    for event in model["major_events"]:
+        event["consumes_token_instance_ids"] = []
+        event["lifecycle_effects"] = []
+
     # Planned objects are exact P3 sources; canonical events project them field
     # for field, while preserving the legacy human-facing fields.
     planned_events = []
@@ -1501,7 +1505,9 @@ def _upgrade_agent_event_proposal_22(
                 "requires_capability_fact_ids": list(event["requires_capability_fact_ids"]),
                 "produces_capability_fact_ids": list(event["produces_capability_fact_ids"]),
                 "requires_token_instance_ids": list(event["requires_token_instance_ids"]),
+                "consumes_token_instance_ids": list(event["consumes_token_instance_ids"]),
                 "produces_token_instance_ids": list(event["produces_token_instance_ids"]),
+                "lifecycle_effects": copy.deepcopy(event["lifecycle_effects"]),
                 "requires_proposition_ids": list(event["requires_proposition_ids"]),
                 "produces_proposition_ids": list(event["produces_proposition_ids"]),
                 "discloses_proposition_ids": list(event["discloses_proposition_ids"]),
@@ -1531,7 +1537,7 @@ def _upgrade_agent_event_proposal_22(
     )
     model.update(
         {
-            "schema_version": "2.4",
+            "schema_version": "2.5",
             "initial_condition_registry": initial_registry,
             "initial_anchor_option_selection_ledger": selection_ledger,
             "planned_event_registry": planned_events,
@@ -1544,6 +1550,14 @@ def _upgrade_agent_event_proposal_22(
             "obligation_event_plan": obligation_plan,
             "capability_occurrence_event_cover": occurrence_cover,
             "authority_token_instance_ledger": [],
+            "lifecycle_scope": {
+                "id": "LFS-NOT-APPLICABLE",
+                "applicability": "not_applicable",
+                "source_ids": ["SL-A"],
+                "lifecycle_contract_ids": [],
+                "semantic_review_claim_id": "T1LFS-NOT-APPLICABLE",
+            },
+            "lifecycle_contract_registry": [],
         }
     )
     model["event_span"]["start"] = event_by_id[emitted[0]]["world_time"]
@@ -1567,6 +1581,7 @@ def _upgrade_agent_event_proposal_22(
         *[item["id"] for item in model["event_coverage_ledger"]],
         *[item["id"] for item in model["information_changes"]],
         *[item["id"] for item in process_subjects],
+        model["lifecycle_scope"]["id"],
         *[item["token_instance_id"] for item in model["authority_token_instance_ledger"]],
         *[item["id"] for item in model["design_decisions"]],
     ]
@@ -2475,6 +2490,311 @@ class T1PureContractTests(unittest.TestCase):
             event_ids,
         )
 
+    @staticmethod
+    def _terminal_send_tail_case() -> dict[str, object]:
+        line_id = "SL-SOURCE"
+
+        def event(
+            event_id: str,
+            *,
+            kind: str,
+            subject_id: str,
+            subject_kind: str,
+            storyline_ids: list[str],
+            step_ids: list[str],
+        ) -> dict[str, object]:
+            return {
+                "id": event_id,
+                "event_kind": kind,
+                "subject_id": subject_id,
+                "subject_kind": subject_kind,
+                "storyline_ids": storyline_ids,
+                "e1_capability_step_ids": step_ids,
+                "lifecycle_effects": [],
+                "world_time": "[WT:000100]",
+            }
+
+        events = {
+            "EV-PRE": event(
+                "EV-PRE",
+                kind="process",
+                subject_id="PSS-PRE",
+                subject_kind="process",
+                storyline_ids=[line_id],
+                step_ids=["CSTEP-PRE"],
+            ),
+            "EV-END": event(
+                "EV-END",
+                kind="story_transition",
+                subject_id=line_id,
+                subject_kind="state",
+                storyline_ids=[line_id],
+                step_ids=["CSTEP-END"],
+            ),
+            **{
+                f"EV-SEND-{index}": event(
+                    f"EV-SEND-{index}",
+                    kind="connection_bridge",
+                    subject_id=f"RF-SEND-{index}",
+                    subject_kind="resource",
+                    storyline_ids=[line_id],
+                    step_ids=[f"CSTEP-SEND-{index}"],
+                )
+                for index in range(1, 5)
+            },
+            **{
+                f"EV-TARGET-{index}": event(
+                    f"EV-TARGET-{index}",
+                    kind="story_transition",
+                    subject_id=f"SL-TARGET-{index}",
+                    subject_kind="state",
+                    storyline_ids=[f"SL-TARGET-{index}"],
+                    step_ids=[f"CSTEP-TARGET-{index}"],
+                )
+                for index in range(1, 4)
+            },
+        }
+        connections = {
+            "SLC-ONE": {
+                "id": "SLC-ONE",
+                "relation": "causal",
+                "from_storyline_id": line_id,
+                "from_state_index": 1,
+            },
+            "SLC-TWO": {
+                "id": "SLC-TWO",
+                "relation": "causal",
+                "from_storyline_id": line_id,
+                "from_state_index": 1,
+            },
+            "SLC-THREE": {
+                "id": "SLC-THREE",
+                "relation": "causal",
+                "from_storyline_id": line_id,
+                "from_state_index": 1,
+            },
+        }
+        paths = [
+            {
+                "connection_id": "SLC-ONE",
+                "relation": "causal",
+                "source_event_id": "EV-END",
+                "target_event_id": "EV-TARGET-1",
+                "bridge_event_ids": ["EV-SEND-1", "EV-SEND-2"],
+                "predecessor_path_event_ids": [
+                    "EV-END",
+                    "EV-SEND-1",
+                    "EV-SEND-2",
+                    "EV-TARGET-1",
+                ],
+            },
+            {
+                "connection_id": "SLC-TWO",
+                "relation": "causal",
+                "source_event_id": "EV-END",
+                "target_event_id": "EV-TARGET-2",
+                "bridge_event_ids": ["EV-SEND-3"],
+                "predecessor_path_event_ids": [
+                    "EV-END", "EV-SEND-3", "EV-TARGET-2"
+                ],
+            },
+            {
+                "connection_id": "SLC-THREE",
+                "relation": "causal",
+                "source_event_id": "EV-END",
+                "target_event_id": "EV-TARGET-3",
+                "bridge_event_ids": ["EV-SEND-4"],
+                "predecessor_path_event_ids": [
+                    "EV-END", "EV-SEND-4", "EV-TARGET-3"
+                ],
+            },
+        ]
+        readiness = [
+            {
+                "connection_id": "SLC-ONE",
+                "relation": "causal",
+                "transport_step_ids": ["CSTEP-SEND-1", "CSTEP-SEND-2"],
+            },
+            {
+                "connection_id": "SLC-TWO",
+                "relation": "causal",
+                "transport_step_ids": ["CSTEP-SEND-3"],
+            },
+            {
+                "connection_id": "SLC-THREE",
+                "relation": "causal",
+                "transport_step_ids": ["CSTEP-SEND-4"],
+            },
+        ]
+        edge_pairs = {
+            (left, right)
+            for path in paths
+            for left, right in zip(
+                path["predecessor_path_event_ids"],
+                path["predecessor_path_event_ids"][1:],
+            )
+        } | {
+            ("EV-SEND-2", "EV-SEND-3"),
+            ("EV-SEND-3", "EV-SEND-4"),
+        }
+        return {
+            "line_id": line_id,
+            "line_type": "main",
+            "transition_ledgers": [{"trigger_ids": ["EV-END"]}],
+            "event_ids": [
+                "EV-PRE",
+                "EV-END",
+                "EV-SEND-1",
+                "EV-SEND-2",
+                "EV-SEND-3",
+                "EV-SEND-4",
+            ],
+            "current_schema": True,
+            "transition_spans": [["EV-PRE", "EV-END"]],
+            "events": events,
+            "connections": connections,
+            "connection_event_paths": paths,
+            "connection_path_readiness": readiness,
+            "edge_pairs": edge_pairs,
+        }
+
+    def test_terminal_send_tail_accepts_four_bridges_multihop_and_same_tick(
+        self,
+    ) -> None:
+        case = self._terminal_send_tail_case()
+        self.assertEqual(
+            {"[WT:000100]"},
+            {
+                case["events"][event_id]["world_time"]
+                for event_id in case["event_ids"]
+                if event_id.startswith("EV-SEND-")
+            },
+        )
+        t1._validate_terminal_state_event(**case)
+
+    def test_terminal_send_tail_rejects_closed_boundary_attacks(self) -> None:
+        attacks = []
+
+        post_state = self._terminal_send_tail_case()
+        post_state["events"]["EV-SEND-1"]["subject_id"] = "SL-SOURCE"
+        attacks.append((post_state, "T1_POST_TERMINAL_STATE_CHANGE"))
+
+        lifecycle = self._terminal_send_tail_case()
+        lifecycle["events"]["EV-SEND-1"]["lifecycle_effects"] = [
+            {"transition_kind": "shutdown"}
+        ]
+        attacks.append((lifecycle, "T1_POST_TERMINAL_STATE_CHANGE"))
+
+        nonbridge = self._terminal_send_tail_case()
+        nonbridge["events"]["EV-SEND-1"]["event_kind"] = "process"
+        attacks.append((nonbridge, "T1_POST_TERMINAL_STATE_CHANGE"))
+
+        wrong_readiness = self._terminal_send_tail_case()
+        wrong_readiness["connection_path_readiness"][0][
+            "transport_step_ids"
+        ] = ["CSTEP-SEND-1"]
+        attacks.append(
+            (
+                wrong_readiness,
+                "T1_POST_TERMINAL_CONNECTION_READINESS_MISMATCH",
+            )
+        )
+
+        duplicate_transport = self._terminal_send_tail_case()
+        duplicate_transport["events"]["EV-SEND-2"][
+            "e1_capability_step_ids"
+        ] = ["CSTEP-SEND-1"]
+        duplicate_transport["connection_path_readiness"][0][
+            "transport_step_ids"
+        ] = ["CSTEP-SEND-1"]
+        attacks.append(
+            (
+                duplicate_transport,
+                "T1_POST_TERMINAL_CONNECTION_READINESS_MISMATCH",
+            )
+        )
+
+        wrong_line = self._terminal_send_tail_case()
+        wrong_line["events"]["EV-SEND-1"]["storyline_ids"] = [
+            "SL-TARGET-1"
+        ]
+        attacks.append(
+            (wrong_line, "T1_POST_TERMINAL_CONNECTION_PATH_INVALID")
+        )
+
+        wrong_connection_line = self._terminal_send_tail_case()
+        wrong_connection_line["connections"]["SLC-ONE"][
+            "from_storyline_id"
+        ] = "SL-FOREIGN"
+        attacks.append(
+            (wrong_connection_line, "T1_POST_TERMINAL_EVENT_INVALID")
+        )
+
+        bridge_before_anchor = self._terminal_send_tail_case()
+        bridge_before_anchor["event_ids"] = [
+            "EV-PRE",
+            "EV-SEND-1",
+            "EV-END",
+            "EV-SEND-2",
+            "EV-SEND-3",
+            "EV-SEND-4",
+        ]
+        attacks.append((bridge_before_anchor, "T1_POST_TERMINAL_EVENT_INVALID"))
+
+        bridge_after_target = self._terminal_send_tail_case()
+        bridge_after_target["connection_event_paths"][0][
+            "predecessor_path_event_ids"
+        ] = ["EV-END", "EV-SEND-1", "EV-TARGET-1", "EV-SEND-2"]
+        attacks.append(
+            (
+                bridge_after_target,
+                "T1_POST_TERMINAL_CONNECTION_PATH_INVALID",
+            )
+        )
+
+        bypass = self._terminal_send_tail_case()
+        bypass["connection_event_paths"][0][
+            "predecessor_path_event_ids"
+        ] = ["EV-END", "EV-TARGET-1"]
+        attacks.append((bypass, "T1_POST_TERMINAL_CONNECTION_PATH_INVALID"))
+
+        trailing_action = self._terminal_send_tail_case()
+        trailing_action["events"]["EV-TRAIL"] = copy.deepcopy(
+            trailing_action["events"]["EV-PRE"]
+        )
+        trailing_action["events"]["EV-TRAIL"]["id"] = "EV-TRAIL"
+        trailing_action["event_ids"].append("EV-TRAIL")
+        attacks.append((trailing_action, "T1_POST_TERMINAL_EVENT_INVALID"))
+
+        duplicate = self._terminal_send_tail_case()
+        duplicate["event_ids"].append("EV-SEND-1")
+        attacks.append((duplicate, "T1_POST_TERMINAL_EVENT_DUPLICATE"))
+
+        for case, code in attacks:
+            with self.subTest(code=code), self.assertRaisesRegex(
+                t1.T1Error, code
+            ):
+                t1._validate_terminal_state_event(**case)
+
+    def test_terminal_send_tail_preserves_empty_optional_and_legacy_rules(
+        self,
+    ) -> None:
+        case = self._terminal_send_tail_case()
+        case["event_ids"] = ["EV-PRE", "EV-END"]
+        t1._validate_terminal_state_event(**case)
+        t1._validate_terminal_state_event(
+            "SL-OPTIONAL", "optional_melody", [], []
+        )
+        with self.assertRaisesRegex(
+            t1.T1Error, "T1_STORYLINE_TERMINAL_STATE_EVENT_MISMATCH"
+        ):
+            t1._validate_terminal_state_event(
+                "SL-LEGACY",
+                "main",
+                [{"trigger_ids": ["EV-END"]}],
+                ["EV-END", "EV-TRAIL"],
+            )
+
     def test_causal_connection_happy_path(self) -> None:
         self._validate_case(self._causal_case())
 
@@ -2708,7 +3028,7 @@ class HistoricalPackageCompatibilityTests(unittest.TestCase):
                     self._trusted_2_3_catalog(),
                 )
 
-    def test_2_2_policy_and_current_2_4_profile_are_unchanged(self) -> None:
+    def test_2_2_policy_and_current_2_5_profile_are_unchanged(self) -> None:
         self.assertEqual(
             frozenset(
                 {
@@ -2724,11 +3044,17 @@ class HistoricalPackageCompatibilityTests(unittest.TestCase):
             frozenset(), t1._TRUSTED_LEGACY_PACKAGE_IDENTITIES["2.2"]
         )
         self.assertNotIn("2.2", t1._TRUSTED_LEGACY_IMPLEMENTATION_BINDING_SETS)
-        self.assertEqual("2.4", t1.CURRENT_MODEL_SCHEMA_VERSION)
+        self.assertEqual("2.5", t1.CURRENT_MODEL_SCHEMA_VERSION)
         self.assertEqual(
-            "t1-initial-event-plan-semantics-v4", t1.T1_PLAN_REVIEW_PROTOCOL
+            "t1-initial-event-plan-semantics-v5", t1.T1_PLAN_REVIEW_PROTOCOL
         )
-        self.assertNotIn("2.4", t1._TRUSTED_LEGACY_IMPLEMENTATION_PAIRS)
+        self.assertEqual(
+            frozenset(), t1._TRUSTED_LEGACY_PACKAGE_IDENTITIES["2.4"]
+        )
+        self.assertEqual(
+            frozenset(), t1._TRUSTED_LEGACY_IMPLEMENTATION_PAIRS["2.4"]
+        )
+        self.assertNotIn("2.5", t1._TRUSTED_LEGACY_IMPLEMENTATION_PAIRS)
 
     @unittest.skipUnless(package.is_dir(), "historical 2.0 package unavailable")
     def test_preserved_old_implementation_cannot_authorize_resealed_2_0(self) -> None:
@@ -3093,6 +3419,21 @@ class T1PlanReviewReplayTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         _storyline, _environment, self.payload = contract_22_test.base_case()
+        for event in self.payload["planned_event_registry"]:
+            event["consumes_token_instance_ids"] = []
+            event["lifecycle_effects"] = []
+        self.payload.update(
+            {
+                "lifecycle_scope": {
+                    "id": "LFS-NOT-APPLICABLE",
+                    "applicability": "not_applicable",
+                    "source_ids": ["SL-A"],
+                    "lifecycle_contract_ids": [],
+                    "semantic_review_claim_id": "T1LFS-NOT-APPLICABLE",
+                },
+                "lifecycle_contract_registry": [],
+            }
+        )
         self.session = {
             "run_id": "review-run",
             "session_id": "review-session",
@@ -3277,6 +3618,21 @@ class T1FailBeforeEvidenceTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.storyline, self.environment, self.plan = contract_22_test.base_case()
+        for event in self.plan["planned_event_registry"]:
+            event["consumes_token_instance_ids"] = []
+            event["lifecycle_effects"] = []
+        self.plan.update(
+            {
+                "lifecycle_scope": {
+                    "id": "LFS-NOT-APPLICABLE",
+                    "applicability": "not_applicable",
+                    "source_ids": ["SL-A"],
+                    "lifecycle_contract_ids": [],
+                    "semantic_review_claim_id": "T1LFS-NOT-APPLICABLE",
+                },
+                "lifecycle_contract_registry": [],
+            }
+        )
         self.session = {
             "run_id": "fail-before-evidence",
             "input_gate": {"path": "T1/input-gate.json", "sha256": "1" * 64},
@@ -4112,7 +4468,7 @@ class T1RuntimeTests(unittest.TestCase):
             )
         ]
         with self.assertRaisesRegex(
-            t1.T1Error, "T1_CONNECTION_CAUSAL_PATH_MISMATCH"
+            t1.T1Error, "T1_CONNECTION_CAUSAL_EDGE_MISMATCH"
         ):
             self._validate(wrong_path)
 
@@ -4474,6 +4830,8 @@ class T1RuntimeTests(unittest.TestCase):
                 "id": "CE-CYCLE",
                 "from_event_id": end,
                 "to_event_id": root,
+                "edge_kind": "sequencing",
+                "payload_ids": [],
                 "mechanism": (
                     "[CAUSE_RESULT_SHA256:"
                     f"{runtime.canonical_sha256(event_index[end]['direct_result'])}]"

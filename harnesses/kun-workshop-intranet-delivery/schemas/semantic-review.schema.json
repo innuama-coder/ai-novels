@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Semantic Review",
+  "type": "object",
+  "required": ["run_id", "gate", "reviewer_role", "scores", "blockers", "verdict"],
+  "properties": {"run_id": {"type": "string"}, "gate": {"enum": ["G1", "G2", "G4"]}, "reviewer_role": {"type": "string"}, "scores": {"type": "object"}, "blockers": {"type": "array", "items": {"type": "string"}}, "verdict": {"enum": ["pass", "pass_with_risks", "revise", "fail"]}},
+  "additionalProperties": false
+}

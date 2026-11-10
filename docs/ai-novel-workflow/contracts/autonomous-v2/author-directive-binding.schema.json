@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "author-directive-binding.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "author_text", "author_text_sha256", "author_approved_bytes", "clauses", "evidence_index", "required_evidence", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "kind": {"const": "author-directive-binding"},
+    "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"}, "run_id": {"type": "string", "minLength": 1},
+    "author_text": {"type": "string", "minLength": 1}, "author_text_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+    "author_approved_bytes": {"const": false},
+    "clauses": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/clause"}},
+    "evidence_index": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "required_evidence": {"$ref": "authority-revision-evidence-index.schema.json#/$defs/evidenceSet"},
+    "status": {"const": "sealed"}
+  },
+  "$defs": {
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clause_id", "text", "evidence_labels"],
+      "properties": {
+        "clause_id": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1},
+        "evidence_labels": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["parent_state", "parent_final_completion", "parent_p1_completion", "parent_h1_completion", "parent_author_decision", "hld_question", "hld_answer", "hld_resolution", "hld_state", "author_event"]
+          }
+        }
+      }
+    }
+  }
+}

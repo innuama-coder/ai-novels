@@ -1,153 +1,144 @@
-# 方法论来源汇总（PRD / HLD / LLD 通用）
+# Novel PRD Writer References
 
-以下为三个 skill 所参考的创作方法论体系，按结构层级整理。
+## Purpose
 
----
+This reference file records the methods used by `novel-prd-writer` and how each method maps to PRD-level fields, constraints, and review rules.
 
-## 第一层：概念与定位（PRD 层）
+The PRD layer uses these methods only to define direction, constraints, and standards. It must not use them to build HLD structure, LLD details, or prose.
 
-### 1. Snowflake Method — Step 1-2（Randy Ingermanson, 1993）
+## PRD Method Map
 
-**来源**：*How to Write a Novel Using the Snowflake Method* (2014)
+| Method | PRD-Level Use | Forbidden Drift |
+|---|---|---|
+| Snowflake Method | Compress concept into logline, 5-sentence summary, and role premises | Do not expand into full chapter synopsis |
+| Save the Cat! Writes a Novel | Define type promise, hook, stakes, and story-function expectations | Do not produce a beat sheet or 15-beat placement |
+| Story Engineering | Define concept, character, theme, structure, scene, voice as requirement areas | Do not design the full structure |
+| Story Grid Genre Conventions | Define required genre functions and forbidden promise breaks | Do not define exact obligatory scenes |
+| Writing the Breakout Novel | Strengthen role demand, emotional pressure, and reader-facing tension | Do not write emotional scene execution |
+| Scene & Sequel | Define that later scenes must create goal/conflict/result or reaction/dilemma/decision pressure | Do not assign scene types to a scene list |
+| K.M. Weiland character/theme work | Link role need, flaw, truth/lie, and theme constraint | Do not design arc milestone sequence |
+| Truby / Anatomy of Story | Define structural functions such as desire, opponent, plan, moral pressure, revelation | Do not build the 22-step story |
+| Story Genius | Require internal story logic behind external plot promise | Do not write backstory scenes |
+| MICE Quotient | Identify dominant route type: Milieu, Inquiry, Character, Event | Do not define route node order |
+| Promises / Progress / Payoff | Define what the PRD promises, what progress must be visible, what must be paid off | Do not decide payoff scene execution |
+| Story Bible practice | Establish continuity rules for role, world, route, style, and forbidden contradictions | Do not become a full encyclopedia |
+| Reedsy worldbuilding | Define world rules, information boundaries, and usable materials | Do not create space detail matrices |
+| Reedsy POV / Le Guin craft | Define POV constraints, voice boundary, language texture, and style prohibitions | Do not allocate POV per scene |
+| Story Grid Scenes | Define scene validity standard for downstream work | Do not write scene blueprints |
 
-一句话到一段落的渐进收敛法。核心主张：
-- 如果不能在一句话（15 词以内）说清小说是讲什么的，概念还不够锋利
-- 从 1 句话 → 5 句话段落（设定、3 个灾难、结局）→ 逐级展开
+## Hard PRD Skills
 
-**用于**：PRD 的第一步（一句话概念）和第二步（段落扩展）
+### 1. Concept Compression
 
-### 2. Logline Formula（好莱坞 / Blake Snyder）
+The PRD must reduce the novel to a stable center:
 
-**来源**：*Save the Cat!* series
+- logline
+- five-sentence expansion
+- core conflict
+- content positioning formula
 
-标准格式：When [inciting incident] happens, [protagonist] must [goal] or else [stakes].
+Acceptance: HLD can restate the story center without inventing missing intent.
 
-**用于**：PRD 的核心卖点提取
+### 2. Role Requirement Definition
 
-### 3. Comparable Titles / 参照分析法（出版行业惯例）
+The PRD must define required role functions and 6 parameters:
 
-**来源**：Pitch documents for literary agents, query letter conventions
+- Identity
+- Goal
+- Need
+- Flaw
+- Motivation
+- Ghost
 
-核心公式：X meets Y but Z.
+Acceptance: HLD can build role hierarchy and arcs from the PRD without redefining the role's purpose.
 
-**用于**：PRD 的同类定位与差异化章节
+### 3. Route Requirement Definition
 
-### 4. Types of Stories（Jessica Brody, Save the Cat! Writes a Novel）
+The PRD must define route functions:
 
-15 种小说类型分类（Buddy Love, Golden Fleece, Institutionalized 等）。每种类型有对应的 beat 调整。
+- main route
+- subplot route
+- character route
+- emotional route
+- theme route
 
-**用于**：PRD 的类型标签与读者预期定位
+Acceptance: HLD can build route architecture, but the PRD does not include node order.
 
----
+### 4. Plot Function Constraints
 
-## 第二层：结构与架构（HLD 层）
+The PRD must define:
 
-### 5. Three-Act Structure（Syd Field, 1979）
+- core conflict
+- required plot functions
+- genre promises
+- hard prohibitions
 
-**来源**：*Screenplay: The Foundations of Screenwriting*
+Acceptance: HLD can generate structure while respecting Must/Won't constraints.
 
-三幕结构：Setup (Act I, 25%) → Confrontation (Act II, 50%) → Resolution (Act III, 25%)。关键元素：Inciting Incident、Plot Point I、Midpoint、Plot Point II、Climax。
+### 5. Theme And Style Constraints
 
-**用于**：HLD 的三幕节拍表
+The PRD must define:
 
-### 6. Save the Cat! 15-Beat Structure（Blake Snyder → Jessica Brody）
+- theme sentence
+- style baseline
+- POV overview
+- tone and language texture
+- forbidden expression
 
-**来源**：*Save the Cat!* (2005), *Save the Cat! Writes a Novel* (2018)
+Acceptance: LLD and Writing Agent can reject output that violates style boundaries.
 
-15 个节拍点按页码百分比分布：Opening Image(0%), Theme Stated(5%), Setup(1-10%), Catalyst(10%), Debate(10-20%), Break into Two(20%), B Story(22%), Fun and Games(20-50%), Midpoint(50%), Bad Guys Close In(50-75%), All Is Lost(75%), Dark Night of the Soul(75-85%), Break into Three(85%), Finale(85-99%), Final Image(100%)。
+### 6. Setting Boundary Definition
 
-**用于**：HLD 的精细节拍设计
+The PRD must define:
 
-### 7. Character Arc Theory（K.M. Weiland / Wikipedia）
+- world rules
+- information boundaries
+- usable materials
+- forbidden rule breaks
 
-**来源**：*Creating Character Arcs* (2016), Wikipedia "Character arc" 页面
+Acceptance: HLD/LLD can design time, space, and information release without changing the premise.
 
-三种弧线类型：Positive Change Arc、Negative Change Arc、Flat Arc。一个角色从起点到终点的内在转变过程。
+### 7. Content Acceptance
 
-**用于**：HLD 的角色弧线设计
+The PRD must include:
 
-### 8. Story Grid Global Story（Shawn Coyne, 2015）
+- content consistency basis
+- Must / Should / Could / Won't matrix
+- risks and open questions
+- downstream acceptance criteria
 
-**来源**：*The Story Grid: What Good Editors Know*
+Acceptance: later artifacts can be judged against the PRD rather than personal taste.
 
-四层分析框架：Genre、Worldview、Structure、Scenes。强调"主题与结构的统一"和"场景级价值偏移"。
+## References
 
-**用于**：HLD 的主题-结构统一验证 + LLD 的场景级设计
+[1] Ingermanson, Randy. *How to Write a Novel Using the Snowflake Method*. 2014. https://www.advancedfictionwriting.com/books/write-novel-using-snowflake-method/
 
-### 9. Hero's Journey / Monomyth（Joseph Campbell / Christopher Vogler）
+[2] Brody, Jessica. *Save the Cat! Writes a Novel*. Ten Speed Press, 2018. Beat sheet overview: https://www.writingmastery.com/blog/what-is-a-beat-sheet
 
-**来源**：*The Hero with a Thousand Faces* (1949), *The Writer's Journey* (1992)
+[3] Brooks, Larry. *Story Engineering: Mastering the 6 Core Competencies of Successful Writing*. Writer's Digest Books, 2011.
 
-12-stage 单神话结构：Ordinary World → Call to Adventure → Refusal → Mentor → Crossing the Threshold → Tests, Allies, Enemies → Approach → Ordeal → Reward → The Road Back → Resurrection → Return with Elixir
+[4] Coyne, Shawn. *The Story Grid*. Black Irish Entertainment, 2015. Genre conventions: https://storygrid.com/genre-conventions/
 
-**用于**：HLD 的角色叙事结构备选方案
+[5] Maass, Donald. *Writing the Breakout Novel*. Writer's Digest Books, 2001.
 
-### 10. Dan Harmon's Story Circle（Dan Harmon / Community）
+[6] Swain, Dwight V. *Techniques of the Selling Writer*. University of Oklahoma Press, 1965. Scene-sequel overview: https://www.storyplanner.com/story/plan/disaster-and-reaction-scene-structure
 
-8-step 循环结构：1. A character is in a zone of comfort → 2. They want something → 3. They enter an unfamiliar situation → 4. They adapt to it → 5. They get what they want → 6. They pay a heavy price → 7. They return to their familiar situation → 8. They've changed.
+[7] Weiland, K.M. *Plot, Character Arc, and Theme: How They're Connected and How They're Different.* https://www.helpingwritersbecomeauthors.com/storys-theme/
 
-**用于**：HLD 的角色弧线备选方案（特别适合短篇）
+[8] Weiland, K.M. *Structuring Your Novel.* https://www.kmweiland.com/book/structuring-your-novel/
 
----
+[9] Truby, John. *The Anatomy of Story: 22 Steps to Becoming a Master Storyteller.* Farrar, Straus and Giroux, 2007. Summary reference: https://www.publishersweekly.com/9780865479517
 
-## 第三层：场景与执行（LLD 层）
+[10] Cron, Lisa. *Story Genius: How to Use Brain Science to Go Beyond Outlining and Write a Riveting Novel.* Ten Speed Press, 2016. Overview: https://www.campfirewriting.com/learn/story-genius
 
-### 11. Story Grid Scene Commandments（Shawn Coyne）
+[11] Reedsy. *Worldbuilding: Create Brave New Worlds.* https://reedsy.com/blog/worldbuilding-guide/
 
-每个场景必须包含 6 要素：
-1. Inciting Incident — 触发场景的事件
-2. Progressive Complication — 使事情更复杂的因素
-3. Turning Point — 角色知道/决定的关键
-4. Crisis — 二选一的困境
-5. Climax — 选择的结果
-6. Resolution — 场景结束时的状态变化
+[12] Reedsy. *Multiple Points of View: 7 Tips for Writing from Different Perspectives.* https://reedsy.com/blog/guide/point-of-view/multiple-points-of-view/
 
-**用于**：LLD 的逐场景设计
+[13] Le Guin, Ursula K. *Steering the Craft.* https://www.ursulakleguin.com/steering-the-craft
 
-### 12. Value Shift 理论（Shawn Coyne / Story Grid）
+[14] Story Grid. *How to Write Scenes: Structure, Examples, and Definitions.* https://storygrid.com/scenes/
 
-每个场景必须从一个情感价值状态转移到另一个状态（如：希望→绝望、爱→恨、安全→恐惧）。没有价值转移的场景应该被删除。
+[15] Card, Orson Scott / Kowal, Mary Robinette. *MICE Quotient* overview. https://wordsdeferred.com/2021/11/29/the-mice-quotient/
 
-**用于**：LLD 的场景清单、场景必要性验证
-
-### 13. Scene & Sequel（Dwight Swain, 1965）
-
-**来源**：*Techniques of the Selling Writer*
-
-主动场景（Scene）：Goal → Conflict → Disaster
-被动场景（Sequel）：Reaction → Dilemma → Decision
-
-核心场景模式：主动（目标驱动）与被动（反应驱动）交替。
-
-**用于**：LLD 的场景类型设计（哪些是主动场景，哪些是被动场景）
-
-### 14. Obligatory Scene（Story Grid / 戏剧传统）
-
-**来源**：故事网格理论 + French scène à faire
-
-读者期待必然出现的场景。缺失会破坏读者体验。
-
-**用于**：LLD 的关键场景标注（[OMG]）
-
----
-
-## 第四层：参照分析（Survey 层）
-
-### 15. 参照作品分析法
-
-**来源**：*The Software of Lifecycle Objects* (Ted Chiang), *Klara and the Sun* (Kazuo Ishiguro), *The Emperor's Soul* (Brandon Sanderson), *Understand* (Ted Chiang), *Exhalation* (Ted Chiang)
-
-五个分析维度：D1-认知差异呈现 / D2-记忆作为叙事材料 / D3-低冲突型情感张力 / D4-静止型叙事的节奏 / D5-预设结局的悬念。
-
-**用于**：HLD 的视角选择、LLD 的记忆调用规则、LLD 的写作纪律
-
----
-
-## 参考链接
-
-- Three-act structure: https://en.wikipedia.org/wiki/Three-act_structure
-- Scene (fiction): https://en.wikipedia.org/wiki/Scene_(fiction)
-- Character arc: https://en.wikipedia.org/wiki/Character_arc
-- Story structure: https://en.wikipedia.org/wiki/Story_structure
-- List of story structures: https://en.wikipedia.org/wiki/List_of_story_structures
-- Save the Cat!: https://en.wikipedia.org/wiki/Save_the_Cat!
+[16] Sanderson, Brandon. *Promises, Progress, and Payoff* overview. https://robincatling.com/promises-progress-and-payoffs

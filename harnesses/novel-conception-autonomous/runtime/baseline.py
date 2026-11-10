@@ -16,7 +16,7 @@ import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping, Sequence
 
 from .canonical import (
@@ -26,6 +26,11 @@ from .canonical import (
     sha256_file,
     verify_artifact_reference,
     verify_manifest_integrity,
+)
+from .b0_implementation_identity import (
+    TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256,
+    TRUSTED_LEGACY_MISMATCH_BINDINGS,
+    TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES,
 )
 from .contracts import ContractRuntime, ContractValidationError
 from .coordinator import SealedDocument
@@ -76,7 +81,31 @@ B0_SCHEMA_DEPENDENCIES = (
     "package-manifest.schema.json",
     "return-request.schema.json",
     "stage-completion.schema.json",
+    "authority-revision-finalization.schema.json",
+    "authority-revision-patch-plan.schema.json",
+    "authority-revision-semantic-review.schema.json",
 )
+
+# Behavioral B0 runtime boundary. ``runtime/__init__.py`` is only the
+# package's public-export aggregator: it defines none of the behavior invoked
+# by the B0 builder, validator, completion gate, canonicalizer, contract
+# runtime, coordinator, migration handoff, return router, or authority-revision
+# logic.
+# Excluding it prevents unrelated later-stage exports from retroactively
+# invalidating a sealed B0. Legacy packages may retain it as a stored extra;
+# the required subset below remains exact and fail-closed.
+B0_REQUIRED_RUNTIME_FILES = (
+    "baseline.py",
+    "b0_completion.py",
+    "b0_implementation_identity.py",
+    "canonical.py",
+    "conception_revision.py",
+    "contracts.py",
+    "coordinator.py",
+    "migration_handoff.py",
+    "return_routing.py",
+)
+B0_LEGACY_AGGREGATE_EXPORT_IDENTITIES = ("runtime/__init__.py",)
 
 
 class BaselineError(ValueError):
@@ -95,6 +124,23 @@ class BaselineBuild:
     baseline: dict[str, Any]
     manifest: dict[str, Any]
     validation: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class AuthorityRevisionMigrationBase:
+    """A hash-verified accepted B0 whose current authority came from migration."""
+
+    package_root: Path
+    baseline_path: Path
+    completion_path: Path
+    manifest_path: Path
+    baseline: dict[str, Any]
+    completion: dict[str, Any]
+    manifest: dict[str, Any]
+    migration: FinalizedMigrationHandoff
+    design_completions: dict[str, Path]
+    source_artifacts: dict[str, Path]
+    authority_artifacts: dict[str, Path]
 
 
 def _fail(code: str, message: str) -> None:
@@ -629,16 +675,7 @@ def _required_implementation_catalog(
     runtime_directory = Path(__file__).resolve().parent
     catalog = {
         f"runtime/{name}": runtime_directory / name
-        for name in (
-            "__init__.py",
-            "baseline.py",
-            "b0_completion.py",
-            "canonical.py",
-            "contracts.py",
-            "coordinator.py",
-            "migration_handoff.py",
-            "return_routing.py",
-        )
+        for name in B0_REQUIRED_RUNTIME_FILES
     }
     catalog["interview/validate_stage_completion.py"] = _INTERVIEW_VALIDATOR
     catalog["interview/stage-completion.schema.json"] = (
@@ -687,21 +724,439 @@ def _coverage_markdown(registry: Sequence[Mapping[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _authority_revision_material(
+    revision_root: Path,
+    finalization_path: Path,
+    *,
+    run_id: str,
+    runtime: ContractRuntime,
+) -> tuple[dict[str, Any], dict[str, Path], Path, Path]:
+    """Validate one fork and resolve its effective and current-state material."""
+
+    root = revision_root.resolve()
+    try:
+        finalization_path.resolve().relative_to(root)
+    except ValueError:
+        _fail("B0_AUTHORITY_REVISION_INVALID", "finalization is outside revision root")
+    finalization = _load_json(
+        finalization_path, code="B0_AUTHORITY_REVISION_INVALID"
+    )
+    bootstrap_state_path = root / "state" / "revision-000.json"
+    if not bootstrap_state_path.is_file():
+        _fail("B0_AUTHORITY_REVISION_INVALID", "bootstrap revision-000 is missing")
+    try:
+        from .conception_revision import validate_conception_revision_run
+
+        revision_context = validate_conception_revision_run(root, runtime=runtime)
+    except (ValueError, OSError) as error:
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    if revision_context.finalization.reference != artifact_reference(
+        finalization_path, root=root
+    ):
+        _fail("B0_AUTHORITY_REVISION_INVALID", "bootstrap finalization changed")
+    try:
+        runtime.validate(finalization, "authority-revision-finalization.schema.json")
+    except ContractValidationError as error:
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    if finalization.get("run_id") != run_id or finalization.get("author_approved_bytes") is not False:
+        _fail("B0_AUTHORITY_REVISION_INVALID", "run or author byte authority mismatch")
+    try:
+        patch_path = verify_artifact_reference(finalization["patch_plan"], root=root)
+        review_path = verify_artifact_reference(finalization["semantic_review"], root=root)
+        verify_artifact_reference(finalization["directive_binding"], root=root)
+        verify_artifact_reference(finalization["evidence_index"], root=root)
+        parent_run_path = verify_artifact_reference(
+            finalization["parent_run"], root=root
+        )
+        for reference in finalization["base_artifacts"] + finalization["effective_artifacts"]:
+            verify_artifact_reference(reference, root=root)
+    except ValueError as error:
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    patch = _load_json(patch_path, code="B0_AUTHORITY_REVISION_INVALID")
+    review = _load_json(review_path, code="B0_AUTHORITY_REVISION_INVALID")
+    try:
+        runtime.validate(patch, "authority-revision-patch-plan.schema.json")
+        runtime.validate(review, "authority-revision-semantic-review.schema.json")
+    except ContractValidationError as error:
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    expected_ids = [
+        "CAU-AUDIT-BOUNDARY",
+        "CAU-GLOBAL-SPINE",
+        "CAU-MAJOR-NODES",
+        "CHR-GU-HENG-MEMORY",
+        "CHR-ROLE-TIERS",
+        "NAR-FAIRNESS",
+        "NAR-POV-ARCHITECTURE",
+    ]
+    if (
+        review.get("candidate_material_sha256")
+        != patch.get("candidate_material_sha256")
+        or review.get("producer") != patch.get("producer")
+        or review.get("covered_ids") != expected_ids
+        or review.get("item_reviews")
+        != [
+            {"source_id": source_id, "verdict": "pass", "findings": []}
+            for source_id in expected_ids
+        ]
+        or review.get("verdict") != "pass"
+        or review.get("reviewer_produced_patch") is not False
+        or any(
+            review.get("reviewer", {}).get(field)
+            == review.get("producer", {}).get(field)
+            for field in ("actor_id", "session_id", "implementation_sha256")
+        )
+    ):
+        _fail("B0_AUTHORITY_REVISION_INVALID", "semantic review binding failed")
+    effective: dict[str, Path] = {}
+    for artifact in patch.get("artifacts", []):
+        domain = artifact.get("domain")
+        if domain in effective:
+            _fail("B0_AUTHORITY_REVISION_INVALID", f"duplicate domain {domain}")
+        try:
+            effective[str(domain)] = verify_artifact_reference(
+                artifact["effective_artifact"], root=root
+            )
+        except (KeyError, ValueError) as error:
+            _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    if set(effective) != {"I3", "I4", "I5"}:
+        _fail("B0_AUTHORITY_REVISION_INVALID", "effective projections must be I3-I5")
+    if (
+        [item["base_artifact"] for item in patch["artifacts"]]
+        != finalization["base_artifacts"]
+        or [item["effective_artifact"] for item in patch["artifacts"]]
+        != finalization["effective_artifacts"]
+    ):
+        _fail("B0_AUTHORITY_REVISION_INVALID", "finalization artifact lists changed")
+    bootstrap_state = _load_json(
+        bootstrap_state_path, code="B0_AUTHORITY_REVISION_INVALID"
+    )
+    try:
+        runtime.validate(bootstrap_state, "autonomous-run-state.schema.json")
+    except ContractValidationError as error:
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+    if (
+        bootstrap_state.get("run_id") != run_id
+        or bootstrap_state.get("source_kind") != "authority_revision"
+        or bootstrap_state.get("source_interview_state")
+        != finalization.get("parent_run")
+        or bootstrap_state.get("authority_revision")
+        != artifact_reference(finalization_path, root=root)
+    ):
+        _fail(
+            "B0_SOURCE_STATE_MISMATCH",
+            "authority bootstrap does not bind finalization.parent_run",
+        )
+    return finalization, effective, parent_run_path, bootstrap_state_path
+
+
+def _authority_revision_gate_state_chain(
+    revision_root: Path,
+    *,
+    input_gate: Mapping[str, Any],
+    finalization: Mapping[str, Any],
+    finalization_path: Path,
+    bootstrap_state_path: Path,
+    run_id: str,
+    runtime: ContractRuntime,
+    require_current_pointer: bool,
+) -> list[Path]:
+    """Resolve an authority B0 gate to its immutable bootstrap ancestry.
+
+    The first B0 gate is bound directly to revision-000.  A later append-only
+    B0 rebuild is issued from a descendant production state (for example after
+    an S1 -> B0 return), so requiring revision-000 literally makes the recovery
+    protocol impossible.  Descendants are accepted only when every state is a
+    canonical, contiguous hash chain rooted at that bootstrap and preserves the
+    same authority source/finalization identity.  At build time the gate must
+    also bind the production run's current-state pointer, preventing stale gates
+    from creating a new candidate.
+    """
+
+    root = revision_root.resolve()
+    gate_reference = input_gate.get("run_state")
+    if not isinstance(gate_reference, Mapping):
+        _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate run_state is missing")
+    gate_reference = dict(gate_reference)
+    try:
+        gate_state_path = verify_artifact_reference(gate_reference, root=root)
+    except ValueError as error:
+        _fail("B0_SOURCE_STATE_MISMATCH", str(error))
+    try:
+        relative = gate_state_path.relative_to(root).as_posix()
+    except ValueError:
+        _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate state is outside revision root")
+    match = re.fullmatch(r"state/revision-(\d{3,})\.json", relative)
+    if match is None:
+        _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate state path is not a revision")
+    gate_revision = int(match.group(1))
+    if relative != f"state/revision-{gate_revision:03d}.json":
+        _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate state path is noncanonical")
+
+    finalization_reference = artifact_reference(finalization_path, root=root)
+    bootstrap_reference = artifact_reference(bootstrap_state_path, root=root)
+    expected_source = finalization.get("parent_run")
+    paths: list[Path] = []
+    previous_reference: dict[str, str] | None = None
+    for revision in range(gate_revision + 1):
+        path = root / "state" / f"revision-{revision:03d}.json"
+        state = _load_json(path, code="B0_SOURCE_STATE_MISMATCH")
+        try:
+            runtime.validate(state, "autonomous-run-state.schema.json")
+        except ContractValidationError as error:
+            _fail("B0_SOURCE_STATE_MISMATCH", str(error))
+        reference = artifact_reference(path, root=root)
+        if canonical_sha256(state) != reference["sha256"]:
+            _fail("B0_SOURCE_STATE_MISMATCH", f"state revision-{revision:03d} is noncanonical")
+        if (
+            state.get("revision") != revision
+            or state.get("previous_state") != previous_reference
+            or state.get("run_id") != run_id
+            or state.get("source_kind") != "authority_revision"
+            or state.get("source_interview_state") != expected_source
+            or state.get("authority_revision") != finalization_reference
+        ):
+            _fail(
+                "B0_SOURCE_STATE_MISMATCH",
+                f"authority state revision-{revision:03d} changed bootstrap identity",
+            )
+        if revision == 0 and reference != bootstrap_reference:
+            _fail("B0_SOURCE_STATE_MISMATCH", "authority bootstrap reference changed")
+        previous_reference = reference
+        paths.append(path)
+    if previous_reference != gate_reference:
+        _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate state does not close the revision chain")
+
+    if require_current_pointer:
+        pointer = _load_json(
+            root / "orchestration" / "current-state.json",
+            code="B0_SOURCE_STATE_MISMATCH",
+        )
+        if pointer != {"schema_version": "2.0", "state": gate_reference}:
+            _fail("B0_SOURCE_STATE_MISMATCH", "B0 gate does not bind current state")
+    return paths
+
+
+def _authority_revision_migration_base(
+    package_root: Path, *, runtime: ContractRuntime
+) -> AuthorityRevisionMigrationBase:
+    """Validate an accepted migration B0, including legacy baselines.
+
+    Early B0 schema-2 packages did not persist ``source_kind``.  Presence of a
+    valid ``migration_finalization`` is the only supported compatibility
+    inference; absence or mixed current-source evidence fails closed.
+    """
+
+    root = package_root.resolve()
+    baseline_path = root / "author-control-baseline.json"
+    completion_path = root / "stage-completion.json"
+    manifest_path = root / "package-manifest.json"
+    validation_path = root / "validation.json"
+    baseline = _load_json(baseline_path, code="B0_AUTHORITY_PARENT_INVALID")
+    completion = _load_json(completion_path, code="B0_AUTHORITY_PARENT_INVALID")
+    manifest = _load_json(manifest_path, code="B0_AUTHORITY_PARENT_INVALID")
+    validation = _load_json(validation_path, code="B0_AUTHORITY_PARENT_INVALID")
+    for path, document in (
+        (baseline_path, baseline),
+        (completion_path, completion),
+        (manifest_path, manifest),
+        (validation_path, validation),
+    ):
+        if path.read_bytes() != canonical_json(document).encode("utf-8"):
+            _fail("B0_AUTHORITY_PARENT_INVALID", f"noncanonical {path.name}")
+    completion_manifest = completion.get("manifest", {})
+    completion_validation = completion.get("validation", {})
+    completion_manifest_path = completion_manifest.get("path")
+    completion_validation_path = completion_validation.get("path")
+    try:
+        runtime.validate(manifest, "package-manifest.schema.json")
+        runtime.validate(completion, "stage-completion.schema.json")
+        verify_manifest_integrity(manifest, root=root)
+    except (ContractValidationError, ValueError) as error:
+        _fail("B0_AUTHORITY_PARENT_INVALID", f"manifest: {error}")
+    if (
+        baseline.get("schema_version") != "2.0"
+        or baseline.get("stage") != "B0"
+        or baseline.get("status") != "ready"
+        or baseline.get("source_kind", "compatibility_migration")
+        != "compatibility_migration"
+        or "migration_finalization" not in baseline
+        or "authority_revision_finalization" in baseline
+        or validation.get("verdict") != "ready"
+        or manifest.get("stage") != "B0"
+        or manifest.get("run_id") != baseline.get("run_id")
+        or manifest.get("artifact_roles", {}).get("baseline")
+        != artifact_reference(baseline_path, root=root)
+        or manifest.get("validation") != artifact_reference(validation_path, root=root)
+        or completion.get("stage") != "B0"
+        or completion.get("status") != "ready"
+        or completion.get("run_id") != baseline.get("run_id")
+        or completion.get("source_kind", "compatibility_migration")
+        != "compatibility_migration"
+        or not isinstance(completion_manifest_path, str)
+        or "\\" in completion_manifest_path
+        or PurePosixPath(completion_manifest_path).is_absolute()
+        or ".." in PurePosixPath(completion_manifest_path).parts
+        or PurePosixPath(completion_manifest_path).name != manifest_path.name
+        or completion_manifest.get("sha256") != sha256_file(manifest_path)
+        or not isinstance(completion_validation_path, str)
+        or "\\" in completion_validation_path
+        or PurePosixPath(completion_validation_path).is_absolute()
+        or ".." in PurePosixPath(completion_validation_path).parts
+        or PurePosixPath(completion_validation_path).name != validation_path.name
+        or completion_validation.get("sha256") != sha256_file(validation_path)
+    ):
+        _fail("B0_AUTHORITY_PARENT_INVALID", "baseline/completion/manifest chain")
+    try:
+        migration_path = verify_artifact_reference(
+            baseline["migration_finalization"], root=root
+        )
+        migration = validate_finalized_migration_handoff(migration_path)
+    except (KeyError, ValueError) as error:
+        _fail("B0_AUTHORITY_PARENT_INVALID", f"migration finalization: {error}")
+    if baseline.get("source_run_id") != migration.source_run_id:
+        _fail("B0_AUTHORITY_PARENT_INVALID", "migration source_run_id changed")
+    entries = baseline.get("design_artifacts")
+    if not isinstance(entries, list) or len(entries) != len(DOMAINS):
+        _fail("B0_AUTHORITY_PARENT_INVALID", "design artifact count")
+    by_domain = {
+        entry.get("domain"): entry for entry in entries if isinstance(entry, Mapping)
+    }
+    if set(by_domain) != set(DOMAINS) or len(by_domain) != len(entries):
+        _fail("B0_AUTHORITY_PARENT_INVALID", "design domains")
+    try:
+        design_completions = {
+            domain: verify_artifact_reference(by_domain[domain]["completion"], root=root)
+            for domain in DOMAINS
+        }
+        source_artifacts = {
+            domain: verify_artifact_reference(
+                by_domain[domain].get("source_artifact", by_domain[domain]["artifact"]),
+                root=root,
+            )
+            for domain in DOMAINS
+        }
+        authority_artifacts = {
+            domain: verify_artifact_reference(by_domain[domain]["artifact"], root=root)
+            for domain in DOMAINS
+        }
+        for field in (
+            "run_state", "v1_completion", "v2_completion",
+            "v2_author_approval", "fact_dependency_register",
+        ):
+            verify_artifact_reference(baseline[field], root=root)
+    except (KeyError, ValueError) as error:
+        _fail("B0_AUTHORITY_PARENT_INVALID", f"baseline reference: {error}")
+    registry = baseline.get("control_registry")
+    if not isinstance(registry, list):
+        _fail("B0_AUTHORITY_PARENT_INVALID", "control registry")
+    expected_registry: list[dict[str, Any]] = []
+    for domain in DOMAINS:
+        controls = extract_controls(authority_artifacts[domain], domain)
+        if by_domain[domain].get("control_ids") != [item["id"] for item in controls]:
+            _fail("B0_AUTHORITY_PARENT_INVALID", f"{domain} control ids")
+        artifact_ref = copy.deepcopy(by_domain[domain]["artifact"])
+        expected_registry.extend(
+            {
+                "id": item["id"],
+                "domain": domain,
+                "hardness": item["hardness"],
+                "artifact": artifact_ref,
+                "heading": item["heading"],
+                "value_sha256": canonical_sha256(item["value"]),
+            }
+            for item in controls
+        )
+    expected_registry.sort(key=lambda item: item["id"])
+    if registry != expected_registry:
+        _fail("B0_AUTHORITY_PARENT_INVALID", "control registry changed")
+    if (
+        design_completions != migration.design_completions
+        or source_artifacts != migration.source_artifacts
+        or authority_artifacts != migration.control_projections
+        or verify_artifact_reference(baseline["run_state"], root=root)
+        != migration.source_interview_state
+        or verify_artifact_reference(baseline["v1_completion"], root=root)
+        != migration.v1_completion
+        or verify_artifact_reference(baseline["v2_completion"], root=root)
+        != migration.v2_completion
+        or verify_artifact_reference(baseline["v2_author_approval"], root=root)
+        != migration.v2_author_approval
+        or verify_artifact_reference(baseline["fact_dependency_register"], root=root)
+        != migration.fact_dependency_register
+    ):
+        _fail("B0_AUTHORITY_PARENT_INVALID", "migration projection changed")
+    return AuthorityRevisionMigrationBase(
+        package_root=root,
+        baseline_path=baseline_path,
+        completion_path=completion_path,
+        manifest_path=manifest_path,
+        baseline=baseline,
+        completion=completion,
+        manifest=manifest,
+        migration=migration,
+        design_completions=design_completions,
+        source_artifacts=source_artifacts,
+        authority_artifacts=authority_artifacts,
+    )
+
+
+def _assert_revision_over_migration_base(
+    base: AuthorityRevisionMigrationBase,
+    *,
+    effective_artifacts: Mapping[str, Path],
+) -> None:
+    changed: set[str] = set()
+    for domain in DOMAINS:
+        before = extract_controls(base.authority_artifacts[domain], domain)
+        after = (
+            extract_controls(effective_artifacts[domain], domain)
+            if domain in effective_artifacts
+            else before
+        )
+        if len(before) != len(after):
+            _fail("B0_AUTHORITY_PARENT_DRIFT", f"{domain} control count")
+        for old, new in zip(before, after):
+            if (
+                old["id"] != new["id"]
+                or old["hardness"] != new["hardness"]
+                or old["heading"] != new["heading"]
+            ):
+                _fail("B0_AUTHORITY_PARENT_DRIFT", old["id"])
+            if old != new:
+                if old["id"] not in {
+                    "CAU-AUDIT-BOUNDARY", "CAU-GLOBAL-SPINE", "CAU-MAJOR-NODES",
+                    "CHR-GU-HENG-MEMORY", "CHR-ROLE-TIERS",
+                    "NAR-FAIRNESS", "NAR-POV-ARCHITECTURE",
+                }:
+                    _fail("B0_AUTHORITY_PARENT_DRIFT", old["id"])
+                changed.add(old["id"])
+    if changed != {
+        "CAU-AUDIT-BOUNDARY", "CAU-GLOBAL-SPINE", "CAU-MAJOR-NODES",
+        "CHR-GU-HENG-MEMORY", "CHR-ROLE-TIERS",
+        "NAR-FAIRNESS", "NAR-POV-ARCHITECTURE",
+    }:
+        _fail("B0_AUTHORITY_PARENT_DRIFT", f"changed controls: {sorted(changed)}")
+
+
 def build_baseline_package(
     package_root: str | Path,
     *,
     run_id: str,
     input_gate: SealedDocument,
-    source_root: str | Path,
-    source_interview_state: str | Path,
-    design_completions: Mapping[str, str | Path],
-    v1_completion: str | Path,
-    v2_completion: str | Path,
-    v2_author_approval: str | Path,
-    fact_dependency_register: str | Path,
+    source_root: str | Path | None = None,
+    source_interview_state: str | Path | None = None,
+    design_completions: Mapping[str, str | Path] | None = None,
+    v1_completion: str | Path | None = None,
+    v2_completion: str | Path | None = None,
+    v2_author_approval: str | Path | None = None,
+    fact_dependency_register: str | Path | None = None,
     implementation_files: Sequence[str | Path] = (),
     runtime: ContractRuntime | None = None,
     migration_handoff: FinalizedMigrationHandoff | None = None,
+    authority_revision_root: str | Path | None = None,
+    authority_revision_finalization: str | Path | None = None,
+    authority_source_run_id: str | None = None,
+    authority_parent_b0_root: str | Path | None = None,
 ) -> BaselineBuild:
     """Build and atomically commit one immutable, ready B0 package."""
 
@@ -726,6 +1181,19 @@ def build_baseline_package(
         _fail("B0_INPUT_GATE_INVALID", "gate reference does not bind gate body")
 
     verified_migration: FinalizedMigrationHandoff | None = None
+    verified_revision: dict[str, Any] | None = None
+    revision_migration_base: AuthorityRevisionMigrationBase | None = None
+    revision_root: Path | None = None
+    revision_authority_artifacts: dict[str, Path] = {}
+    revision_parent_state_path: Path | None = None
+    revision_bootstrap_state_path: Path | None = None
+    revision_gate_state_paths: list[Path] = []
+    if migration_handoff is not None and authority_revision_root is not None:
+        _fail("B0_SOURCE_KIND_CONFLICT", "migration and authority revision are exclusive")
+    if (authority_revision_root is None) != (authority_revision_finalization is None):
+        _fail("B0_AUTHORITY_REVISION_INVALID", "root and finalization are both required")
+    if authority_parent_b0_root is not None and authority_revision_root is None:
+        _fail("B0_SOURCE_KIND_CONFLICT", "authority parent requires authority revision")
     source_run_id = run_id
     if migration_handoff is not None:
         verified_migration = validate_finalized_migration_handoff(
@@ -737,28 +1205,114 @@ def build_baseline_package(
                 "resolved migration handoff changed after caller validation",
             )
         source_run_id = verified_migration.source_run_id
-
-    root = Path(source_root).resolve()
-    state_path = _require_source(
-        source_interview_state, root, label="source interview state"
-    )
-    if set(design_completions) != set(DOMAINS):
-        _fail("B0_SOURCE_CHAIN_MISMATCH", "design_completions must be exactly I0-I5")
-    completion_paths = {
-        domain: _require_source(
-            design_completions[domain], root, label=f"{domain} completion"
+    elif authority_revision_root is not None:
+        if not isinstance(authority_source_run_id, str) or not authority_source_run_id:
+            _fail("B0_AUTHORITY_REVISION_INVALID", "authority_source_run_id is required")
+        source_run_id = authority_source_run_id
+        revision_root = Path(authority_revision_root).resolve()
+        revision_finalization_path = Path(authority_revision_finalization).resolve()
+        (
+            verified_revision,
+            revision_authority_artifacts,
+            revision_parent_state_path,
+            revision_bootstrap_state_path,
+        ) = _authority_revision_material(
+            revision_root,
+            revision_finalization_path,
+            run_id=run_id,
+            runtime=contract_runtime,
         )
-        for domain in DOMAINS
-    }
-    v1_path = _require_source(v1_completion, root, label="V1 completion")
-    v2_path = _require_source(v2_completion, root, label="V2 completion")
-    approval_path = _require_source(
-        v2_author_approval, root, label="V2 author approval"
-    )
-    register_path = _require_source(
-        fact_dependency_register, root, label="fact dependency register"
-    )
-    if verified_migration is None:
+        revision_gate_state_paths = _authority_revision_gate_state_chain(
+            revision_root,
+            input_gate=input_gate.data,
+            finalization=verified_revision,
+            finalization_path=revision_finalization_path,
+            bootstrap_state_path=revision_bootstrap_state_path,
+            run_id=run_id,
+            runtime=contract_runtime,
+            require_current_pointer=True,
+        )
+
+    if authority_parent_b0_root is not None:
+        revision_migration_base = _authority_revision_migration_base(
+            Path(authority_parent_b0_root), runtime=contract_runtime
+        )
+        if source_root is not None or any(
+            value is not None
+            for value in (
+                source_interview_state, design_completions, v1_completion,
+                v2_completion, v2_author_approval, fact_dependency_register,
+            )
+        ):
+            _fail(
+                "B0_SOURCE_KIND_CONFLICT",
+                "migration ancestry cannot be mixed with native source arguments",
+            )
+        if authority_source_run_id != revision_migration_base.baseline["source_run_id"]:
+            _fail("B0_AUTHORITY_PARENT_INVALID", "authority source_run_id mismatch")
+        source_run_id = revision_migration_base.baseline["source_run_id"]
+        _assert_revision_over_migration_base(
+            revision_migration_base,
+            effective_artifacts=revision_authority_artifacts,
+        )
+
+    if revision_migration_base is not None:
+        root = revision_migration_base.package_root
+        parent_baseline = revision_migration_base.baseline
+        state_path = verify_artifact_reference(parent_baseline["run_state"], root=root)
+        completion_paths = revision_migration_base.design_completions
+        v1_path = verify_artifact_reference(parent_baseline["v1_completion"], root=root)
+        v2_path = verify_artifact_reference(parent_baseline["v2_completion"], root=root)
+        approval_path = verify_artifact_reference(
+            parent_baseline["v2_author_approval"], root=root
+        )
+        register_path = verify_artifact_reference(
+            parent_baseline["fact_dependency_register"], root=root
+        )
+        artifacts = revision_migration_base.source_artifacts
+        authority_artifacts = {
+            **revision_migration_base.authority_artifacts,
+            **revision_authority_artifacts,
+        }
+        raw_facts, _ = _fact_dependencies(
+            _load_json(register_path, code="B0_FACT_REGISTER_INVALID"),
+            register_path=register_path,
+            source_root=root,
+        )
+        source_paths = {
+            path for path in root.rglob("*") if path.is_file()
+        }
+    else:
+        if any(
+            value is None
+            for value in (
+                source_root, source_interview_state, design_completions,
+                v1_completion, v2_completion, v2_author_approval,
+                fact_dependency_register,
+            )
+        ):
+            _fail("B0_SOURCE_CHAIN_MISMATCH", "complete source chain is required")
+        root = Path(source_root).resolve()
+        state_path = _require_source(
+            source_interview_state, root, label="source interview state"
+        )
+        if not isinstance(design_completions, Mapping) or set(design_completions) != set(DOMAINS):
+            _fail("B0_SOURCE_CHAIN_MISMATCH", "design_completions must be exactly I0-I5")
+        completion_paths = {
+            domain: _require_source(
+                design_completions[domain], root, label=f"{domain} completion"
+            )
+            for domain in DOMAINS
+        }
+        v1_path = _require_source(v1_completion, root, label="V1 completion")
+        v2_path = _require_source(v2_completion, root, label="V2 completion")
+        approval_path = _require_source(
+            v2_author_approval, root, label="V2 author approval"
+        )
+        register_path = _require_source(
+            fact_dependency_register, root, label="fact dependency register"
+        )
+    if revision_migration_base is None and verified_migration is None:
         artifacts, authority_artifacts, source_paths, raw_facts = _validate_source_chain(
             run_id=source_run_id,
             source_root=root,
@@ -769,7 +1323,12 @@ def build_baseline_package(
             approval_path=approval_path,
             fact_register_path=register_path,
         )
-    else:
+        if verified_revision is not None:
+            authority_artifacts = {
+                **authority_artifacts,
+                **revision_authority_artifacts,
+            }
+    elif verified_migration is not None:
         if verified_migration.package_root != root:
             _fail(
                 "B0_MIGRATION_HANDOFF_STALE",
@@ -833,6 +1392,40 @@ def build_baseline_package(
     staging.mkdir()
     try:
         _copy_sources(source_paths, root, staging)
+        if verified_revision is not None and revision_root is not None:
+            revision_source = revision_root / "authority-revision"
+            revision_destination = staging / "authority-revision"
+            if not revision_source.is_dir():
+                _fail("B0_AUTHORITY_REVISION_INVALID", str(revision_source))
+            shutil.copytree(revision_source, revision_destination)
+            if revision_bootstrap_state_path is None:
+                _fail("B0_AUTHORITY_REVISION_INVALID", "bootstrap state unresolved")
+            if not revision_gate_state_paths:
+                _fail("B0_AUTHORITY_REVISION_INVALID", "gate state chain unresolved")
+            for source_state in revision_gate_state_paths:
+                state_destination = staging / source_state.relative_to(revision_root)
+                state_destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source_state, state_destination)
+                if sha256_file(source_state) != sha256_file(state_destination):
+                    _fail("B0_COPY_MISMATCH", f"authority state changed: {source_state.name}")
+            pointer_source = (
+                revision_root
+                / "orchestration"
+                / "authority-revision"
+                / "current-bootstrap.json"
+            )
+            if not pointer_source.is_file():
+                _fail("B0_AUTHORITY_REVISION_INVALID", "bootstrap pointer missing")
+            pointer_destination = (
+                staging
+                / "orchestration"
+                / "authority-revision"
+                / "current-bootstrap.json"
+            )
+            pointer_destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(pointer_source, pointer_destination)
+            if sha256_file(pointer_source) != sha256_file(pointer_destination):
+                _fail("B0_COPY_MISMATCH", "authority bootstrap pointer changed")
         implementation_refs: list[dict[str, str]] = []
         implementation_records: list[dict[str, Any]] = []
         for identity, source in sorted(implementation_catalog.items()):
@@ -848,7 +1441,25 @@ def build_baseline_package(
         design_entries: list[dict[str, Any]] = []
         registry: list[dict[str, Any]] = []
         for domain in DOMAINS:
-            artifact_ref = _staged_reference(authority_artifacts[domain], root, staging)
+            if verified_revision is not None and domain in revision_authority_artifacts:
+                artifact_ref = artifact_reference(
+                    staging
+                    / Path(
+                        *PurePosixPath(
+                            next(
+                                item["effective_artifact"]["path"]
+                                for item in _load_json(
+                                    staging / "authority-revision" / "patch-plan.json",
+                                    code="B0_AUTHORITY_REVISION_INVALID",
+                                )["artifacts"]
+                                if item["domain"] == domain
+                            )
+                        ).parts
+                    ),
+                    root=staging,
+                )
+            else:
+                artifact_ref = _staged_reference(authority_artifacts[domain], root, staging)
             source_artifact_ref = _staged_reference(artifacts[domain], root, staging)
             controls = extracted[domain]
             design_entries.append(
@@ -880,7 +1491,26 @@ def build_baseline_package(
             "run_id": run_id,
             "source_run_id": source_run_id,
             "status": "ready",
-            "run_state": _staged_reference(state_path, root, staging),
+            "source_kind": (
+                "authority_revision"
+                if verified_revision is not None
+                else (
+                    "compatibility_migration"
+                    if verified_migration is not None
+                    else "native"
+                )
+            ),
+            "run_state": (
+                artifact_reference(
+                    staging
+                    / Path(
+                        *PurePosixPath(verified_revision["parent_run"]["path"]).parts
+                    ),
+                    root=staging,
+                )
+                if verified_revision is not None
+                else _staged_reference(state_path, root, staging)
+            ),
             "design_artifacts": design_entries,
             "v1_completion": _staged_reference(v1_path, root, staging),
             "v2_completion": _staged_reference(v2_path, root, staging),
@@ -899,6 +1529,39 @@ def build_baseline_package(
         if verified_migration is not None:
             baseline["migration_finalization"] = _staged_reference(
                 verified_migration.finalization_path, root, staging
+            )
+        if verified_revision is not None:
+            baseline["authority_revision_finalization"] = artifact_reference(
+                staging / "authority-revision" / "finalization.json", root=staging
+            )
+            baseline["base_design_artifacts"] = copy.deepcopy(
+                verified_revision["base_artifacts"]
+            )
+            baseline["effective_design_artifacts"] = copy.deepcopy(
+                verified_revision["effective_artifacts"]
+            )
+            baseline["base_source_kind"] = (
+                "compatibility_migration"
+                if revision_migration_base is not None
+                else "native"
+            )
+        if revision_migration_base is not None:
+            baseline["base_migration_finalization"] = _staged_reference(
+                verify_artifact_reference(
+                    revision_migration_base.baseline["migration_finalization"],
+                    root=revision_migration_base.package_root,
+                ),
+                root,
+                staging,
+            )
+            baseline["parent_b0_baseline"] = _staged_reference(
+                revision_migration_base.baseline_path, root, staging
+            )
+            baseline["parent_b0_completion"] = _staged_reference(
+                revision_migration_base.completion_path, root, staging
+            )
+            baseline["parent_b0_manifest"] = _staged_reference(
+                revision_migration_base.manifest_path, root, staging
             )
         try:
             contract_runtime.validate(
@@ -955,6 +1618,25 @@ def build_baseline_package(
             "validation": by_path["validation.json"],
             "implementation": implementation_refs,
         }
+        if verified_revision is not None:
+            manifest["source_kind"] = "authority_revision"
+            manifest["authority_revision"] = copy.deepcopy(
+                baseline["authority_revision_finalization"]
+            )
+            manifest["base_source_kind"] = baseline["base_source_kind"]
+        if revision_migration_base is not None:
+            manifest["base_migration_finalization"] = copy.deepcopy(
+                baseline["base_migration_finalization"]
+            )
+            manifest["parent_b0_baseline"] = copy.deepcopy(
+                baseline["parent_b0_baseline"]
+            )
+            manifest["parent_b0_completion"] = copy.deepcopy(
+                baseline["parent_b0_completion"]
+            )
+            manifest["parent_b0_manifest"] = copy.deepcopy(
+                baseline["parent_b0_manifest"]
+            )
         try:
             contract_runtime.validate(manifest, "package-manifest.schema.json")
             verify_manifest_integrity(manifest, root=staging)
@@ -1011,6 +1693,47 @@ def build_baseline_from_handoff(
     )
 
 
+def build_baseline_from_authority_revision(
+    package_root: str | Path,
+    *,
+    authority_revision_finalization: str | Path,
+    authority_source_run_id: str,
+    authority_parent_b0_root: str | Path | None = None,
+    **arguments: Any,
+) -> BaselineBuild:
+    """Build B0 from a completed authority-revision fork.
+
+    A native base supplies the old source chain through ``arguments``.  A
+    finalized-migration base supplies only ``authority_parent_b0_root``; mixing
+    those two ancestry modes is rejected while the new current source remains
+    uniquely ``authority_revision``.
+    """
+
+    finalization = Path(authority_revision_finalization).resolve()
+    if (
+        finalization.name != "finalization.json"
+        or finalization.parent.name != "authority-revision"
+    ):
+        _fail("B0_AUTHORITY_REVISION_INVALID", str(finalization))
+    forbidden = {
+        "migration_handoff",
+        "authority_revision_root",
+        "authority_revision_finalization",
+        "authority_source_run_id",
+        "authority_parent_b0_root",
+    } & set(arguments)
+    if forbidden:
+        _fail("B0_SOURCE_KIND_CONFLICT", str(sorted(forbidden)))
+    return build_baseline_package(
+        package_root,
+        authority_revision_root=finalization.parent.parent,
+        authority_revision_finalization=finalization,
+        authority_source_run_id=authority_source_run_id,
+        authority_parent_b0_root=authority_parent_b0_root,
+        **arguments,
+    )
+
+
 def validate_baseline_package(
     package_root: str | Path,
     *,
@@ -1039,10 +1762,31 @@ def validate_baseline_package(
         root / "author-control-baseline.json", root=root
     ):
         _fail("B0_MANIFEST_INVALID", "manifest baseline role does not bind baseline")
+    if baseline.get("source_kind") == "authority_revision":
+        expected_manifest_lineage = {
+            "source_kind": "authority_revision",
+            "authority_revision": baseline["authority_revision_finalization"],
+            "base_source_kind": baseline["base_source_kind"],
+        }
+        for field in (
+            "base_migration_finalization", "parent_b0_baseline",
+            "parent_b0_completion", "parent_b0_manifest",
+        ):
+            if field in baseline:
+                expected_manifest_lineage[field] = baseline[field]
+        if any(
+            manifest.get(field) != value
+            for field, value in expected_manifest_lineage.items()
+        ):
+            _fail("B0_MANIFEST_INVALID", "authority ancestry changed")
 
     migration_reference = baseline.get("migration_finalization")
+    revision_reference = baseline.get("authority_revision_finalization")
     verified_migration: FinalizedMigrationHandoff | None = None
-    if migration_reference is not None:
+    authority_parent: AuthorityRevisionMigrationBase | None = None
+    if baseline.get("source_kind") == "compatibility_migration":
+        if migration_reference is None or revision_reference is not None:
+            _fail("B0_SOURCE_KIND_CONFLICT", "migration evidence mismatch")
         try:
             migration_path = verify_artifact_reference(migration_reference, root=root)
         except ValueError as error:
@@ -1050,6 +1794,125 @@ def validate_baseline_package(
         verified_migration = validate_finalized_migration_handoff(migration_path)
         if verified_migration.source_run_id != baseline["source_run_id"]:
             _fail("B0_MIGRATION_SOURCE_MISMATCH", "source_run_id changed")
+    elif baseline.get("source_kind") == "authority_revision":
+        if revision_reference is None or migration_reference is not None:
+            _fail("B0_SOURCE_KIND_CONFLICT", "authority revision evidence mismatch")
+        try:
+            revision_path = verify_artifact_reference(revision_reference, root=root)
+        except ValueError as error:
+            _fail("B0_AUTHORITY_REVISION_INVALID", str(error))
+        (
+            finalization,
+            effective,
+            revision_parent_state_path,
+            revision_bootstrap_state_path,
+        ) = _authority_revision_material(
+            root,
+            revision_path,
+            run_id=baseline["run_id"],
+            runtime=contract_runtime,
+        )
+        if baseline.get("run_state") != artifact_reference(
+            revision_parent_state_path, root=root
+        ):
+            _fail(
+                "B0_SOURCE_STATE_MISMATCH",
+                "authority baseline does not bind finalization.parent_run",
+            )
+        authority_input_gate = _load_json(
+            root / "input-gate.json", code="B0_INPUT_GATE_INVALID"
+        )
+        _authority_revision_gate_state_chain(
+            root,
+            input_gate=authority_input_gate,
+            finalization=finalization,
+            finalization_path=revision_path,
+            bootstrap_state_path=revision_bootstrap_state_path,
+            run_id=baseline["run_id"],
+            runtime=contract_runtime,
+            require_current_pointer=False,
+        )
+        if (
+            baseline.get("base_design_artifacts") != finalization["base_artifacts"]
+            or baseline.get("effective_design_artifacts") != finalization["effective_artifacts"]
+        ):
+            _fail("B0_AUTHORITY_REVISION_INVALID", "base/effective lineage changed")
+        entries = {entry["domain"]: entry for entry in baseline["design_artifacts"]}
+        for domain, path in effective.items():
+            if verify_artifact_reference(entries[domain]["artifact"], root=root) != path:
+                _fail("B0_AUTHORITY_REVISION_INVALID", f"{domain} effective artifact changed")
+        base_source_kind = baseline.get("base_source_kind")
+        ancestry_fields = (
+            "base_migration_finalization", "parent_b0_baseline",
+            "parent_b0_completion", "parent_b0_manifest",
+        )
+        if base_source_kind == "native":
+            if any(field in baseline for field in ancestry_fields):
+                _fail("B0_SOURCE_KIND_CONFLICT", "native ancestry has migration evidence")
+        elif base_source_kind == "compatibility_migration":
+            try:
+                parent_baseline_path = verify_artifact_reference(
+                    baseline["parent_b0_baseline"], root=root
+                )
+                authority_parent = _authority_revision_migration_base(
+                    parent_baseline_path.parent, runtime=contract_runtime
+                )
+                if (
+                    artifact_reference(authority_parent.completion_path, root=root)
+                    != baseline["parent_b0_completion"]
+                    or artifact_reference(authority_parent.manifest_path, root=root)
+                    != baseline["parent_b0_manifest"]
+                    or artifact_reference(
+                        authority_parent.migration.finalization_path, root=root
+                    ) != baseline["base_migration_finalization"]
+                ):
+                    _fail("B0_AUTHORITY_PARENT_INVALID", "ancestry reference changed")
+            except (KeyError, ValueError) as error:
+                _fail("B0_AUTHORITY_PARENT_INVALID", str(error))
+            _assert_revision_over_migration_base(
+                authority_parent, effective_artifacts=effective
+            )
+            parent_entries = {
+                entry["domain"]: entry
+                for entry in authority_parent.baseline["design_artifacts"]
+            }
+            for domain in DOMAINS:
+                if (
+                    entries[domain]["completion"]
+                    != artifact_reference(
+                        authority_parent.design_completions[domain], root=root
+                    )
+                    or entries[domain].get("source_artifact")
+                    != artifact_reference(
+                        authority_parent.source_artifacts[domain], root=root
+                    )
+                    or (
+                        domain in {"I0", "I1", "I2"}
+                        and entries[domain]["artifact"]
+                        != artifact_reference(
+                            authority_parent.authority_artifacts[domain], root=root
+                        )
+                    )
+                    or entries[domain]["control_ids"]
+                    != parent_entries[domain]["control_ids"]
+                ):
+                    _fail("B0_AUTHORITY_PARENT_DRIFT", domain)
+            parent_top = authority_parent.baseline
+            for field in (
+                "v1_completion", "v2_completion",
+                "v2_author_approval", "fact_dependency_register",
+            ):
+                parent_path = verify_artifact_reference(
+                    parent_top[field], root=authority_parent.package_root
+                )
+                if baseline[field] != artifact_reference(parent_path, root=root):
+                    _fail("B0_AUTHORITY_PARENT_DRIFT", field)
+            if baseline.get("source_run_id") != parent_top.get("source_run_id"):
+                _fail("B0_AUTHORITY_PARENT_DRIFT", "source_run_id")
+        else:
+            _fail("B0_SOURCE_KIND_CONFLICT", f"base source {base_source_kind!r}")
+    elif baseline.get("source_kind") != "native":
+        _fail("B0_SOURCE_KIND_CONFLICT", str(baseline.get("source_kind")))
     elif baseline["source_run_id"] != baseline["run_id"]:
         _fail(
             "B0_MIGRATION_HANDOFF_MISSING",
@@ -1096,13 +1959,30 @@ def validate_baseline_package(
     register_path = verify_artifact_reference(
         baseline["fact_dependency_register"], root=root
     )
-    if verified_migration is None:
+    if verified_migration is None and authority_parent is None:
+        source_chain_state = verify_artifact_reference(
+            baseline["run_state"], root=root
+        )
+        if baseline.get("source_kind") == "authority_revision":
+            base_v2_completion = verify_artifact_reference(
+                baseline["v2_completion"], root=root
+            )
+            base_v2_model = _load_json(
+                base_v2_completion, code="B0_SOURCE_COMPLETION_INVALID"
+            )
+            try:
+                source_chain_state = _resolve_source_reference(
+                    base_v2_model["run_state"],
+                    owner_path=base_v2_completion,
+                    source_root=root,
+                    label="V2 base run state",
+                )
+            except (KeyError, ValueError) as error:
+                _fail("B0_SOURCE_STATE_MISMATCH", str(error))
         _, _, _, register_facts = _validate_source_chain(
             run_id=source_run_id,
             source_root=root,
-            source_interview_state=verify_artifact_reference(
-                baseline["run_state"], root=root
-            ),
+            source_interview_state=source_chain_state,
             design_completions=resolved_design_completions,
             v1_completion_path=verify_artifact_reference(
                 baseline["v1_completion"], root=root
@@ -1150,20 +2030,69 @@ def validate_baseline_package(
         ):
             _fail("B0_IMPLEMENTATION_STALE", "implementation catalog is invalid")
         stored_by_identity[record["identity"]] = record["artifact"]
+    stored_binding_digest = canonical_sha256(
+        {
+            identity: reference.get("sha256")
+            for identity, reference in sorted(stored_by_identity.items())
+        }
+    )
+    trusted_legacy = (
+        stored_binding_digest
+        in TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256
+    )
     required_catalog = _required_implementation_catalog(contract_runtime)
-    if not set(required_catalog).issubset(stored_by_identity):
+    missing_required = set(required_catalog) - set(stored_by_identity)
+    if missing_required and not (
+        trusted_legacy
+        and missing_required == set(TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES)
+    ):
         _fail("B0_IMPLEMENTATION_STALE", "required implementation binding is missing")
+    current_mismatches: list[str] = []
     for identity, current_path in required_catalog.items():
+        if identity in missing_required:
+            continue
         copied_reference = stored_by_identity[identity]
         try:
             verify_artifact_reference(copied_reference, root=root)
         except ValueError as error:
             _fail("B0_IMPLEMENTATION_STALE", f"{identity} binding failed: {error}")
         if copied_reference["sha256"] != sha256_file(current_path):
+            current_mismatches.append(identity)
+    if trusted_legacy:
+        expected_mismatches = set(TRUSTED_LEGACY_MISMATCH_BINDINGS)
+        if set(current_mismatches) != expected_mismatches:
             _fail(
                 "B0_IMPLEMENTATION_STALE",
-                f"current {identity} differs from the package-bound implementation",
+                "trusted legacy implementation migration does not match",
             )
+        for identity, binding in TRUSTED_LEGACY_MISMATCH_BINDINGS.items():
+            if (
+                stored_by_identity[identity].get("sha256")
+                != binding["stored_sha256"]
+                or sha256_file(required_catalog[identity])
+                != binding["approved_current_sha256"]
+            ):
+                _fail(
+                    "B0_IMPLEMENTATION_STALE",
+                    f"trusted legacy {identity} migration differs",
+                )
+        # A trusted historical digest is meaningful only if every bound copy,
+        # including its aggregate export, still exists with the sealed bytes.
+        for identity, copied_reference in stored_by_identity.items():
+            try:
+                verify_artifact_reference(copied_reference, root=root)
+            except ValueError as error:
+                _fail(
+                    "B0_IMPLEMENTATION_STALE",
+                    f"legacy {identity} binding failed: {error}",
+                )
+    elif current_mismatches:
+        _fail(
+            "B0_IMPLEMENTATION_STALE",
+            "current "
+            + current_mismatches[0]
+            + " differs from the package-bound implementation",
+        )
 
     inventory: dict[str, tuple[str, dict[str, str]]] = {}
     for entry in baseline["design_artifacts"]:
@@ -1179,6 +2108,7 @@ def validate_baseline_package(
             _fail("B0_SOURCE_COMPLETION_INVALID", f"{entry['domain']} is not ready")
         if (
             verified_migration is None
+            and baseline.get("source_kind") != "authority_revision"
             and _completion_artifact(completion, completion_path, root)
             != source_artifact_path
         ):
@@ -1248,6 +2178,7 @@ __all__ = [
     "BaselineError",
     "DOMAINS",
     "build_baseline_package",
+    "build_baseline_from_authority_revision",
     "extract_controls",
     "validate_baseline_package",
 ]

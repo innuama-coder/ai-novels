@@ -1,0 +1,44 @@
+schema_version: 1
+name: kun-workshop-intranet-delivery
+version: 0.1.0
+built_at_utc: 2026-07-27T03:38:13.677211+00:00
+source:
+  artifact: dist/kun-workshop-intranet-delivery-0.1.0-source.zip
+  sha256: 8d26b6e19d650427a89c98d3f122aa9491b1760bd139ceda4e9fe38863122379
+  status: pass
+builds:
+  codex:
+    artifact: dist/kun-workshop-intranet-delivery-0.1.0-codex.zip
+    sha256: e22f34fa1bfccccfcc7f6d8a877c227483d415d15b0c7c414c0f107fac0dac60
+    status: pass
+    validation:
+      - staging validation passed
+      - zip validation passed
+  claude:
+    artifact: dist/kun-workshop-intranet-delivery-0.1.0-claude.zip
+    sha256: 17b54e4f777cdcdc8be36c4a0830e20b0bb8428236f6f00d5042567caa5f6078
+    status: pass
+    validation:
+      - staging validation passed
+      - zip validation passed
+  gemini:
+    artifact: dist/kun-workshop-intranet-delivery-0.1.0-gemini.zip
+    sha256: 90d65ca09823b7486dd78100726e3376620b4d0dfdb13b008d17d87fb7847325
+    status: pass
+    validation:
+      - staging validation passed
+      - zip validation passed
+  openclaw:
+    artifact: dist/kun-workshop-intranet-delivery-0.1.0-openclaw.zip
+    sha256: 99b610bb9a4316949a7d1320ac1e28cc5e1a948c1c594148851d7612297047cd
+    status: pass
+    validation:
+      - staging validation passed
+      - zip validation passed
+  hermas:
+    artifact: dist/kun-workshop-intranet-delivery-0.1.0-hermas.zip
+    sha256: 3790948fee8153bf7d3b7a0995ebdfcc37bf224d344614385be95db5d2afc8c7
+    status: pass
+    validation:
+      - staging validation passed
+      - zip validation passed

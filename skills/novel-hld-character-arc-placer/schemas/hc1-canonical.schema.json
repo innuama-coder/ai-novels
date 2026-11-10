@@ -10,6 +10,28 @@
                                                    "$ref":  "common.schema.json#/$defs/sourceId"
                                                }
                                  },
+                  "characterIds": {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {"$ref": "common.schema.json#/$defs/sourceId"}
+                  },
+                  "optionalCharacterIds": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {"$ref": "common.schema.json#/$defs/sourceId"}
+                  },
+                  "institutionalChoiceActor": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["actor_role", "source_refs", "responsibility", "authority_limit"],
+                      "properties": {
+                          "actor_role": {"type": "string", "minLength": 2},
+                          "source_refs": {"$ref": "#/$defs/sourceRefs"},
+                          "responsibility": {"type": "string", "minLength": 8},
+                          "authority_limit": {"type": "string", "minLength": 8}
+                      }
+                  },
                   "authorityRef":  {
                                        "type":  "object",
                                        "additionalProperties":  false,
@@ -117,7 +139,8 @@
                                                                                     "uniqueItems":  true,
                                                                                     "items":  {
                                                                                                   "type":  "string",
-                                                                                                  "minLength":  1
+                                                                                                  "minLength":  1,
+                                                                                                  "pattern":  "^负责\\S"
                                                                                               }
                                                                                 },
                                                            "absence_reason":  {
@@ -472,6 +495,54 @@
                                                                      }
                                                      }
                                   },
+                  "chapterAgencyContract": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                          "id", "source_refs", "source_authority_refs", "ownership_class", "resolution_ref",
+                          "chapter_id", "parent_unit_id", "focal_character_ids", "choice_actor_ids", "institutional_choice_actors",
+                          "cost_bearer_ids", "unavailable_character_ids", "information_paths", "constraints"
+                      ],
+                      "properties": {
+                          "id": {"type": "string", "pattern": "^HAS-"},
+                          "source_refs": {"$ref": "#/$defs/sourceRefs"},
+                          "source_authority_refs": {"$ref": "#/$defs/authorityRefs"},
+                          "ownership_class": {"$ref": "#/$defs/ownership"},
+                          "resolution_ref": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/fileReference"}]},
+                          "chapter_id": {"type": "string", "pattern": "^HCH-"},
+                          "parent_unit_id": {"type": "string", "pattern": "^HNU-"},
+                          "focal_character_ids": {"$ref": "#/$defs/characterIds"},
+                          "choice_actor_ids": {"$ref": "#/$defs/optionalCharacterIds"},
+                          "institutional_choice_actors": {
+                              "type": "array", "uniqueItems": true,
+                              "items": {"$ref": "#/$defs/institutionalChoiceActor"}
+                          },
+                          "cost_bearer_ids": {"$ref": "#/$defs/characterIds"},
+                          "unavailable_character_ids": {
+                              "type": "array", "uniqueItems": true,
+                              "items": {"$ref": "common.schema.json#/$defs/sourceId"}
+                          },
+                          "information_paths": {
+                              "type": "array", "minItems": 1,
+                              "items": {
+                                  "type": "object", "additionalProperties": false,
+                                  "required": ["character_id", "acquisition_modes", "limit"],
+                                  "properties": {
+                                      "character_id": {"$ref": "common.schema.json#/$defs/sourceId"},
+                                      "acquisition_modes": {
+                                          "type": "array", "minItems": 1, "uniqueItems": true,
+                                          "items": {"enum": ["perceived", "told", "inferred", "remembered", "documented", "system_output"]}
+                                      },
+                                      "limit": {"type": "string", "minLength": 1}
+                                  }
+                              }
+                          },
+                          "constraints": {
+                              "type": "array", "minItems": 1, "uniqueItems": true,
+                              "items": {"type": "string", "minLength": 1}
+                          }
+                      }
+                  },
                   "hdd":  {
                               "type":  "object",
                               "additionalProperties":  false,
@@ -562,7 +633,8 @@
                      "relationship_steps",
                      "choice_cost_consequence_links",
                      "event_character_alignment",
-                     "capability_information_permission_checks"
+                     "capability_information_permission_checks",
+                     "chapter_agency_contracts"
                  ],
     "properties":  {
                        "schema_version":  {
@@ -737,6 +809,11 @@
                                                                         "items":  {
                                                                                       "$ref":  "#/$defs/feasibility"
                                                                                   }
-                                                                    }
+                                                                    },
+                       "chapter_agency_contracts": {
+                           "type": "array",
+                           "minItems": 1,
+                           "items": {"$ref": "#/$defs/chapterAgencyContract"}
+                       }
                    }
 }

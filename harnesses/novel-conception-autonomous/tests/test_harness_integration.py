@@ -185,6 +185,48 @@ class PortableValidatorAndReleaseTests(unittest.TestCase):
         skill.write_text(text, encoding="utf-8", newline="")
         self._assert_rejected("HARN_ADAPTER_INVALID")
 
+    def test_validator_rejects_b0_implementation_identity_drift(self):
+        path, manifest = self._manifest()
+        manifest["b0_implementation_identity_contract"][
+            "required_runtime_files"
+        ].remove("runtime/canonical.py")
+        self._write_json(path, manifest)
+        self._assert_rejected("HARN_B0_IMPLEMENTATION_IDENTITY_INVALID")
+
+        self.release._copy_source(HARNESS_ROOT, self.root)
+        authority = self.root / "runtime" / "b0_implementation_identity.py"
+        authority.write_text(
+            authority.read_text(encoding="utf-8").replace(
+                "98a67b0b3e2037f8729066bf31fc3421a1fe98e3d5ff76322f07593446799488",
+                "0" * 64,
+                1,
+            ),
+            encoding="utf-8",
+            newline="",
+        )
+        self._assert_rejected("HARN_B0_IMPLEMENTATION_IDENTITY_INVALID")
+
+    def test_validator_rejects_stage_implementation_identity_drift(self):
+        path, manifest = self._manifest()
+        manifest["stage_implementation_identity_contract"][
+            "upstream_policy"
+        ] = "copy-all-upstream-sources"
+        self._write_json(path, manifest)
+        self._assert_rejected("HARN_STAGE_IMPLEMENTATION_IDENTITY_INVALID")
+
+        self.release._copy_source(HARNESS_ROOT, self.root)
+        authority = self.root / "runtime" / "stage_implementation_identity.py"
+        authority.write_text(
+            authority.read_text(encoding="utf-8").replace(
+                "1df651e9a8b8f551fe667e5ca505224eb8a1d6701e8c634b90760388f59615ac",
+                "0" * 64,
+                1,
+            ),
+            encoding="utf-8",
+            newline="",
+        )
+        self._assert_rejected("HARN_STAGE_IMPLEMENTATION_IDENTITY_INVALID")
+
     def test_validator_rejects_legacy_entry_and_weakened_adapter_mapping(self):
         path, manifest = self._manifest()
         manifest["stages"].insert(-1, "D1")

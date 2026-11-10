@@ -223,7 +223,7 @@ class HH1BPublicRuntimeTests(unittest.TestCase):
         context=B.load_context(work,B.SPEC,B.impl_hash(),B._catalog());_,_,report,producer=B.admit(context)
         review=json.loads((draft/"canonical.json").read_text(encoding="utf-8"));binding_index=producer["binding_index"]
         elements=B._all_elements(report);all_ids={item["id"] for item in elements}
-        relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions")
+        relation_sections=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","time_space_pacing_tension","key_scene_functions","chapter_definitions")
         dimension_ids={"fact_fidelity":all_ids,"coverage_fidelity":all_ids,"structure_and_relation_fidelity":{item["id"] for section in relation_sections for item in report[section]},"authority_and_open_item_fidelity":{item["id"] for item in report["open_items_constraints_and_lld_boundary"]},"visual_data_fidelity":set()}
         for name,ids in dimension_ids.items():
             sources,locators=B._evidence_for(report,binding_index,ids);review[name]["report_element_ids"]=sorted(ids);review[name]["source_ids"]=sorted(sources);review[name]["locators"]=sorted(locators)

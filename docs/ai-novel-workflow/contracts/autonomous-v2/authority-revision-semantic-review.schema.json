@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "authority-revision-semantic-review.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "review_id", "transaction_id", "run_id", "candidate_material_sha256", "reviewer", "producer", "covered_ids", "item_reviews", "reviewer_produced_patch", "verdict", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "authority-revision-semantic-review"},
+    "review_id": {"type": "string", "minLength": 1},
+    "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "candidate_material_sha256": {"$ref": "common-defs.schema.json#/$defs/sha256"},
+    "reviewer": {"$ref": "authority-revision-patch-plan.schema.json#/$defs/identity"},
+    "producer": {"$ref": "authority-revision-patch-plan.schema.json#/$defs/identity"},
+    "covered_ids": {"$ref": "#/$defs/exactAllowset"},
+    "item_reviews": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"$ref": "#/$defs/itemReview"}},
+    "reviewer_produced_patch": {"const": false},
+    "verdict": {"const": "pass"},
+    "status": {"const": "sealed"}
+  },
+  "$defs": {
+    "sourceId": {"enum": ["CAU-AUDIT-BOUNDARY", "CAU-GLOBAL-SPINE", "CAU-MAJOR-NODES", "CHR-GU-HENG-MEMORY", "CHR-ROLE-TIERS", "NAR-FAIRNESS", "NAR-POV-ARCHITECTURE"]},
+    "exactAllowset": {"type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "itemReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "verdict", "findings"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/sourceId"},
+        "verdict": {"const": "pass"},
+        "findings": {"type": "array", "maxItems": 0}
+      }
+    }
+  }
+}

@@ -13,6 +13,15 @@ the ten exact stage owners. It parses every owner runtime, verifies each public
 API and proves the production `ACTION_CONTRACT` equals `dependency-spec.json`.
 Exit code is 0 only when `ValidationReport.ok` is true.
 
+The source bundle also includes the authority-revision bootstrap runtime and
+all eight revision schemas. Release validation must resolve the full 32-schema
+catalog and expose both `initialize_conception_revision_run` and its read-only
+validator, plus the write-free `build_authority_revision_review_material`
+entrypoint. Validation must prove initialization consumes an external sealed
+review before any target write and cannot create its own passing review. The
+checked-in ZIPs are not rewritten by ordinary development;
+`build_release.py` creates new archives only during the release transaction.
+
 Build reproducible, product-versioned archives:
 
 ```powershell

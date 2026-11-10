@@ -4,10 +4,10 @@ from __future__ import annotations
 import argparse,hashlib,json,re,shutil
 from pathlib import Path
 
-STAGE="HF1";SKILL="novel-hld-finalizer";CHAIN=["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HQ2","HH1"]
-STAGE_SKILLS={"HB0":"novel-hld-baseline-admitter","HA1":"novel-hld-narrative-architect","HS1":"novel-hld-storyline-choreographer","HC1":"novel-hld-character-arc-placer","HI1":"novel-hld-information-architect","HR1":"novel-hld-rhythm-continuity-architect","HK1":"novel-hld-key-scene-function-planner","HQ1":"novel-hld-semantic-reviewer","HP1":"novel-hld-package-assembler","HQ2":"novel-hld-lld-readiness-evaluator","HH1":"novel-hld-human-review-composite"}
+STAGE="HF1";SKILL="novel-hld-finalizer";CHAIN=["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","HQ2","HH1"]
+STAGE_SKILLS={"HB0":"novel-hld-baseline-admitter","HA1":"novel-hld-narrative-architect","HS1":"novel-hld-storyline-choreographer","HC1":"novel-hld-character-arc-placer","HI1":"novel-hld-information-architect","HR1":"novel-hld-rhythm-continuity-architect","HK1":"novel-hld-key-scene-function-planner","HD1":"novel-hld-chapter-definition-designer","HQ1":"novel-hld-semantic-reviewer","HP1":"novel-hld-package-assembler","HQ2":"novel-hld-lld-readiness-evaluator","HH1":"novel-hld-human-review-composite"}
 PUBLIC_STAGE_SKILLS={**STAGE_SKILLS,"HQ2":"harness-core/composite-stage-publisher","HH1":"harness-core/composite-stage-publisher"}
-UPSTREAM={"HB0":(),"HA1":("HB0",),"HS1":("HB0","HA1"),"HC1":("HB0","HA1","HS1"),"HI1":("HB0","HA1","HS1","HC1"),"HR1":("HB0","HA1","HS1","HC1","HI1"),"HK1":("HB0","HA1","HS1","HC1","HI1","HR1"),"HQ1":("HB0","HA1","HS1","HC1","HI1","HR1","HK1"),"HP1":("HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1"),"HQ2":("HB0","HP1"),"HH1":("HB0","HP1","HQ2")}
+UPSTREAM={"HB0":(),"HA1":("HB0",),"HS1":("HB0","HA1"),"HC1":("HB0","HA1","HS1"),"HI1":("HB0","HA1","HS1","HC1"),"HR1":("HB0","HA1","HS1","HC1","HI1"),"HK1":("HB0","HA1","HS1","HC1","HI1","HR1"),"HD1":("HB0","HA1","HS1","HC1","HI1","HR1","HK1"),"HQ1":("HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1"),"HP1":("HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"),"HQ2":("HB0","HP1"),"HH1":("HB0","HP1","HQ2")}
 CORE_ROLES={"run_state","author_decision","hp1_package","hp1_manifest","lld_handoff","hld_cross_index","hq2_acceptance","hh1_manifest","hh1_html","render_target_registry"}
 EXACT_ROLES=CORE_ROLES|{f"validation_{stage}" for stage in CHAIN}
 APPROVED={"hld-completion.json","final-validation.json","finalizer-execution.json","package-manifest.json"}

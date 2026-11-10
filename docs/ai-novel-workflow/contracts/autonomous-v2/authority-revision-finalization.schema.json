@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "authority-revision-finalization.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "transaction_id", "run_id", "source_kind", "parent_run", "parent_final_completion", "evidence_index", "directive_binding", "patch_plan", "semantic_review", "base_artifacts", "effective_artifacts", "author_approved_bytes", "status"],
+  "properties": {
+    "schema_version": {"const": "1.0"}, "kind": {"const": "authority-revision-finalization"}, "transaction_id": {"type": "string", "pattern": "^[0-9a-f]{24}$"}, "run_id": {"type": "string", "minLength": 1}, "source_kind": {"const": "authority_revision"},
+    "parent_run": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "parent_final_completion": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "evidence_index": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "directive_binding": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "patch_plan": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}, "semantic_review": {"$ref": "common-defs.schema.json#/$defs/artifactReference"},
+    "base_artifacts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}}, "effective_artifacts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "common-defs.schema.json#/$defs/artifactReference"}},
+    "author_approved_bytes": {"const": false}, "status": {"const": "ready"}
+  }
+}

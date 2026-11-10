@@ -56,7 +56,7 @@ class Parser(HTMLParser):
         if self.in_doc_title:self.title_text.append(data)
         if self._visible and not self._ignored and not self._nav:self._visible[-1][1].append(data)
 def canonical_sha(value):return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")).hexdigest()
-def elements(report):return [item for name in ("title_and_decision_scope","overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary","visual_models") for item in report[name]]
+def elements(report):return [item for name in ("title_and_decision_scope","overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","chapter_definitions","open_items_constraints_and_lld_boundary","visual_models") for item in report[name]]
 def validate_author_visible_language(blocks:list[str],*,repeat_allowed:set[int]|None=None)->list[str]:
     errors=[];seen={};repeat_allowed=repeat_allowed or set()
     for index,value in enumerate(blocks):

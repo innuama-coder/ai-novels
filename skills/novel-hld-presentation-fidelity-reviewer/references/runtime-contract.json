@@ -5,7 +5,7 @@
   "stage": "HH1",
   "task_profile": "HH1.B",
   "public_entrypoint": {"argv": ["python", "scripts/run_skill.py", "<work-order.json>", "<draft-directory>"], "success_exit": 0, "nonready_exit": 2, "runtime_error_exit": 1},
-  "required_allowlist_roles_ordered": ["hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "novel_hld_package", "hld_cross_index", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "human_review_report", "hh1_a_manifest", "hh1_a_generation_session", "hh1_a_work_order"],
+  "required_allowlist_roles_ordered": ["hb0_manifest", "hld_control_baseline", "hp1_completion", "hp1_manifest", "novel_hld_package", "hld_cross_index", "hld_model_ha1", "hld_model_hs1", "hld_model_hc1", "hld_model_hi1", "hld_model_hr1", "hld_model_hk1", "hld_model_hd1", "human_review_report", "hh1_a_manifest", "hh1_a_generation_session", "hh1_a_work_order"],
   "forbidden_input_classes": ["raw_conception", "chat", "prior_report", "sample_chapter", "novel_prose", "html", "svg", "css", "dom_registry"],
   "draft_profile": ["canonical.json", "review-session.json"],
   "ready_package_profile": ["presentation-fidelity-review.json", "review-session.json", "fidelity-review-execution.json", "validation.json", "package-manifest.json"],

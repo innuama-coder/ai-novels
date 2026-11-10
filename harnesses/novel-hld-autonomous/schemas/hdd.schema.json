@@ -5,9 +5,9 @@
   "additionalProperties": false,
   "required": ["id", "source_id", "owner_stage", "affected_obligation_ids", "disposition", "object_evidence_refs", "rationale_anchor", "downstream_effect", "resolution_ref"],
   "properties": {
-    "id": {"type": "string", "pattern": "^HDD-(HA1|HS1|HC1|HI1|HR1|HK1|HQ1)-.+$"},
+    "id": {"type": "string", "pattern": "^HDD-(HA1|HS1|HC1|HI1|HR1|HK1|HD1|HQ1)-.+$"},
     "source_id": {"$ref": "common.schema.json#/$defs/sourceId"},
-    "owner_stage": {"enum": ["HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1"]},
+    "owner_stage": {"enum": ["HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1"]},
     "affected_obligation_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
     "disposition": {"enum": ["not_needed_for_current_stage", "conditional_structure_preserves_open", "required_now", "resolved_by_external_author_event"]},
     "object_evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "topology-migration.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "harness", "hld_run_id", "migration_id", "event_sequence",
+    "timestamp", "reason", "missing_stage", "state_before_ref", "ledger_before_ref",
+    "pointer_before_sha256", "old_topology", "new_topology", "source_index_before_ref",
+    "source_index_after_ref", "preserved_completions", "invalidated_completions",
+    "owner_binding", "runtime_bindings"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "harness": {"const": "novel-hld-autonomous"},
+    "hld_run_id": {"type": "string", "minLength": 1},
+    "migration_id": {"type": "string", "pattern": "^MIG-[0-9]{6}-[A-Z0-9-]+$"},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "timestamp": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "missing_stage": {"const": "HD1"},
+    "state_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "ledger_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "pointer_before_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "old_topology": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/stage"}, "uniqueItems": true},
+    "new_topology": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/stage"}, "uniqueItems": true},
+    "source_index_before_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "source_index_after_ref": {"$ref": "common.schema.json#/$defs/fileReference"},
+    "preserved_completions": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/artifactReference"}},
+    "invalidated_completions": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/artifactReference"}},
+    "owner_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["skill", "version", "implementation_sha256"],
+      "properties": {
+        "skill": {"const": "novel-hld-chapter-definition-designer"},
+        "version": {"$ref": "common.schema.json#/$defs/semver"},
+        "implementation_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "runtime_bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contracts_sha256", "public_runtime_registry_sha256", "stage_contract_sha256"],
+      "properties": {
+        "contracts_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "public_runtime_registry_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "stage_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    }
+  }
+}

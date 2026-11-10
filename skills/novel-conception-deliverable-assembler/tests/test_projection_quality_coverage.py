@@ -19,14 +19,15 @@ store_module = importlib.import_module(
 
 
 class ProjectionAwareQualityCoverageTests(unittest.TestCase):
-    def _models(self):
+    def _models(self, version="2.5"):
         return {
             "S1": {"schema_version": "2.0", "items": [{"id": "SOR-A"}]},
-            "T1": q1_projection_tests._model("2.4"),
+            "T1": q1_projection_tests._model(version),
         }
 
     def test_projection_representatives_and_exact_generic_duplicates(self):
         models = self._models()
+        self.assertEqual(models["T1"]["schema_version"], "2.5")
         models["T1"]["other"].append(copy.deepcopy(models["T1"]["other"][0]))
         targets = p1._expected_quality_objects(models)
         self.assertEqual(
@@ -51,6 +52,16 @@ class ProjectionAwareQualityCoverageTests(unittest.TestCase):
         event = self._models()
         event["T1"]["planned_event_registry"][0]["changed_subject"]["after"] = "drift"
         mutants.append(event)
+        consumes = self._models()
+        consumes["T1"]["planned_event_registry"][0][
+            "consumes_token_instance_ids"
+        ] = ["ATI-DRIFT"]
+        mutants.append(consumes)
+        lifecycle = self._models()
+        lifecycle["T1"]["planned_event_registry"][0]["lifecycle_effects"] = [
+            {"drift": True}
+        ]
+        mutants.append(lifecycle)
         proposition = self._models()
         proposition["T1"]["planned_proposition_registry"][0]["statement"] = "drift"
         mutants.append(proposition)
@@ -69,6 +80,32 @@ class ProjectionAwareQualityCoverageTests(unittest.TestCase):
                     p1.P1Error, "P1_Q1_QUALITY_COVERAGE_INVALID"
                 ):
                     p1._expected_quality_objects(model)
+
+    def test_t1_24_remains_projection_aware(self):
+        models = self._models("2.4")
+        targets = p1._expected_quality_objects(models)
+        self.assertEqual(
+            [(item["stage"], item["id"]) for item in targets],
+            [("S1", "SOR-A"), ("T1", "CE-A"), ("T1", "EV-A"),
+             ("T1", "EVD-A"), ("T1", "PROP-A")],
+        )
+        ignored_25_fields = copy.deepcopy(models)
+        ignored_25_fields["T1"]["planned_event_registry"][0][
+            "consumes_token_instance_ids"
+        ] = ["ATI-IGNORED"]
+        ignored_25_fields["T1"]["planned_event_registry"][0][
+            "lifecycle_effects"
+        ] = [{"legacy": "ignored"}]
+        self.assertEqual(
+            p1._expected_quality_objects(ignored_25_fields),
+            targets,
+        )
+        planned = copy.deepcopy(models)
+        planned["T1"]["planned_causal_edges"][0]["mechanism"] = "drift"
+        with self.assertRaisesRegex(
+            p1.P1Error, "P1_Q1_QUALITY_COVERAGE_INVALID"
+        ):
+            p1._expected_quality_objects(planned)
 
     def test_certificate_is_exact_and_legacy_remains_unprojected(self):
         models = self._models()
@@ -134,4 +171,3 @@ class ProjectionAwareQualityCoverageTests(unittest.TestCase):
             full_validation=False,
         )
         self.assertEqual(set(loaded), set(p1.STAGES))
-

@@ -88,7 +88,21 @@ def _visual(
 def _report() -> dict:
     world = _control("MOD-WORLD-01", "近未来的秘密实验", "两个国家在危机中有限合作。")
     logic = _control("MOD-WORLD-02", "不能越过的规则", "记忆不是人格，关心也不能替代同意。")
-    story = _control("MOD-STORY-01", "两条前线在此汇合", "顾衡的失踪把沈逾带进秘密基地。")
+    story = _control(
+        "MOD-STORY-01",
+        "一个生命想决定自己的去留",
+        "一段不该被复活的记忆，唤醒了一个想要自己决定去留的生命。",
+    )
+    connection = _control(
+        "MOD-STORY-02",
+        "两条前线在此汇合",
+        "顾衡的失踪把沈逾带进秘密基地。",
+    )
+    rhythm = _control(
+        "MOD-STORY-03",
+        "危机越急，人物越要诚实",
+        "外部危机越来越急，人物却必须慢下来承认彼此。",
+    )
     character = _control("MOD-CHAR-01", "沈逾", "她接受任务，却不愿把服从说成赞同。")
     visuals = [
         _visual("VIS-WORLD", "world_environment_map", "SEC-WORLD", "map"),
@@ -126,8 +140,8 @@ def _report() -> dict:
         "storylines": {
             "story_subject": "一段不该被复活的记忆，唤醒了一个想要自己决定去留的生命。",
             "lines": [story],
-            "connections": [story],
-            "major_events": [story],
+            "connections": [connection],
+            "major_events": [rhythm],
             "suspense_conflict_rhythm": "外部危机越来越急，人物却必须慢下来承认彼此。",
             "constraints": [],
             "source_ids": ["MACHINE-SOURCE-01"],
@@ -459,14 +473,14 @@ class VisibleCopyProjectionTests(unittest.TestCase):
         self.assertNotIn("无 · 推进", world_visual)
         self.assertIn('data-kind="人物"', world_visual)
 
-    def test_html_timeline_translates_machine_phase_and_marker_copy(self) -> None:
+    def test_html_timeline_uses_natural_phase_and_translates_marker_copy(self) -> None:
         report = _report()
         timeline = report["visual_models"][3]
         timeline["nodes"][0].update(
             {
                 "label": "危机埋点",
                 "kind": "setup",
-                "temporal_label": "P1",
+                "temporal_label": "第一阶段",
             }
         )
         timeline["nodes"].append(
@@ -510,7 +524,7 @@ class VisibleCopyProjectionTests(unittest.TestCase):
             "第一阶段 · 铺垫", "P<em>1</em> · 探针", 1
         )
         with self.assertRaisesRegex(
-            h1c.H1CError, "timeline model vocabulary"
+            h1a.H1AError, "H1A_VISIBLE_COPY_INVALID"
         ):
             h1c.validate_html_document(leaked, report)
 
@@ -633,6 +647,16 @@ class VisibleCopyProjectionTests(unittest.TestCase):
         for bad in (
             "MOD-WORLD-01",
             "DCTRL-STORY-01",
+            "ENV-001",
+            "SL-GUHENG-LIVING",
+            "SLC-MAIN-THREAT",
+            "SLOT-PERMIT-CUSTODIAN",
+            "ACTOR-CONTRACT-H1",
+            "TOKEN-STARTUP-01",
+            "[DEMAND:CHD-001:" + "a" * 64 + "]职责[/DEMAND]",
+            "NOT_STARTED",
+            "UNCONSUMED",
+            "a" * 64,
             "Review scope",
             "Responsibility",
             "Allowed",
@@ -643,6 +667,126 @@ class VisibleCopyProjectionTests(unittest.TestCase):
                 with self.assertRaises(h1a.H1AError) as caught:
                     h1a.validate_human_visible_strings([bad])
                 self.assertEqual(caught.exception.code, "H1A_VISIBLE_COPY_INVALID")
+
+    def test_natural_chinese_and_story_name_are_not_false_positives(self) -> None:
+        h1a.validate_human_visible_strings([
+            "这份结论可核验，也保留来源材料供作者继续阅读。",
+            "R-07 在沈逾面前提出了自己的请求。",
+            "许可保管岗签发单次令牌，载体操作岗收到后才执行唯一启动。",
+        ])
+
+    def test_report_visible_fields_reject_internal_copy(self) -> None:
+        mutations = (
+            ("decision control", lambda report: report.__setitem__("decision_controls", [{"statement": "按 ENV-001 执行。", "must_hold": ["人物自己选择。"], "must_not_imply": ["不得替人物选择。"]}])),
+            ("visual node", lambda report: report["visual_models"][0]["nodes"][0].__setitem__("label", "ENV-001")),
+            ("visual group kind", lambda report: report["visual_models"][3]["groups"][0].__setitem__("kind", "ENV-001")),
+            ("visual lane", lambda report: report["visual_models"][0]["nodes"][0].__setitem__("lane", "SL-MAIN")),
+            ("character responsibility", lambda report: report["characters"]["core_characters"][0].__setitem__("responsibility", "[DEMAND:CHD-001:" + "b" * 64 + "]职责[/DEMAND]")),
+            ("story definition", lambda report: report["storylines"]["lines"][0].__setitem__("definition", "状态从 NOT_STARTED 进入 ACTIVE。")),
+            ("fragment purpose", lambda report: report["fragments"][0].__setitem__("review_purpose", "检查 SLOT-PERMIT-CUSTODIAN。")),
+        )
+        for label, mutate in mutations:
+            with self.subTest(label=label):
+                report = _report()
+                mutate(report)
+                with self.assertRaises(h1a.H1AError) as caught:
+                    h1a.validate_human_visible_copy(report)
+                self.assertEqual(caught.exception.code, "H1A_VISIBLE_COPY_INVALID")
+
+    def test_plan_brief_and_visual_fields_use_the_same_lint(self) -> None:
+        plan = {
+            "review_scope_contract": {"semantic_disclaimer": "作者阅读正文。"},
+            "decision_controls": [],
+            "review_path": [],
+            "sections": [],
+            "visual_models": [{
+                "title": "环境流转",
+                "review_purpose": "查看人物如何移动。",
+                "groups": [],
+                "nodes": [{
+                    "label": "ENV-001", "summary": "采样室。", "kind": "环境",
+                    "lane": None, "tier": None, "temporal_label": None,
+                }],
+                "edges": [],
+                "text_equivalents": [],
+            }],
+            "fragment_briefs": [{
+                "title": "启动之前",
+                "review_purpose": "确认选择边界。",
+                "information_limits": {
+                    "may_present": ["SLOT-PERMIT-CUSTODIAN"],
+                    "must_not_present_as_known": ["未发生的决定"],
+                },
+                "allowed_perception_channels": ["监护屏"],
+                "scene_contract": {
+                    "before_state": "许可尚未生效。",
+                    "immediate_goal": "确认授权。",
+                    "pressure": "窗口收紧。",
+                    "obstacle": "四栏必须分别成立。",
+                    "required_choice": "只签自己的意见。",
+                    "direct_consequence": "采样窗口打开。",
+                    "after_state": "证据只读封存。",
+                },
+                "required_demonstrations": ["顾衡仍活着。"],
+                "forbidden_additions": ["不得写成死亡。"],
+            }],
+            "decision_prompts": [],
+        }
+        with self.assertRaises(h1a.H1AError) as caught:
+            h1a.validate_human_visible_strings(h1a._human_visible_plan_strings(plan))
+        self.assertEqual(caught.exception.code, "H1A_VISIBLE_COPY_INVALID")
+
+    def test_plan_title_and_visual_group_kind_are_visible_copy(self) -> None:
+        base = {
+            "work_identity": {
+                "work_title": "断线",
+                "report_title": "《断线》构思人审报告",
+            },
+            "review_scope_contract": {"semantic_disclaimer": "作者阅读正文。"},
+            "decision_controls": [],
+            "review_path": [],
+            "sections": [],
+            "visual_models": [{
+                "title": "故事走向",
+                "review_purpose": "查看变化。",
+                "groups": [{
+                    "label": "相遇之前",
+                    "summary": "两个人走向同一场危机。",
+                    "kind": "故事线",
+                    "lane": None,
+                    "tier": None,
+                    "temporal_label": None,
+                }],
+                "nodes": [],
+                "edges": [],
+                "text_equivalents": [],
+            }],
+            "fragment_briefs": [],
+            "decision_prompts": [],
+        }
+        mutations = (
+            ("work title", lambda plan: plan["work_identity"].__setitem__("work_title", "ENV-001")),
+            ("report title", lambda plan: plan["work_identity"].__setitem__("report_title", "《ENV-001》构思人审报告")),
+            ("group kind", lambda plan: plan["visual_models"][0]["groups"][0].__setitem__("kind", "ENV-001")),
+        )
+        for label, mutate in mutations:
+            with self.subTest(label=label):
+                plan = copy.deepcopy(base)
+                mutate(plan)
+                values = h1a._human_visible_plan_strings(plan)
+                self.assertTrue(any("ENV-001" in value for value in values))
+                with self.assertRaises(h1a.H1AError) as caught:
+                    h1a.validate_human_visible_strings(values)
+                self.assertEqual(
+                    caught.exception.code, "H1A_VISIBLE_COPY_INVALID"
+                )
+
+    def test_h1c_rejects_internal_visual_group_kind_before_dom_checks(self) -> None:
+        report = _report()
+        report["visual_models"][3]["groups"][0]["kind"] = "ENV-001"
+        with self.assertRaises(h1a.H1AError) as caught:
+            h1c.validate_html_document("", report)
+        self.assertEqual(caught.exception.code, "H1A_VISIBLE_COPY_INVALID")
 
     def test_escaped_script_text_is_visible_prose_not_active_content(self) -> None:
         report = _report()

@@ -187,6 +187,12 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/v2-html-contract.md": (
             _SKILL / "references" / "v2-html-contract.md"
         ),
+        "h1-a-visible-copy/run_v2.py": Path(h1a.__file__).resolve(),
+        "h1-a-visible-copy/review-plan-contract.md": (
+            Path(h1a.__file__).resolve().parents[1]
+            / "references"
+            / "review-plan-contract.md"
+        ),
         "schemas/h1-review-plan.schema.json": (
             _SCHEMAS / "h1-review-plan.schema.json"
         ),

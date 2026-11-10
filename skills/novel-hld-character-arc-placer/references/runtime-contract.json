@@ -10,6 +10,10 @@
     "stage-scoped HDD coverage before candidate",
     "authority/ownership separation and stable IDs",
     "core character arc role coverage and bilateral relationship state checks",
+    "participation responsibilities begin with the natural-Chinese duty marker 负责, state only in-world duties, and exclude English prose, design jargon, or explicit lifecycle claims governed by chapter agency, with fresh semantic review required for paraphrase and authority fidelity",
+    "return-resolution coverage accepts complete ordered HAS-PARTICIPATION coverage with CHR identity bindings, ordered existing HAS-AGENCY chapter-contract coverage, or one base-bound ordered HAS-AGENCY-plus-HAS-ARC repair; participation mixtures, reverse family order, missing, duplicate, reordered, and unknown targets fail closed",
+    "return-resolution after a previously accepted HC1 seals its main, manifest, and completion as a return base; only affected semantic target objects may change, authority partition and unrelated semantic structures remain byte-for-value exact, and only existing chapter-agency or arc-step collection derivation claims may refresh source refs/value hash while claim inventory/order/ID/locator stay exact; an initial local revision has no base and a partial base fails closed",
+    "one ordered chapter agency contract per HA1 shell with explicit focal, named or source-bound institutional choice, cost, availability, and information-path bounds",
     "exact package profile and external parent result envelope"
   ],
   "display_name": "Novel HLD Character Arc Placer",
@@ -33,7 +37,8 @@
     "relationship_steps",
     "choice_cost_consequence_links",
     "event_character_alignment",
-    "capability_information_permission_checks"
+    "capability_information_permission_checks",
+    "chapter_agency_contracts"
   ],
   "next_stage": "HI1",
   "object_arrays": {
@@ -42,6 +47,7 @@
     "capability_information_permission_checks": "HAS-",
     "character_participation_register": "HAS-",
     "choice_cost_consequence_links": "HAS-",
+    "chapter_agency_contracts": "HAS-",
     "event_character_alignment": "HAS-",
     "relationship_steps": "HRS-"
   },
@@ -51,7 +57,8 @@
     "core_character_arc_paths",
     "relationship_change_placement",
     "choice_cost_consequence_traceability",
-    "capability_information_permission_checks"
+    "capability_information_permission_checks",
+    "chapter_agency_contracts"
   ],
   "public_entrypoint": {"path":"skills/novel-hld-character-arc-placer/scripts/run_skill.py","runtime":"python","arguments":["work_order","draft_dir"]},
   "runtime_version": "1.0.0",

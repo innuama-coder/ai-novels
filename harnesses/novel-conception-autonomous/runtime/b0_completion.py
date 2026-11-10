@@ -84,10 +84,13 @@ def complete_b0(
     baseline = __import__("json").loads(baseline_path.read_text(encoding="utf-8"))
     if baseline["run_id"] != coordinator.state["run_id"]:
         raise BaselineError("B0_RUN_ID_MISMATCH", "baseline belongs to another run")
-    if (
-        baseline["run_state"]["sha256"]
-        != coordinator.state["source_interview_state"]["sha256"]
-    ):
+    current_source_state = coordinator.state["source_interview_state"]
+    source_state_matches = (
+        baseline["run_state"] == current_source_state
+        if baseline.get("source_kind") == "authority_revision"
+        else baseline["run_state"]["sha256"] == current_source_state["sha256"]
+    )
+    if not source_state_matches:
         raise BaselineError(
             "B0_SOURCE_STATE_MISMATCH",
             "baseline does not bind the source interview state frozen by revision 0",
@@ -116,6 +119,7 @@ def complete_b0(
         "run_id": baseline["run_id"],
         "stage": "B0",
         "status": "ready",
+        "source_kind": baseline["source_kind"],
         "manifest": manifest_reference,
         "validation": validation_reference,
         "input_gate": copy.deepcopy(input_gate.reference),
@@ -123,6 +127,19 @@ def complete_b0(
         "previous_stage_completions": [],
         "return_binding": copy.deepcopy(input_gate.data["return_binding"]),
     }
+    if baseline["source_kind"] == "authority_revision":
+        completion_data["authority_revision"] = copy.deepcopy(
+            baseline["authority_revision_finalization"]
+        )
+        completion_data["base_source_kind"] = baseline["base_source_kind"]
+        for field in (
+            "base_migration_finalization",
+            "parent_b0_baseline",
+            "parent_b0_completion",
+            "parent_b0_manifest",
+        ):
+            if field in baseline:
+                completion_data[field] = copy.deepcopy(baseline[field])
     try:
         contract_runtime.validate(completion_data, "stage-completion.schema.json")
     except ContractValidationError as error:

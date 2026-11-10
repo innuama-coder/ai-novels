@@ -317,7 +317,7 @@ class H1APlanSkeletonTests(unittest.TestCase):
                     "display_kind": "cards",
                     "definition": f"{kind} definition {index}",
                     "responsibility": f"说明 {kind} {index} 在故事中的作用",
-                    "must_hold": ["P1 values remain exact"],
+                    "must_hold": ["已验收的构思结论保持原样"],
                     "must_not_imply": ["No new authority"],
                     "source_anchor_ids": anchor_ids,
                     "default_visible": True,
@@ -442,7 +442,7 @@ class H1APlanSkeletonTests(unittest.TestCase):
                     group_id=group_id,
                     lane=lane,
                     temporal_label=(
-                        f"T{node_index}" if timeline else None
+                        f"第{node_index}阶段" if timeline else None
                     ),
                 )
                 for node_index in range(1, node_count + 1)
@@ -463,7 +463,7 @@ class H1APlanSkeletonTests(unittest.TestCase):
                         "lane": lane,
                         "tier": None,
                         "temporal_label": (
-                            "T1-T2" if timeline else None
+                            "第一至第二阶段" if timeline else None
                         ),
                         "source_anchor_ids": anchor_ids,
                     }
@@ -569,7 +569,7 @@ class H1APlanSkeletonTests(unittest.TestCase):
                 ),
                 "decision_control_ids": ["DCTRL-FRAGMENTS"],
                 "source_anchor_ids": anchor_ids,
-                "required_demonstrations": ["Show bounded P1 behavior"],
+                "required_demonstrations": ["呈现受约束的故事行为"],
                 "forbidden_additions": ["No new facts"],
                 "target_words_min": 320,
                 "target_words_max": 480,
@@ -610,7 +610,7 @@ class H1APlanSkeletonTests(unittest.TestCase):
                     "priority": "critical",
                     "statement": "The world controls the available choices.",
                     "must_hold": ["World constraints remain reviewable."],
-                    "must_not_imply": ["Every P1 detail is visible by default."],
+                    "must_not_imply": ["全部来源细节都在默认页面展开。"],
                     "default_element_ids": ["MOD-WORLD-1"],
                 },
                 {

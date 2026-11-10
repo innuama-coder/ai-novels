@@ -10,7 +10,7 @@
       "pattern": "^(?![A-Za-z]:)(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
     },
     "stage": {
-      "enum": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HQ1", "HP1", "HQ2", "HH1", "HF1"]
+      "enum": ["HB0", "HA1", "HS1", "HC1", "HI1", "HR1", "HK1", "HD1", "HQ1", "HP1", "HQ2", "HH1", "HF1"]
     },
     "fileReference": {
       "type": "object",

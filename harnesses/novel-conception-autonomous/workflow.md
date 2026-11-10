@@ -21,18 +21,84 @@ H1-A plan → H1-B fragments → independent fidelity review → H1-A assemble �
 The diagram is logical: P1 is the sole top-level input to H1-A plan, while all
 H1 packages and workspaces carry the same run/session/lineage.
 
-The current T1 owner contract is schema `2.4` with review protocol
-`t1-initial-event-plan-semantics-v4`. Each adjacent S1 transition is realized
+An approved correction to completed conception authority starts a new
+revision-000 fork. The producer first builds deterministic review material
+without writing a run. A different reviewer task seals an external, canonical
+semantic-review artifact against that material. The bootstrap validates that
+artifact before acquiring its run lock, copies it byte-for-byte, and never
+creates or changes the review verdict. Only then may the exact seven allowed
+text edits be replayed and the new run promoted.
+
+The fork's B0 current source is always `authority_revision`; base ancestry is
+separate. A finalized-migration parent is admitted only through its accepted
+B0 baseline/completion/manifest chain. B0 copies that chain read-only, retains
+its migration finalization as ancestry, and overlays exactly the reviewed
+seven I3-I5 values. It never represents migration and authority revision as
+two simultaneous current sources.
+
+The fork's current state is also separate from base ancestry. Its initial B0
+gate binds the exact authority bootstrap revision-000, whose
+`source_interview_state` equals finalization `parent_run`. An append-only B0
+refresh after a routed return instead binds the exact current descendant state;
+the complete canonical state chain back to revision-000 must preserve the same
+source and finalization identity and is copied into the refreshed package. B0
+publishes the parent-run reference as its source `run_state`; an older migration
+B0 state remains available only through the copied parent baseline lineage.
+
+B0 implementation identity covers only the runtime modules and authoritative
+contracts that define or validate B0 behavior. The package-level
+`runtime/__init__.py` public-export aggregator is not a required B0 identity:
+later-stage exports added there cannot make an already sealed baseline stale.
+New B0 packages omit that aggregator from their implementation catalog. Older
+packages that stored it remain replay-compatible only through the exact frozen
+full-catalog digest registered in the harness manifest. That historical branch
+revalidates every copied binding and permits exactly the registered old-to-new
+`runtime/baseline.py` hash pair. Its separate
+`runtime/b0_implementation_identity.py` authority is required and hash-bound in
+every new B0 package; the historical package may lack only that newly introduced
+identity. Every other current required file must still equal its stored hash.
+The branch is read-only and cannot generate or reseal a package. Outside that
+exact profile, a stored aggregator is merely a catalog superset member, while
+every required runtime, validator and B0 schema binding is still mandatory and
+hash-exact; missing or tampered required bindings fail closed.
+
+The same ownership rule is versioned for S1 through P1 by
+`runtime/stage_implementation_identity.py`. A stage binds its own executable
+runner, directly used shared helpers, schemas, and review contracts; it does
+not absorb the source files and schemas owned by every upstream validator.
+Upstream public validation remains mandatory and fail-closed at the point of
+use, so this removes maintenance cascade rather than upstream verification.
+New packages use contract `1.0` and an exact catalog. Historical run19
+catalogs are a one-way read-only migration: the full catalog digest, explicit
+removed/missing set, and each runner old-to-approved-current hash pair must all
+match. Any future drift requires a new declared contract version and cannot be
+silently accepted by an old migration entry.
+
+The current T1 owner contract is schema `2.5` with review protocol
+`t1-initial-event-plan-semantics-v5`. Each adjacent S1 transition is realized
 by one ordered atomic event span: direct causal continuity, strict time order,
 one shared storyline, and exactly one final `story_transition` state commit.
+That commit is the source line's final state-changing/transition-span event.
+After it, the current contract admits only an E1-readiness-bound causal SEND
+tail: non-state `connection_bridge` events owned by the source storyline,
+forming the exact source-anchor-to-target-anchor path and an injective exact
+cover of the connection's transport steps. It rejects lifecycle effects,
+foreign or duplicate bridges, path bypass, post-target placement, and any
+unowned trailing action. This is a runtime contract correction within schema
+`2.5`/review protocol v5—the public JSON shape and review-claim universe do not
+change, while the exact implementation identity does.
 Typed edges distinguish `narrative_causal`, capability, proposition, token,
-and sequencing dependencies. Only narrative edges realize S1 connections or
-participate in the associative-connection ban. T1 `2.3` and earlier remain
+sequencing, and subject-lifecycle dependencies. Lifecycle validation follows
+effective story time and the typed dependency DAG, not chapter or disclosure
+order. It proves one `NOT_STARTED → ACTIVE → SHUTDOWN` sequence, a causal path
+from formal acceptance through the single-use permit producer to startup, and
+exactly one permit consumption. Only narrative edges realize S1 connections or
+participate in the associative-connection ban. T1 `2.4` and earlier remain
 read-only legacy replay branches and cannot authorize a new generation
 session or a relabeled reseal. The exact T1 `2.3` full implementation snapshot
-is retained for provenance audit, but no `2.3` ready package was released; its
-package identity inventory is therefore explicitly empty and complete package
-replay remains fail-closed.
+is retained for provenance audit, but no trusted `2.3` or `2.4` ready-package
+identity is currently registered; both package inventories are explicitly
+empty and replay therefore remains fail-closed.
 
 The independent fidelity review is a bounded quality dependency, not another
 top-level stage and not a content producer. It reads only sealed P1, plan,
@@ -47,6 +113,13 @@ public replay prove canonical completion bodies, sibling manifest/validation
 hashes, and the complete nested upstream lineage. Legacy flat logical paths
 remain replay-compatible, while foreign, escaped or backslash paths fail
 closed before workspace or package publication.
+
+At the filesystem boundary, Windows normal and extended namespace spellings
+(`C:\\...` and `\\\\?\\C:\\...`, including the UNC equivalent) have one
+resolved containment identity. The prefix is never admitted into a logical
+artifact reference. Resolution still occurs before containment comparison, so
+`..`, drive-qualified logical paths, backslashes, cross-root paths and
+symlinks that leave the run root remain fail-closed.
 
 ## P1 crash recovery boundary
 
@@ -184,6 +257,29 @@ completion inventory. A different return, fake target, fake predecessor digest,
 or stale caller fails before any artifact is written. Prepared refreshes recover
 through the same append-only journal as first-time upgrades, and already
 invalidated sessions or rejected orders are not inventoried again.
+
+A different, qualification-only edge applies when the current run has already
+reached an active H1 return and every current B0-P1 package passes its public
+validator under the versioned implementation-catalog migration authority.
+`apply_compatible_qualification_refresh()` admits the digest rebase only when
+owner schema versions, review-protocol names, binding identities and production
+contract shape are unchanged, and every old-to-current implementation hash is
+the exact pair in the frozen migration registry. It appends one state revision
+with no semantic field change, retains every B0-P1 completion and the exact H1
+workspace bytes, rejects the stale pending H1 order, and issues the same H1
+action with a fresh gate/state binding. A validator failure routes to that
+package's actual B0-P1 owner; schema, protocol, owner-version, unregistered-code,
+tamper, missing-package, or state/order/workspace drift remains fail-closed and
+cannot use this edge.
+
+An already consumed H1-B order is never rewritten by that rebase. Protected
+fragment review may continue to use it only when the current qualification is
+the exact direct compatible-refresh successor of the order's state: the two
+states have identical semantic fields, the fragments-ready workspace is the
+same sealed reference, and the rejected/reissued pending assemble orders have
+identical action, inputs, actor and workspace. The trusted qualification plan
+and receipt must prove the direct edge. Any intervening revision, foreign
+receipt, workspace/order drift or semantic state change rejects the material.
 
 ## First stage-origin return admission
 
@@ -344,6 +440,37 @@ the same files without a valid prepared transaction remain untrusted orphans.
 
 ## Author and final transactions
 
+Before H1-A assembly, a `presentation-fidelity-review` verdict of `revise`
+whose deterministic owner is H1-A plan must use
+`apply_internal_h1_plan_return`. The review must bind the exact candidate
+report, current P1, plan and fragment manifests and must be task/thread
+independent of both producers. Candidate and review must already exist as
+sealed documents under a precommitted reviewer assignment. The dedicated
+reviewer actor records the verdict and protected completion; generic document
+persistence cannot mint either authority artifact. The transaction rejects the pending assemble
+order, retains all rejected artifacts as immutable evidence, and issues a new
+H1-A-plan gate/order against a fresh initialized workspace. Missing review,
+producer attribution, cross-owner routing, stale state and repeated return all
+fail before any pointer changes. A replacement attempt may expose a new defect
+while the earlier H1 return remains unresolved. A fresh independent plan
+failure then performs a same-owner H1-A refresh; a fresh independent fragment
+failure performs a local H1-B refresh. The fragment reviewer task and thread
+must each differ from the sealed fragment generation-session producer; its
+declared independence basis is not sufficient evidence by itself. H1-B must
+use `assign_internal_h1_fragment_fidelity_review` →
+`record_internal_h1_fragment_fidelity_failure` →
+`apply_internal_h1_fragment_return`; assignment, review and completion use
+protected namespaces and bind the exact current state, workspaces, consumed
+order and marker, manifest, generation session and reviewer. Both append a
+successor that names the
+exact superseded H1 return and preserve the complete parent lineage, old
+workspace and old work order as immutable evidence. Foreign owners, downstream
+widening, reused assignment/evidence/reviewer identity and stale bindings
+remain fail-closed. The fragment review+completion pair is protected by an
+immutable prepared/complete journal: caught write failure rolls back the pair,
+and resume validates the assignment before completing a process-interrupted
+pair.
+
 After H1-C, an independent production-owned human-readability review must seal
 an exact `pass` over the author-facing JSON report, rendered HTML, and every
 fragment text. Its five ordered dimensions are `natural_zh`, `readability`,
@@ -437,10 +564,12 @@ ambiguous, foreign, escaped, or tampered roots fail before work-order
 publication. Executors receive sealed inputs explicitly, and mismatches fail
 before callback execution. Stage-return reissue applies the same rule.
 
-P1 independently replays Q1 quality coverage. For T1 2.2–2.4 it merges only
+P1 independently replays Q1 quality coverage. For T1 2.2–2.5 it merges only
 the three contract-defined planned/canonical projection pairs and rejects ID-set
 drift, duplicate registry IDs, third sources, missing counterparts, and
-projection conflicts. The resulting S1/T1 targets must exactly equal Q1's
+projection conflicts. T1 2.5 additionally projects token-instance consumption
+and lifecycle effects; the frozen 2.2–2.4 field set and canonical hashes remain
+unchanged. The resulting S1/T1 targets must exactly equal Q1's
 sealed required and covered certificate values before P1 admission succeeds.
 
 P1's cross-model index is schema/path-aware: explicit descriptors bind each

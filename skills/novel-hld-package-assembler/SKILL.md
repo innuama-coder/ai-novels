@@ -1,6 +1,6 @@
 ---
 name: novel-hld-package-assembler
-description: Deterministically assemble the admitted HB0 baseline, six accepted HLD design packages, and passing HQ1 semantic review into the lossless HP1 machine package, cross-index, traceability matrix, and exact LWR-to-LWK LLD handoff. Use only for a sealed HP1 work-order. Never add, repair, reinterpret, summarize away, or revise story semantics.
+description: Deterministically assemble the admitted HB0 baseline, seven accepted HLD design packages including HD1 chapter definitions, and passing HQ1 semantic review into the lossless HP1 machine package, cross-index, traceability matrix, and exact LWR-to-LWK LLD handoff. Use only for a sealed HP1 work-order. Never add, repair, reinterpret, summarize away, or revise story semantics.
 ---
 
 # Novel HLD Package Assembler
@@ -35,7 +35,7 @@ Exit codes:
 
 ## Hard input rule
 
-Accept only the work-order path. Require the exact current ready chain `[HB0, HA1, HS1, HC1, HI1, HR1, HK1, HQ1]`, sealed input-gate/state, exact owner implementation, empty unresolved projection, and role/path/SHA-256 allowlist. Every upstream manifest must close over its public ready profile, bind its main artifact and validation, and be bound by its completion. HQ1 must pass with zero findings.
+Accept only the work-order path. Require the exact current ready chain `[HB0, HA1, HS1, HC1, HI1, HR1, HK1, HD1, HQ1]`, sealed input-gate/state, exact owner implementation, empty unresolved projection, and role/path/SHA-256 allowlist. Every upstream manifest must close over its public ready profile, bind its main artifact and validation, and be bound by its completion. HQ1 must pass with zero findings.
 
 ## Ready output
 

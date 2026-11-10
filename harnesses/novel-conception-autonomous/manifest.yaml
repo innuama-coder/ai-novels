@@ -6,11 +6,56 @@
   "release_date": "2026-08-05",
   "entrypoint": "runtime.production_orchestrator:initialize_production_run",
   "resume_entrypoint": "runtime.production_orchestrator:resume_production_run",
+  "authority_revision_entrypoint": "runtime.production_orchestrator:initialize_conception_revision_run",
+  "authority_revision_review_material_entrypoint": "runtime.production_orchestrator:build_authority_revision_review_material",
+  "h1_plan_return_entrypoint": "runtime.production_orchestrator:apply_internal_h1_plan_return",
+  "h1_plan_fidelity_review_assignment_entrypoint": "runtime.production_orchestrator:assign_internal_h1_plan_fidelity_review",
+  "h1_plan_fidelity_review_record_entrypoint": "runtime.production_orchestrator:record_internal_h1_plan_fidelity_failure",
   "terminal_compatibility_entrypoint": "runtime.harness:run_from_rendered_h1",
   "validator": "validators.validate_harness:validate_harness",
   "workflow": "novel-conception-autonomous-v2",
   "dependency_spec": "dependency-spec.json",
   "dependency_lock": "dependency-lock.json",
+  "b0_implementation_identity_contract": {
+    "version": "1.0",
+    "scope": "behavioral-runtime-and-authoritative-contracts",
+    "required_runtime_files": [
+      "runtime/baseline.py",
+      "runtime/b0_completion.py",
+      "runtime/b0_implementation_identity.py",
+      "runtime/canonical.py",
+      "runtime/conception_revision.py",
+      "runtime/contracts.py",
+      "runtime/coordinator.py",
+      "runtime/migration_handoff.py",
+      "runtime/return_routing.py"
+    ],
+    "legacy_stored_extras": ["runtime/__init__.py"],
+    "legacy_extra_policy": "stored-superset-compatible",
+    "trusted_legacy_catalog_sha256": [
+      "98a67b0b3e2037f8729066bf31fc3421a1fe98e3d5ff76322f07593446799488"
+    ],
+    "trusted_legacy_missing_current_identities": [
+      "runtime/b0_implementation_identity.py"
+    ],
+    "trusted_legacy_mismatch_bindings": {
+      "runtime/baseline.py": {
+        "stored_sha256": "e9eb8603f16b374288a0f7b04aaa43c8a4d51dbfac97f7c064c1a39b37a6bf34",
+        "approved_current_sha256": "51160603f780f7edf0014a04c3a0ca6ac11807a1a86e663624ce2feb1a194c0c"
+      }
+    },
+    "required_binding_policy": "missing-or-tampered-reject"
+  },
+  "stage_implementation_identity_contract": {
+    "version": "1.0",
+    "authority": "runtime/stage_implementation_identity.py",
+    "stages": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1"],
+    "scope_policy": "stage-owned-runtime-schema-review-contracts",
+    "upstream_policy": "public-validator-self-authenticated-not-copied",
+    "migration_policy": "exact-legacy-catalog-digest-plus-approved-mapping",
+    "migration_registry_sha256": "971dccb4b5b2acba0f3995716df1ba68df08193764944eca19d4ce12d5d1f2df",
+    "current_policy": "exact-catalog-missing-or-tampered-reject"
+  },
   "legacy_profiles_forbidden": ["D1", "R1"],
   "forbidden_skill_names": ["novel-development-map-designer"],
   "stages": [
@@ -38,6 +83,7 @@
   ],
   "production_transactions": [
     "initialize-or-resume",
+    "initialize-authority-revision-fork",
     "issue-exact-work-order",
     "execute-owning-skill",
     "persist-stage-or-workspace",

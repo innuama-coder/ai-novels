@@ -21,13 +21,14 @@ MODEL_ROLES={
  "hld_model_ha1":"canonical-models/narrative-architecture.json","hld_model_hs1":"canonical-models/storyline-choreography.json",
  "hld_model_hc1":"canonical-models/character-arc-placement.json","hld_model_hi1":"canonical-models/narrative-information-architecture.json",
  "hld_model_hr1":"canonical-models/rhythm-continuity-architecture.json","hld_model_hk1":"canonical-models/key-scene-function-map.json",
+ "hld_model_hd1":"canonical-models/chapter-definition-architecture.json",
 }
 HP1_PACKAGE_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/novel-hld-package.schema.json"
 HP1_CROSS_INDEX_SCHEMA=REPO/"skills/novel-hld-package-assembler/references/hld-cross-index.schema.json"
 REQUIRED_ROLES=("hb0_completion","hb0_manifest","hld_control_baseline","hp1_completion","hp1_manifest","hp1_validation","novel_hld_package","hld_cross_index","hld_traceability_matrix","hld_spec",*MODEL_ROLES,"hq2_completion","hq2_manifest","hq2_validation","lld_handoff_acceptance")
 SPEC=Spec(SKILL,VERSION,"HH1.A","hld-human-review-report.json","human_review_report","generation-session.json","report-assembly-execution.json","hh1-a-validation.schema.json",REQUIRED_ROLES,True)
-DOMAIN_BY_ROLE={"hld_model_ha1":"overall_narrative_architecture","hld_model_hs1":"storyline_choreography","hld_model_hc1":"character_arc_placement","hld_model_hi1":"pov_information_suspense","hld_model_hr1":"time_space_pacing_tension","hld_model_hk1":"key_scene_functions"}
-DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","open_items_constraints_and_lld_boundary")
+DOMAIN_BY_ROLE={"hld_model_ha1":"overall_narrative_architecture","hld_model_hs1":"storyline_choreography","hld_model_hc1":"character_arc_placement","hld_model_hi1":"pov_information_suspense","hld_model_hr1":"time_space_pacing_tension","hld_model_hk1":"key_scene_functions","hld_model_hd1":"chapter_definitions"}
+DOMAIN_SECTIONS=("overall_narrative_architecture","world_environment_definitions","character_definitions","environment_definitions","storyline_choreography","character_arc_placement","pov_information_suspense","time_space_pacing_tension","key_scene_functions","chapter_definitions","open_items_constraints_and_lld_boundary")
 WORLD_ENVIRONMENT_SCOPES={"city_and_region","local_people_and_daily_life","social_order_and_public_atmosphere","technology_and_infrastructure","climate_and_physical_environment"}
 IDENTITY_FIELDS={"schema_version","skill","stage","hld_run_id","status","input_gate_ref","source_artifacts","derivation_claims","decision_dependencies"}
 CJK=re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]");LATIN=re.compile(r"\b[A-Za-z]+(?:['’][A-Za-z]+)*\b")

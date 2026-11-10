@@ -245,7 +245,7 @@ def load_context(skill_root: Path, work_order_path: Path) -> Context:
 
 
 def _iter_evidence(model: Mapping[str, Any]) -> Iterable[dict[str, Any]]:
-    groups = ("storyline_trace_tests","character_arc_trace_tests","key_function_consumption_tests") if model["mode"] == "consumer_test" else ("obligation_coverage_tests","classification_fidelity_tests")
+    groups = ("storyline_trace_tests","character_arc_trace_tests","key_function_consumption_tests","chapter_definition_consumption_tests") if model["mode"] == "consumer_test" else ("obligation_coverage_tests","classification_fidelity_tests")
     for group in groups:
         for test in model[group]:
             yield from test["evidence"]
@@ -390,6 +390,13 @@ def _validate_consumer(context: Context, model: dict[str, Any]) -> None:
     chapter_ids = _consumer_chapter_ids(handoff, units, story_ids)
     character_ids = {value for item in units for value in item["character_ids"]}
     key_ids = unit_ids | {value for item in units for value in item["hkf_ids"]}
+    chapter_refs=handoff.get("chapter_definition_refs")
+    if not isinstance(chapter_refs,list) or not chapter_refs:
+        raise CandidateError("consumer handoff lacks chapter definitions")
+    chapter_definition_ids={item.get("id") for item in chapter_refs}
+    chapter_definition_chapter_ids={item.get("chapter_id") for item in chapter_refs}
+    if None in chapter_definition_ids or len(chapter_definition_ids)!=len(chapter_refs) or None in chapter_definition_chapter_ids or len(chapter_definition_chapter_ids)!=len(chapter_refs):
+        raise CandidateError("consumer handoff chapter definition identities are incomplete or duplicated")
     if set(model["reconstruction_results"]["lld_work_order"]) != unit_ids:
         raise CandidateError("consumer reconstruction omits or invents LLD work units")
     states = {item["work_unit_id"]:(item["entry_state"],item["exit_state"]) for item in model["reconstruction_results"]["entry_exit_states"]}

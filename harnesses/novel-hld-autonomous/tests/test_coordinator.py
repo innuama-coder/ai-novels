@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import hashlib
 import json
+import os
 import shutil
 import sys
 import tempfile
@@ -29,13 +30,13 @@ class CoordinatorTests(unittest.TestCase):
         self.assertEqual(coordinator._ready_status("HP1"),"running")
 
     def test_public_runtime_registry_is_complete_and_drift_fails_before_issuance(self):
-        expected={"HB0":("HB0",None),"HA1":("HA1",None),"HS1":("HS1",None),"HC1":("HC1",None),"HI1":("HI1",None),"HR1":("HR1",None),"HK1":("HK1",None),"HQ1":("HQ1",None),"HP1":("HP1",None),"consumer_test":("HQ2","consumer_test"),"fidelity_test":("HQ2","fidelity_test"),"HH1-A":("HH1","HH1-A"),"HH1-B":("HH1","HH1-B"),"HH1-C":("HH1","HH1-C"),"publisher":("HQ2","publisher"),"HH1-publisher":("HH1","HH1-publisher"),"HF1":("HF1",None)}
+        expected={"HB0":("HB0",None),"HA1":("HA1",None),"HS1":("HS1",None),"HC1":("HC1",None),"HI1":("HI1",None),"HR1":("HR1",None),"HK1":("HK1",None),"HD1":("HD1",None),"HQ1":("HQ1",None),"HP1":("HP1",None),"consumer_test":("HQ2","consumer_test"),"fidelity_test":("HQ2","fidelity_test"),"HH1-A":("HH1","HH1-A"),"HH1-B":("HH1","HH1-B"),"HH1-C":("HH1","HH1-C"),"publisher":("HQ2","publisher"),"HH1-publisher":("HH1","HH1-publisher"),"HF1":("HF1",None)}
         design_runtime=importlib.import_module("harnesses.novel-hld-autonomous.runtime.design_stage_runtime");hp1_runtime=importlib.import_module("skills.novel-hld-package-assembler.scripts.hp1_runtime");hh1a=importlib.import_module("skills.novel-hld-review-report-assembler.scripts.hh1a_runtime");hh1b=importlib.import_module("skills.novel-hld-presentation-fidelity-reviewer.scripts.hh1b_runtime")
         for token,(stage,kind) in expected.items():
             skill,version,digest=owner_registry.resolve_public_owner(stage,kind)
             self.assertTrue(skill and version and len(digest)==64)
             if token=="HB0":actual=hb0.implementation_sha256()
-            elif token in {"HA1","HS1","HC1","HI1","HR1","HK1","HQ1"}:actual=design_runtime.implementation_sha256(REPO/"skills"/skill)
+            elif token in {"HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"}:actual=design_runtime.implementation_sha256(REPO/"skills"/skill)
             elif token=="HP1":actual=hp1_runtime.implementation_sha256()
             elif token in {"consumer_test","fidelity_test"}:
                 hq2_runtime=importlib.import_module("harnesses.novel-hld-autonomous.runtime.hq2_stage_runtime")
@@ -172,6 +173,22 @@ class CoordinatorTests(unittest.TestCase):
             _,after=coordinator.load_current(workspace);self.assertEqual((after["active_task_kind"],after["event_sequence"]),("HA1",ledger["event_sequence"]+1));self.assertNotEqual(after["active_work_order_ref"],old)
             record=json.loads(next((workspace/"reissues").glob("*.json")).read_text());self.assertEqual((record["superseded_work_order_ref"],record["replacement_work_order_ref"]),(old,after["active_work_order_ref"]))
 
+    def test_independently_rejected_unaccepted_output_is_preserved_on_reissue(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,ledger=self.advance_to_ha1(Path(raw));old_work_path=coordinator.verify_file_ref(ledger["active_work_order_ref"],workspace);old_work=json.loads(old_work_path.read_text(encoding="utf-8"));self.ready_design_for_active(workspace,ledger);old_output=workspace/old_work["output_directory"];result_path=old_output/"stage-result.json";os.replace(workspace/"stage-result.json",result_path);result_bytes=result_path.read_bytes()
+            coordinator.reissue_active_work_order(workspace,"2026-08-06T00:02:00Z","independent semantic acceptance rejected a false authority claim")
+            _,after=coordinator.load_current(workspace);replacement=json.loads(coordinator.verify_file_ref(after["active_work_order_ref"],workspace).read_text(encoding="utf-8"));record=json.loads(next((workspace/"reissues").glob("*.json")).read_text(encoding="utf-8"))
+            self.assertNotEqual(replacement["output_directory"],old_work["output_directory"]);self.assertFalse((workspace/replacement["output_directory"]).exists());self.assertEqual(result_path.read_bytes(),result_bytes);self.assertEqual(record["superseded_result_ref"],coordinator._ref(result_path,workspace,"stage_result"));self.assertEqual(record["superseded_output_directory"],old_work["output_directory"])
+
+    def test_reissue_order_collision_fails_before_any_document_is_published(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,ledger=self.advance_to_ha1(Path(raw));self.ready_design_for_active(workspace,ledger);old_work=json.loads(coordinator.verify_file_ref(ledger["active_work_order_ref"],workspace).read_text(encoding="utf-8"));old_output=workspace/old_work["output_directory"];os.replace(workspace/"stage-result.json",old_output/"stage-result.json")
+            event=ledger["event_sequence"]+1;collision=workspace/f"work-order-{event:06d}-HA1.json";collision.write_bytes(b'{"forged":true}')
+            pointer_before=(workspace/"coordinator-current.json").read_bytes();files_before={path.relative_to(workspace).as_posix():path.read_bytes() for path in workspace.rglob("*") if path.is_file()}
+            with self.assertRaisesRegex(coordinator.CoordinatorFailure,"immutable coordinator document collision"):
+                coordinator.reissue_active_work_order(workspace,"2026-08-06T00:02:00Z","independent semantic acceptance rejected a false authority claim")
+            self.assertEqual((workspace/"coordinator-current.json").read_bytes(),pointer_before);self.assertEqual({path.relative_to(workspace).as_posix():path.read_bytes() for path in workspace.rglob("*") if path.is_file()},files_before);self.assertFalse((workspace/f"input-gate-{event:06d}-HA1.json").exists());self.assertFalse((workspace/"reissues"/f"reissue-{event:06d}-HA1.json").exists())
+
     def test_unexecuted_return_resolution_work_order_can_be_auditably_reissued(self):
         with tempfile.TemporaryDirectory() as raw:
             workspace,ledger=self.advance_to_ha1(Path(raw));self.nonready_for_active(workspace,ledger,"upstream_defect")
@@ -181,6 +198,27 @@ class CoordinatorTests(unittest.TestCase):
             _,after=coordinator.load_current(workspace);new_path=coordinator.verify_file_ref(after["active_work_order_ref"],workspace);new=json.loads(new_path.read_text(encoding="utf-8"));new_binding=json.loads(coordinator.verify_file_ref(new["return_binding"],workspace).read_text(encoding="utf-8"))
             self.assertEqual((new["mode"],new_binding,new["revision_plan_ref"],new["revision_plan_state_ref"]),("return_resolution",old_binding,old["revision_plan_ref"],old["revision_plan_state_ref"]))
             self.assertEqual(after["event_sequence"],before["event_sequence"]+1)
+
+    def test_downstream_return_seals_and_reissues_last_accepted_owner_base(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,ledger=self.advance_to_ha1(Path(raw))
+            for expected in ("HA1","HS1","HC1"):
+                self.assertEqual(ledger["active_task_kind"],expected)
+                self.ready_design_for_active(workspace,ledger)
+                coordinator.accept_result(workspace,workspace/"stage-result.json",f"2026-08-06T00:0{2 + len(expected)}:00Z")
+                _,ledger=coordinator.load_current(workspace)
+            state=json.loads(coordinator.verify_file_ref(ledger["current_state_ref"],workspace).read_text(encoding="utf-8"))
+            hc1=next(item for item in state["accepted_completions"] if json.loads((workspace/item["completion_path"]).read_text(encoding="utf-8"))["stage"]=="HC1")
+            self.nonready_for_active(workspace,ledger,"upstream_defect")
+            active=json.loads(coordinator.verify_file_ref(ledger["active_work_order_ref"],workspace).read_text(encoding="utf-8"));blocked=json.loads((workspace/"stage-result.json").read_text(encoding="utf-8"));blocked["revision"]=active["revision"];cp.write(workspace/"stage-result.json",blocked)
+            target={"target_kind":"hld_content","affected_ids":["HAS-001"],"requirements":["repair arc"],"source_target_refs":["/finding"],"correction_condition":"arc repaired","defect_origin":"upstream_content","violated_contract":"arc","automatic":True}
+            coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:10:00Z",[target]);_,before=coordinator.load_current(workspace)
+            old=json.loads(coordinator.verify_file_ref(before["active_work_order_ref"],workspace).read_text(encoding="utf-8"));base={item["role"]:item for item in old["file_allowlist"] if item["role"].startswith("return_base::HC1::")}
+            self.assertEqual(set(base),{"return_base::HC1::main","return_base::HC1::manifest","return_base::HC1::completion"})
+            self.assertEqual((base["return_base::HC1::main"]["path"],base["return_base::HC1::main"]["sha256"]),(hc1["path"],hc1["sha256"]))
+            coordinator.reissue_active_work_order(workspace,"2026-08-06T00:11:00Z","refresh HC1 return runtime")
+            _,after=coordinator.load_current(workspace);new=json.loads(coordinator.verify_file_ref(after["active_work_order_ref"],workspace).read_text(encoding="utf-8"));new_base={item["role"]:item for item in new["file_allowlist"] if item["role"].startswith("return_base::HC1::")}
+            self.assertEqual(new_base,base)
 
     def test_required_now_opens_external_author_question_without_agent_answer(self):
         with tempfile.TemporaryDirectory() as raw:
@@ -216,10 +254,33 @@ class CoordinatorTests(unittest.TestCase):
     def test_forward_design_topology_reaches_hq1_without_skip(self):
         with tempfile.TemporaryDirectory() as raw:
             workspace,ledger=self.advance_to_ha1(Path(raw));seen=[]
-            for expected in ("HA1","HS1","HC1","HI1","HR1","HK1"):
+            for expected in ("HA1","HS1","HC1","HI1","HR1","HK1","HD1"):
                 _,ledger=coordinator.load_current(workspace);self.assertEqual(ledger["active_task_kind"],expected);seen.append(expected);self.ready_design_for_active(workspace,ledger);coordinator.accept_result(workspace,workspace/"stage-result.json",f"2026-08-06T00:{len(seen)+1:02d}:00Z")
-            _,ledger=coordinator.load_current(workspace);self.assertEqual((seen,ledger["active_task_kind"]),(["HA1","HS1","HC1","HI1","HR1","HK1"],"HQ1"))
+            _,ledger=coordinator.load_current(workspace);self.assertEqual((seen,ledger["active_task_kind"]),(["HA1","HS1","HC1","HI1","HR1","HK1","HD1"],"HQ1"))
             hq1_order=json.loads(coordinator.verify_file_ref(ledger["active_work_order_ref"],workspace).read_text());roles={item["role"] for item in hq1_order["file_allowlist"]};required={"baseline_manifest","baseline_validation","upstream::HB0::main","upstream::HB0::completion",*(f"upstream::{stage}::{suffix}" for stage in coordinator.UPSTREAM["HQ1"][1:] for suffix in ("main","manifest","completion","validation"))};self.assertTrue(required.issubset(roles))
+
+    def test_legacy_author_wait_migrates_append_only_to_hd1(self):
+        with tempfile.TemporaryDirectory() as raw:
+            workspace,current=self.advance_to_ha1(Path(raw));state=json.loads((workspace/current["current_state_ref"]["path"]).read_text(encoding="utf-8"));hb0_artifact=dict(state["accepted_completions"][0])
+            completion_path=workspace/hb0_artifact["completion_path"];completion=json.loads(completion_path.read_text(encoding="utf-8"));source_ref=next(item for item in completion["canonical_artifacts"] if item["role"]=="source_index");source_path=workspace/source_ref["path"];source=json.loads(source_path.read_text(encoding="utf-8"))
+            for entry in source["entries"]:entry["allowed_stages"]=[stage for stage in entry["allowed_stages"] if stage!="HD1"]
+            cp.write(source_path,source);source_digest=coordinator._hash(source_path);source_ref["sha256"]=source_digest
+            manifest_path=workspace/hb0_artifact["manifest_path"];manifest=json.loads(manifest_path.read_text(encoding="utf-8"));manifest["artifact_roles"]["source_index"]["sha256"]=source_digest;next(item for item in manifest["files"] if item["role"]=="source_index")["sha256"]=source_digest;cp.write(manifest_path,manifest)
+            completion["manifest_ref"]["sha256"]=coordinator._hash(manifest_path);cp.write(completion_path,completion)
+            hb0_artifact.update({"manifest_sha256":coordinator._hash(manifest_path),"completion_sha256":coordinator._hash(completion_path)})
+            artifacts=[hb0_artifact]+[self.fake_stage_artifact(workspace,stage) for stage in ("HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HQ2","HH1")]
+            legacy_state={"schema_version":"1.0","harness":coordinator.HARNESS,"hld_run_id":"hld-fixture","revision":11,"event_sequence":50,"status":"waiting_author_decision","current_stage":None,"accepted_completions":artifacts,"current_result_ref":None,"previous_state_ref":None,"revision_plan_ref":None,"revision_plan_state_ref":None,"waiting_transaction_ref":None};state_path=workspace/"states/revision-011.json";cp.write(state_path,legacy_state)
+            legacy_ledger={**current,"ledger_revision":10,"event_sequence":50,"current_state_ref":cp.fref(state_path,workspace,"state_before"),"active_work_order_ref":None,"active_task_kind":None,"accepted_result_refs":[],"composite_state_ref":None,"terminal_status":None};ledger_path=workspace/"coordinator/ledger-0010.json";cp.write(ledger_path,legacy_ledger);cp.write(workspace/"coordinator-current.json",{"ledger_ref":cp.fref(ledger_path,workspace,"coordinator_ledger")})
+            old_bytes={path:path.read_bytes() for path in (state_path,ledger_path,manifest_path,completion_path,source_path)};old_pointer=(workspace/"coordinator-current.json").read_bytes()
+            coordinator.migrate_missing_stage(workspace,"HD1","2026-08-06T01:00:00Z","insert the independently contracted chapter-definition stage")
+            _,after=coordinator.load_current(workspace);next_state=json.loads((workspace/after["current_state_ref"]["path"]).read_text(encoding="utf-8"));order=json.loads((workspace/after["active_work_order_ref"]["path"]).read_text(encoding="utf-8"));gate=json.loads((workspace/order["input_gate_ref"]["path"]).read_text(encoding="utf-8"));migration=json.loads((workspace/next_state["current_result_ref"]["path"]).read_text(encoding="utf-8"));derived=json.loads((workspace/migration["source_index_after_ref"]["path"]).read_text(encoding="utf-8"))
+            self.assertEqual((next_state["revision"],next_state["current_stage"],next_state["status"],after["active_task_kind"]),(12,"HD1","running","HD1"));self.assertEqual(len(next_state["accepted_completions"]),7);self.assertEqual(order["event_sequence"],52)
+            self.assertEqual(gate["source_lineage_refs"][0],migration["source_index_after_ref"]);self.assertTrue(all("HD1" in item["allowed_stages"] for item in derived["entries"] if item["domain"] in coordinator.SOURCE_ACCESS_MATRIX["HD1"]));self.assertTrue(all("HD1" not in item["allowed_stages"] for item in derived["entries"] if item["domain"] not in coordinator.SOURCE_ACCESS_MATRIX["HD1"]))
+            self.assertEqual(migration["preserved_completions"],artifacts[:7]);self.assertEqual(migration["invalidated_completions"],artifacts[7:]);self.assertEqual({path:path.read_bytes() for path in old_bytes},old_bytes)
+            committed_pointer=(workspace/"coordinator-current.json").read_bytes();(workspace/"coordinator-current.json").write_bytes(old_pointer);coordinator.migrate_missing_stage(workspace,"HD1","2026-08-06T01:00:00Z","insert the independently contracted chapter-definition stage");self.assertEqual((workspace/"coordinator-current.json").read_bytes(),committed_pointer)
+            coordinator.reissue_active_work_order(workspace,"2026-08-06T01:01:00Z","refresh rejected migrated-stage result")
+            _,reissued=coordinator.load_current(workspace);reissued_order=coordinator.read_json(coordinator.verify_file_ref(reissued["active_work_order_ref"],workspace));reissued_gate=coordinator.read_json(coordinator.verify_file_ref(reissued_order["input_gate_ref"],workspace));expected_source=migration["source_index_after_ref"]
+            self.assertEqual(next(item for item in reissued_order["file_allowlist"] if item["role"]=="source_index"),expected_source);self.assertEqual(reissued_gate["source_lineage_refs"][0],expected_source)
 
     def test_third_identical_automatic_fingerprint_exhausts(self):
         with tempfile.TemporaryDirectory() as raw:
@@ -235,7 +296,7 @@ class CoordinatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             workspace,ledger=self.advance_to_ha1(Path(raw));self.nonready_for_active(workspace,ledger,"upstream_defect");targets=[{"target_kind":"hld_content","affected_ids":["HST-001"],"requirements":["repair architecture"],"source_target_refs":["/a"],"correction_condition":"architecture repaired","defect_origin":"upstream_content","violated_contract":"architecture","automatic":True},{"target_kind":"hld_content","affected_ids":["HAS-001"],"requirements":["repair arc"],"source_target_refs":["/b"],"correction_condition":"arc repaired","defect_origin":"upstream_content","violated_contract":"arc","automatic":True}];coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:02:00Z",targets);_,ledger=coordinator.load_current(workspace);self.assertEqual(json.loads((workspace/ledger["active_work_order_ref"]["path"]).read_text())["mode"],"return_resolution")
             self.ready_design_for_active(workspace,ledger);coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:03:00Z");_,ledger=coordinator.load_current(workspace);work=json.loads((workspace/ledger["active_work_order_ref"]["path"]).read_text());self.assertEqual((work["stage"],work["mode"]),("HS1","forward"));self.assertEqual(sum(ledger["fingerprint_completion_counts"].values()),1)
-            self.ready_design_for_active(workspace,ledger);coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:04:00Z");_,ledger=coordinator.load_current(workspace);work=json.loads((workspace/ledger["active_work_order_ref"]["path"]).read_text());binding=json.loads((workspace/work["return_binding"]["path"]).read_text());self.assertEqual((work["stage"],work["mode"],binding["affected_ids"]),("HC1","return_resolution",["HAS-001"]))
+            self.ready_design_for_active(workspace,ledger);coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:04:00Z");_,ledger=coordinator.load_current(workspace);work=json.loads((workspace/ledger["active_work_order_ref"]["path"]).read_text());binding=json.loads((workspace/work["return_binding"]["path"]).read_text());self.assertEqual((work["stage"],work["mode"],binding["affected_ids"]),("HC1","return_resolution",["HAS-001"]));self.assertTrue({"return_binding","revision_plan","revision_plan_state"}.issubset({item["role"] for item in work["file_allowlist"]}))
             self.ready_design_for_active(workspace,ledger);coordinator.accept_result(workspace,workspace/"stage-result.json","2026-08-06T00:05:00Z");_,ledger=coordinator.load_current(workspace);state=json.loads((workspace/ledger["current_state_ref"]["path"]).read_text());self.assertEqual((state["status"],state["current_stage"],state["revision_plan_ref"],sum(ledger["fingerprint_completion_counts"].values())),("running","HI1",None,2))
 
     def test_external_author_answer_is_byte_bound_consumed_once_and_resumes_owner(self):
@@ -306,7 +367,7 @@ class CoordinatorTests(unittest.TestCase):
             for seq,kind in enumerate(coordinator.TASK_ORDER["HH1"],40):task=fx.ready_task(kind,seq,state_ref,up,previous);previous[kind]=task;hh_tasks.append(task)
             hh_order=fx.publish_order("HH1",hh_tasks);publisher.execute(hh_order);(workspace/"stage-result.json").unlink()
             artifacts={"HB0":cp.artifact(workspace,"HB0"),"HP1":cp.artifact(workspace,"HP1"),"HQ2":cp.artifact(workspace,"HQ2"),"HH1":coordinator._artifact(workspace/"HH1-package"/"hld-human-review-report.json",workspace/"HH1-package"/"package-manifest.json",workspace/"HH1-package"/"stage-completion.json",workspace)}
-            for stage in ("HA1","HS1","HC1","HI1","HR1","HK1","HQ1"):artifacts[stage]=self.fake_stage_artifact(workspace,stage)
+            for stage in ("HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1"):artifacts[stage]=self.fake_stage_artifact(workspace,stage)
             accepted=[artifacts[x] for x in coordinator.UPSTREAM["HF1"]];state={"schema_version":"1.0","harness":coordinator.HARNESS,"hld_run_id":"hld-fixture","revision":11,"event_sequence":50,"status":"waiting_author_decision","current_stage":None,"accepted_completions":accepted,"current_result_ref":cp.fref(workspace/"HH1-package"/"stage-completion.json",workspace,"stage_result"),"previous_state_ref":None,"revision_plan_ref":None,"revision_plan_state_ref":None,"waiting_transaction_ref":None};spath=workspace/"states"/"revision-011.json";cp.write(spath,state);sref=cp.fref(spath,workspace,"state_before");ledger={"schema_version":"1.0","harness":coordinator.HARNESS,"hld_run_id":"hld-fixture","ledger_revision":0,"event_sequence":50,"current_state_ref":sref,"active_work_order_ref":None,"active_task_kind":None,"accepted_result_refs":[],"composite_state_ref":None,"consumed_author_event_ids":[],"fingerprint_completion_counts":{},"terminal_status":None};coordinator._snapshot(workspace,ledger)
             hh_manifest=workspace/artifacts["HH1"]["manifest_path"];hh_doc=json.loads(hh_manifest.read_text(encoding="utf-8"));html=hh_manifest.parent/hh_doc["artifact_roles"]["human_review_html"]["path"];decision={"schema_version":"1.0","hld_run_id":"hld-fixture","revision":11,"event_sequence":51,"event_id":"AUTHOR-APPROVE-001","external":True,"current":True,"consumed":False,"decision":"approved","author_text":"Approved for final closure.","bindings":{"hp1_package_sha256":artifacts["HP1"]["sha256"],"hq2_acceptance_sha256":artifacts["HQ2"]["sha256"],"hh1_manifest_sha256":artifacts["HH1"]["manifest_sha256"],"html_sha256":coordinator._hash(html)},"revision_targets":[]};dpath=workspace/"external-author-decision.json";cp.write(dpath,decision);coordinator.accept_author_decision(workspace,dpath,"2026-08-06T00:10:00Z");_,active=coordinator.load_current(workspace);self.assertEqual(active["active_task_kind"],"HF1");self.assertIsNone(active["terminal_status"])
             old_order_ref=dict(active["active_work_order_ref"]);coordinator.reissue_active_work_order(workspace,"2026-08-06T00:10:30Z","refresh HF1 runtime before execution");_,active=coordinator.load_current(workspace);self.assertEqual(active["active_task_kind"],"HF1");self.assertNotEqual(old_order_ref,active["active_work_order_ref"])

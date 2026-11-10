@@ -78,6 +78,7 @@ def add_handoff_story_and_time_controls(admitted: dict, *, storyline_id: str = "
     admitted["HR1"]["main"]["unit_duration_density"] = [{
         "unit_id": unit_id, "elapsed_start_day": 0, "elapsed_end_day": 1, "elapsed_label": "day 0 to day 1",
     }]
+    admitted["HD1"]={"main":{"chapter_definitions":[{"id":"HDF-001","chapter_id":"HCH-001","chapter_number":1}]}}
 
 
 def manifest_for(package: Path, content: list[Path], stage: str) -> Path:
@@ -115,7 +116,7 @@ def build_design_package(workspace: Path, stage: str, authority: dict, *, lwr_pr
     package = workspace / f"{stage}-package"
     package.mkdir()
     decision = f"HDDES-{stage}-001"
-    object_ids = {"HA1": "HNU-001", "HS1": "HTS-001", "HC1": "HAS-001", "HI1": "HIN-001", "HR1": "HTM-001", "HK1": "HKF-001"}
+    object_ids = {"HA1": "HNU-001", "HS1": "HTS-001", "HC1": "HAS-001", "HI1": "HIN-001", "HR1": "HTM-001", "HK1": "HKF-001", "HD1":"HDF-001"}
     object_id = object_ids[stage]
     stage_authority = hp1.json.loads(hp1.canonical_json(authority))
     stage_authority["hld_ownership"] = {"source_projection": [object_id], "hld_owned": [], "preserved_open": [], "lld_freedom": []}
@@ -123,7 +124,7 @@ def build_design_package(workspace: Path, stage: str, authority: dict, *, lwr_pr
         "schema_version": "1.0", "skill": f"fixture-{stage.lower()}", "stage": stage,
         "hld_run_id": "hld-fixture", "status": "ready", "authority_partition": stage_authority,
         "design_decisions": [{"id": decision}], "decision_dependencies": [], "open_items": [],
-        "objects": [] if stage == "HK1" else [{"id": object_id, "source_refs": ["NAR-001"], "design_decision_ids": [decision]}],
+        "objects": [] if stage in {"HK1","HD1"} else [{"id": object_id, "source_refs": ["NAR-001"], "design_decision_ids": [decision]}],
     }
     if stage == "HA1":
         model["chapter_shells"]=[{"id":"HCH-001","parent_unit_id":"HNU-001"}]
@@ -143,6 +144,8 @@ def build_design_package(workspace: Path, stage: str, authority: dict, *, lwr_pr
     elif stage == "HR1":
         model["space_transition_map"]=[{"id":"HTM-SPACE-001","from_environment_id":"ENV-001","to_environment_id":"ENV-001"}]
         model["unit_duration_density"]=[{"unit_id":"HNU-001","elapsed_start_day":0,"elapsed_end_day":1,"elapsed_label":"day 0 to day 1"}]
+    elif stage == "HD1":
+        model["chapter_definitions"]=[{"id":"HDF-001","chapter_id":"HCH-001","chapter_number":1}]
     if stage == "HK1":
         model["key_scene_functions"] = [{
             "id": "HKF-001",
@@ -336,6 +339,7 @@ class HP1DependencyProjectionTests(unittest.TestCase):
             "elapsed_start_day": 0, "elapsed_end_day": 1, "label": "day 0 to day 1",
         }])
         self.assertEqual(handoff["terminal_state_refs"], ["after", "K-AFTER", "The choice is irreversible."])
+        self.assertEqual(handoff["chapter_definition_refs"],[{"id":"HDF-001","chapter_id":"HCH-001","chapter_number":1,"model_path":"canonical-models/chapter-definition-architecture.json","locator":"/chapter_definitions/0","value_sha256":hp1.value_hash(admitted["HD1"]["main"]["chapter_definitions"][0])}])
 
     def test_missing_character_or_environment_disposition_fails_closed(self):
         admitted = {

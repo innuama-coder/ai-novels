@@ -16,6 +16,7 @@ def stage_model(stage,input_gate_ref,actual_reads):
     model.update({
         "pov_policy":e("HPV-POLICY-001",allowed_modes=["internal_limited"],switch_rule="unit boundary only",legality_rule="perceived or legitimately inferred"),
         "unit_pov_assignments":[e("HPV-UNIT-001",unit_id="HNU-001",pov_character_id="CHR-001",focalization_mode="internal_limited",perception_limits=["no remote perception"])],
+        "chapter_pov_assignments":[e("HPV-CHAPTER-001",chapter_id="HCH-001",parent_unit_id="HNU-001",hc1_agency_contract_id="HAS-AGENCY-001",pov_character_id="CHR-001",focalization_mode="internal_limited",knowledge_acquisition_modes=["perceived"],perception_limits=["只允许人物当时能够感知或合法获知的信息"])],
         "information_nodes":[e("HIN-001",source_information_id="INT-FREE-001",knower_ids=["CHR-001"],reader_state="known",acquisition_mode="perceived",earliest_legal_unit_id="HNU-001",forbidden_leak_unit_ids=[],resolution_ref=None)],
         "knowledge_states":[e("HKS-CHR-001",character_id="CHR-001",unit_id="HNU-001",information_node_ids=["HIN-001"],misbelief_node_ids=[])],
         "reader_information_states":[e("HKS-READER-001",unit_id="HNU-001",information_node_ids=["HIN-001"],inference_permissions=["infer authorized pressure"])],

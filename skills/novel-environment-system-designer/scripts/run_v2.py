@@ -15,6 +15,9 @@ from typing import Any, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 s1_runtime = importlib.import_module(
     "skills.novel-storyline-architecture-designer.scripts.run_v2"
 )
@@ -380,28 +383,16 @@ def _implementation_paths() -> dict[str, Path]:
         "skill/run_v2.py": _HERE,
         "skill/SKILL.md": _SKILL / "SKILL.md",
         "skill/runtime-contract.md": _SKILL / "references" / "runtime-contract.md",
-        "upstream/S1-run_v2.py": _S1_SKILL / "scripts" / "run_v2.py",
-        "upstream/S1-runtime-contract.md": (
-            _S1_SKILL / "references" / "runtime-contract.md"
-        ),
-        "upstream/W1-run_v2.py": _W1_SKILL / "scripts" / "run_v2.py",
-        "upstream/W1-runtime-contract.md": (
-            _W1_SKILL / "references" / "runtime-contract.md"
-        ),
     }
     for name in (
         "canonical.py",
         "contracts.py",
         "coordinator.py",
-        "baseline.py",
-        "b0_completion.py",
+        "stage_implementation_identity.py",
     ):
         values[f"runtime/{name}"] = runtime_dir / name
     for name in (
         "environment-system.schema.json",
-        "world-model.schema.json",
-        "storyline-architecture.schema.json",
-        "author-control-baseline.schema.json",
         "canonical-common.schema.json",
         "common-defs.schema.json",
         "input-gate.schema.json",
@@ -6009,9 +6000,11 @@ def _check_package_boundary(root: Path) -> None:
         f"generation-evidence/{index:02d}-{phase}.json"
         for index, phase in enumerate(PHASES, 1)
     }
+    execution = _read(root / "execution-record.json", "E1_EXECUTION_INVALID")
     allowed_implementation = {
-        f"implementation/{identity}"
-        for identity in _implementation_paths()
+        f"implementation/{item['identity']}"
+        for item in execution.get("implementation_catalog", [])
+        if isinstance(item, Mapping) and isinstance(item.get("identity"), str)
     }
     allowed_reviews: set[str] = set()
     phase3_path = root / "generation-evidence" / "03-zones-and-topology.json"
@@ -6087,9 +6080,20 @@ def validate_e1_package(
         item["identity"]: item["artifact"]
         for item in execution.get("implementation_catalog", [])
     }
+    identity_mode = "pre-versioned-model"
+    if current_model:
+        try:
+            identity_mode, catalog = stage_identity.validate_stage_catalog(
+                stage="E1",
+                records=execution.get("implementation_catalog"),
+                package_root=root,
+                current_paths=_implementation_paths(),
+                verify_artifact_reference=rt.verify_artifact_reference,
+                sha256_file=rt.sha256_file,
+            )
+        except stage_identity.StageImplementationIdentityError as error:
+            _fail("E1_IMPLEMENTATION_STALE", str(error))
     if not current_model:
-        if set(catalog) != set(_implementation_paths()):
-            _fail("E1_LEGACY_PROVENANCE_UNTRUSTED", "implementation set differs")
         for identity, reference in catalog.items():
             try:
                 rt.verify_artifact_reference(reference, root=root)
@@ -6254,7 +6258,15 @@ def validate_e1_package(
     if current_model:
         expected_session.update(
             {
-                "implementation_bindings": _implementation_bindings(),
+                "implementation_bindings": (
+                    _implementation_bindings()
+                    if identity_mode
+                    == stage_identity.STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION
+                    else [
+                        {"identity": identity, "sha256": reference["sha256"]}
+                        for identity, reference in sorted(catalog.items())
+                    ]
+                ),
                 "review_source_bindings": _review_source_bindings(s1, w1),
                 "authority_review_protocol": AUTHORITY_REVIEW_PROTOCOL,
                 "hosting_review_protocol": HOSTING_REVIEW_PROTOCOL,
@@ -6305,11 +6317,10 @@ def validate_e1_package(
                 root=root,
             )
         )
-        for identity in _implementation_paths()
+        for identity in catalog
     }
     if (
-        set(catalog) != set(_implementation_paths())
-        or {
+        {
             rt.canonical_json(item)
             for item in execution.get("implementation", [])
         }
@@ -6327,16 +6338,6 @@ def validate_e1_package(
             "E1_IMPLEMENTATION_STALE",
             "implementation files, catalog, execution, and manifest differ",
         )
-    for identity, current in _implementation_paths().items():
-        reference = catalog.get(identity)
-        if reference is None:
-            _fail("E1_IMPLEMENTATION_STALE", identity)
-        try:
-            rt.verify_artifact_reference(reference, root=root)
-        except Exception as error:
-            _fail("E1_IMPLEMENTATION_STALE", str(error))
-        if current_model and reference["sha256"] != rt.sha256_file(current):
-            _fail("E1_IMPLEMENTATION_STALE", identity)
     if not current_model:
         _validate_legacy_package_provenance(model, catalog)
     if require_completion:

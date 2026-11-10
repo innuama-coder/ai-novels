@@ -16,6 +16,9 @@ from typing import Any, Mapping, Sequence
 
 
 rt = importlib.import_module("harnesses.novel-conception-autonomous.runtime")
+stage_identity = importlib.import_module(
+    "harnesses.novel-conception-autonomous.runtime.stage_implementation_identity"
+)
 _HERE = Path(__file__).resolve()
 _REPO = _HERE.parents[3]
 _SKILL = _HERE.parents[1]
@@ -283,7 +286,7 @@ S1_RUNTIME_DEPENDENCIES = (
     "canonical.py",
     "contracts.py",
     "coordinator.py",
-    "baseline.py",
+    "stage_implementation_identity.py",
 )
 
 S1_SCHEMA_DEPENDENCIES = (
@@ -4676,17 +4679,17 @@ def validate_s1_package(
         )
     if evidence_index != expected_evidence_index:
         _fail("S1_EVIDENCE_INVALID", "evidence index differs from phase chain")
-    catalog = {x["identity"]: x["artifact"] for x in execution.get("implementation_catalog", [])}
-    for identity, current in _implementation_paths().items():
-        reference = catalog.get(identity)
-        if reference is None:
-            _fail("S1_IMPLEMENTATION_STALE", identity)
-        try:
-            rt.verify_artifact_reference(reference, root=root)
-        except Exception as error:
-            _fail("S1_IMPLEMENTATION_STALE", str(error))
-        if reference["sha256"] != rt.sha256_file(current):
-            _fail("S1_IMPLEMENTATION_STALE", identity)
+    try:
+        stage_identity.validate_stage_catalog(
+            stage="S1",
+            records=execution.get("implementation_catalog"),
+            package_root=root,
+            current_paths=_implementation_paths(),
+            verify_artifact_reference=rt.verify_artifact_reference,
+            sha256_file=rt.sha256_file,
+        )
+    except stage_identity.StageImplementationIdentityError as error:
+        _fail("S1_IMPLEMENTATION_STALE", str(error))
     if require_completion:
         completion_path = root / "stage-completion.json"
         completion = _read(completion_path, "S1_COMPLETION_MISSING")

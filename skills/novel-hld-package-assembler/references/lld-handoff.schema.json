@@ -3,7 +3,7 @@
   "$id": "lld-handoff.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "skill", "stage", "hld_run_id", "status", "next_stage", "current_hld_package", "work_units", "chapter_designs", "storyline_dispositions", "work_unit_time_windows", "character_dispositions", "environment_coverage", "world_setting", "space_transition_map", "terminal_state_refs", "unresolved_dependency_summary", "preserved_open_items", "resolution_refs"],
+  "required": ["schema_version", "skill", "stage", "hld_run_id", "status", "next_stage", "current_hld_package", "work_units", "chapter_designs", "chapter_definition_refs", "storyline_dispositions", "work_unit_time_windows", "character_dispositions", "environment_coverage", "world_setting", "space_transition_map", "terminal_state_refs", "unresolved_dependency_summary", "preserved_open_items", "resolution_refs"],
   "properties": {
     "schema_version": {"const": "1.0"},
     "skill": {"const": "novel-hld-package-assembler"},
@@ -14,6 +14,7 @@
     "current_hld_package": {"$ref": "common.schema.json#/$defs/fileReference"},
     "work_units": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lwk"}},
     "chapter_designs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/chapterDesign"}},
+    "chapter_definition_refs": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["id", "chapter_id", "chapter_number", "model_path", "locator", "value_sha256"], "properties": {"id": {"type": "string", "pattern": "^HDF-"}, "chapter_id": {"type": "string", "pattern": "^HCH-"}, "chapter_number": {"type": "integer", "minimum": 1}, "model_path": {"const": "canonical-models/chapter-definition-architecture.json"}, "locator": {"type": "string", "pattern": "^/chapter_definitions/[0-9]+$"}, "value_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
     "storyline_dispositions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/storylineDisposition"}},
     "work_unit_time_windows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/timeWindow"}},
     "character_dispositions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/characterDisposition"}},

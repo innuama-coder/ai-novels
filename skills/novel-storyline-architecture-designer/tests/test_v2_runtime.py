@@ -28,6 +28,8 @@ class S1ImplementationDependencyRegistryTests(unittest.TestCase):
         self.assertIn("skill/run_v2.py", identities)
         self.assertIn("schemas/storyline-architecture.schema.json", identities)
         self.assertIn("schemas/canonical-common.schema.json", identities)
+        self.assertIn("runtime/stage_implementation_identity.py", identities)
+        self.assertNotIn("runtime/baseline.py", identities)
         self.assertNotIn("schemas/world-model.schema.json", identities)
         self.assertNotIn("schemas/environment-system.schema.json", identities)
         self.assertNotIn("runtime/b0_completion.py", identities)

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Novel HLD Chapter Definition Designer"
+  short_description: "Define writing-ready chapter contracts from sealed HLD models"
+  default_prompt: "Use $novel-hld-chapter-definition-designer to define every HLD chapter with complete dramatic, information, continuity, memory, and LLD handoff controls."

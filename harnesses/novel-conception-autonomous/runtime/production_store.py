@@ -17,7 +17,12 @@ from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterator, Mapping
 
-from .canonical import canonical_json, canonical_sha256, sha256_file
+from .canonical import (
+    canonical_json,
+    canonical_sha256,
+    filesystem_identity,
+    sha256_file,
+)
 from .contracts import ContractRuntime, ContractValidationError
 from .coordinator import AutonomousCoordinator, CoordinatorError, SealedDocument
 from .production_coordinator import ProductionCoordinator
@@ -37,17 +42,21 @@ class ProductionRunStore:
     """Append-only state/workspace store rooted in one run directory."""
 
     def __init__(self, root: str | Path, *, runtime: ContractRuntime | None = None):
-        self.root = Path(root).resolve()
+        self.root = filesystem_identity(root)
         self.runtime = runtime or ContractRuntime()
 
     def _path(self, logical: str) -> Path:
         pure = PurePosixPath(logical)
-        if pure.is_absolute() or not pure.parts or ".." in pure.parts:
+        if (
+            pure.is_absolute()
+            or not pure.parts
+            or ".." in pure.parts
+            or "\\" in logical
+            or re.match(r"^[A-Za-z]:", logical) is not None
+        ):
             _fail("PROD_PATH_INVALID", logical)
         candidate = self.root / Path(*pure.parts)
-        target = self._without_windows_extended_prefix(
-            self.physical_path(candidate).resolve()
-        )
+        target = filesystem_identity(self.physical_path(candidate))
         try:
             target.relative_to(self.root)
         except ValueError:
@@ -84,8 +93,7 @@ class ProductionRunStore:
     def resolve_physical_path(self, path: str | Path) -> Path:
         """Resolve one physical candidate and prove it remains in this run."""
 
-        resolved = self.physical_path(path).resolve()
-        normal = self._without_windows_extended_prefix(resolved)
+        normal = filesystem_identity(self.physical_path(path))
         try:
             normal.relative_to(self.root)
         except ValueError:
@@ -365,11 +373,233 @@ class ProductionRunStore:
     def persist_document(self, document: SealedDocument) -> Path:
         if canonical_sha256(document.data) != document.reference.get("sha256"):
             _fail("PROD_DOCUMENT_HASH_MISMATCH", str(document.reference))
+        logical = str(document.reference.get("path", ""))
+        if logical.startswith((
+            "reviews/h1-presentation-fidelity/",
+            "reviews/h1-fragment-fidelity/",
+            "orchestration/h1-fidelity-review-assignments/",
+            "orchestration/h1-fidelity-review-completions/",
+            "orchestration/h1-fragment-fidelity-review-assignments/",
+            "orchestration/h1-fragment-fidelity-review-completions/",
+            "orchestration/h1-fidelity-authority-transactions/",
+        )):
+            _fail("PROD_REVIEW_AUTHORITY_REQUIRED", logical)
         path = self._path(str(document.reference["path"]))
         self._write_new(path, canonical_json(document.data).encode("utf-8"))
         if sha256_file(path) != document.reference["sha256"]:
             _fail("PROD_DOCUMENT_WRITE_MISMATCH", str(path))
         return path
+
+    def _persist_h1_fidelity_authority_document(
+        self, document: SealedDocument
+    ) -> Path:
+        """Persist a protected review authority artifact from orchestrator APIs."""
+
+        logical = str(document.reference.get("path", ""))
+        if not logical.startswith((
+            "reviews/h1-presentation-fidelity/",
+            "reviews/h1-fragment-fidelity/",
+            "orchestration/h1-fidelity-review-assignments/",
+            "orchestration/h1-fidelity-review-completions/",
+            "orchestration/h1-fragment-fidelity-review-assignments/",
+            "orchestration/h1-fragment-fidelity-review-completions/",
+            "orchestration/h1-fidelity-authority-transactions/",
+        )):
+            _fail("PROD_REVIEW_AUTHORITY_PATH_INVALID", logical)
+        if canonical_sha256(document.data) != document.reference.get("sha256"):
+            _fail("PROD_DOCUMENT_HASH_MISMATCH", str(document.reference))
+        path = self._path(logical)
+        self._write_new(path, canonical_json(document.data).encode("utf-8"))
+        if sha256_file(path) != document.reference["sha256"]:
+            _fail("PROD_DOCUMENT_WRITE_MISMATCH", str(path))
+        return path
+
+    def _h1_fidelity_authority_transaction(
+        self, review: SealedDocument, completion: SealedDocument
+    ) -> tuple[SealedDocument, SealedDocument]:
+        documents = [
+            {"data": copy.deepcopy(review.data), "reference": dict(review.reference)},
+            {
+                "data": copy.deepcopy(completion.data),
+                "reference": dict(completion.reference),
+            },
+        ]
+        base = {
+            "schema_version": "1.0",
+            "kind": "h1-fidelity-authority-pair-transaction",
+            "documents": documents,
+            "status": "prepared",
+        }
+        transaction_id = canonical_sha256(base)[:24]
+        prepared_data = {**base, "transaction_id": transaction_id}
+        prepared = SealedDocument(
+            data=prepared_data,
+            reference={
+                "path": (
+                    "orchestration/h1-fidelity-authority-transactions/"
+                    f"{transaction_id}.prepared.json"
+                ),
+                "sha256": canonical_sha256(prepared_data),
+            },
+        )
+        complete_data = {
+            "schema_version": "1.0",
+            "kind": "h1-fidelity-authority-pair-completion",
+            "transaction_id": transaction_id,
+            "prepared": dict(prepared.reference),
+            "documents": [dict(review.reference), dict(completion.reference)],
+            "status": "complete",
+        }
+        complete = SealedDocument(
+            data=complete_data,
+            reference={
+                "path": (
+                    "orchestration/h1-fidelity-authority-transactions/"
+                    f"{transaction_id}.complete.json"
+                ),
+                "sha256": canonical_sha256(complete_data),
+            },
+        )
+        return prepared, complete
+
+    def persist_h1_fidelity_authority_pair(
+        self, review: SealedDocument, completion: SealedDocument
+    ) -> None:
+        """Persist review+completion as one recoverable protected transaction."""
+
+        prepared, complete = self._h1_fidelity_authority_transaction(
+            review, completion
+        )
+        self.preflight_immutable_documents(
+            (prepared, review, completion, complete)
+        )
+        prepared_path = self._path(prepared.reference["path"])
+        complete_path = self._path(complete.reference["path"])
+        write_set = [
+            (
+                self._path(document.reference["path"]),
+                document.reference["sha256"],
+                self._path(document.reference["path"]).exists(),
+            )
+            for document in (prepared, review, completion, complete)
+        ]
+        try:
+            self._write_new(
+                prepared_path, canonical_json(prepared.data).encode("utf-8")
+            )
+            for document in (review, completion):
+                self._persist_h1_fidelity_authority_document(document)
+            self._write_new(
+                complete_path, canonical_json(complete.data).encode("utf-8")
+            )
+        except Exception:
+            for path, digest, existed_before in reversed(write_set):
+                if (
+                    not existed_before
+                    and path.is_file()
+                    and sha256_file(path) == digest
+                ):
+                    path.unlink()
+            raise
+
+    def recover_h1_fidelity_authority_transactions(self) -> None:
+        """Complete any crash-interrupted protected review+completion pair."""
+
+        root = self.root / "orchestration" / "h1-fidelity-authority-transactions"
+        if not root.is_dir():
+            return
+        for path in sorted(root.glob("*.prepared.json")):
+            prepared = self.load_document({
+                "path": path.relative_to(self.root).as_posix(),
+                "sha256": sha256_file(path),
+            })
+            data = prepared.data
+            documents = data.get("documents")
+            base = {
+                "schema_version": data.get("schema_version"),
+                "kind": data.get("kind"),
+                "documents": documents,
+                "status": data.get("status"),
+            }
+            transaction_id = data.get("transaction_id")
+            if (
+                set(data)
+                != {"schema_version", "kind", "documents", "status", "transaction_id"}
+                or data.get("schema_version") != "1.0"
+                or data.get("kind") != "h1-fidelity-authority-pair-transaction"
+                or data.get("status") != "prepared"
+                or not isinstance(documents, list)
+                or len(documents) != 2
+                or transaction_id != canonical_sha256(base)[:24]
+            ):
+                _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+            sealed: list[SealedDocument] = []
+            for item in documents:
+                if (
+                    not isinstance(item, Mapping)
+                    or set(item) != {"data", "reference"}
+                    or not isinstance(item["data"], Mapping)
+                    or not isinstance(item["reference"], Mapping)
+                ):
+                    _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+                sealed.append(SealedDocument(
+                    data=dict(item["data"]), reference=dict(item["reference"])
+                ))
+            review, completion = sealed
+            assignment_reference = completion.data.get("assignment")
+            try:
+                assignment = self.load_document(assignment_reference)
+            except (TypeError, ProductionStoreError) as error:
+                raise ProductionStoreError(
+                    "PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path)
+                ) from error
+            if (
+                not str(review.reference.get("path", "")).startswith(
+                    "reviews/h1-fragment-fidelity/"
+                )
+                or not str(completion.reference.get("path", "")).startswith(
+                    "orchestration/h1-fragment-fidelity-review-completions/"
+                )
+                or review.data.get("kind")
+                != "internal-h1-fragment-fidelity-failure"
+                or completion.data.get("kind")
+                != "internal-h1-fragment-fidelity-review-completion"
+                or completion.data.get("review") != review.reference
+                or assignment.data.get("kind")
+                != "internal-h1-fragment-fidelity-review-assignment"
+                or assignment.data.get("status") != "assigned"
+                or assignment.data.get("reviewer") != review.data.get("reviewer")
+                or completion.data.get("state") != assignment.data.get("state")
+                or completion.data.get("h1_workspace")
+                != assignment.data.get("h1_workspace")
+                or completion.data.get("fragment_manifest")
+                != assignment.data.get("fragment_manifest")
+                or review.data.get("fragment_manifest")
+                != assignment.data.get("fragment_manifest")
+            ):
+                _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+            expected_prepared, complete = self._h1_fidelity_authority_transaction(
+                review, completion
+            )
+            if expected_prepared != prepared:
+                _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+            complete_path = self._path(complete.reference["path"])
+            if complete_path.is_file():
+                persisted = self.load_document(complete.reference)
+                if persisted.data != complete.data:
+                    _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+                continue
+            for document in (review, completion):
+                target = self._path(document.reference["path"])
+                if target.is_file():
+                    persisted = self.load_document(document.reference)
+                    if persisted.data != document.data:
+                        _fail("PROD_REVIEW_AUTHORITY_TRANSACTION_INVALID", str(path))
+                else:
+                    self._persist_h1_fidelity_authority_document(document)
+            self._write_new(
+                complete_path, canonical_json(complete.data).encode("utf-8")
+            )
 
     def persist_state(self, document: SealedDocument) -> Path:
         self.runtime.validate(document.data, "autonomous-run-state.schema.json")
@@ -710,12 +940,13 @@ class ProductionRunStore:
             (
                 mode in {
                     "new_return", "stage_return", "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return"
                 }
                 and active_reference is not None
             )
             or (
-                mode == "active_return_refresh"
+                mode in {"active_return_refresh", "compatible_qualification_refresh"}
                 and active_reference != request.reference
             )
             or (
@@ -761,7 +992,7 @@ class ProductionRunStore:
                 ),
                 runtime=self.runtime,
             )
-            if mode == "active_return_refresh":
+            if mode in {"active_return_refresh", "compatible_qualification_refresh"}:
                 transition = coordinator.refresh_active_return(
                     request=request,
                     next_state_path=successor.reference["path"],
@@ -798,9 +1029,11 @@ class ProductionRunStore:
             )
         if mode in {
             "active_return_escalation",
+            "compatible_qualification_refresh",
             "active_stage_return_refresh",
             "stage_return",
             "internal_h1_fragment_return",
+            "internal_h1_plan_return",
             "internal_h1_readability_return",
             "internal_h1_html_readability_return",
         }:
@@ -834,21 +1067,30 @@ class ProductionRunStore:
                 )
             order = orders[0]
             expected_action = replay_plan.data["target_stage"]
-            h1_implementation_refresh = (
+            h1_internal_refresh = (
                 mode == "active_stage_return_refresh"
                 and expected_action == "H1"
-                and isinstance(
-                    replay_plan.data["stale_identity"].get(
-                        "initialized_workspace"
-                    ),
-                    Mapping,
+                and any(
+                    isinstance(
+                        replay_plan.data["stale_identity"].get(field), Mapping
+                    )
+                    for field in (
+                        "initialized_workspace",
+                        "planned_workspace",
+                        "restored_workspace",
+                    )
                 )
             )
             if mode in {
                 "stage_return", "internal_h1_fragment_return",
+                "internal_h1_plan_return",
                 "internal_h1_readability_return",
                 "internal_h1_html_readability_return",
-            } and expected_action == "H1" or h1_implementation_refresh:
+            } and expected_action == "H1" or h1_internal_refresh:
+                expected_action = replay_plan.data["stale_identity"].get(
+                    "resume_point"
+                )
+            if mode == "compatible_qualification_refresh":
                 expected_action = replay_plan.data["stale_identity"].get(
                     "resume_point"
                 )
@@ -870,15 +1112,20 @@ class ProductionRunStore:
                         replay_plan.data["stale_identity"].get(
                             "planned_workspace",
                             replay_plan.data["stale_identity"].get(
-                                "initialized_workspace"
+                                "initialized_workspace",
+                                replay_plan.data["stale_identity"].get(
+                                    "current_workspace"
+                                ),
                             ),
                         ),
                     )
                     if mode in {
+                        "compatible_qualification_refresh",
                         "internal_h1_fragment_return",
+                        "internal_h1_plan_return",
                         "internal_h1_readability_return",
                         "internal_h1_html_readability_return",
-                    } or h1_implementation_refresh
+                    } or h1_internal_refresh
                     else order.data.get("h1_workspace") is not None
                 )
                 or not isinstance(order.data.get("required_actor"), str)
@@ -1116,10 +1363,12 @@ class ProductionRunStore:
                         receipt.data.get("transition_mode")
                         in {
                             "active_return_refresh",
+                            "compatible_qualification_refresh",
                             "active_return_escalation",
                             "active_stage_return_refresh",
                             "stage_return",
                             "internal_h1_fragment_return",
+                            "internal_h1_plan_return",
                             "internal_h1_readability_return",
                             "internal_h1_html_readability_return",
                         }
@@ -1185,10 +1434,12 @@ class ProductionRunStore:
             not in {
                 "new_return",
                 "active_return_refresh",
+                "compatible_qualification_refresh",
                 "active_return_escalation",
                 "active_stage_return_refresh",
                 "stage_return",
                 "internal_h1_fragment_return",
+                "internal_h1_plan_return",
                 "internal_h1_readability_return",
                 "internal_h1_html_readability_return",
             }
@@ -1199,7 +1450,8 @@ class ProductionRunStore:
                 and plan.get("refresh_generation") != 0
             )
             or (
-                plan.get("transition_mode") == "active_return_refresh"
+                plan.get("transition_mode")
+                in {"active_return_refresh", "compatible_qualification_refresh"}
                 and (
                     plan.get("refresh_generation", 0) < 1
                     or not isinstance(plan.get("prior_qualification"), Mapping)
@@ -1224,6 +1476,7 @@ class ProductionRunStore:
             or (
                 plan.get("transition_mode") in {
                     "stage_return", "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                 }
                 and (
@@ -1242,12 +1495,22 @@ class ProductionRunStore:
                 )
             )
             or (
+                plan.get("transition_mode") == "compatible_qualification_refresh"
+                and (
+                    plan.get("target_stage") != "H1"
+                    or plan.get("superseded_return") is not None
+                    or plan.get("invalidated_stages") != []
+                )
+            )
+            or (
                 plan.get("transition_mode")
                 not in {
                     "active_return_escalation",
+                    "compatible_qualification_refresh",
                     "active_stage_return_refresh",
                     "stage_return",
                     "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                     "internal_h1_html_readability_return",
                 }
@@ -1257,9 +1520,11 @@ class ProductionRunStore:
                 plan.get("transition_mode")
                 in {
                     "active_return_escalation",
+                    "compatible_qualification_refresh",
                     "active_stage_return_refresh",
                     "stage_return",
                     "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                     "internal_h1_html_readability_return",
                 }
@@ -1279,9 +1544,11 @@ class ProductionRunStore:
                 plan.get("transition_mode")
                 not in {
                     "active_return_escalation",
+                    "compatible_qualification_refresh",
                     "active_stage_return_refresh",
                     "stage_return",
                     "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                     "internal_h1_html_readability_return",
                 }
@@ -1295,9 +1562,11 @@ class ProductionRunStore:
                 plan.get("transition_mode")
                 in {
                     "active_return_escalation",
+                    "compatible_qualification_refresh",
                     "active_stage_return_refresh",
                     "stage_return",
                     "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                     "internal_h1_html_readability_return",
                 }
@@ -1326,9 +1595,11 @@ class ProductionRunStore:
             )
         if plan["transition_mode"] in {
             "active_return_escalation",
+            "compatible_qualification_refresh",
             "active_stage_return_refresh",
             "stage_return",
             "internal_h1_fragment_return",
+            "internal_h1_plan_return",
             "internal_h1_readability_return",
             "internal_h1_html_readability_return",
         }:
@@ -1340,22 +1611,32 @@ class ProductionRunStore:
             ]
             expected_inputs = dict(plan["post_upgrade_inputs"])
             expected_action = plan["target_stage"]
-            h1_implementation_refresh = (
+            h1_internal_refresh = (
                 plan["transition_mode"] == "active_stage_return_refresh"
                 and plan["target_stage"] == "H1"
-                and isinstance(
-                    plan["stale_identity"].get("initialized_workspace"),
-                    Mapping,
+                and any(
+                    isinstance(plan["stale_identity"].get(field), Mapping)
+                    for field in (
+                        "initialized_workspace",
+                        "planned_workspace",
+                        "restored_workspace",
+                    )
                 )
             )
+            h1_initialized_refresh = h1_internal_refresh and isinstance(
+                plan["stale_identity"].get("initialized_workspace"), Mapping
+            )
+            if plan["transition_mode"] == "compatible_qualification_refresh":
+                expected_action = plan["stale_identity"].get("resume_point")
             if (
                 plan["transition_mode"] in {
                     "stage_return", "internal_h1_fragment_return",
+                    "internal_h1_plan_return",
                     "internal_h1_readability_return",
                     "internal_h1_html_readability_return",
                 }
                 and plan["target_stage"] == "H1"
-            ) or h1_implementation_refresh:
+            ) or h1_internal_refresh:
                 expected_action = plan["stale_identity"].get("resume_point")
             if plan["target_stage"] in {"E1", "T1"}:
                 prior = self.load_document(plan["prior_qualification"])
@@ -1375,8 +1656,11 @@ class ProductionRunStore:
                 != (
                     3
                     if (
-                        plan["transition_mode"] == "internal_h1_readability_return"
-                        or h1_implementation_refresh
+                        plan["transition_mode"] in {
+                            "internal_h1_plan_return",
+                            "internal_h1_readability_return",
+                        }
+                        or h1_initialized_refresh
                     )
                     else 2
                 )
@@ -1395,20 +1679,28 @@ class ProductionRunStore:
                         "restored_workspace",
                         plan["stale_identity"].get(
                             "planned_workspace",
-                            plan["stale_identity"].get("initialized_workspace"),
+                            plan["stale_identity"].get(
+                                "initialized_workspace",
+                                plan["stale_identity"].get("current_workspace"),
+                            ),
                         ),
                     )
                     if plan["transition_mode"] in {
+                        "compatible_qualification_refresh",
                         "internal_h1_fragment_return",
+                        "internal_h1_plan_return",
                         "internal_h1_readability_return",
                         "internal_h1_html_readability_return",
-                    } or h1_implementation_refresh
+                    } or h1_internal_refresh
                     else matching[0].data.get("h1_workspace") is not None
                 )
                 or not isinstance(matching[0].data.get("required_actor"), str)
                 or matching[0].data.get("inputs") != expected_inputs
                 or (
-                    plan["transition_mode"] == "internal_h1_readability_return"
+                    plan["transition_mode"] in {
+                        "internal_h1_plan_return",
+                        "internal_h1_readability_return",
+                    }
                     and len(
                         [
                             item for item in post_documents
@@ -1420,7 +1712,7 @@ class ProductionRunStore:
                     != 1
                 )
                 or (
-                    h1_implementation_refresh
+                    h1_initialized_refresh
                     and len(
                         [
                             item for item in post_documents
@@ -1553,20 +1845,25 @@ class ProductionRunStore:
             )
             derived.append(document)
             post_upgrade_receipts.append(dict(document.reference))
-        h1_implementation_refresh = (
+        h1_internal_refresh = (
             plan.data.get("transition_mode") == "active_stage_return_refresh"
             and plan.data.get("target_stage") == "H1"
-            and isinstance(
-                plan.data.get("stale_identity", {}).get(
-                    "initialized_workspace"
-                ),
-                Mapping,
+            and any(
+                isinstance(
+                    plan.data.get("stale_identity", {}).get(field), Mapping
+                )
+                for field in (
+                    "initialized_workspace",
+                    "planned_workspace",
+                    "restored_workspace",
+                )
             )
         )
         if plan.data.get("transition_mode") in {
-            "internal_h1_fragment_return", "internal_h1_readability_return",
+            "internal_h1_fragment_return", "internal_h1_plan_return",
+            "internal_h1_readability_return",
             "internal_h1_html_readability_return",
-        } or h1_implementation_refresh:
+        } or h1_internal_refresh:
             stale = plan.data["stale_identity"]
             failure_reference = stale.get(
                 "fidelity_failure",
@@ -1686,16 +1983,21 @@ class ProductionRunStore:
             })
             self._path("orchestration/current-work-order.json")
         if plan.data.get("transition_mode") in {
-            "internal_h1_fragment_return", "internal_h1_readability_return",
+            "internal_h1_fragment_return", "internal_h1_plan_return",
+            "internal_h1_readability_return",
             "internal_h1_html_readability_return",
         } or (
             plan.data.get("transition_mode") == "active_stage_return_refresh"
             and plan.data.get("target_stage") == "H1"
-            and isinstance(
-                plan.data.get("stale_identity", {}).get(
-                    "initialized_workspace"
-                ),
-                Mapping,
+            and any(
+                isinstance(
+                    plan.data.get("stale_identity", {}).get(field), Mapping
+                )
+                for field in (
+                    "initialized_workspace",
+                    "planned_workspace",
+                    "restored_workspace",
+                )
             )
         ):
             stale = plan.data.get("stale_identity", {})
@@ -1774,16 +2076,21 @@ class ProductionRunStore:
                 },
             )
         if plan.data.get("transition_mode") in {
-            "internal_h1_fragment_return", "internal_h1_readability_return",
+            "internal_h1_fragment_return", "internal_h1_plan_return",
+            "internal_h1_readability_return",
             "internal_h1_html_readability_return",
         } or (
             plan.data.get("transition_mode") == "active_stage_return_refresh"
             and plan.data.get("target_stage") == "H1"
-            and isinstance(
-                plan.data.get("stale_identity", {}).get(
-                    "initialized_workspace"
-                ),
-                Mapping,
+            and any(
+                isinstance(
+                    plan.data.get("stale_identity", {}).get(field), Mapping
+                )
+                for field in (
+                    "initialized_workspace",
+                    "planned_workspace",
+                    "restored_workspace",
+                )
             )
         ):
             restored = plan.data["stale_identity"].get(
@@ -1991,10 +2298,12 @@ class ProductionRunStore:
                     plan.data.get("transition_mode")
                     in {
                         "active_return_refresh",
+                        "compatible_qualification_refresh",
                         "active_return_escalation",
                         "active_stage_return_refresh",
                         "stage_return",
                         "internal_h1_fragment_return",
+                        "internal_h1_plan_return",
                         "internal_h1_readability_return",
                         "internal_h1_html_readability_return",
                     }

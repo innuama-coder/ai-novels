@@ -444,6 +444,67 @@ class AutonomousV2ContractTests(unittest.TestCase):
                 self.assertIn(phrase, text)
         self.assertNotIn("`rendered → ready`", text)
 
+    def test_current_t1_entrypoints_share_25_terminal_send_tail_contract(
+        self,
+    ) -> None:
+        t1_skill = (
+            ROOT / "skills" / "novel-event-timeline-designer" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        t1_prompt = (
+            ROOT / "skills" / "novel-event-timeline-designer"
+            / "agents" / "openai.yaml"
+        ).read_text(encoding="utf-8")
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        t1_section = workflow.split("## 7. T1", 1)[1].split("## 8. C1", 1)[0]
+        harness = (
+            ROOT / "harnesses" / "novel-conception-autonomous" / "workflow.md"
+        ).read_text(encoding="utf-8")
+        package_contract = (
+            ROOT / "skills" / "novel-conception-deliverable-assembler"
+            / "references" / "package-contract.md"
+        ).read_text(encoding="utf-8")
+        p1_runtime = (
+            ROOT / "skills" / "novel-conception-deliverable-assembler"
+            / "scripts" / "run_v2.py"
+        ).read_text(encoding="utf-8")
+        q1_runtime = (
+            ROOT / "skills" / "novel-conception-reviewer"
+            / "scripts" / "run_v2.py"
+        ).read_text(encoding="utf-8")
+
+        for text in (t1_skill, t1_prompt, t1_section, harness):
+            with self.subTest(document=text[:40]):
+                self.assertIn("2.5", text)
+                self.assertIn("t1-initial-event-plan-semantics-v5", text)
+        self.assertIn("最后一个 transition-span／状态变化事件", t1_skill)
+        self.assertIn("readiness-bound terminal SEND bridge tail", t1_prompt)
+        self.assertIn("transport_step_ids", t1_section)
+        self.assertIn("non-state `connection_bridge`", harness)
+        self.assertIn("T1 schema 2.2 through 2.5", package_contract)
+        self.assertIn(
+            '{"2.2", "2.3", "2.4", "2.5"}',
+            p1_runtime,
+        )
+        for runtime_source in (q1_runtime, p1_runtime):
+            self.assertIn("_T1_EVENT_PROJECTION_MAP_25", runtime_source)
+            self.assertIn(
+                '"consumes_token_instance_ids": "consumes_token_instance_ids"',
+                runtime_source,
+            )
+            self.assertIn(
+                '"lifecycle_effects": "lifecycle_effects"',
+                runtime_source,
+            )
+        self.assertIn("For T1 2.5 only", package_contract)
+        self.assertIn("2.4 keep their frozen projection field set", package_contract)
+        for stale in (
+            "provisional 2.4",
+            "当前 2.4 还要求",
+            "当前生产模型固定为 `schema_version: 2.4`",
+        ):
+            with self.subTest(stale=stale):
+                self.assertNotIn(stale, t1_skill + t1_prompt + t1_section)
+
     def test_v2_skill_entry_chain_exists_and_uses_current_stage_names(self) -> None:
         expected = {
             "novel-storyline-architecture-designer": "S1",

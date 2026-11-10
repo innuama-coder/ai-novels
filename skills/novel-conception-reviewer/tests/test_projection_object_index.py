@@ -34,7 +34,9 @@ def _event_pair(identifier: str = "EV-A") -> tuple[dict, dict]:
         "requires_capability_fact_ids": [],
         "produces_capability_fact_ids": ["FACT-A"],
         "requires_token_instance_ids": [],
+        "consumes_token_instance_ids": [],
         "produces_token_instance_ids": [],
+        "lifecycle_effects": [],
         "requires_proposition_ids": [],
         "produces_proposition_ids": ["PROP-A"],
         "discloses_proposition_ids": [],
@@ -80,7 +82,9 @@ def _event_pair(identifier: str = "EV-A") -> tuple[dict, dict]:
         "requires_capability_fact_ids": [],
         "produces_capability_fact_ids": ["FACT-A"],
         "requires_token_instance_ids": [],
+        "consumes_token_instance_ids": [],
         "produces_token_instance_ids": [],
+        "lifecycle_effects": [],
         "initial_anchor_refs": [],
         "source_ids": ["EVD-A"],
         "atomicity_reason": "atomic",
@@ -90,6 +94,10 @@ def _event_pair(identifier: str = "EV-A") -> tuple[dict, dict]:
 
 def _model(version: str = "2.4") -> dict:
     planned, canonical = _event_pair()
+    if version != "2.5":
+        for event in (planned, canonical):
+            event.pop("consumes_token_instance_ids")
+            event.pop("lifecycle_effects")
     proposition = {
         "id": "PROP-A",
         "statement": "statement",
@@ -341,8 +349,8 @@ class ProjectionAwareObjectIndexTests(unittest.TestCase):
             }
             self.assertEqual(after, before)
 
-    def test_t1_22_through_24_use_canonical_representatives(self) -> None:
-        for version in ("2.2", "2.3", "2.4"):
+    def test_t1_22_through_25_use_canonical_representatives(self) -> None:
+        for version in ("2.2", "2.3", "2.4", "2.5"):
             with self.subTest(version=version):
                 model = _model(version)
                 output: dict = {}
@@ -423,6 +431,36 @@ class ProjectionAwareObjectIndexTests(unittest.TestCase):
                 "Q1_STORY_OBJECT_(PROJECTION_INVALID|AMBIGUOUS)",
             ):
                 q1._index_stage_model(mutant, stage="T1", output={})
+
+    def test_t1_25_consumption_and_lifecycle_projection_fail_closed(self) -> None:
+        for field, drift in (
+            ("consumes_token_instance_ids", ["ATI-DRIFT"]),
+            ("lifecycle_effects", [{"drift": True}]),
+        ):
+            with self.subTest(field=field):
+                model = _model("2.5")
+                model["planned_event_registry"][0][field] = drift
+                with self.assertRaisesRegex(
+                    q1.Q1Error,
+                    rf"Q1_STORY_OBJECT_PROJECTION_INVALID: T1:EV-A\.{field}",
+                ):
+                    q1._index_stage_model(model, stage="T1", output={})
+
+    def test_t1_24_does_not_require_25_projection_fields(self) -> None:
+        model = _model("2.4")
+        output: dict = {}
+        q1._index_stage_model(model, stage="T1", output=output)
+        baseline = copy.deepcopy(output)
+
+        model["planned_event_registry"][0]["consumes_token_instance_ids"] = [
+            "ATI-IGNORED"
+        ]
+        model["planned_event_registry"][0]["lifecycle_effects"] = [
+            {"legacy": "ignored"}
+        ]
+        output = {}
+        q1._index_stage_model(model, stage="T1", output=output)
+        self.assertEqual(output, baseline)
 
     def test_story_and_handoff_indexes_share_projection_logic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

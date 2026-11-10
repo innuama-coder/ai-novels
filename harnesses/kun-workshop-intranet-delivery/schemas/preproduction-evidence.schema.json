@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pre-production Deployment Evidence",
+  "type": "object",
+  "required": ["run_id", "environment", "candidate_version", "authorisation", "deployment", "rollback", "smoke_test", "verdict"],
+  "properties": {
+    "run_id": {"type": "string"}, "environment": {"type": "string", "minLength": 1}, "candidate_version": {"type": "string", "minLength": 1},
+    "authorisation": {"type": "object", "required": ["approval_reference", "approver", "window"], "properties": {"approval_reference": {"type": "string"}, "approver": {"type": "string"}, "window": {"type": "string"}}, "additionalProperties": false},
+    "deployment": {"type": "object", "required": ["executed_by", "started_at", "log_reference"], "properties": {"executed_by": {"type": "string"}, "started_at": {"type": "string"}, "log_reference": {"type": "string"}}, "additionalProperties": false},
+    "rollback": {"type": "object", "required": ["plan_reference", "readiness_verdict"], "properties": {"plan_reference": {"type": "string"}, "readiness_verdict": {"enum": ["pass", "fail"]}}, "additionalProperties": false},
+    "smoke_test": {"type": "object", "required": ["executed_by", "evidence_reference", "verdict"], "properties": {"executed_by": {"type": "string"}, "evidence_reference": {"type": "string"}, "verdict": {"enum": ["pass", "fail"]}}, "additionalProperties": false},
+    "verdict": {"enum": ["pass", "fail", "partial"]}
+  }, "additionalProperties": false
+}

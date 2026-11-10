@@ -146,3 +146,11 @@ machine tokens, fixed English audit labels, nested book-title wrappers and
 audit-style wording before publication. H1-C repeats the same visible-text
 check over parsed body text while ignoring attributes, styles and escaped
 inactive markup.
+
+The same lexical gate runs during plan validation over every natural-language
+field that can reach a report, visual, decision prompt or fragment brief. It
+rejects internal object/stage/status identifiers, demand wrappers, hashes and
+audit labels while allowing ordinary Chinese expressions such as “可核验”、
+normal names and the story name `R-07`. The gate never rewrites upstream copy:
+the controlled planner must supply human place names, storyline names, role
+descriptions and state descriptions before the plan can be sealed.

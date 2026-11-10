@@ -759,6 +759,20 @@ P1 精确投影、配对 S1/W1 并冻结四个完整性摘要；P2 验证环境�
 - `event_demands`
 - `event_span`
 - `timeline_axes`
+- `initial_condition_registry`
+- `initial_anchor_option_selection_ledger`
+- `planned_event_registry`
+- `process_state_subject_registry`
+- `planned_proposition_registry`
+- `planned_causal_edges`
+- `transition_event_cover`
+- `milestone_event_buckets`
+- `connection_event_paths`
+- `obligation_event_plan`
+- `capability_occurrence_event_cover`
+- `authority_token_instance_ledger`
+- `lifecycle_scope`
+- `lifecycle_contract_registry`
 - `proposition_registry`
 - `major_events`
 - `causal_edges`
@@ -777,11 +791,19 @@ P1 精确投影、配对 S1/W1 并冻结四个完整性摘要；P2 验证环境�
 T1 不接受仅靠文字看起来合理的时序。运行时必须根据结构字段重新验证 S1 的
 `causes`、`strict_before`、`not_before`、`requires_all`、`first_disclosure`、
 `must_remain_unknown`，并阻断无因果祖先的前提、提前披露、伪造首次披露和重复终局。
-当前 2.4 还要求每个事件披露的命题在 P4 形成至少一个原子 `information_changes`
+当前 2.5 还要求每个事件披露的命题在 P4 形成至少一个原子 `information_changes`
 记录：记录只绑定一个事件、一个命题和该事件内一个支持 `communicate` 的 E1 occurrence；
 subject 必须是可见的参与角色槽，可见槽必须由该 capability step 接纳。S1
 `first_disclosure` 还必须穿透 E1 obligation occurrence binding 与 T1 occurrence cover
 闭合。事件与信息记录双向索引，空信息账本只在全模型没有披露时成立。
+
+当前 2.5 把叙事因果、capability、proposition、token 与 sequencing 依赖分型，
+并以 `lifecycle_scope`、`lifecycle_contract_registry` 和权限实例账本闭合正式接受、
+许可生产、启动与关停的有效发生顺序。故事线终态 `story_transition` 必须是该线最后一个
+transition-span／状态变化事件；只有当 E1 `connection_path_readiness.transport_step_ids`
+无重复精确覆盖完整 `source anchor → ordered connection_bridge → target anchor` 路径时，
+才允许在终态锚点后保留属于源故事线的非状态 causal SEND bridge。任何生命周期或状态
+effect、错线／外来／重复 bridge、端点绕过、目标锚点后的动作或非 bridge 尾随事件都失败。
 
 T1 的人物相关状态是 `slot-level requirement`，不是人物心理、关系语义或人物弧决定。
 它回答“事件要求承担者发生什么可观察变化”；C1 回答“哪个人物承担、为何这样选择、
@@ -800,11 +822,14 @@ T1 的人物相关状态是 `slot-level requirement`，不是人物心理、关�
 - 信息、资源、权限和世界状态连续；角色槽的行动、关系需求和目标需求连续；
 - 叙述约束不会提前暴露禁止信息；
 - 不用后续事件的 `preconditions` 代替应该真实存在的前序事件。
-- 当前生产模型固定为 `schema_version: 2.4`，且只接受当前 E1 生产契约作为新会话输入；
-  T1 `2.0`–`2.3` 仅在打包 runtime/schema 摘要命中受信历史配对、manifest/completion/canonical
+- 当前生产模型固定为 `schema_version: 2.5`、语义审查协议
+  `t1-initial-event-plan-semantics-v5`，且只接受当前 E1 `2.4` 生产契约作为新会话输入；
+  T1 `2.0`–`2.4` 仅在打包 runtime/schema 摘要命中受信历史配对、manifest/completion/canonical
   命中精确已发布包身份，并通过包内历史 schema 与历史 phase/lineage 重放时只读接受。
   其中 2.3 只保留了一份精确的完整实现绑定快照，没有发布过 ready package；因此实现
   provenance 可以审计，但 package identity inventory 显式为空，完整 package replay 保持关闭；
+  2.4 的受信 implementation-pair 与 ready-package identity inventories 都显式为空，因此同样
+  fail closed。历史版本不得新建、重封或被用于给当前结果降标；
 - 每个 `(EVD,event)` 实现必须由该事件 placement 中至少一个同环境 affordance
   精确承载：该 affordance 必须包含该 EVD、允许事件发起行动且其前置条件全部进入
   事件前置条件。同线但属于其他 EVD 的 affordance 不能替代，未服务该事件任何 EVD
@@ -1547,6 +1572,20 @@ B0 才能解析该 return。若 owner 属于 H1-A/B/C，顶层 `resume_stage=H1`
 | H1-B | `H1-B` | `planned` | fragment、assembly、HTML、H1 completion |
 | H1-A assemble／组装漂移 | `H1-A-assemble` | `fragments_ready` | assembly、HTML、H1 completion |
 | H1-C | `H1-C` | `assembled` | HTML、H1 completion |
+
+当 `fragments_ready` 已形成且当前唯一工作单为 `H1-A-assemble` 时，独立呈现一致性
+审查若以 `revise` 证明错误属于 H1-A plan，唯一入口是公开的
+`apply_internal_h1_plan_return`。事务必须逐字绑定候选报告、当前 P1、plan／fragment
+manifest、两位生产者身份和待组装工作单；审查者 task/thread 均不得与生产者复用。
+候选报告与审查必须在回退事务前由独立任务封存；orchestrator 不得代审查者创建或
+落盘审查证据。调度器先以 `assign_internal_h1_plan_fidelity_review` 锁定真实 reviewer
+task/thread、候选、workspace、manifest 与 assemble 工作单；该 reviewer 再以专属 actor
+调用 `record_internal_h1_plan_fidelity_failure`，回退入口只消费其受保护 completion。
+普通 `persist_document` 不得创建 assignment、review 或 completion，调用方临时构造或
+预先落盘的伪身份文件均不得被入口接纳。
+成功后旧 plan、fragment、候选报告、失败审查和 assemble 工作单全部保留为不可变证据，
+旧工作单被拒绝，创建新 initialized workspace，并只签发新的 H1-A-plan gate/order。
+缺审查、伪造独立身份、跨内部 owner、旧状态或重复使用同一失败证据均须零写入拒绝。
 
 正式结构由
 [`return-request.schema.json`](contracts/autonomous-v2/return-request.schema.json)

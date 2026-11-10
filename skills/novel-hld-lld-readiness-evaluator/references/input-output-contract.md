@@ -15,7 +15,7 @@ mode 不由调用者自由填写，而由 allowlist 的精确 role 闭包推导�
 - `handoff-consumption-test.json`
 - `review-session.json`
 
-canonical 必须记录交接重建结果、故事线/角色弧/关键功能消费测试、约束与自由度测试、猜测缺口、findings、六维证据、verdict 与 defect origin。消费测试还必须证明 `chapter_designs[]` 完整覆盖全部章节壳，章序和工作单元正确，逐章核心内容、章末变化与故事线角色足以让详细设计直接开始工作，同时没有越界写成分场或成稿。每个测试项必须以稳定对象 ID 和 JSON Pointer 证据绑定实际读取文件。
+canonical 必须记录交接重建结果、故事线/角色弧/关键功能消费测试、逐章定义消费测试、约束与自由度测试、猜测缺口、findings、六维证据、verdict 与 defect origin。消费测试还必须证明 `chapter_designs[]` 完整覆盖全部章节壳，章序和工作单元正确，逐章核心内容、章末变化与故事线角色足以让详细设计直接开始工作，同时没有越界写成分场或成稿。逐章定义消费测试必须证明 LLD 能找到每章的目标、阻力、选择、代价、状态变化和验收条件，而不需要自行补写章节职责。每个测试项必须以稳定对象 ID 和 JSON Pointer 证据绑定实际读取文件。
 
 ## fidelity_test
 

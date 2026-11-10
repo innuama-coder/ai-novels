@@ -3,7 +3,7 @@
   "skill":"novel-hld-finalizer",
   "stage":"HF1",
   "owner_version":"1.0.0",
-  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HQ1","HP1","HQ2","HH1"],
+  "upstream_stages":["HB0","HA1","HS1","HC1","HI1","HR1","HK1","HD1","HQ1","HP1","HQ2","HH1"],
   "result_scope":"top_level",
   "task_kinds":["HF1"],
   "public_entrypoint":{"path":"skills/novel-hld-finalizer/scripts/validate_package.py","runtime":"python","arguments":["mode","work_order","input_gate","workspace"]},

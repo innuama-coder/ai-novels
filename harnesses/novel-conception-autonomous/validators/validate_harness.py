@@ -24,9 +24,11 @@ _REQUIRED = (
     "workflow.md",
     "rules.md",
     "runtime/harness.py",
+    "runtime/b0_implementation_identity.py",
     "runtime/production_orchestrator.py",
     "runtime/production_coordinator.py",
     "runtime/production_store.py",
+    "runtime/stage_implementation_identity.py",
     "adapters/codex/SKILL.md",
     "adapters/codex/install.md",
     "adapters/codex/mapping.md",
@@ -97,6 +99,46 @@ _ADAPTER_MAPPINGS = (
     ),
     ("legacy-d1-r1", "unsupported", "none", "reject"),
 )
+_B0_IMPLEMENTATION_IDENTITY_CONTRACT = {
+    "version": "1.0",
+    "scope": "behavioral-runtime-and-authoritative-contracts",
+    "required_runtime_files": [
+        "runtime/baseline.py",
+        "runtime/b0_completion.py",
+        "runtime/b0_implementation_identity.py",
+        "runtime/canonical.py",
+        "runtime/conception_revision.py",
+        "runtime/contracts.py",
+        "runtime/coordinator.py",
+        "runtime/migration_handoff.py",
+        "runtime/return_routing.py",
+    ],
+    "legacy_stored_extras": ["runtime/__init__.py"],
+    "legacy_extra_policy": "stored-superset-compatible",
+    "trusted_legacy_catalog_sha256": [
+        "98a67b0b3e2037f8729066bf31fc3421a1fe98e3d5ff76322f07593446799488"
+    ],
+    "trusted_legacy_missing_current_identities": [
+        "runtime/b0_implementation_identity.py"
+    ],
+    "trusted_legacy_mismatch_bindings": {
+        "runtime/baseline.py": {
+            "stored_sha256": "e9eb8603f16b374288a0f7b04aaa43c8a4d51dbfac97f7c064c1a39b37a6bf34",
+            "approved_current_sha256": "51160603f780f7edf0014a04c3a0ca6ac11807a1a86e663624ce2feb1a194c0c",
+        }
+    },
+    "required_binding_policy": "missing-or-tampered-reject",
+}
+_STAGE_IMPLEMENTATION_IDENTITY_CONTRACT = {
+    "version": "1.0",
+    "authority": "runtime/stage_implementation_identity.py",
+    "stages": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1"],
+    "scope_policy": "stage-owned-runtime-schema-review-contracts",
+    "upstream_policy": "public-validator-self-authenticated-not-copied",
+    "migration_policy": "exact-legacy-catalog-digest-plus-approved-mapping",
+    "migration_registry_sha256": "971dccb4b5b2acba0f3995716df1ba68df08193764944eca19d4ce12d5d1f2df",
+    "current_policy": "exact-catalog-missing-or-tampered-reject",
+}
 _OUTPUT_ROOT_CONTRACT = {
     "schema_version": "2.0",
     "fresh": ["absent", "empty-real-directory"],
@@ -197,6 +239,16 @@ def validate_harness(root=None):
                 != "runtime.production_orchestrator:initialize_production_run"
                 or manifest.get("resume_entrypoint")
                 != "runtime.production_orchestrator:resume_production_run"
+                or manifest.get("authority_revision_entrypoint")
+                != "runtime.production_orchestrator:initialize_conception_revision_run"
+                or manifest.get("authority_revision_review_material_entrypoint")
+                != "runtime.production_orchestrator:build_authority_revision_review_material"
+                or manifest.get("h1_plan_return_entrypoint")
+                != "runtime.production_orchestrator:apply_internal_h1_plan_return"
+                or manifest.get("h1_plan_fidelity_review_assignment_entrypoint")
+                != "runtime.production_orchestrator:assign_internal_h1_plan_fidelity_review"
+                or manifest.get("h1_plan_fidelity_review_record_entrypoint")
+                != "runtime.production_orchestrator:record_internal_h1_plan_fidelity_failure"
                 or manifest.get("terminal_compatibility_entrypoint")
                 != "runtime.harness:run_from_rendered_h1"
                 or manifest.get("validator")
@@ -211,6 +263,16 @@ def validate_harness(root=None):
                 "novel-development-map-designer"
             ]:
                 errors.append("HARN_LEGACY_POLICY_INVALID")
+            if (
+                manifest.get("b0_implementation_identity_contract")
+                != _B0_IMPLEMENTATION_IDENTITY_CONTRACT
+            ):
+                errors.append("HARN_B0_IMPLEMENTATION_IDENTITY_INVALID")
+            if (
+                manifest.get("stage_implementation_identity_contract")
+                != _STAGE_IMPLEMENTATION_IDENTITY_CONTRACT
+            ):
+                errors.append("HARN_STAGE_IMPLEMENTATION_IDENTITY_INVALID")
             if tuple(manifest.get("stages", ())) != _STAGES:
                 errors.append("HARN_MANIFEST_STAGES_INVALID")
             if tuple(
@@ -277,6 +339,54 @@ def validate_harness(root=None):
         except (OSError, UnicodeError, json.JSONDecodeError):
             errors.append("HARN_MANIFEST_INVALID")
     runner = base / "runtime" / "harness.py"
+    b0_identity_authority = base / "runtime" / "b0_implementation_identity.py"
+    if b0_identity_authority.is_file():
+        try:
+            module_name = f"_b0_identity_{abs(hash(str(b0_identity_authority)))}"
+            spec = importlib.util.spec_from_file_location(
+                module_name, b0_identity_authority
+            )
+            if spec is None or spec.loader is None:
+                raise ImportError("B0 identity loader unavailable")
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            contract = manifest.get("b0_implementation_identity_contract", {})
+            if (
+                not isinstance(contract, dict)
+                or module.B0_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION
+                != contract.get("version")
+                or sorted(module.TRUSTED_LEGACY_IMPLEMENTATION_CATALOG_SHA256)
+                != contract.get("trusted_legacy_catalog_sha256")
+                or sorted(module.TRUSTED_LEGACY_MISSING_CURRENT_IDENTITIES)
+                != contract.get("trusted_legacy_missing_current_identities")
+                or module.TRUSTED_LEGACY_MISMATCH_BINDINGS
+                != contract.get("trusted_legacy_mismatch_bindings")
+            ):
+                errors.append("HARN_B0_IMPLEMENTATION_IDENTITY_INVALID")
+            checked.append("runtime:b0-implementation-identity")
+        except (ImportError, OSError, UnicodeError, ValueError, AttributeError):
+            errors.append("HARN_B0_IMPLEMENTATION_IDENTITY_INVALID")
+    identity_authority = base / "runtime" / "stage_implementation_identity.py"
+    if identity_authority.is_file():
+        try:
+            module_name = f"_stage_identity_{abs(hash(str(identity_authority)))}"
+            spec = importlib.util.spec_from_file_location(module_name, identity_authority)
+            if spec is None or spec.loader is None:
+                raise ImportError("stage identity loader unavailable")
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            contract = manifest.get("stage_implementation_identity_contract", {})
+            if (
+                not isinstance(contract, dict)
+                or module.STAGE_IMPLEMENTATION_IDENTITY_CONTRACT_VERSION
+                != contract.get("version")
+                or module.migration_registry_digest()
+                != contract.get("migration_registry_sha256")
+            ):
+                errors.append("HARN_STAGE_IMPLEMENTATION_IDENTITY_INVALID")
+            checked.append("runtime:stage-implementation-identity")
+        except (ImportError, OSError, UnicodeError, ValueError, AttributeError):
+            errors.append("HARN_STAGE_IMPLEMENTATION_IDENTITY_INVALID")
     if runner.is_file():
         try:
             tree = ast.parse(runner.read_text(encoding="utf-8"))
@@ -403,7 +513,11 @@ def validate_harness(root=None):
                 if isinstance(node, ast.FunctionDef)
             }
             checked.append("runtime:production-coordinator-api")
-            if methods != {"refresh_active_stage_return"}:
+            if methods != {
+                "accept_h1_workspace_transition",
+                "refresh_active_stage_return",
+                "narrow_active_h1_return",
+            }:
                 errors.append("HARN_PRODUCTION_COORDINATOR_API_INVALID")
         except (OSError, UnicodeError, SyntaxError, StopIteration):
             errors.append("HARN_PRODUCTION_COORDINATOR_API_INVALID")
@@ -485,6 +599,21 @@ def validate_harness(root=None):
                 "manifest_name": manifest["name"],
                 "entrypoint": manifest["entrypoint"],
                 "resume_entrypoint": manifest["resume_entrypoint"],
+                "authority_revision_entrypoint": manifest[
+                    "authority_revision_entrypoint"
+                ],
+                "authority_revision_review_material_entrypoint": manifest[
+                    "authority_revision_review_material_entrypoint"
+                ],
+                "h1_plan_return_entrypoint": manifest[
+                    "h1_plan_return_entrypoint"
+                ],
+                "h1_plan_fidelity_review_assignment_entrypoint": manifest[
+                    "h1_plan_fidelity_review_assignment_entrypoint"
+                ],
+                "h1_plan_fidelity_review_record_entrypoint": manifest[
+                    "h1_plan_fidelity_review_record_entrypoint"
+                ],
                 "ordered_steps": manifest["adapter_contract"]["ordered_steps"],
                 "authority": manifest["adapter_contract"]["authority"],
                 "forbidden": manifest["adapter_contract"]["forbidden"],

@@ -2,7 +2,7 @@
 
 ## Exact inputs
 
-Stage `HF1`, owner `novel-hld-finalizer`, upstream order `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HQ1,HP1,HQ2,HH1]`. The allowlist has exactly these semantic/operational roles:
+Stage `HF1`, owner `novel-hld-finalizer`, upstream order `[HB0,HA1,HS1,HC1,HI1,HR1,HK1,HD1,HQ1,HP1,HQ2,HH1]`. The allowlist has exactly these semantic/operational roles:
 
 - `run_state`, `author_decision`
 - `hp1_package`, `hp1_manifest`, `lld_handoff`, `hld_cross_index`

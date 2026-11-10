@@ -1,0 +1,22 @@
+version: "2.0"
+name: "ai-novels-task-001"
+repo:
+  url: "https://github.com/innuama-coder/ai-novels.git"
+  branch: "main"
+task_dir: "tasks/development/v1.0.0-greeting-cli/TASK-001"
+executor: "codex"
+deliverables:
+  - path: "harnesses/novel-conception-autonomous/requirements.txt"
+    verify: "uv run --with-requirements harnesses/novel-conception-autonomous/requirements.txt python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime"
+  - path: "harnesses/novel-conception-autonomous/runtime/contracts.py"
+    verify: "python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime"
+  - path: "harnesses/novel-conception-autonomous/runtime/canonical.py"
+    verify: "python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime"
+  - path: "harnesses/novel-conception-autonomous/tests/test_contract_runtime.py"
+    verify: "python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime"
+execution:
+  poll_interval_sec: 5
+  idle_timeout_sec: 120
+  max_duration_min: 120
+  max_nudge_count: 10
+  max_consecutive_escalate: 3

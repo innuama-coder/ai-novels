@@ -43,6 +43,8 @@ instructions, viewpoint execution, or sample prose.
 
 Each character or concrete-place card keeps its sealed baseline definition as the first source/locator pair. When a later canonical HLD model has legitimately refined that same entity, the card may append one or more current-model pairs. Every appended model object must explicitly cite the card's baseline source ID through `source_refs` or `source_authority_refs`; unrelated entities, another baseline card, and unsealed material are rejected. This permits an author-approved HLD correction to reach the report without silently rewriting or discarding the original definition.
 
+Each character or concrete-place card keeps its sealed baseline definition as the first source/locator pair. When a later canonical HLD model has legitimately refined that same entity, the card may append one or more current-model pairs. Every appended model object must explicitly cite the card's baseline source ID through `source_refs` or `source_authority_refs`; unrelated entities, another baseline card, and unsealed material are rejected. This permits an author-approved HLD correction to reach the report without silently rewriting or discarding the original definition.
+
 Author-visible fields must use concrete subject-action-consequence prose. Machine-facing city networks, resident portraits, season profiles, source IDs, and locators remain exact but hidden. Their required author-facing counterparts are `city_stories`, `route_stories`, `ordinary_people_stories`, and `season_story`. The runtime rejects machine/process wording, dense semicolon compression, exact substantive repetition, and incomplete reader-story coverage before canonical output.
 
 ## Internal package

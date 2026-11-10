@@ -6,6 +6,35 @@ receipts do not replace stage packages or completion records.
 
 The run root contains:
 
+- for an authority-revision fork, an immutable `authority-revision/` evidence
+  chain containing the bootstrap intent, copied parent/HLD evidence, author
+  directive binding, exact patch plan, independent semantic review,
+  finalization, validation and completion;
+
+  The semantic review is copied byte-for-byte from an external canonical,
+  hash-bound artifact. Its candidate digest is reproduced from the final
+  directive, evidence bindings and exact seven edits. No bootstrap component
+  is permitted to author or upgrade the review verdict.
+
+  `source_kind` remains uniquely `authority_revision`. If the read-only base
+  was an accepted compatibility migration, `base_source_kind`, the base
+  migration finalization and the parent B0 baseline/completion/manifest are
+  propagated through the new baseline, package manifest and B0 completion.
+  I0-I2 and every non-target control remain the parent's exact semantic
+  projection; only the seven reviewed I3-I5 values may differ.
+
+  The new B0 `run_state` is the authority finalization's `parent_run`, exactly
+  matching the fork revision-000 `source_interview_state`. A migration base's
+  old run state remains reachable only through the copied parent B0 baseline;
+  it is never promoted as the current authority-revision run state. B0
+  completion compares the complete reference, not only its SHA-256.
+
+  A refreshed authority B0 keeps the old package and completion immutable. Its
+  stored input gate references the current post-return state, and the package
+  carries the complete hash-linked state chain back to revision-000. The old
+  completion is superseded, the old work order receives a rejection receipt,
+  and the replacement B0 completion and subsequent S1 gate/order are appended.
+
 - append-only canonical `state/revision-NNN.json` snapshots;
 - immutable gates and one-shot work orders with consumed receipts;
 - the current H1 workspace chain;
@@ -13,6 +42,35 @@ The run root contains:
 - H1-A plan, H1-B fragments, H1-A assembly, H1-C HTML and formal H1 package;
 - the external author event and, for revise, its deterministic return body;
 - final conception completion only on the current approved branch.
+
+A B0 execution record binds the exact behavioral runtime, validator and schema
+files used by B0. It deliberately excludes the package-level
+`runtime/__init__.py` export aggregator, whose later-stage public exports do not
+change baseline semantics. Public validation accepts a historical execution
+catalog that still contains this file only when its complete identity-to-hash
+map equals the frozen digest registered by the harness; every copied reference
+is then revalidated read-only. Only the registered old-to-approved-current
+`runtime/baseline.py` hash pair may differ; the separate migration-authority
+module is mandatory in every new catalog and is the sole identity an exact
+historical package may lack. Every other required runtime, schema and validator
+must remain current-exact. It never lets an extra replace a required identity:
+all required identities must remain present and manifest-bound, and new
+packages must equal the current B0 files. Missing, tampered, partially resealed,
+future-validator or unregistered historical profiles fail closed.
+
+S1 through P1 use the shared versioned stage-implementation identity contract.
+Each catalog contains only the producing stage's runner, stage-owned runtime
+helpers, authoritative schemas, and review contracts. An upstream validator is
+called through its public API and authenticates its own package and identity;
+its source tree is not copied into every downstream identity. Thus approved
+maintenance to B0 or S1 does not make an otherwise unchanged E1/P1 package
+stale. Current catalogs are exact and include
+`runtime/stage_implementation_identity.py`. Pre-versioned packages replay only
+when the complete stored catalog digest equals the frozen stage entry, every
+stored artifact still verifies, the removed/missing identity set is exact, and
+every changed retained file matches an explicit old-to-approved-current pair.
+Missing or tampered stage-owned runtime/schema/review files, arbitrary extras,
+resealed legacy catalogs, and any later unapproved current drift fail closed.
 
 The formal H1 package preserves the original H1-A input gate as immutable
 provenance while binding its stage completion to the current `H1-publish`
@@ -38,6 +96,24 @@ refresh transaction described in
 That transaction preserves B0-P1, supersedes the stale H1 suffix, and restarts
 at a fresh H1-A plan workspace. It cannot promote the stale plan, fragments, or
 assembly candidate and cannot manufacture an author decision.
+
+When only the sealed production-qualification digest predates a versioned,
+migration-approved stage implementation catalog, a current active H1 return may
+use the compatible qualification refresh. The receipt records the frozen
+migration-registry digest, every exact approved implementation pair, and the
+successful B0-P1 public replay set. The successor preserves all content and H1
+workspace references byte-for-value; only revision/previous-state, the current
+qualification pointer, and a newly bound copy of the pending H1 gate/order
+change. This evidence cannot authorize a package, schema, review protocol,
+owner version, runtime-contract semantic, or unregistered implementation
+change.
+
+The refresh does not reseal a consumed H1-B order. Its old state binding remains
+admissible to protected fragment-fidelity handling only through the current,
+trusted compatible-refresh receipt, whose predecessor is that exact state and
+whose successor is the current state. The workspace and old/new pending action
+bindings must be byte-for-value identical and the state snapshots may differ
+only in revision lineage; this exception cannot cross another state revision.
 
 A failed independent prepublication HTML readability review uses the
 production-only `apply_internal_h1_html_readability_return` transaction. Its
@@ -74,6 +150,11 @@ deliverable is the H1 report, fragments and offline HTML, all bound to that P1.
 The H1 assembly also contains an independent element-level semantic fidelity
 review. Its pass is required evidence that human-language compression did not
 materially contradict, omit, overstate or promote P1 content.
+If that review returns `revise` before assembly because H1-A planned unsupported
+specificity, production must use the append-only transaction documented in
+[`internal-h1-plan-return.md`](internal-h1-plan-return.md). It rejects the old
+assemble order, preserves the rejected plan and fragments as evidence, and
+starts a new H1-A plan session from the unchanged current P1.
 Development may start only when the latest persisted state has
 `development_status=ready` and the final completion revalidates all nine stage
 completions plus the current author approval.

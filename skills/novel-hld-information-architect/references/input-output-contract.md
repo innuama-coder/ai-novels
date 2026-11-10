@@ -16,6 +16,7 @@ The sole content authority is `package/narrative-information-architecture.json`.
 
 - `pov_policy`
 - `unit_pov_assignments[]`
+- `chapter_pov_assignments[]`
 - `knowledge_states[]`
 - `reader_information_states[]`
 - `suspense_chains[]`
@@ -24,6 +25,8 @@ The sole content authority is `package/narrative-information-architecture.json`.
 - `concealment_and_inference_rules[]`
 
 Every information node records a stable `HIN-` ID, source, knower, reader state, acquisition mode, earliest legal unit, forbidden leak units, source authority refs, ownership class, and resolution ref. Every suspense chain records an `HSP-` ID and explicit setup, probe, reveal, payoff, or authorized-open terminal. POV/knowledge objects use the registered `HPV-` and `HKS-` prefixes.
+
+`unit_pov_assignments[]` covers every HA1 narrative unit in order. `chapter_pov_assignments[]` covers every HA1 chapter shell in order and binds its exact parent unit, HC1 agency-contract ID, focal character, focalization mode, acquisition modes, and perception limit. The chapter assignment is the effective downstream POV contract; it may differ from the unit default only at a chapter boundary and only for a focal character and information path explicitly authorized by HC1.
 
 Every canonical element preserves `source_authority_refs[]`, uses exactly one `ownership_class=source_projection|hld_owned|preserved_open|lld_freedom`, and satisfies the frozen mapping. `decision_dependencies[]` is exactly the HI1 HDD set.
 
@@ -58,7 +61,7 @@ Local semantic correction uses the harness-defined local-candidate revise profil
 ## Ready semantic conditions
 
 - Every knowledge change has a valid source and legal acquisition path.
-- Every POV assignment obeys perception, epistemic, moral, and narrative-contract limits.
+- Every unit and chapter POV assignment obeys perception, epistemic, moral, availability, and narrative-contract limits.
 - Every mandatory reveal has an earlier setup; every mandatory setup has payoff.
 - Misbelief and inference are derivable from available evidence rather than forced stupidity.
 - Reader knowledge is explicitly distinguished from each character's knowledge.

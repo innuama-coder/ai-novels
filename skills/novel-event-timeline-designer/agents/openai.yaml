@@ -1,4 +1,4 @@
 interface:
   display_name: "小说事件时间线设计"
   short_description: "将故事线与环境能力转化为可验证、可追溯的完整事件时间线"
-  default_prompt: "使用 $novel-event-timeline-designer 按 T1 2.4 受控路径完成 typed-edge 原子事件跨度计划、独立语义审查、精确实现和封包。"
+  default_prompt: "使用 $novel-event-timeline-designer 按 T1 2.5 / t1-initial-event-plan-semantics-v5 受控路径完成 typed-edge 原子事件跨度、显式生命周期、readiness-bound terminal SEND bridge tail、独立语义审查、精确实现和封包。"

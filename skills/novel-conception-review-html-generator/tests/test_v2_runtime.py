@@ -37,6 +37,26 @@ PATH_KINDS = (
 )
 
 
+class H1CImplementationIdentityTests(unittest.TestCase):
+    def test_identity_binds_reused_h1a_visible_copy_contract(self):
+        h1c = importlib.import_module(H1C_MODULE)
+        paths = h1c._implementation_paths()
+
+        self.assertEqual(
+            paths["h1-a-visible-copy/run_v2.py"],
+            Path(h1c.h1a.__file__).resolve(),
+        )
+        self.assertEqual(
+            paths["h1-a-visible-copy/review-plan-contract.md"],
+            Path(h1c.h1a.__file__).resolve().parents[1]
+            / "references"
+            / "review-plan-contract.md",
+        )
+        self.assertTrue(
+            paths["h1-a-visible-copy/review-plan-contract.md"].is_file()
+        )
+
+
 class _Coordinator:
     def __init__(self, *, reject: bool = False):
         self.calls: list[dict] = []
