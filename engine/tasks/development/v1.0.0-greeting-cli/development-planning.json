@@ -1,0 +1,2721 @@
+{
+  "planning_status": "ready",
+  "planning_name": "development",
+  "task_version": "v1.0.0-greeting-cli",
+  "output_root": "tasks/development/v1.0.0-greeting-cli",
+  "work_class": "software_development",
+  "planning_target": {
+    "work_type": "software_implementation",
+    "planning_purpose": "把已批准的小说构思自主工作流 V2 框架实现为可运行、可迁移、可验收的技能链。",
+    "default_output_root": "tasks/development/v1.0.0-greeting-cli",
+    "deliverable_root": "product_changes",
+    "acceptance_object": "正式 V2 技能运行器、公共 harness、测试证据与整链完成语义",
+    "evidence_model": [
+      "source traceability",
+      "per-task acceptance and verification",
+      "completion receipts and manifests",
+      "generic and Duanxian E2E evidence"
+    ],
+    "planning_boundary": "planning-only; this package does not implement production changes or claim skill delivery."
+  },
+  "source_inventory": [
+    {
+      "path": "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md",
+      "kind": "authoritative workflow and contracts"
+    },
+    {
+      "path": "docs/ai-novel-workflow/contracts/autonomous-v2/",
+      "kind": "authoritative JSON schemas"
+    },
+    {
+      "path": "docs/ai-novel-workflow/conception-orchestration.md",
+      "kind": "legacy orchestration migration context"
+    },
+    {
+      "path": "docs/ai-novel-workflow/conception-phase.md",
+      "kind": "legacy phase migration context"
+    },
+    {
+      "path": "testing/autonomous_v2_schema_runtime.py",
+      "kind": "reference-only test runtime"
+    },
+    {
+      "path": "testing/test_conception_autonomous_v2_contracts.py",
+      "kind": "existing contract tests"
+    },
+    {
+      "path": "testing/test_conception_autonomous_v2_runtime.py",
+      "kind": "existing reference runtime tests"
+    },
+    {
+      "path": "skills/novel-storyline-architecture-designer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-world-model-designer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-environment-system-designer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-event-timeline-designer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-character-system-designer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-conception-reviewer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-conception-deliverable-assembler/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-conception-human-review-assembler/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-conception-fragment-writer/SKILL.md",
+      "kind": "skill contract"
+    },
+    {
+      "path": "skills/novel-conception-review-html-generator/SKILL.md",
+      "kind": "skill contract"
+    }
+  ],
+  "source_interpretation": {
+    "authority_order": [
+      "conception-autonomous-workflow-v2.md",
+      "autonomous-v2 schemas",
+      "formal SKILL.md",
+      "legacy docs/scripts as migration evidence only"
+    ],
+    "current_state": "V2 contracts and 46 reference tests exist; most domain skills have no production runner; Q1/H1 scripts remain legacy 1.x.",
+    "root_problem": "contracts are formalized but executable semantics are fragmented or absent; without one official runtime and coordinator, per-skill implementations will drift.",
+    "implementation_principle": "shared semantics first, domain stages in authority order, packaging/review last, one final acceptance gate."
+  },
+  "development_scope": {
+    "in_scope": [
+      "production V2 runtime",
+      "B0 and S1-W1-E1-T1-C1-Q1-P1-H1 skills",
+      "author decision and completion",
+      "harness/adapters",
+      "unit/contract/integration/E2E tests"
+    ],
+    "out_of_scope": [
+      "new novel content",
+      "changes to approved Duanxian conception",
+      "chapter development",
+      "running this plan as implementation"
+    ],
+    "migration_rule": "legacy D1/R1 scripts may be read for reusable behavior but cannot satisfy V2 completion."
+  },
+  "project_stack": {
+    "language": "Python",
+    "test_framework": "stdlib unittest plus explicit subprocess/DOM checks as needed",
+    "schema": "JSON Schema Draft 2020-12 via production dependency",
+    "repository": "https://github.com/innuama-coder/ai-novels.git",
+    "branch": "main",
+    "dependency_risk": "repository lacks a root dependency manifest; TASK-001 must establish a harness-local reproducible policy before runtime code is accepted."
+  },
+  "planning_harness_model": {
+    "target_type": "harness-workflow",
+    "quality_standard": "review-gated-branching-dag-planning",
+    "stages": [
+      "STAGE-001",
+      "STAGE-002",
+      "STAGE-003",
+      "STAGE-004"
+    ]
+  },
+  "phase_reports": [
+    {
+      "stage_id": "STAGE-001",
+      "stage_name": "Overall Planning",
+      "purpose": "把 V2 权威链转换为实现范围、公共底座、迁移边界与验收模型。",
+      "inputs": [
+        "V2 权威工作流",
+        "现有技能与测试盘点"
+      ],
+      "outputs": [
+        "17 个任务的责任分界",
+        "依赖图",
+        "风险与停止条件"
+      ],
+      "review_checks": [
+        "无遗漏阶段",
+        "未把 legacy 脚本视为完成",
+        "唯一最终验收任务"
+      ],
+      "status": "pass",
+      "blocking_findings": []
+    },
+    {
+      "stage_id": "STAGE-002",
+      "stage_name": "Independent Task Formation",
+      "purpose": "形成职责单一、可独立验收的实现任务包。",
+      "inputs": [
+        "STAGE-001 依赖图"
+      ],
+      "outputs": [
+        "task.md",
+        "PROMPT.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "spec.yaml"
+      ],
+      "review_checks": [
+        "输入输出契约",
+        "allowed/forbidden scope",
+        "acceptance/verification/handoff"
+      ],
+      "status": "pass",
+      "blocking_findings": []
+    },
+    {
+      "stage_id": "STAGE-003",
+      "stage_name": "Task Logic And Completeness Review",
+      "purpose": "逐任务审查实现逻辑、真实性边界与证据闭环。",
+      "inputs": [
+        "17 个任务包"
+      ],
+      "outputs": [
+        "逐任务 cohesion review",
+        "任务逻辑审查"
+      ],
+      "review_checks": [
+        "职责内聚",
+        "无隐藏依赖",
+        "可独立验收",
+        "负例存在"
+      ],
+      "status": "pass",
+      "blocking_findings": []
+    },
+    {
+      "stage_id": "STAGE-004",
+      "stage_name": "Whole-Plan Integrity And Dependency Review",
+      "purpose": "审查整链覆盖、DAG、迁移顺序和最终交付门。",
+      "inputs": [
+        "任务逻辑审查",
+        "DAG",
+        "coverage matrix"
+      ],
+      "outputs": [
+        "完整性结论",
+        "最终验收契约"
+      ],
+      "review_checks": [
+        "无环",
+        "执行顺序正确",
+        "所有实现任务被最终验收依赖",
+        "整链和项目无硬编码"
+      ],
+      "status": "pass",
+      "blocking_findings": []
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "TASK-001",
+      "title": "建立 V2 正式契约运行时",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.3-§3.6, §15, §16 item 1",
+        "docs/ai-novel-workflow/contracts/autonomous-v2/"
+      ],
+      "inputs": [
+        "22 份 autonomous-v2 JSON Schema",
+        "现有 testing/autonomous_v2_schema_runtime.py 仅作为测试参考"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/requirements.txt",
+        "harnesses/novel-conception-autonomous/runtime/contracts.py",
+        "harnesses/novel-conception-autonomous/runtime/canonical.py",
+        "harnesses/novel-conception-autonomous/tests/test_contract_runtime.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous/runtime",
+        "harnesses/novel-conception-autonomous/tests"
+      ],
+      "allowed_scope": [
+        "引入并锁定支持 Draft 2020-12 的正式 JSON Schema 依赖",
+        "实现 schema 加载、严格校验、canonical JSON、hash 与 manifest 基础函数"
+      ],
+      "forbidden_scope": [
+        "不改写领域技能语义",
+        "不得继续把 testing/autonomous_v2_schema_runtime.py 当生产运行时",
+        "不得降级为手写字段检查"
+      ],
+      "acceptance": [
+        "正式 validator 对全部 22 份 schema 自检通过并拒绝 additionalProperties、条件分支和引用错误",
+        "canonical JSON 与 hash 在字段顺序变化时保持稳定",
+        "依赖安装与离线运行方式有可复现说明"
+      ],
+      "verification": [
+        "python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime",
+        "使用正反 fixture 验证 Draft 2020-12 行为"
+      ],
+      "stop_conditions": [
+        "无法获得或固定 Draft 2020-12 validator",
+        "现有 schema 被正式 validator 判定自相矛盾且未先回到契约评审"
+      ],
+      "dependencies": [],
+      "handoff_requirements": [
+        "向 TASK-002/003 交付稳定 Python API、依赖清单与测试命令"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-001/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-001",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-001/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-001/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-001/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-001/spec.yaml"
+    },
+    {
+      "task_id": "TASK-002",
+      "title": "实现运行状态、拓扑与返工路由",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.9, §14.1-§14.3, §16 item 2"
+      ],
+      "inputs": [
+        "TASK-001 正式契约 API",
+        "run-state、return-route、completion schema"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/runtime/coordinator.py",
+        "harnesses/novel-conception-autonomous/runtime/return_routing.py",
+        "harnesses/novel-conception-autonomous/tests/test_coordinator.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous/runtime",
+        "harnesses/novel-conception-autonomous/tests"
+      ],
+      "allowed_scope": [
+        "实现不可变 run-state 版本推进、固定阶段拓扑、定向 return 计算与 resolution 闭环"
+      ],
+      "forbidden_scope": [
+        "不执行业务技能内容生成",
+        "不得绕过 state_before、input_gate、current completion 引用及其哈希绑定",
+        "不得把不可变 run-state 快照或文件存在当作阶段完成"
+      ],
+      "acceptance": [
+        "所有合法拓扑路径可推进且非法跳步被拒绝",
+        "router 按唯一所有权和失效表确定性计算 owner、失效后缀、resume_stage 与 resume_point",
+        "resolution 逐值重验 return、input gate、新 completion 和状态前缀；同一 return 不得重复解析"
+      ],
+      "verification": [
+        "python -m unittest harnesses.novel-conception-autonomous.tests.test_coordinator",
+        "覆盖 forward、非法跳步、定向返工、从最新快照恢复、陈旧哈希、重复解析和缺失 active-return 正文"
+      ],
+      "stop_conditions": [
+        "run-state 与 return-route schema 无法表达权威流程",
+        "owner、失效后缀或恢复点无法由 §14.1-§14.3 确定性计算"
+      ],
+      "dependencies": [
+        "TASK-001"
+      ],
+      "handoff_requirements": [
+        "向所有后续任务交付唯一 coordinator API 和状态迁移证据"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-002/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-002",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-002/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-002/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-002/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-002/spec.yaml"
+    },
+    {
+      "task_id": "TASK-003",
+      "title": "实现 B0 基线封装、事实门与完成判定",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.7, §3.3-§3.6, §13-§15, §16 item 3"
+      ],
+      "inputs": [
+        "冻结的 source interview run-state",
+        "I0–I5 六个 ready completion 及其六份 canonical 设计原文",
+        "V1 completion 及其绑定的 fact-dependency-register",
+        "V2 completion 与当前、唯一、绑定本次 V2 的 approved 作者记录",
+        "TASK-001/002 正式运行时"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/runtime/baseline.py",
+        "harnesses/novel-conception-autonomous/runtime/b0_completion.py",
+        "harnesses/novel-conception-autonomous/tests/test_baseline.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous/runtime",
+        "harnesses/novel-conception-autonomous/tests"
+      ],
+      "allowed_scope": [
+        "无损封装 B0，按原文稳定 control ID 建立锁定项/开放项/证据锚点，执行事实门、manifest 与 completion"
+      ],
+      "forbidden_scope": [
+        "不补写故事内容",
+        "不把访谈推断升级为锁定事实",
+        "不发明原文不存在的 control ID、fact adoption 或批准记录",
+        "不允许仅凭文件存在判完成"
+      ],
+      "acceptance": [
+        "每个锁定事实可追溯到批准来源",
+        "冲突事实、缺失证据和未批准简报均硬阻断",
+        "B0 completion 同时校验语义状态、制品、hash、manifest 和 run-state"
+      ],
+      "verification": [
+        "python -m unittest harnesses.novel-conception-autonomous.tests.test_baseline",
+        "用批准、未批准、冲突、篡改四组 fixture 验证"
+      ],
+      "stop_conditions": [
+        "缺少已批准访谈制品或无法确定来源优先级",
+        "缺少 fact-dependency-register、原文稳定 control ID 或结构性事实仍未采用",
+        "事实门发现需作者裁决的实质冲突"
+      ],
+      "dependencies": [
+        "TASK-001",
+        "TASK-002"
+      ],
+      "handoff_requirements": [
+        "向 S1 提供唯一合法 B0 输入包与完成收据"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-003/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-003",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-003/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-003/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-003/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-003/spec.yaml"
+    },
+    {
+      "task_id": "TASK-004",
+      "title": "实现 S1 故事线架构设计技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §4, §3.9, §14-§15, §16 item 4",
+        "skills/novel-storyline-architecture-designer/SKILL.md"
+      ],
+      "inputs": [
+        "B0 baseline package",
+        "storyline-architecture schema"
+      ],
+      "expected_outputs": [
+        "skills/novel-storyline-architecture-designer/scripts/run_v2.py",
+        "skills/novel-storyline-architecture-designer/references/runtime-contract.md",
+        "skills/novel-storyline-architecture-designer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-storyline-architecture-designer"
+      ],
+      "allowed_scope": [
+        "生成多维故事线、因果链、汇合/分叉/交叉点、悬念冲突和边界控制信息"
+      ],
+      "forbidden_scope": [
+        "不设计世界、环境、事件目录或角色档案",
+        "不改写 B0 锁定事实",
+        "不把可选旋律线强制为正文"
+      ],
+      "acceptance": [
+        "输出通过正式 schema 和 lineage 校验",
+        "主体线覆盖起点—升级—转折—危机—收束，其他线有关系与连接点",
+        "每条线明确展开资格、主题作用、冲突/悬念和开发边界"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-storyline-architecture-designer.tests.test_v2_runtime",
+        "用通用 fixture 与缺线/断链/事实漂移负例验证"
+      ],
+      "stop_conditions": [
+        "B0 未完成或事实门失败",
+        "故事线冲突必须由作者裁决"
+      ],
+      "dependencies": [
+        "TASK-003"
+      ],
+      "handoff_requirements": [
+        "向 W1 交付 S1 正式制品、completion、manifest 与控制信息"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-004/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-004",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-004/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-004/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-004/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-004/spec.yaml"
+    },
+    {
+      "task_id": "TASK-005",
+      "title": "实现 W1 虚拟世界模型设计技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §5, §3.9, §14-§15, §16 item 5",
+        "skills/novel-world-model-designer/SKILL.md"
+      ],
+      "inputs": [
+        "B0 baseline",
+        "S1 storyline architecture"
+      ],
+      "expected_outputs": [
+        "skills/novel-world-model-designer/scripts/run_v2.py",
+        "skills/novel-world-model-designer/references/runtime-contract.md",
+        "skills/novel-world-model-designer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-world-model-designer"
+      ],
+      "allowed_scope": [
+        "依据全部故事线定义世界规则、制度、技术/资源、地理时空、社会运行与边界"
+      ],
+      "forbidden_scope": [
+        "不枚举具体场景",
+        "不写事件链",
+        "不创建角色档案"
+      ],
+      "acceptance": [
+        "每条故事线所依赖的世界能力、限制和代价均有规则承载",
+        "规则含适用范围、例外、代价与一致性检查",
+        "输出不越界吸收 E1/T1/C1 职责"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-world-model-designer.tests.test_v2_runtime",
+        "正反 fixture 验证规则覆盖、矛盾和越界"
+      ],
+      "stop_conditions": [
+        "S1 未完成或 lineage 不匹配",
+        "世界规则无法同时承载已批准故事线且需要改 S1"
+      ],
+      "dependencies": [
+        "TASK-004"
+      ],
+      "handoff_requirements": [
+        "向 E1 交付 W1 正式制品和故事线到规则的 coverage"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-005/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-005",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-005/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-005/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-005/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-005/spec.yaml"
+    },
+    {
+      "task_id": "TASK-006",
+      "title": "实现 E1 环境系统设计技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §6, §3.9, §14-§15, §16 item 6",
+        "skills/novel-environment-system-designer/SKILL.md"
+      ],
+      "inputs": [
+        "B0、S1、W1 正式制品"
+      ],
+      "expected_outputs": [
+        "skills/novel-environment-system-designer/scripts/run_v2.py",
+        "skills/novel-environment-system-designer/references/runtime-contract.md",
+        "skills/novel-environment-system-designer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-environment-system-designer"
+      ],
+      "allowed_scope": [
+        "把世界规则展开为可承载具体事件的环境，定义空间、设施、感知、权限、风险、资源和转场"
+      ],
+      "forbidden_scope": [
+        "不新增故事线",
+        "不决定事件结果",
+        "不编写场景正文"
+      ],
+      "acceptance": [
+        "所有需落地的故事线节点均有可执行环境承载",
+        "环境具有事件所需入口、限制、可感知信息、行动接口和转场关系",
+        "环境只从 W1 展开且不违背世界规则"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-environment-system-designer.tests.test_v2_runtime",
+        "覆盖承载充分性、不可达转场、缺行动接口与规则冲突"
+      ],
+      "stop_conditions": [
+        "W1 未完成",
+        "故事线要求无法由现有世界规则支持"
+      ],
+      "dependencies": [
+        "TASK-005"
+      ],
+      "handoff_requirements": [
+        "向 T1 交付环境目录、连接图和 storyline coverage"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-006/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-006",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-006/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-006/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-006/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-006/spec.yaml"
+    },
+    {
+      "task_id": "TASK-007",
+      "title": "实现 T1 事件时间线设计技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §7, §3.9, §14-§15, §16 item 7",
+        "skills/novel-event-timeline-designer/SKILL.md"
+      ],
+      "inputs": [
+        "B0、S1、W1、E1 正式制品"
+      ],
+      "expected_outputs": [
+        "skills/novel-event-timeline-designer/scripts/run_v2.py",
+        "skills/novel-event-timeline-designer/references/runtime-contract.md",
+        "skills/novel-event-timeline-designer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-event-timeline-designer"
+      ],
+      "allowed_scope": [
+        "将所有故事线展开为背景事件、铺垫、触发、升级、转折、危机、收束及跨线连接"
+      ],
+      "forbidden_scope": [
+        "不写章节或场景正文",
+        "不改变故事线目的",
+        "不创建未受世界/环境约束的事件"
+      ],
+      "acceptance": [
+        "主线和必需支线不存在时间/因果断点，背景事件能解释前置条件",
+        "每个事件定义参与者角色需求、环境、触发、前置、结果、信息变化和后继",
+        "并发、回忆、插叙和汇合点有明确时间关系"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-event-timeline-designer.tests.test_v2_runtime",
+        "覆盖因果断链、时序矛盾、环境缺失和无后果事件"
+      ],
+      "stop_conditions": [
+        "E1 无法承载必需事件",
+        "补齐事件必须改变已批准故事线"
+      ],
+      "dependencies": [
+        "TASK-006"
+      ],
+      "handoff_requirements": [
+        "向 C1 交付完整事件目录、时间线和角色槽位需求"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-007/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-007",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-007/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-007/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-007/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-007/spec.yaml"
+    },
+    {
+      "task_id": "TASK-008",
+      "title": "实现 C1 角色系统设计技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §8, §3.9, §14-§15, §16 item 8",
+        "skills/novel-character-system-designer/SKILL.md"
+      ],
+      "inputs": [
+        "B0、S1、W1、E1、T1 正式制品"
+      ],
+      "expected_outputs": [
+        "skills/novel-character-system-designer/scripts/run_v2.py",
+        "skills/novel-character-system-designer/references/runtime-contract.md",
+        "skills/novel-character-system-designer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-character-system-designer"
+      ],
+      "allowed_scope": [
+        "按故事线与事件角色槽位补齐核心、关系层、机构层角色定义及三层关系延伸"
+      ],
+      "forbidden_scope": [
+        "不写人物小传正文或章节",
+        "不为丰富而增加无职责角色",
+        "不改变事件因果"
+      ],
+      "acceptance": [
+        "所有事件角色槽位均有角色承担且无孤儿角色",
+        "核心角色具目标、责任、能力、边界、约束、弧线和信息状态",
+        "三层关系是角色定义延伸，明确作用、矛盾、变化和连接事件"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-character-system-designer.tests.test_v2_runtime",
+        "覆盖缺角色、无职责角色、关系误解和动机不一致"
+      ],
+      "stop_conditions": [
+        "T1 角色需求自相矛盾",
+        "角色补齐要求改写既有事件链"
+      ],
+      "dependencies": [
+        "TASK-007"
+      ],
+      "handoff_requirements": [
+        "向 Q1 交付完整 C1 制品和角色—事件—故事线 coverage"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-008/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-008",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-008/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-008/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-008/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-008/spec.yaml"
+    },
+    {
+      "task_id": "TASK-009",
+      "title": "迁移 Q1 构思审查技能到 V2 双任务审查",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §9, §3.9, §14-§15, §16 item 9",
+        "skills/novel-conception-reviewer/SKILL.md"
+      ],
+      "inputs": [
+        "B0 及 S1/W1/E1/T1/C1 制品",
+        "现有 reviewer 1.x 脚本仅作迁移参考"
+      ],
+      "expected_outputs": [
+        "skills/novel-conception-reviewer/scripts/run_v2.py",
+        "skills/novel-conception-reviewer/references/isolation-protocol.md",
+        "skills/novel-conception-reviewer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-conception-reviewer"
+      ],
+      "allowed_scope": [
+        "实现语义审查任务与 handoff 审查任务隔离、问题路由、修复回环和统一 Q1 completion"
+      ],
+      "forbidden_scope": [
+        "不得在同一上下文伪造两份审查",
+        "审查器不直接修复领域制品",
+        "不得用 legacy D1/R1 completion 通过 V2"
+      ],
+      "acceptance": [
+        "两项审查由独立执行上下文产生并保留可验证 isolation evidence",
+        "审查覆盖自洽、真实性边界、逻辑、完整性、全覆盖和契约交接",
+        "每个 blocker 精确路由到责任阶段并经 resolver 后重新审查"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-conception-reviewer.tests.test_v2_runtime",
+        "以刻意注入的跨域矛盾、缺 coverage、坏 handoff 和伪隔离证据验证"
+      ],
+      "stop_conditions": [
+        "运行环境无法提供可验证隔离",
+        "审查结论依赖作者裁决而非自动返工"
+      ],
+      "dependencies": [
+        "TASK-002",
+        "TASK-008"
+      ],
+      "handoff_requirements": [
+        "仅在双审查通过后向 P1 交付 Q1 completion 与审查证据"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-009/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-009",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-009/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-009/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-009/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-009/spec.yaml"
+    },
+    {
+      "task_id": "TASK-010",
+      "title": "实现 P1 机器构思交付物组装技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §10, §3.9, §14-§15, §16 item 10",
+        "skills/novel-conception-deliverable-assembler/SKILL.md"
+      ],
+      "inputs": [
+        "Q1 已通过的全部正式制品"
+      ],
+      "expected_outputs": [
+        "skills/novel-conception-deliverable-assembler/scripts/run_v2.py",
+        "skills/novel-conception-deliverable-assembler/references/package-contract.md",
+        "skills/novel-conception-deliverable-assembler/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-conception-deliverable-assembler"
+      ],
+      "allowed_scope": [
+        "无损组装机器构思包、索引、开发 handoff、lineage 与 completion"
+      ],
+      "forbidden_scope": [
+        "不新增构思事实",
+        "不润色或重写上游控制信息",
+        "不接受未通过 Q1 的输入"
+      ],
+      "acceptance": [
+        "P1 对所有上游制品逐项可追溯且内容无语义漂移",
+        "包内索引、hash、manifest、版本、开发 handoff 相互一致",
+        "缺件、陈旧版本或 Q1 未通过时硬阻断"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-conception-deliverable-assembler.tests.test_v2_runtime",
+        "对照源制品做字段级无损与篡改验证"
+      ],
+      "stop_conditions": [
+        "Q1 completion 不完整",
+        "上游制品之间仍有未解决冲突"
+      ],
+      "dependencies": [
+        "TASK-009"
+      ],
+      "handoff_requirements": [
+        "向 H1-A 和最终完成流程交付唯一 P1 正式包"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-010/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-010",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-010/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-010/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-010/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-010/spec.yaml"
+    },
+    {
+      "task_id": "TASK-011",
+      "title": "迁移 H1-A 人审报告设计与组装技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.1-§11.2, §3.8-§3.9, §14-§15, §16 item 11",
+        "skills/novel-conception-human-review-assembler/SKILL.md"
+      ],
+      "inputs": [
+        "P1 正式机器构思包",
+        "现有 H1-A 1.x 脚本仅作迁移参考"
+      ],
+      "expected_outputs": [
+        "skills/novel-conception-human-review-assembler/scripts/run_v2.py",
+        "skills/novel-conception-human-review-assembler/references/review-plan-contract.md",
+        "skills/novel-conception-human-review-assembler/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-conception-human-review-assembler"
+      ],
+      "allowed_scope": [
+        "从 P1 设计十分钟人审信息架构、视觉表达计划、片段槽位和共享工作区"
+      ],
+      "forbidden_scope": [
+        "不改变 P1 事实",
+        "不直接写小说片段或 HTML",
+        "不回读 legacy R1/D1"
+      ],
+      "acceptance": [
+        "世界、故事线、环境/事件、角色及控制信息在十分钟路径内完整可达",
+        "每个视觉/文本模块绑定 P1 source anchor",
+        "fragment-input-package 和 H1 workspace 通过 schema 与 lineage"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-conception-human-review-assembler.tests.test_v2_runtime",
+        "验证覆盖、时长预算、锚点和 legacy 输入拒绝"
+      ],
+      "stop_conditions": [
+        "P1 不完整",
+        "十分钟预算与完整控制信息无法同时满足且需调整契约"
+      ],
+      "dependencies": [
+        "TASK-010"
+      ],
+      "handoff_requirements": [
+        "向 H1-B 交付片段输入包；向 H1-C 交付报告计划和 workspace"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-011/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-011",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-011/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-011/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-011/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-011/spec.yaml"
+    },
+    {
+      "task_id": "TASK-012",
+      "title": "迁移 H1-B 小说评审片段编写技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.3, §3.8-§3.9, §14-§15, §16 item 12",
+        "skills/novel-conception-fragment-writer/SKILL.md"
+      ],
+      "inputs": [
+        "H1-A fragment-input-package",
+        "P1 source anchors",
+        "既有固定风格与语言硬约束"
+      ],
+      "expected_outputs": [
+        "skills/novel-conception-fragment-writer/scripts/run_v2.py",
+        "skills/novel-conception-fragment-writer/references/v2-fragment-contract.md",
+        "skills/novel-conception-fragment-writer/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-conception-fragment-writer"
+      ],
+      "allowed_scope": [
+        "按批准槽位生成足量、可审阅、风格固定且源事实一致的小说片段"
+      ],
+      "forbidden_scope": [
+        "不补设定或改变剧情结论",
+        "不把片段当正式正文",
+        "不绕过 P1 anchors"
+      ],
+      "acceptance": [
+        "每个片段承担明确评审问题且总量满足报告计划",
+        "固定语言/风格、视角、信息边界和决定性心理活动限制均被验证",
+        "片段事实逐项回链 P1，虚构表面细节不产生新控制信息"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-conception-fragment-writer.tests.test_v2_runtime",
+        "验证数量、风格、锚点、越权事实和禁写心理活动"
+      ],
+      "stop_conditions": [
+        "H1-A 输入槽位不足或相互冲突",
+        "固定风格无法表达指定评审问题"
+      ],
+      "dependencies": [
+        "TASK-011"
+      ],
+      "handoff_requirements": [
+        "向 H1-C 交付 fragment package、验证报告和 workspace 更新"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-012/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-012",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-012/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-012/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-012/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-012/spec.yaml"
+    },
+    {
+      "task_id": "TASK-013",
+      "title": "迁移 H1-C HTML 报告生成与 H1 完成技能",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.4, §3.8-§3.9, §14-§15, §16 item 13",
+        "skills/novel-conception-review-html-generator/SKILL.md"
+      ],
+      "inputs": [
+        "H1-A 报告计划与 workspace",
+        "H1-B fragment package",
+        "P1 anchors"
+      ],
+      "expected_outputs": [
+        "skills/novel-conception-review-html-generator/scripts/run_v2.py",
+        "skills/novel-conception-review-html-generator/references/v2-html-contract.md",
+        "skills/novel-conception-review-html-generator/tests/test_v2_runtime.py"
+      ],
+      "impacted_areas": [
+        "skills/novel-conception-review-html-generator"
+      ],
+      "allowed_scope": [
+        "生成单文件/可移植 HTML、SVG 信息图、审阅导航、P1 锚点与统一 H1 completion"
+      ],
+      "forbidden_scope": [
+        "不修改片段或构思事实",
+        "不以纯文字替代应图形化的关系/时间/空间信息",
+        "不使用 legacy completion"
+      ],
+      "acceptance": [
+        "报告含正式标题且十分钟路径清晰，关键关系/环境/故事线使用可访问 SVG",
+        "所有展示内容与 P1/片段包一致且 source anchor 可核验",
+        "离线打开、打印、响应式、可访问性和统一 H1 completion 均通过"
+      ],
+      "verification": [
+        "python -m unittest skills.novel-conception-review-html-generator.tests.test_v2_runtime",
+        "用 DOM、SVG、锚点、离线资源、打印与内容一致性测试验证"
+      ],
+      "stop_conditions": [
+        "H1-A/B completion 不完整",
+        "可视化需要改变上游控制信息才能成立"
+      ],
+      "dependencies": [
+        "TASK-011",
+        "TASK-012"
+      ],
+      "handoff_requirements": [
+        "向作者裁决流程交付 HTML、资产清单、H1 completion 与验证报告"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-013/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-013",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-013/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-013/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-013/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-013/spec.yaml"
+    },
+    {
+      "task_id": "TASK-014",
+      "title": "实现作者裁决与最终构思完成流程",
+      "task_type": "implementation",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §12-§15, §16 item 14"
+      ],
+      "inputs": [
+        "P1 completion",
+        "H1 completion",
+        "author-decision schema",
+        "run-state"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/runtime/author_decision.py",
+        "harnesses/novel-conception-autonomous/runtime/final_completion.py",
+        "harnesses/novel-conception-autonomous/tests/test_final_completion.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous/runtime",
+        "harnesses/novel-conception-autonomous/tests"
+      ],
+      "allowed_scope": [
+        "记录批准/拒绝/要求修订，路由返工，生成最终 conception completion"
+      ],
+      "forbidden_scope": [
+        "不代替作者批准",
+        "拒绝/修订不得伪装成完成",
+        "不得仅批准 HTML 而绕过 P1/H1 一致性"
+      ],
+      "acceptance": [
+        "批准只在 P1/H1 同版本一致且均完成时产生最终 completion",
+        "修订意见可精确路由并使下游陈旧化",
+        "最终 completion 校验 run-state、hash、manifest、作者决策和双包一致性"
+      ],
+      "verification": [
+        "python -m unittest harnesses.novel-conception-autonomous.tests.test_final_completion",
+        "覆盖批准、拒绝、局部返工、陈旧 HTML 和篡改决策"
+      ],
+      "stop_conditions": [
+        "作者决策格式无法映射正式 schema",
+        "修订意见缺少可确定责任阶段"
+      ],
+      "dependencies": [
+        "TASK-002",
+        "TASK-010",
+        "TASK-013"
+      ],
+      "handoff_requirements": [
+        "向主 harness 交付最终状态机接口和终态证据"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-014/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-014",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-014/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-014/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-014/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-014/spec.yaml"
+    },
+    {
+      "task_id": "TASK-015",
+      "title": "组装自主构思主 Harness、适配器与发布验证",
+      "task_type": "integration",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+        "docs/ai-novel-workflow/conception-orchestration.md"
+      ],
+      "inputs": [
+        "所有阶段运行器及 completion",
+        "coordinator 与 final completion"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/manifest.yaml",
+        "harnesses/novel-conception-autonomous/agent.md",
+        "harnesses/novel-conception-autonomous/workflow.md",
+        "harnesses/novel-conception-autonomous/rules.md",
+        "harnesses/novel-conception-autonomous/adapters/codex/SKILL.md",
+        "harnesses/novel-conception-autonomous/validators/validate_harness.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous",
+        "docs/ai-novel-workflow/conception-orchestration.md",
+        "docs/ai-novel-workflow/conception-phase.md"
+      ],
+      "allowed_scope": [
+        "连接正式调用链、适配器、validator、release builder、日志/证据和兼容迁移说明"
+      ],
+      "forbidden_scope": [
+        "不复制领域逻辑到 orchestration",
+        "不保留 D1/R1 作为 V2 成功路径",
+        "不以文档声明替代可运行调用"
+      ],
+      "acceptance": [
+        "manifest 中顺序与权威链一致且每一 gate/route 可执行",
+        "harness 自检覆盖必需文件、schema、运行器、completion、适配器和 legacy 禁入",
+        "旧入口明确失败或显式兼容，不产生半 V2 包"
+      ],
+      "verification": [
+        "python harnesses/novel-conception-autonomous/validators/validate_harness.py",
+        "运行全体单元/契约测试并检查发布包清单"
+      ],
+      "stop_conditions": [
+        "任一上游技能尚无可验证 V2 runner",
+        "旧编排仍能绕过正式 coordinator"
+      ],
+      "dependencies": [
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "TASK-011",
+        "TASK-012",
+        "TASK-013",
+        "TASK-014"
+      ],
+      "handoff_requirements": [
+        "向 E2E 任务交付唯一整链入口、运行说明和 harness 自检证据"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-015/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-015",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-015/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-015/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-015/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-015/spec.yaml"
+    },
+    {
+      "task_id": "TASK-016",
+      "title": "建立通用与《断线》整链前向验收套件",
+      "task_type": "integration_test",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §15-§17",
+        "duanxian/ 已批准访谈与构思资料"
+      ],
+      "inputs": [
+        "可运行主 harness",
+        "通用最小 fixture",
+        "《断线》已批准输入"
+      ],
+      "expected_outputs": [
+        "harnesses/novel-conception-autonomous/evals/README.md",
+        "harnesses/novel-conception-autonomous/evals/fixtures/generic/fixture.json",
+        "harnesses/novel-conception-autonomous/evals/fixtures/duanxian/fixture.json",
+        "testing/test_conception_autonomous_v2_e2e.py"
+      ],
+      "impacted_areas": [
+        "harnesses/novel-conception-autonomous/evals",
+        "testing"
+      ],
+      "allowed_scope": [
+        "构造去项目硬编码的通用用例、断线回归用例、失败注入和全链证据断言"
+      ],
+      "forbidden_scope": [
+        "不得把《断线》内容写进通用运行器",
+        "不得用快照完全替代语义/契约断言",
+        "不得覆写已批准项目交付物"
+      ],
+      "acceptance": [
+        "通用 fixture 从 B0 到作者批准完整通过",
+        "《断线》前向测试验证内容一致性且不依赖硬编码名称规则",
+        "至少覆盖每个 gate、一个跨阶段返工、暂停恢复、篡改和 legacy 输入拒绝"
+      ],
+      "verification": [
+        "python -m unittest testing.test_conception_autonomous_v2_e2e",
+        "重复运行两次验证确定性与幂等性"
+      ],
+      "stop_conditions": [
+        "整链只能通过项目特判",
+        "测试无法在隔离临时目录执行"
+      ],
+      "dependencies": [
+        "TASK-015"
+      ],
+      "handoff_requirements": [
+        "向最终交付验收提供测试日志、制品 manifest、coverage 和失败注入报告"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-016/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-016",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-016/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-016/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-016/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-016/spec.yaml"
+    },
+    {
+      "task_id": "TASK-017",
+      "title": "执行最终交付验收并出具报告",
+      "task_type": "delivery_acceptance",
+      "task_status": "ready",
+      "source_refs": [
+        "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+        "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+      ],
+      "inputs": [
+        "TASK-001 至 TASK-016 的代码、测试、completion 与 handoff 证据"
+      ],
+      "expected_outputs": [
+        "tasks/development/v1.0.0-greeting-cli/acceptance-report.md"
+      ],
+      "impacted_areas": [
+        "tasks/development/v1.0.0-greeting-cli/acceptance-report.md"
+      ],
+      "allowed_scope": [
+        "只执行独立验收、追溯覆盖核对和报告结论"
+      ],
+      "forbidden_scope": [
+        "不在验收任务中补功能或改契约",
+        "不得豁免失败测试",
+        "不得把待修问题记为通过"
+      ],
+      "acceptance": [
+        "所有 source traceability、coverage、verification、handoff 证据齐全",
+        "全部单元、契约、harness、E2E 和负例测试通过",
+        "报告逐项给出 pass/fail、证据路径、遗留风险；任一 blocker 均判失败"
+      ],
+      "verification": [
+        "运行 development-planning.json 中全部 verification 命令",
+        "人工复核 V2 §14-§16 与任务覆盖矩阵",
+        "验证 acceptance-report.md 可从干净工作区复现"
+      ],
+      "stop_conditions": [
+        "任何依赖任务未完成或证据缺失",
+        "任何测试 failed 或存在 unresolved blocker"
+      ],
+      "dependencies": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "TASK-011",
+        "TASK-012",
+        "TASK-013",
+        "TASK-014",
+        "TASK-015",
+        "TASK-016"
+      ],
+      "handoff_requirements": [
+        "向用户交付 acceptance-report.md 和明确的可开发/不可开发结论"
+      ],
+      "task_description_path": "tasks/development/v1.0.0-greeting-cli/TASK-017/task.md",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-017",
+      "prompt_path": "tasks/development/v1.0.0-greeting-cli/TASK-017/PROMPT.md",
+      "agents_path": "tasks/development/v1.0.0-greeting-cli/TASK-017/AGENTS.md",
+      "claude_path": "tasks/development/v1.0.0-greeting-cli/TASK-017/CLAUDE.md",
+      "spec_path": "tasks/development/v1.0.0-greeting-cli/TASK-017/spec.yaml"
+    }
+  ],
+  "dag": {
+    "nodes": [
+      "TASK-001",
+      "TASK-002",
+      "TASK-003",
+      "TASK-004",
+      "TASK-005",
+      "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
+      "TASK-010",
+      "TASK-011",
+      "TASK-012",
+      "TASK-013",
+      "TASK-014",
+      "TASK-015",
+      "TASK-016",
+      "TASK-017"
+    ],
+    "edges": [
+      {
+        "from": "TASK-001",
+        "to": "TASK-002",
+        "reason": "TASK-002 consumes the accepted output of TASK-001",
+        "consumed_output": "TASK-001 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.9, §14.1-§14.3, §16 item 2"
+        ]
+      },
+      {
+        "from": "TASK-001",
+        "to": "TASK-003",
+        "reason": "TASK-003 consumes the accepted output of TASK-001",
+        "consumed_output": "TASK-001 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.7, §3.3-§3.6, §13-§15, §16 item 3"
+        ]
+      },
+      {
+        "from": "TASK-002",
+        "to": "TASK-003",
+        "reason": "TASK-003 consumes the accepted output of TASK-002",
+        "consumed_output": "TASK-002 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §3.7, §3.3-§3.6, §13-§15, §16 item 3"
+        ]
+      },
+      {
+        "from": "TASK-003",
+        "to": "TASK-004",
+        "reason": "TASK-004 consumes the accepted output of TASK-003",
+        "consumed_output": "TASK-003 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §4, §3.9, §14-§15, §16 item 4",
+          "skills/novel-storyline-architecture-designer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-004",
+        "to": "TASK-005",
+        "reason": "TASK-005 consumes the accepted output of TASK-004",
+        "consumed_output": "TASK-004 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §5, §3.9, §14-§15, §16 item 5",
+          "skills/novel-world-model-designer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-005",
+        "to": "TASK-006",
+        "reason": "TASK-006 consumes the accepted output of TASK-005",
+        "consumed_output": "TASK-005 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §6, §3.9, §14-§15, §16 item 6",
+          "skills/novel-environment-system-designer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-006",
+        "to": "TASK-007",
+        "reason": "TASK-007 consumes the accepted output of TASK-006",
+        "consumed_output": "TASK-006 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §7, §3.9, §14-§15, §16 item 7",
+          "skills/novel-event-timeline-designer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-007",
+        "to": "TASK-008",
+        "reason": "TASK-008 consumes the accepted output of TASK-007",
+        "consumed_output": "TASK-007 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §8, §3.9, §14-§15, §16 item 8",
+          "skills/novel-character-system-designer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-002",
+        "to": "TASK-009",
+        "reason": "TASK-009 consumes the accepted output of TASK-002",
+        "consumed_output": "TASK-002 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §9, §3.9, §14-§15, §16 item 9",
+          "skills/novel-conception-reviewer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-008",
+        "to": "TASK-009",
+        "reason": "TASK-009 consumes the accepted output of TASK-008",
+        "consumed_output": "TASK-008 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §9, §3.9, §14-§15, §16 item 9",
+          "skills/novel-conception-reviewer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-009",
+        "to": "TASK-010",
+        "reason": "TASK-010 consumes the accepted output of TASK-009",
+        "consumed_output": "TASK-009 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §10, §3.9, §14-§15, §16 item 10",
+          "skills/novel-conception-deliverable-assembler/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-010",
+        "to": "TASK-011",
+        "reason": "TASK-011 consumes the accepted output of TASK-010",
+        "consumed_output": "TASK-010 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.1-§11.2, §3.8-§3.9, §14-§15, §16 item 11",
+          "skills/novel-conception-human-review-assembler/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-011",
+        "to": "TASK-012",
+        "reason": "TASK-012 consumes the accepted output of TASK-011",
+        "consumed_output": "TASK-011 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.3, §3.8-§3.9, §14-§15, §16 item 12",
+          "skills/novel-conception-fragment-writer/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-011",
+        "to": "TASK-013",
+        "reason": "TASK-013 consumes the accepted output of TASK-011",
+        "consumed_output": "TASK-011 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.4, §3.8-§3.9, §14-§15, §16 item 13",
+          "skills/novel-conception-review-html-generator/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-012",
+        "to": "TASK-013",
+        "reason": "TASK-013 consumes the accepted output of TASK-012",
+        "consumed_output": "TASK-012 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §11.4, §3.8-§3.9, §14-§15, §16 item 13",
+          "skills/novel-conception-review-html-generator/SKILL.md"
+        ]
+      },
+      {
+        "from": "TASK-002",
+        "to": "TASK-014",
+        "reason": "TASK-014 consumes the accepted output of TASK-002",
+        "consumed_output": "TASK-002 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §12-§15, §16 item 14"
+        ]
+      },
+      {
+        "from": "TASK-010",
+        "to": "TASK-014",
+        "reason": "TASK-014 consumes the accepted output of TASK-010",
+        "consumed_output": "TASK-010 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §12-§15, §16 item 14"
+        ]
+      },
+      {
+        "from": "TASK-013",
+        "to": "TASK-014",
+        "reason": "TASK-014 consumes the accepted output of TASK-013",
+        "consumed_output": "TASK-013 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §12-§15, §16 item 14"
+        ]
+      },
+      {
+        "from": "TASK-004",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-004",
+        "consumed_output": "TASK-004 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-005",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-005",
+        "consumed_output": "TASK-005 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-006",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-006",
+        "consumed_output": "TASK-006 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-007",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-007",
+        "consumed_output": "TASK-007 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-008",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-008",
+        "consumed_output": "TASK-008 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-009",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-009",
+        "consumed_output": "TASK-009 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-010",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-010",
+        "consumed_output": "TASK-010 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-011",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-011",
+        "consumed_output": "TASK-011 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-012",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-012",
+        "consumed_output": "TASK-012 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-013",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-013",
+        "consumed_output": "TASK-013 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-014",
+        "to": "TASK-015",
+        "reason": "TASK-015 consumes the accepted output of TASK-014",
+        "consumed_output": "TASK-014 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §2, §13-§16",
+          "docs/ai-novel-workflow/conception-orchestration.md"
+        ]
+      },
+      {
+        "from": "TASK-015",
+        "to": "TASK-016",
+        "reason": "TASK-016 consumes the accepted output of TASK-015",
+        "consumed_output": "TASK-015 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §15-§17",
+          "duanxian/ 已批准访谈与构思资料"
+        ]
+      },
+      {
+        "from": "TASK-001",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-001",
+        "consumed_output": "TASK-001 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-002",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-002",
+        "consumed_output": "TASK-002 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-003",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-003",
+        "consumed_output": "TASK-003 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-004",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-004",
+        "consumed_output": "TASK-004 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-005",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-005",
+        "consumed_output": "TASK-005 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-006",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-006",
+        "consumed_output": "TASK-006 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-007",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-007",
+        "consumed_output": "TASK-007 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-008",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-008",
+        "consumed_output": "TASK-008 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-009",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-009",
+        "consumed_output": "TASK-009 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-010",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-010",
+        "consumed_output": "TASK-010 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-011",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-011",
+        "consumed_output": "TASK-011 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-012",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-012",
+        "consumed_output": "TASK-012 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-013",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-013",
+        "consumed_output": "TASK-013 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-014",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-014",
+        "consumed_output": "TASK-014 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-015",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-015",
+        "consumed_output": "TASK-015 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      },
+      {
+        "from": "TASK-016",
+        "to": "TASK-017",
+        "reason": "TASK-017 consumes the accepted output of TASK-016",
+        "consumed_output": "TASK-016 completion and handoff evidence",
+        "source_refs": [
+          "docs/ai-novel-workflow/conception-autonomous-workflow-v2.md §14-§16",
+          "tasks/development/v1.0.0-greeting-cli/development-planning.json"
+        ]
+      }
+    ],
+    "parallel_groups": [],
+    "execution_order": [
+      "TASK-001",
+      "TASK-002",
+      "TASK-003",
+      "TASK-004",
+      "TASK-005",
+      "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
+      "TASK-010",
+      "TASK-011",
+      "TASK-012",
+      "TASK-013",
+      "TASK-014",
+      "TASK-015",
+      "TASK-016",
+      "TASK-017"
+    ],
+    "cycle_check": {
+      "status": "pass",
+      "cycles": []
+    }
+  },
+  "task_descriptions": [
+    {
+      "task_id": "TASK-001",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-001/task.md",
+      "responsibility": "建立 V2 正式契约运行时"
+    },
+    {
+      "task_id": "TASK-002",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-002/task.md",
+      "responsibility": "实现运行状态、拓扑与返工路由"
+    },
+    {
+      "task_id": "TASK-003",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-003/task.md",
+      "responsibility": "实现 B0 基线封装、事实门与完成判定"
+    },
+    {
+      "task_id": "TASK-004",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-004/task.md",
+      "responsibility": "实现 S1 故事线架构设计技能"
+    },
+    {
+      "task_id": "TASK-005",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-005/task.md",
+      "responsibility": "实现 W1 虚拟世界模型设计技能"
+    },
+    {
+      "task_id": "TASK-006",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-006/task.md",
+      "responsibility": "实现 E1 环境系统设计技能"
+    },
+    {
+      "task_id": "TASK-007",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-007/task.md",
+      "responsibility": "实现 T1 事件时间线设计技能"
+    },
+    {
+      "task_id": "TASK-008",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-008/task.md",
+      "responsibility": "实现 C1 角色系统设计技能"
+    },
+    {
+      "task_id": "TASK-009",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-009/task.md",
+      "responsibility": "迁移 Q1 构思审查技能到 V2 双任务审查"
+    },
+    {
+      "task_id": "TASK-010",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-010/task.md",
+      "responsibility": "实现 P1 机器构思交付物组装技能"
+    },
+    {
+      "task_id": "TASK-011",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-011/task.md",
+      "responsibility": "迁移 H1-A 人审报告设计与组装技能"
+    },
+    {
+      "task_id": "TASK-012",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-012/task.md",
+      "responsibility": "迁移 H1-B 小说评审片段编写技能"
+    },
+    {
+      "task_id": "TASK-013",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-013/task.md",
+      "responsibility": "迁移 H1-C HTML 报告生成与 H1 完成技能"
+    },
+    {
+      "task_id": "TASK-014",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-014/task.md",
+      "responsibility": "实现作者裁决与最终构思完成流程"
+    },
+    {
+      "task_id": "TASK-015",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-015/task.md",
+      "responsibility": "组装自主构思主 Harness、适配器与发布验证"
+    },
+    {
+      "task_id": "TASK-016",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-016/task.md",
+      "responsibility": "建立通用与《断线》整链前向验收套件"
+    },
+    {
+      "task_id": "TASK-017",
+      "path": "tasks/development/v1.0.0-greeting-cli/TASK-017/task.md",
+      "responsibility": "执行最终交付验收并出具报告"
+    }
+  ],
+  "fixtures": [
+    {
+      "task_id": "TASK-001",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-001",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-001/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-001/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-001/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-001/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-002",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-002",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-002/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-002/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-002/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-002/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-003",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-003",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-003/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-003/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-003/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-003/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-004",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-004",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-004/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-004/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-004/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-004/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-005",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-005",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-005/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-005/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-005/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-005/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-006",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-006",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-006/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-006/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-006/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-006/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-007",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-007",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-007/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-007/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-007/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-007/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-008",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-008",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-008/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-008/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-008/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-008/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-009",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-009",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-009/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-009/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-009/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-009/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-010",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-010",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-010/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-010/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-010/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-010/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-011",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-011",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-011/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-011/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-011/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-011/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-012",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-012",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-012/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-012/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-012/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-012/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-013",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-013",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-013/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-013/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-013/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-013/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-014",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-014",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-014/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-014/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-014/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-014/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-015",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-015",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-015/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-015/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-015/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-015/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-016",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-016",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-016/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-016/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-016/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-016/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    },
+    {
+      "task_id": "TASK-017",
+      "fixture_dir": "tasks/development/v1.0.0-greeting-cli/TASK-017",
+      "files": [
+        "tasks/development/v1.0.0-greeting-cli/TASK-017/PROMPT.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-017/AGENTS.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-017/CLAUDE.md",
+        "tasks/development/v1.0.0-greeting-cli/TASK-017/spec.yaml"
+      ],
+      "status": "ready",
+      "package_type": "multi_task_subtask",
+      "relationship_doc_path": "tasks/development/v1.0.0-greeting-cli/TASKS.md"
+    }
+  ],
+  "coverage_matrix": [
+    {
+      "area": "正式契约、序列化与依赖",
+      "source_refs": [
+        "V2 §4, §14, §16 item 1"
+      ],
+      "tasks": [
+        "TASK-001",
+        "TASK-017"
+      ],
+      "evidence": [
+        "Draft 2020-12 tests",
+        "canonical hash tests"
+      ]
+    },
+    {
+      "area": "状态、拓扑、返工和恢复",
+      "source_refs": [
+        "V2 §5, §12"
+      ],
+      "tasks": [
+        "TASK-002",
+        "TASK-014",
+        "TASK-015",
+        "TASK-017"
+      ],
+      "evidence": [
+        "coordinator path tests",
+        "route/resolver tests"
+      ]
+    },
+    {
+      "area": "B0 基线与事实门",
+      "source_refs": [
+        "V2 §6"
+      ],
+      "tasks": [
+        "TASK-003",
+        "TASK-017"
+      ],
+      "evidence": [
+        "baseline negative fixtures",
+        "B0 completion"
+      ]
+    },
+    {
+      "area": "S1→W1→E1→T1→C1 领域设计链",
+      "source_refs": [
+        "V2 §7"
+      ],
+      "tasks": [
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-017"
+      ],
+      "evidence": [
+        "per-skill runtime tests",
+        "cross-stage coverage"
+      ]
+    },
+    {
+      "area": "Q1 双任务审查",
+      "source_refs": [
+        "V2 §8"
+      ],
+      "tasks": [
+        "TASK-009",
+        "TASK-017"
+      ],
+      "evidence": [
+        "isolation evidence",
+        "semantic and handoff reviews"
+      ]
+    },
+    {
+      "area": "P1 机器交付",
+      "source_refs": [
+        "V2 §9"
+      ],
+      "tasks": [
+        "TASK-010",
+        "TASK-017"
+      ],
+      "evidence": [
+        "lossless package tests",
+        "P1 completion"
+      ]
+    },
+    {
+      "area": "H1 人审三技能",
+      "source_refs": [
+        "V2 §10"
+      ],
+      "tasks": [
+        "TASK-011",
+        "TASK-012",
+        "TASK-013",
+        "TASK-017"
+      ],
+      "evidence": [
+        "ten-minute plan",
+        "fragment validation",
+        "HTML/SVG validation"
+      ]
+    },
+    {
+      "area": "作者裁决与最终完成",
+      "source_refs": [
+        "V2 §11, §13"
+      ],
+      "tasks": [
+        "TASK-014",
+        "TASK-017"
+      ],
+      "evidence": [
+        "author decision tests",
+        "final completion"
+      ]
+    },
+    {
+      "area": "主 harness 与整链验收",
+      "source_refs": [
+        "V2 §15, §16"
+      ],
+      "tasks": [
+        "TASK-015",
+        "TASK-016",
+        "TASK-017"
+      ],
+      "evidence": [
+        "harness self-validation",
+        "generic and Duanxian E2E",
+        "acceptance report"
+      ]
+    }
+  ],
+  "external_dependencies": [
+    {
+      "name": "Draft 2020-12 JSON Schema validator",
+      "decision_owner": "TASK-001",
+      "hard_gate": "must be official and reproducibly installable; no hand-written substitute"
+    },
+    {
+      "name": "review task isolation mechanism",
+      "decision_owner": "TASK-009",
+      "hard_gate": "must emit verifiable independent-execution evidence"
+    }
+  ],
+  "open_questions": [],
+  "cohesion_and_independent_acceptance_review": {
+    "status": "pass",
+    "standard": "cohesive_and_independently_acceptable",
+    "reviewed_task_ids": [
+      "TASK-001",
+      "TASK-002",
+      "TASK-003",
+      "TASK-004",
+      "TASK-005",
+      "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
+      "TASK-010",
+      "TASK-011",
+      "TASK-012",
+      "TASK-013",
+      "TASK-014",
+      "TASK-015",
+      "TASK-016",
+      "TASK-017"
+    ],
+    "task_reviews": [
+      {
+        "task_id": "TASK-001",
+        "primary_responsibility": "建立 V2 正式契约运行时",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous/runtime and harnesses/novel-conception-autonomous/tests.",
+          "Produces one accepted output cluster for 建立 V2 正式契约运行时."
+        ],
+        "acceptance_surface": [
+          "正式 validator 对全部 22 份 schema 自检通过并拒绝 additionalProperties、条件分支和引用错误",
+          "canonical JSON 与 hash 在字段顺序变化时保持稳定",
+          "依赖安装与离线运行方式有可复现说明"
+        ],
+        "dependencies_declared": [],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-001.",
+          "Verification is task-scoped: python -m unittest harnesses.novel-conception-autonomous.tests.test_contract_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-002",
+        "primary_responsibility": "实现运行状态、拓扑与返工路由",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous/runtime and harnesses/novel-conception-autonomous/tests.",
+          "Produces one accepted output cluster for 实现运行状态、拓扑与返工路由."
+        ],
+        "acceptance_surface": [
+          "所有合法拓扑路径可推进且非法跳步被拒绝",
+          "router 按唯一所有权和失效表确定性计算 owner、失效后缀、resume_stage 与 resume_point",
+          "resolution 逐值重验 return、input gate、新 completion 和状态前缀；同一 return 不得重复解析"
+        ],
+        "dependencies_declared": [
+          "TASK-001"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-002.",
+          "Verification is task-scoped: python -m unittest harnesses.novel-conception-autonomous.tests.test_coordinator"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-003",
+        "primary_responsibility": "实现 B0 基线封装、事实门与完成判定",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous/runtime and harnesses/novel-conception-autonomous/tests.",
+          "Produces one accepted output cluster for 实现 B0 基线封装、事实门与完成判定."
+        ],
+        "acceptance_surface": [
+          "每个锁定事实可追溯到批准来源",
+          "冲突事实、缺失证据和未批准简报均硬阻断",
+          "B0 completion 同时校验语义状态、制品、hash、manifest 和 run-state"
+        ],
+        "dependencies_declared": [
+          "TASK-001",
+          "TASK-002"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-003.",
+          "Verification is task-scoped: python -m unittest harnesses.novel-conception-autonomous.tests.test_baseline"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-004",
+        "primary_responsibility": "实现 S1 故事线架构设计技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-storyline-architecture-designer.",
+          "Produces one accepted output cluster for 实现 S1 故事线架构设计技能."
+        ],
+        "acceptance_surface": [
+          "输出通过正式 schema 和 lineage 校验",
+          "主体线覆盖起点—升级—转折—危机—收束，其他线有关系与连接点",
+          "每条线明确展开资格、主题作用、冲突/悬念和开发边界"
+        ],
+        "dependencies_declared": [
+          "TASK-003"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-004.",
+          "Verification is task-scoped: python -m unittest skills.novel-storyline-architecture-designer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-005",
+        "primary_responsibility": "实现 W1 虚拟世界模型设计技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-world-model-designer.",
+          "Produces one accepted output cluster for 实现 W1 虚拟世界模型设计技能."
+        ],
+        "acceptance_surface": [
+          "每条故事线所依赖的世界能力、限制和代价均有规则承载",
+          "规则含适用范围、例外、代价与一致性检查",
+          "输出不越界吸收 E1/T1/C1 职责"
+        ],
+        "dependencies_declared": [
+          "TASK-004"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-005.",
+          "Verification is task-scoped: python -m unittest skills.novel-world-model-designer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-006",
+        "primary_responsibility": "实现 E1 环境系统设计技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-environment-system-designer.",
+          "Produces one accepted output cluster for 实现 E1 环境系统设计技能."
+        ],
+        "acceptance_surface": [
+          "所有需落地的故事线节点均有可执行环境承载",
+          "环境具有事件所需入口、限制、可感知信息、行动接口和转场关系",
+          "环境只从 W1 展开且不违背世界规则"
+        ],
+        "dependencies_declared": [
+          "TASK-005"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-006.",
+          "Verification is task-scoped: python -m unittest skills.novel-environment-system-designer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-007",
+        "primary_responsibility": "实现 T1 事件时间线设计技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-event-timeline-designer.",
+          "Produces one accepted output cluster for 实现 T1 事件时间线设计技能."
+        ],
+        "acceptance_surface": [
+          "主线和必需支线不存在时间/因果断点，背景事件能解释前置条件",
+          "每个事件定义参与者角色需求、环境、触发、前置、结果、信息变化和后继",
+          "并发、回忆、插叙和汇合点有明确时间关系"
+        ],
+        "dependencies_declared": [
+          "TASK-006"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-007.",
+          "Verification is task-scoped: python -m unittest skills.novel-event-timeline-designer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-008",
+        "primary_responsibility": "实现 C1 角色系统设计技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-character-system-designer.",
+          "Produces one accepted output cluster for 实现 C1 角色系统设计技能."
+        ],
+        "acceptance_surface": [
+          "所有事件角色槽位均有角色承担且无孤儿角色",
+          "核心角色具目标、责任、能力、边界、约束、弧线和信息状态",
+          "三层关系是角色定义延伸，明确作用、矛盾、变化和连接事件"
+        ],
+        "dependencies_declared": [
+          "TASK-007"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-008.",
+          "Verification is task-scoped: python -m unittest skills.novel-character-system-designer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-009",
+        "primary_responsibility": "迁移 Q1 构思审查技能到 V2 双任务审查",
+        "cohesion_basis": [
+          "Only owns skills/novel-conception-reviewer.",
+          "Produces one accepted output cluster for 迁移 Q1 构思审查技能到 V2 双任务审查."
+        ],
+        "acceptance_surface": [
+          "两项审查由独立执行上下文产生并保留可验证 isolation evidence",
+          "审查覆盖自洽、真实性边界、逻辑、完整性、全覆盖和契约交接",
+          "每个 blocker 精确路由到责任阶段并经 resolver 后重新审查"
+        ],
+        "dependencies_declared": [
+          "TASK-002",
+          "TASK-008"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-009.",
+          "Verification is task-scoped: python -m unittest skills.novel-conception-reviewer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-010",
+        "primary_responsibility": "实现 P1 机器构思交付物组装技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-conception-deliverable-assembler.",
+          "Produces one accepted output cluster for 实现 P1 机器构思交付物组装技能."
+        ],
+        "acceptance_surface": [
+          "P1 对所有上游制品逐项可追溯且内容无语义漂移",
+          "包内索引、hash、manifest、版本、开发 handoff 相互一致",
+          "缺件、陈旧版本或 Q1 未通过时硬阻断"
+        ],
+        "dependencies_declared": [
+          "TASK-009"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-010.",
+          "Verification is task-scoped: python -m unittest skills.novel-conception-deliverable-assembler.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-011",
+        "primary_responsibility": "迁移 H1-A 人审报告设计与组装技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-conception-human-review-assembler.",
+          "Produces one accepted output cluster for 迁移 H1-A 人审报告设计与组装技能."
+        ],
+        "acceptance_surface": [
+          "世界、故事线、环境/事件、角色及控制信息在十分钟路径内完整可达",
+          "每个视觉/文本模块绑定 P1 source anchor",
+          "fragment-input-package 和 H1 workspace 通过 schema 与 lineage"
+        ],
+        "dependencies_declared": [
+          "TASK-010"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-011.",
+          "Verification is task-scoped: python -m unittest skills.novel-conception-human-review-assembler.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-012",
+        "primary_responsibility": "迁移 H1-B 小说评审片段编写技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-conception-fragment-writer.",
+          "Produces one accepted output cluster for 迁移 H1-B 小说评审片段编写技能."
+        ],
+        "acceptance_surface": [
+          "每个片段承担明确评审问题且总量满足报告计划",
+          "固定语言/风格、视角、信息边界和决定性心理活动限制均被验证",
+          "片段事实逐项回链 P1，虚构表面细节不产生新控制信息"
+        ],
+        "dependencies_declared": [
+          "TASK-011"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-012.",
+          "Verification is task-scoped: python -m unittest skills.novel-conception-fragment-writer.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-013",
+        "primary_responsibility": "迁移 H1-C HTML 报告生成与 H1 完成技能",
+        "cohesion_basis": [
+          "Only owns skills/novel-conception-review-html-generator.",
+          "Produces one accepted output cluster for 迁移 H1-C HTML 报告生成与 H1 完成技能."
+        ],
+        "acceptance_surface": [
+          "报告含正式标题且十分钟路径清晰，关键关系/环境/故事线使用可访问 SVG",
+          "所有展示内容与 P1/片段包一致且 source anchor 可核验",
+          "离线打开、打印、响应式、可访问性和统一 H1 completion 均通过"
+        ],
+        "dependencies_declared": [
+          "TASK-011",
+          "TASK-012"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-013.",
+          "Verification is task-scoped: python -m unittest skills.novel-conception-review-html-generator.tests.test_v2_runtime"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-014",
+        "primary_responsibility": "实现作者裁决与最终构思完成流程",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous/runtime and harnesses/novel-conception-autonomous/tests.",
+          "Produces one accepted output cluster for 实现作者裁决与最终构思完成流程."
+        ],
+        "acceptance_surface": [
+          "批准只在 P1/H1 同版本一致且均完成时产生最终 completion",
+          "修订意见可精确路由并使下游陈旧化",
+          "最终 completion 校验 run-state、hash、manifest、作者决策和双包一致性"
+        ],
+        "dependencies_declared": [
+          "TASK-002",
+          "TASK-010",
+          "TASK-013"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-014.",
+          "Verification is task-scoped: python -m unittest harnesses.novel-conception-autonomous.tests.test_final_completion"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-015",
+        "primary_responsibility": "组装自主构思主 Harness、适配器与发布验证",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous and docs/ai-novel-workflow/conception-orchestration.md and docs/ai-novel-workflow/conception-phase.md.",
+          "Produces one accepted output cluster for 组装自主构思主 Harness、适配器与发布验证."
+        ],
+        "acceptance_surface": [
+          "manifest 中顺序与权威链一致且每一 gate/route 可执行",
+          "harness 自检覆盖必需文件、schema、运行器、completion、适配器和 legacy 禁入",
+          "旧入口明确失败或显式兼容，不产生半 V2 包"
+        ],
+        "dependencies_declared": [
+          "TASK-004",
+          "TASK-005",
+          "TASK-006",
+          "TASK-007",
+          "TASK-008",
+          "TASK-009",
+          "TASK-010",
+          "TASK-011",
+          "TASK-012",
+          "TASK-013",
+          "TASK-014"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-015.",
+          "Verification is task-scoped: python harnesses/novel-conception-autonomous/validators/validate_harness.py"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-016",
+        "primary_responsibility": "建立通用与《断线》整链前向验收套件",
+        "cohesion_basis": [
+          "Only owns harnesses/novel-conception-autonomous/evals and testing.",
+          "Produces one accepted output cluster for 建立通用与《断线》整链前向验收套件."
+        ],
+        "acceptance_surface": [
+          "通用 fixture 从 B0 到作者批准完整通过",
+          "《断线》前向测试验证内容一致性且不依赖硬编码名称规则",
+          "至少覆盖每个 gate、一个跨阶段返工、暂停恢复、篡改和 legacy 输入拒绝"
+        ],
+        "dependencies_declared": [
+          "TASK-015"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-016.",
+          "Verification is task-scoped: python -m unittest testing.test_conception_autonomous_v2_e2e"
+        ],
+        "verdict": "pass"
+      },
+      {
+        "task_id": "TASK-017",
+        "primary_responsibility": "执行最终交付验收并出具报告",
+        "cohesion_basis": [
+          "Only owns tasks/development/v1.0.0-greeting-cli/acceptance-report.md.",
+          "Produces one accepted output cluster for 执行最终交付验收并出具报告."
+        ],
+        "acceptance_surface": [
+          "所有 source traceability、coverage、verification、handoff 证据齐全",
+          "全部单元、契约、harness、E2E 和负例测试通过",
+          "报告逐项给出 pass/fail、证据路径、遗留风险；任一 blocker 均判失败"
+        ],
+        "dependencies_declared": [
+          "TASK-001",
+          "TASK-002",
+          "TASK-003",
+          "TASK-004",
+          "TASK-005",
+          "TASK-006",
+          "TASK-007",
+          "TASK-008",
+          "TASK-009",
+          "TASK-010",
+          "TASK-011",
+          "TASK-012",
+          "TASK-013",
+          "TASK-014",
+          "TASK-015",
+          "TASK-016"
+        ],
+        "hidden_dependencies": [],
+        "overlap_with_tasks": [],
+        "acceptance_evidence": [
+          "Source refs, expected output, acceptance, and verification are explicit for TASK-017.",
+          "Verification is task-scoped: 运行 development-planning.json 中全部 verification 命令"
+        ],
+        "verdict": "pass"
+      }
+    ],
+    "split_required": [],
+    "merge_required": [],
+    "hidden_dependencies": [],
+    "acceptance_evidence": [
+      "Every task includes source refs, expected output paths, verification commands, acceptance controls, stop conditions, and handoff evidence.",
+      "The final acceptance task consumes all implementation tasks and reviews source traceability, expected output, verification, and acceptance evidence."
+    ],
+    "review_reasoning": [
+      "Shared runtime, orchestration, each domain skill, each H1 skill, integration, E2E, and final acceptance have distinct ownership.",
+      "The sequential domain chain mirrors the approved authority flow; no artificial parallelism is declared.",
+      "Legacy migration is isolated to the owning skill tasks and cannot become a V2 success path."
+    ]
+  },
+  "delivery_acceptance": {
+    "task_id": "TASK-017",
+    "report_path": "tasks/development/v1.0.0-greeting-cli/acceptance-report.md",
+    "standards": [
+      "source traceability, full coverage, reproducible verification, and explicit handoff must all pass"
+    ],
+    "methods": [
+      "review development-planning.json, every task package, verification log, and acceptance report"
+    ],
+    "evidence_required": [
+      "development-planning.json, task completion receipts, verification logs, coverage report, and final acceptance report"
+    ],
+    "verification_commands_or_checks": [
+      "run all unit/contract/integration/E2E test commands; review source traceability and handoff evidence"
+    ],
+    "pass_fail_rules": [
+      "fail on any missing evidence, failed verification, coverage gap, or blocker; pass only with no unresolved item"
+    ],
+    "blocker_conditions": [
+      "missing task output, failed test, unresolved contract conflict, absent traceability, or incomplete handoff"
+    ],
+    "source_traceability_required": true,
+    "coverage_required": true
+  },
+  "task_logic_review": {
+    "status": "pass",
+    "reviewed_task_ids": [
+      "TASK-001",
+      "TASK-002",
+      "TASK-003",
+      "TASK-004",
+      "TASK-005",
+      "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
+      "TASK-010",
+      "TASK-011",
+      "TASK-012",
+      "TASK-013",
+      "TASK-014",
+      "TASK-015",
+      "TASK-016",
+      "TASK-017"
+    ],
+    "checks": [
+      "Each task has one primary responsibility and owned file surface.",
+      "Inputs are produced by declared dependencies.",
+      "Acceptance includes positive and negative evidence.",
+      "Stop conditions prevent speculative contract changes.",
+      "Legacy code never counts as V2 completion."
+    ],
+    "blocking_findings": [],
+    "required_revisions": []
+  },
+  "plan_integrity_review": {
+    "status": "pass",
+    "checks": [
+      "All authority stages B0 through final completion are covered.",
+      "Exactly one delivery acceptance task exists and depends on every implementation task.",
+      "DAG order matches the approved call chain.",
+      "Generic E2E prevents Duanxian hard-coding."
+    ],
+    "coverage_findings": [
+      "No uncovered formal stage or completion semantic."
+    ],
+    "dependency_findings": [
+      "No hidden dependency after explicit shared-runtime and coordinator tasks."
+    ],
+    "parallel_safety_findings": [
+      "No parallel group declared because stage outputs are contract inputs to the next stage."
+    ],
+    "execution_order_findings": [
+      "Runtime→coordinator→B0→domain chain→Q1→P1→H1→author decision→harness→E2E→acceptance."
+    ],
+    "delivery_acceptance_findings": [
+      "TASK-017 is non-implementing and cannot waive blockers."
+    ],
+    "blocking_findings": [],
+    "required_revisions": []
+  },
+  "planning_gate_report": [
+    {
+      "gate": "source_inventory",
+      "status": "pass"
+    },
+    {
+      "gate": "cohesion_independent_acceptance",
+      "status": "pass"
+    },
+    {
+      "gate": "dag_integrity",
+      "status": "pass"
+    },
+    {
+      "gate": "coverage_and_final_acceptance",
+      "status": "pass"
+    }
+  ],
+  "required_fixes": []
+}
