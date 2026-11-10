@@ -11,8 +11,8 @@ description: 通过小步、确认式作者访谈，将小说意图卡和主体�
 
 开始前读取：
 
-- [构思访谈共同协议](../../engine/docs/ai-novel-workflow/interview-protocol.md)；
-- [conception-phase.md](../../engine/docs/ai-novel-workflow/conception-phase.md) 的共同交互协议；
+- [构思访谈共同协议](../../docs/ai-novel-workflow/interview-protocol.md)；
+- [conception-phase.md](../../docs/ai-novel-workflow/conception-phase.md) 的共同交互协议；
 - [world-methodology.md](references/world-methodology.md)；
 - 生成交付物时读取 [world-operating-contract-template.md](references/world-operating-contract-template.md)。
 

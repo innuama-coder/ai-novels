@@ -9,7 +9,7 @@ description: 将小说意图卡转化为经作者确认或明确授权的主体�
 
 产出一份**主体定义**，回答“谁必须作出何种核心选择、为什么不能轻易放弃、谁或什么持续让选择付出代价”。它是角色访谈的输入，不是角色百科、情节大纲或 prose。
 
-读取 [conception-phase.md](../../engine/docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”、[subject-methodology.md](references/subject-methodology.md) 和 [subject-definition-template.md](references/subject-definition-template.md) 后执行。
+读取 [conception-phase.md](../../docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”、[subject-methodology.md](references/subject-methodology.md) 和 [subject-definition-template.md](references/subject-definition-template.md) 后执行。
 
 只记录会改变主体选择、关系压力或行动代价的信息。姓名、外貌、履历、口头禅、完整心理档案、事件顺序和场景表现均不属于本 skill。
 

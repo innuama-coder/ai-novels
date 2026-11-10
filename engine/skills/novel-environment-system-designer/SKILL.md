@@ -13,7 +13,7 @@ description: 把故事线和世界模型展开为可承载具体行动的环境�
 
 完整读取工作流第 3、6、14、15 节，以及：
 
-- [E1 Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/environment-system.schema.json)；
+- [E1 Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/environment-system.schema.json)；
 - [E1 唯一运行契约](references/runtime-contract.md)。
 
 ### E1 2.4 capability-readiness contract

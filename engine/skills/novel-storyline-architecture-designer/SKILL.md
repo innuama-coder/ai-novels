@@ -33,9 +33,9 @@ relations, terminality, or consistency dimensions from story vocabulary.
 
 完整读取：
 
-- [自主构思工作流](../../engine/docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)的第 3、4、14、15 节；
-- [S1 Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/storyline-architecture.schema.json)；
-- [公共 canonical Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/canonical-common.schema.json)；
+- [自主构思工作流](../../docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)的第 3、4、14、15 节；
+- [S1 Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/storyline-architecture.schema.json)；
+- [公共 canonical Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/canonical-common.schema.json)；
 - [S1 唯一运行契约](references/runtime-contract.md)。
 
 ## 唯一生产运行路径

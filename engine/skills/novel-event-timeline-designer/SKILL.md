@@ -16,7 +16,7 @@ description: 将已验收的 B0/S1/W1/E1 构思包转化为可验证的小说事
 完整阅读：
 
 - [运行时契约](references/runtime-contract.md)
-- [T1 canonical schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/event-timeline.schema.json)
+- [T1 canonical schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/event-timeline.schema.json)
 
 只使用 `scripts/run_v2.py` 进入生产路径。必须设置非空 `CODEX_THREAD_ID`，并提供同一 run 的已验收 B0、S1、W1、E1 包，以及 coordinator 发出的精确 T1 input gate。运行时会冻结上游 canonical、manifest、completion、E1 两个语义审查包、实现文件、schema 和 review protocol；任一 identity 漂移都必须失败。
 

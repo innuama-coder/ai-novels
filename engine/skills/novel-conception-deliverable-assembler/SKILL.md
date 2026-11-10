@@ -13,8 +13,8 @@ description: 将通过独立 Q1 审查的作者控制基线、故事线、世界
 ## 权威契约
 
 完整读取工作流第 3、10、14、15 节，以及
-[P1 Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/novel-conception-package.schema.json)、
-[开发交接 Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/development-handoff.schema.json)。
+[P1 Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/novel-conception-package.schema.json)、
+[开发交接 Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/development-handoff.schema.json)。
 
 ## 输入硬准入
 

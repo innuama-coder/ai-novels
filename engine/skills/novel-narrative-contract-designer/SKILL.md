@@ -13,7 +13,7 @@ description: 通过小步、确认式访谈，将已确认的小说意图、主�
 
 开始前完整读取：
 
-- [conception-phase.md](../../engine/docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”；
+- [conception-phase.md](../../docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”；
 - [narrative-methodology.md](references/narrative-methodology.md)；
 - 生成交付物时读取 [narrative-contract-template.md](references/narrative-contract-template.md)。
 

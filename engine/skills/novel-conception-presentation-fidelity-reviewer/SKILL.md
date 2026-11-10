@@ -40,7 +40,7 @@ H1-B fragment package、候选 `human-review-report.json` 和 source inventory�
 ## 输出与硬门
 
 无论通过、需修订还是因输入/独立性不足而阻断，都输出一个符合
-[`presentation-fidelity-review.schema.json`](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/presentation-fidelity-review.schema.json)
+[`presentation-fidelity-review.schema.json`](../../docs/ai-novel-workflow/contracts/autonomous-v2/presentation-fidelity-review.schema.json)
 的 `presentation-fidelity-review.json`。失败项使用 `revise`，无法完成审查使用
 `blocked` 并填写 blockers。只有以下条件同时成立才可 `pass`：
 

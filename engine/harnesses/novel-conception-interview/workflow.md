@@ -3,7 +3,7 @@
 > Autonomous-stage migration notice: this file remains authoritative for I0–I5, V1, V2 and
 > the V2 interview approval only. Its historical `D1 -> R1` tail is not a valid autonomous V2
 > production route. After V2 approval, continue with
-> [`conception-autonomous-workflow-v2.md`](../../engine/docs/ai-novel-workflow/conception-autonomous-workflow-v2.md):
+> [`conception-autonomous-workflow-v2.md`](../../docs/ai-novel-workflow/conception-autonomous-workflow-v2.md):
 > `B0 -> S1 -> W1 -> E1 -> T1 -> C1 -> Q1 -> P1 -> H1`.
 
 ## Stage graph

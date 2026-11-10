@@ -22,7 +22,7 @@ description: 根据冻结的故事线、世界、环境和事件模型解析角�
 
 必须先完整读取
 [运行契约](references/runtime-contract.md) 和
-[C1 schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/character-system.schema.json)。
+[C1 schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/character-system.schema.json)。
 
 ## 职责
 

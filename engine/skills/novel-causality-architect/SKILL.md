@@ -9,7 +9,7 @@ description: 将已确认的小说意图卡、主体定义与核心角色设计�
 
 产出一份**因果故事线**，回答“在这些主体、关系和世界限制下，什么变化迫使谁作出什么选择；该选择又为什么使下一变化成为必要”。它把主体定义和角色选择模型转为可开发的主线骨架，不是章节表、分场大纲、时间流水账或 prose。
 
-读取 [conception-phase.md](../../engine/docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”、[causal-methodology.md](references/causal-methodology.md) 和 [causal-storyline-template.md](references/causal-storyline-template.md) 后执行。
+读取 [conception-phase.md](../../docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”、[causal-methodology.md](references/causal-methodology.md) 和 [causal-storyline-template.md](references/causal-storyline-template.md) 后执行。
 
 每个节点采用最小链条：
 

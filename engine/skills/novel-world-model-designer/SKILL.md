@@ -11,7 +11,7 @@ Create a traceable world model that can carry every approved S1 storyline withou
 
 Read these before producing W1:
 
-- [W1 schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/world-model.schema.json)
+- [W1 schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/world-model.schema.json)
 - [W1 runtime contract](references/runtime-contract.md)
 
 ## Controlled workflow

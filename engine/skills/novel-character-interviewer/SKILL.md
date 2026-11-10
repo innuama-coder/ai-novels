@@ -11,7 +11,7 @@ description: 通过小步、确认式作者访谈，将小说原始 idea、意�
 
 这是对作者的设计访谈，不是 Agent 冒充虚构角色接受采访。角色扮演答案只能作为候选，不得自动成为设定。开始前完整读取：
 
-- [conception-phase.md](../../engine/docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”；
+- [conception-phase.md](../../docs/ai-novel-workflow/conception-phase.md) 的“前五步共同交互协议”；
 - [character-methodology.md](references/character-methodology.md)；
 - 生成交付物时读取 [core-character-design-template.md](references/core-character-design-template.md)。
 

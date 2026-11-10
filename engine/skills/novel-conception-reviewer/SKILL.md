@@ -13,9 +13,9 @@ description: 独立审查自主构思 V2 的故事线、世界、环境、事件
 
 完整读取：
 
-- [自主构思工作流](../../engine/docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)第 3、9、14、15 节；
-- [Q1 Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/conception-review.schema.json)；
-- [return Schema](../../engine/docs/ai-novel-workflow/contracts/autonomous-v2/return-request.schema.json)。
+- [自主构思工作流](../../docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)第 3、9、14、15 节；
+- [Q1 Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/conception-review.schema.json)；
+- [return Schema](../../docs/ai-novel-workflow/contracts/autonomous-v2/return-request.schema.json)。
 
 本目录旧 D1/R1 `references/` 和 `scripts/` 只服务历史 1.x 包；不得用于生成、验证或
 批准 V2 Q1 completion。
