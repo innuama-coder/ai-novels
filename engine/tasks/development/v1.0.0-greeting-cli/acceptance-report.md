@@ -2,7 +2,7 @@
 
 - 验收任务：`TASK-017`
 - 验收日期：2026-08-01（Asia/Shanghai）
-- 依据：[`conception-autonomous-workflow-v2.md`](../../../engine/docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)、[`development-planning.json`](development-planning.json)
+- 依据：[`conception-autonomous-workflow-v2.md`](../../docs/ai-novel-workflow/conception-autonomous-workflow-v2.md)、[`development-planning.json`](development-planning.json)
 - 验收范围：TASK-001–TASK-016 的实现、契约、测试、主 Harness、发布包、generic/《断线》整链验收，以及 TASK-017 本报告
 - 最终结论：**PASS**
 - 未解决 blocker：**0**
