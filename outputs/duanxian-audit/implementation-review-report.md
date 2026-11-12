@@ -1,39 +1,227 @@
-# 《断线》实现审视报告（duanxian-audit-rint2-001 · 工作项B）
+# 《断线》实施审视报告（工作项 B·修正轮 r2）
 
-内容与证据基线：main@92573f1cca40f37cee04d2beb8708ff33ba603d6（下称 BASE，当前 worktree 即该基线）。执行依据为《工作项B定义书》c423216ef9f8bbe8a9846b1a4d877d298a9334f7（sha256 b0017ed4db8c46c0b368f01543659b93077a7b2aed94fb459137e40b4e107975，经只读 fetch＋SHA 核验后全文读取），并使用 Owner 已确认的两份 A 基准（A 定义书 99e18a0d，sha256 68ec7c0a…；目标总结 goals-summary a6935ddc，sha256 ac7f045a…）作为目标口径对照，不把它们当新故事事实来源。证据编号自 B-E001 起，引用尽量落到路径与行号；负向断言附检索范围。本报告为该冻结树的静态只读审视结论。
+- 内容基线 BASE：`92573f1cca40f37cee04d2beb8708ff33ba603d6`（冻结只读；本报告全部证据取自该树）。
+- 规范输入：B 定义书 rdef-001（完整 SHA `c423216ef9f8bbe8a9846b1a4d877d298a9334f7`）；A 基准 gdef-001（`68ec7c0a…`）与目标拟人化总结（`ac7f045a…`）仅作目标口径基线，不引为新故事事实来源。
+- 方法与执行边界：只读静态审视（`git ls-tree/show/grep`、本地 SHA-256 重算、`python3 -I` 标准库行为观察）；本轮未运行仓库 CLI、pytest、validator 或任何构建，未访问仓库本体之外的网络资源。
+- 本稿为按独立验收 racc-001 §7 F01–F10 的全量修正稿；修正仅落本文件，不改动任何既有源文件与历史证据。
 
 ## 一、审视范围与证据基线
 
-BASE 跟踪文件共 1444 个：`duanxian/` 148、`engine/` 1290（docs 83、skills 669、harnesses 404、scripts 5、tests 6、testing 10、tasks 112）、根层 6（README.md、.gitattributes、.gitignore、.serena/ 两件、.zcode/plans/ 仓库重构计划）【B-E001】。分层阅读账：目标与导览 4 件全文（novel-goals 六章全 212 行、三份 README）；批准构思 6 件全文，其中 2.8MB 人审 JSON 按字段走查（schema、review_path、decision_controls、world/characters/storylines、visual_models、fragments、drilldown_index、reduction_ledger、source_coverage、p1_completion），HTML 做标题／SVG 数／外链／脚本离线投影核验；宪法流程 6 份长文全文（workflow README、构思 V2 1733 行、HLD V1 设计 1028 行、技能契约目录 1396 行、开发阶段规范、最终交付契约）；旧规格 `duanxian/design/specs/` 36 件——根层 10 件逐份核版本与批准边界（6 月 digital-life 八篇＋7 月 intake/proposal 两篇），`lld/characters|scenes|spaces/` 26 件核索引对应与代表全文；旧运行链 `duanxian/design/runs/` 49 件（proposal 15、prd 13、hld 20、lld 1）的全部 manifest/gate/风险报告/终包与 canonical 世界事实 v2.0/v3.0，12 份编号产物中深读 01/12/终包等 5 件；`workflow-docs/` 11 件全读；`design-tasks/` 2 件与 reference 1 件；写作产物 19 件（正文 508 行与场景锚点草稿 184 行全文，17 份素材中 4 份全文、13 份同构抽读并逐一核表头与引用列）；项目代码 run.py 与 3 个测试逐行核路径解析，`duanxian/testing/` 17 件按链抽读；引擎层 82 个技能目录 SKILL.md 全目录结构化读取加代表深读，5 个校验器与 6 个测试文件做正负例核对，4 个 harness 的关键运行时/测试清单/发布件核读，31 个 zip 全量 sha256 分组；四个 harness 的文件/测试计数为 novel-conception-interview 92/0（零 test_*.py 但有 evals 用例集，不以测试文件数断无验证）、novel-conception-autonomous 107/25、novel-hld-autonomous 152/12、kun-workshop-intranet-delivery 53/0。`duanxian/` 148 件的构成为：conception-approved 6、design/specs 36、design/runs 49、workflow-docs 11、design-tasks 2、reference 1、writing 17、novel-text 1、design-scenes-draft 1、conception-production（run.py＋3 测试）4、testing 17、project-display-metadata 1、两级 README 与其余导览文件。二进制与压缩包仅读清单、manifest 与内容哈希，未解包、未运行。取证纪律：定义书 §5.2 的阅读顺序（目标→批准→宪法→旧链→写作→代码→资产）作为本轮实际执行序；引用一律落到路径与行号；负向断言（如零命中、零存在）附检索命令与范围；同一事实在多投影（JSON/Markdown/HTML/zip）间以哈希或字段对照确认同源后才计为证据。【流程规范】本轮为静态审视：spec out_of_scope 禁止运行仓库测试与构建，下文所有"通过/失败"均指留存文件的记载或本地静态解析/哈希重算结论，不冒充本轮实测成绩。未读部分及原因：669 个技能文件中非代表源码未逐字读毕（以全目录结构化读取＋按职责闭包抽读覆盖），同构素材 13 件未逐字读毕（同代同构，代表已全文）；上述未读不影响任一裁定，关键结论均锚定在全文已读文件。
+**总量与分层（B-E049）**：BASE 跟踪树共 1444 个文件：根层 6、`duanxian/` 148（147 个常规路径＋1 个带引号中文名 `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/HLD-断线设计稿.md`）、`engine/` 1290（docs 83、skills 669、harnesses 404、scripts 5、tests 6、testing 10、tasks 112、README 1）。
+
+**覆盖账（F01 要求，按层闭合）**：
+
+| 层（总数） | 全文已读 | 定点/行级 | 结构·清单·哈希核对 |
+| --- | ---: | ---: | ---: |
+| 根层（6） | 3 | 2 | 1 |
+| duanxian（148） | 8 | 64 | 76 |
+| engine/docs（83） | 0 | 14 | 69 |
+| engine/skills（669） | 0 | 45 | 624 |
+| engine/harnesses（404） | 0 | 24 | 380 |
+| engine/scripts（5） | 0 | 5 | 0 |
+| engine/tests（6） | 0 | 0 | 6 |
+| engine/testing（10） | 0 | 3 | 7 |
+| engine/tasks（112） | 0 | 0 | 112 |
+| engine/README.md（1） | 0 | 1 | 0 |
+| 合计（1444） | 11 | 158 | 1275 |
+
+- 全文已读（11）：批准目录 4 件（README.md、author-decision.json、conception-completion.json、human-review-report.md，JSON 为全字段走查）、`duanxian/novel-goals.md`、`duanxian/README.md`、`duanxian/novel-text/2026-06-07-duanxian-novel.md`（508 行）、`duanxian/conception-production/run.py`（1082 行，两段读毕）。
+- 定点/行级（158）：批准 HTML/JSON 2；CLI 测试 3；`duanxian/testing/` 17（驱动细读＋其余入口归类）；`duanxian/writing/` 17（逐件核对反引号 LLD 路径，writer-R07/writer-qianxu 细读）；workflow-docs 7；design/specs 顶层 10；design/runs 6（07-13 HLD 链为主）；design-tasks manifest 1；`project-display-metadata.json` 1；engine 侧为 workflow 契约文档、runtime 关键模块、五 validator 入口、manifest/release 记录等。
+- 结构·清单·哈希核对（1275）：非逐字阅读，含 superpowers 旧根引用专项 grep（79 文件 219 行，B-E045）、autonomous-v2 32 份 schema 结构核对（B-E032）、82 技能目录与 56 个 `test_*.py` 计数（B-E033）、31 个 zip 的 sha256 去重（B-E034）、tasks 112 件任务样例清单核对（样例不作生产成果）。
+- **限制声明**：逐字全量阅读门未满足，本报告不自称满足；上表不把抽样或结构核对虚报为“全读”。结构核对类仅支撑计数、存在性与引用真实性结论，不单独支撑语义结论。抽样按定义书 §2.5 高风险全查＋确定性抽样执行；本轮已按 F01 扩读契约文档与 run.py 全文。
+- 否定性断言与可复现性：本报告全部否定性断言（零命中、不存在、未见）附检索命令与范围——文件名类用 `git ls-tree -r --name-only` 全名单精确匹配；内容类用全树 `git grep` 或目录内全文扫描；“对象不在树”与“对象从未存在”严格分开表述。全部计数类结论可用标准命令对 BASE 复现。
+- 权限与红线遵守：秘密零打印零写入，凭据仅经命令替换引用；未修改宪法、spec 与历史证据；运行账本按 `.gitignore:L11–18` 设计不入库（B-E004）【流程规范】，构成第三、四节“本体不可复验/无法判断”类限制的来源。
 
 ## 二、目标六问与实现对照
 
-按 novel-goals 六问逐一对照实现留存。六问分别锚定目标文档第一至六章与 S01–S23 来源索引（A 总结的 G00/S 引用键），本节逐问回查权威原文与对应产物，不转述 A 总结代替核对。**一问要写什么**：近未来数字生命长篇（C/M 气象武器危机下有限合作、已故情报员顾衡记忆启动 R-07、沈逾的交流与告别），批准构思给出完整对应物——世界定义（架空近未来 C/M 气象武器、12 个 MOD-WORLD-ENV 环境、3 套系统、五条硬规则事件条件）、十线架构、43 个主要事件、17 名角色（R-07/沈逾双核心＋15 配角）、八个推进阶段、5 个视觉模型、3 个样片【B-E006,B-E007】。实现程度：构思对象已完成（限定于留存批准文件），Markdown/HTML/JSON 三投影一致；批准报告自述结构规模为 43 个主要事件、十条故事线、17 名角色、八个推进阶段，并明示这只是结构规模、不能换算为章节数——正文层仍未开工。**二问为何写**：主题（记忆与身份的责任、关心不变成占有、任务成功不自动豁免伦理）落位于人审报告"最终作者判断问题"与 8 项决策控制（世界本体/承载、故事架构/因果/悬念、人物能动/关系网、样片证据）【B-E007】；亲属维度的"关心不变成占有"亦有对应物——程予安保有生活与同意边界、周岚不是情报筹码、行动层救人而原因层按必要范围保护，三项都在批准角色档案与五条硬规则中留有字段级记载。**三问为谁写**：目标读者未指定是【未完成项】——意图卡 v0.2 在 2026-07-21 修订确认时仍明写"目标读者未指定"，批准构思亦未补市场定位；【推断】依据主题与冲突结构，可把"愿跟随人物选择、愿让伦理问题保持开放的科幻读者"视为沟通对象，但这只是审视推断，不是作者决定，不能冒充口径。**四问怎么写**：宪法规定"构思自主 V2→正式开发基线→HLD→LLD→写作→分层评审与作者定稿"逐段推进、逐段交接；构思段已按 V2 实际发生——完成记录载 B0、S1 attempt-03、W1 attempt-04、E1 attempt-13、T1 attempt-15、C1、Q1、P1、H1 attempt-02 各阶段包哈希【B-E005】，testing 驱动亦留有可复算的调用链；按最终交付契约第 2–3 节，P1 机器包是构思事实的最终权威、H1 的 Markdown 与 HTML 只是忠实呈现，每次交接须携带来源、版本、约束与状态——该呈现分离原则在留存文件中有明文。开发基线及以后各段在 BASE 无新版运行留痕。**五问写成什么样算合格**：目标文档援引的场景评分门（无客观 blocker、总分≥80、前四项各≥满分 70%）与 released 标记条件属开发规范条款【流程规范】；BASE 中无任何《断线》场景语义评测记录，故该门未启用、不能预支达标；按开发规范，最终手稿须先过机器门（可解析、可追溯、可复现、可消费、版本与哈希同版）、语义门（场景功能、人物能动性、视角信息、因果、节奏、声音、连续性）与作者门（代表性场景声音与密度、结构变更、宏观修订、终稿），三关齐备才可标 released——当前三关均无《断线》记录。**六问当前进度与断点**：2026-08-17 构思批准（approval_scope=conception、decision=approved）为唯一正式阶段批准；导览把正文标为草稿、推进方向指向 HLD→LLD；旧 7 月 HLD 收敛状态 pending_hld_human_review 与 gate"人审前不得进入 LLD"仍未放行【B-E015】。六问结论与 A 目标总结口径一致：构思段目标→产物映射闭合，其余段目标已立、实现未发生。
+| 问 | 目标定位（路径） | 实现对象（路径） | 正向证据 | 缺口/反证 | 程度 | 强度 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 要写一本什么小说 | `duanxian/novel-goals.md` 第一、五章：数字生命近未来长篇，危机闭环与伦理未决并立【当前权威口径】（B-E001） | 批准构思 `human-review-report.md` 故事章（B-E012）；`novel-text` 旧稿（B-E013）【历史/旧链口径】 | L277–289 记忆非录像、R-07 为新主体；旧正文 L464–476“评估完成。选择终止。” | 旧稿成稿于 2026-06-07，先于 2026-08-17 批准；与新版叙述契约 L26 存在差异（见第五节） | 构思层已完成（限定批准范围）；正文层属历史遗留 | 直接留存 |
+| 为何写 | `novel-goals.md` 第二章：记忆、身份与照护责任落到人物选择（B-E001） | 批准报告 L251–255 原因层、L608–615 保管责任人（B-E012）；旧意图卡动机段 L7–11【历史/旧链口径】（B-E015） | 批准层主题证据完整 | 主题执行须待 HLD 与正文；旧意图卡只是主题来源，不得代作者宣布唯一伦理答案 | 构思层完成；执行层无法判断 | 直接留存／不足 |
+| 为谁写 | `novel-goals.md` 第三章；`duanxian-intent-card.md` L31“目标读者未指定”【未完成项】（B-E001/B-E015） | 无商业画像产物 | 未决状态本身有直接记录 | 任何具体读者画像或渠道判断都是编造 | 未决（作者侧待定，非程序缺陷） | 直接留存（未决记录） |
+| 怎么写 | `novel-goals.md` 第四章：构思 V2→开发基线→HLD→LLD→写作→分层评审【流程规范】（B-E001） | 构思链 approved/ready（B-E007/B-E008/B-E009）；引擎 HLD/LLD 工具链 implementation-candidate（B-E037） | 作者批准＋完成记录＋三层哈希账（第三节） | 开发 handoff 本体未留存（B-E009 引用不可复验）；`run.py` 七条 runtime 路径静态断裂（B-E028） | 构思段完成；HLD 及以后未证 | 直接留存＋静态可定位 |
+| 写成什么样算合格 | `novel-goals.md` 第五章三门；`engine/docs/ai-novel-workflow/development-phase.md` L137–152 场景 80/70% 规则【流程规范】（B-E043） | 构思段三门留痕：作者门 approved（B-E008）、机器门引用一致（第三节）、语义门 `review_path` 五项（B-E009） | 三门在构思段均有记录 | 场景级评分零实例；validator 本轮未重放，历史通过不外推 | 构思段部分可复验；后续门无启用证据 | 引用值／直接留存分层 |
+| 当前进度与断点 | `novel-goals.md` 第六章（B-E001） | 批准链 2026-08-17（B-E007）；`duanxian/README.md` L22–23 权威与状态声明（B-E026） | 批准与留存绑定成立 | 旧 HLD 停在 pending 人审【历史/旧链口径】（B-E019–B-E022）；新版 HLD 运行留痕未见且账本不入库，现实进度无法判断【未完成项】 | 构思完成；HLD/LLD/写作现实进度无法判断 | 直接留存＋不足 |
+
+说明：矩阵逐行贴口径；“无法判断”均指冻结证据不可得，不指现实未发生（F04 口径）。
+
+**逐问补充解读**：
+1. “要写什么”——目标文档把主承诺定为“危机闭环与伦理未决同时成立”，不用胜利抵销失去（B-E001）；批准纲要以硬规则、开放边界两章承接该承诺（L295–309、L325–329）；旧正文结尾段方向一致，但其因果安排先于新版叙述契约，只能作历史参照，不得计为批准后的实现。
+2. “为何写”——目标要求把记忆、身份与照护责任落到具体人物的选择与代价；批准报告的授权链（L468–475）与保管责任人（L608–615）给出人物级落点；写作层的责任刻画目前只存在于旧稿，新版执行尚未开始或未见留痕。
+3. “为谁写”——未决。目标读者、年龄层与渠道均无作者决定，本报告不以沟通对象【推断】替代定位事实。
+4. “怎么写”——流程规范要求每次交接携带来源、版本、约束与状态；构思段三份记录满足该要求；开发 handoff 本体未留存，使“构思→开发”交接的下游连续性不可复验，这是流程可用性的实际断点。
+5. “写成什么样算合格”——三门与场景 80/70% 规则是“应当”而非“已经”；构思段可支撑作者门（批准记录）与机器门（引用一致层），语义门有结构化留痕但未做逐元素复验；场景级评分规则尚无任何实例记录可援引。
+6. “当前进度与断点”——冻结证据只能确认：构思阶段完成并批准；旧链停在人类评审门；引擎侧 HLD 工具链为候选态。现实是否已推进新版 HLD 属树外事实，本报告不代答。
 
 ## 三、构思批准链与P1留存
 
-run `duanxian-conception-v2-20260811-18` 留存链本地重算核验，五组绑定全部一致：author-decision.json 的 human_review_package.html_sha256（80cfc4d8…）等于跟踪 HTML 实测哈希，其 human_review_package 与 machine_package 双绑定结构完整（前者绑人审三投影，后者绑 P1 清单）；其 machine_package.manifest（bba81d35…）等于完成记录 p1_manifest；author_decision 引用哈希（4f5a070d…）等于跟踪 author-decision.json；目录 README 记载的完成记录哈希（4eabd4af…）与终态哈希（0679739a…）、development_handoff（d48194db…）与跟踪文件逐项相符；两 JSON run_id 一致，run_state 终态 revision-038【B-E004,B-E005】。决策内容：schema 2.0、approval_scope=conception、decision=approved、unresolved_items 空、event_seq 1、决策文本"构思合格，完成提交并推送。"；完成记录 status=ready，载 run_state 至 revision-037，目录 README 记终态 revision-038——两值属链上先后状态而非矛盾。人审约束合规：评审范围契约 bounded-decision-controls-v1/expandable-lossless-p1；评审预算 9.78/10 分钟，5 条评审路径（世界 187s、故事线 113s、角色 89s、样片 175s、决策 23s）；drilldown_index 4602 条 EVID-CURRENT-SRC-* 均含 json_pointer 与 value_sha256，reduction_ledger 4602 条逐项对账，source_coverage 3924；视觉模型 5 个（VIS-WORLD-ENV、CONTROL-LOGIC、STORY-ARCH、MAJOR-TIMELINE、CHAR-NETWORK）、样片 3 个（FRAG-DX-01..03）；HTML 离线（零外链、零脚本、5 幅 SVG 对应 5 个视觉模型），三投影标题与结构一致【B-E007,B-E008】。另按 approval_scope=conception 限定：该批准只覆盖构思，不等于整部小说完成，正文、HLD、LLD 均不得引用它作为完成凭证。三个试读场景（雨停以前／门合上以后／只有文字的清晨）为非权威样片，本报告未从中补任何设定。【未完成项】P1 机器本体三文件名 `novel-conception-package.json`、`development-handoff.json`、`hld-completion.json` 在 BASE 跟踪树匹配为零（对全树 git grep 核验）；`duanxian/conception-approved/.gitignore` 明示 conception-runs/、autonomous/、human-review/、quality/、run-states/、compatibility-migrations/ 等运行账本不入库，属设计性留存缺口，不能据此宣布批准无效，也不能把 H1 Markdown 提升为机器入口【B-E009,B-E010】。契约侧 `engine/docs/ai-novel-workflow/contracts/autonomous-v2/` 留有 33 份 JSON Schema（含 novel-conception-package、development-handoff、author-decision、stage-completion、return-request 等）与 contract-index.md，即"机器包 schema 在库、实例不在库"【B-E011】。阶段完成哈希的核验等级须如实分层：九阶段包哈希在完成记录中仅为引用值（本体随账本不入库），属"仅有路径/hash 引用"级；可直接重算的只有上列五组留存文件绑定，不因五组通过推导全链通过。B0 的来源链另涉访谈链兼容迁移：技能 novel-interview-b0-migrator 与 runtime 的 migration_handoff 模块负责把 7 月访谈批准投影为 B0 控制面，迁移终态文件同样位于不入库的 compatibility-migrations/ 下。运行不入库的另一旁证：testing 驱动的默认 RUN_ID 为早期轮次（duanxian-conception-v2-20260802-04），批准轮次 20260811-18 经环境变量切换，说明 8 月 2 日至 18 日间存在多轮迭代，而 conception-runs/ 账本全部不入库——多轮尝试细节仅存在于运行机器。【流程规范】下一阶段必须取得并重验同版 P1 机器本体、开发 handoff 与运行证据，方可进入正式开发基线；本轮对机器本体只登记"冻结 Git 留存不足以复验"。
+【当前权威口径】批准事实：`duanxian/conception-approved/author-decision.json` `/approval_scope=conception`、`/decision=approved`、`/run_id=duanxian-conception-v2-20260811-18`、`/approval_record/text`＝“构思合格，完成提交并推送。”（B-E008）；`conception-completion.json` `/status=ready`、`/run_id` 与上一致、`/event_seq=1`、`/unresolved_items=[]`、`/stage_completions` 九键 B0,C1,E1,H1,P1,Q1,S1,T1,W1（B-E009）；批准 README 记 2026-08-17 作者批准、approved/ready（B-E007）。
+
+**哈希三层账（F02：重算、引用一致、本体不可得分层）**：
+
+| 层 | 对象（运行相对路径） | 值与绑定 | 判定 |
+| --- | --- | --- | --- |
+| 本轮本地重算 | author-decision.json | `4f5a070d22a92fb211b9e99709e04e05b16460aa52ae40c7ebb0eaf49249e2bd`＝completion `/author_decision/sha256` | 一致，直接留存 |
+| 本轮本地重算 | conception-completion.json | `4eabd4af2b249493f3aae1a2668c4de9b37dea7f61628e1b454293e49587d127`＝批准 README L22 记录值 | 一致，直接留存 |
+| 本轮本地重算 | human-review-report.html | `80cfc4d82d77683324808ba3f96817914c24fd1de007fae70641789dedf65e36`＝author-decision `/human_review_package/html_sha256` | 一致，直接留存 |
+| 引用值跨文件一致 | P1/package-manifest.json | author-decision `/machine_package/manifest_sha256`＝completion `/p1_manifest/sha256`＝`bba81d35a089320074eb8677911707052ba99b1265fbf19731c78785a1eef8ce` | 两处记录一致；本体未留存，不可重算 |
+| 引用值跨文件一致 | P1/stage-completion.json | author-decision `/machine_package/completion_sha256`＝completion `/stage_completions/P1/sha256`＝`42e307d1089a58ed3df6f13059007fe33f48da993b8c62832edc141f2a6e249b` | 同上 |
+| 引用值跨文件一致 | H1/stage-attempt-02/stage-completion.json | author-decision `/human_review_package/completion_sha256`＝completion `/stage_completions/H1/sha256`＝`28ec088d192374e825bfb4ffb44853bdf6e498f518d625f266980a91f1834e89` | 同上 |
+| 单处引用、本体不可得 | H1/stage-attempt-02/package-manifest.json（`fbe8b9a6…`）、H1/html-attempt-04/package-manifest.json（`72092963…`）、P1/development-handoff.json（`d48194db…`）、`/validation/sha256`（`c370cea5…`） | 仅留存文件单侧记录（B-E009） | 引用值，无法复验 |
+| 运行态（设计不入库） | `state/revision-037.json`（completion `/run_state` 引 `1ca5af5c…`）与批准 README L18/L21 终态 `state/revision-038.json`（`0679739a…`） | 两处分属完成时点与终态时点 | 阶段先后解释成立，非冲突 |
+
+- 三层分离结论：**记录批准**成立；**留存文件绑定**对 3 个重算对象成立；**全链重新验证未做**——validator 未重放、机器本体不在树，本报告不声称“合规/三投影一致已复验”【流程规范】。
+- 版本号的分层含义：completion 内 `/run_state` 引用的是完成时点的运行态快照（`revision-037`），批准 README 的 final state 是运行收束后的终态记录（`revision-038`）；两处指向不同时点，属记录阶段差而非冲突。但两个状态本体文件均未留存，两层记录同样只能作引用值对待。
+- 留存政策与缺口：批准 README L3“运行账本和历史尝试不纳入 Git”＋`.gitignore:L11–18`（B-E004/B-E007）。三个机器 basename（novel-conception-package.json、development-handoff.json、hld-completion.json）对 BASE 全量文件名列表精确匹配零命中（B-E048，检索规则：`git ls-tree -r --name-only` 全名单）——这是**留存缺口**，不证明机器链不存在，也不否定批准【未完成项】。
+- 人审计数（`decision_controls=8`、`visual_models=5`、`fragments=3`、`drilldown_index=4602`、`reduction_ledger=4602`、`source_coverage=3924`、`review_path` 五项 `estimated_seconds` 187/113/89/175/23）与 HTML 结构（5 个 svg、0 外链、0 script）属**结构/离线核对**，不等于逐元素语义验证（B-E010/B-E011）。
 
 ## 四、HLD与LLD断点及旧链隔离
 
-旧链按运行逐个核门，不取单点：proposal 2026-07-05——7 行收敛 P1 记录与 14 产物，Agent pass、人审 pending、PRD 入口 blocked_pending_human_confirmation，技能快照自述"未提交草稿态，非发布包"【B-E012】；PRD 2026-07-06 blocked（仅 manifest，无产物）；PRD 2026-07-07——人审经 2026-07-07 用户指令确认（留存记载"by user instruction"），10 产物带 SHA-256 摘要清单，HLD 入口 pass_to_hld，CLAIM-01..10 与冻结边界成文【B-E013】；HLD 2026-07-10 blocked（仅 manifest+gate，产物未生成）；HLD 2026-07-13——PRD 契约认证 pass、12 份编号产物生成，但终包裁定三连：HLD agent design=fail（HLD-TRACE-CLOSURE）、HLD human review=pending_required、LLD entry=blocked_revision_required【B-E015】；LLD 2026-07-08 目录顶部自标 superseded——当时把设计任务派发误读为小说 LLD 节点，权威记录在 engine/docs/superpowers/runs/design/2026-07-08-hld-lld-design-task-dispatch/manifest.md，其下旧 blocked 表格不得摘取冒充当前裁定；配套的 design-tasks/2026-07-07 记 planning_only_until_prd_human_confirmation，HLD-DESIGN-01..11 与 HLD-REQ-01..08 全部 planning_ready_blocked，即整条设计任务链当时仅规划态。fail 机制已静态闭环：`engine/scripts/validate_hld_contract.py` 按契约 JSON 要求 8 列原子级 Fact Trace（Fact trace id／Upstream fact id／Upstream fact atom／HLD fact atom／Source refs／Expansion mode／Support mechanism／Preservation status）【B-E017】；运行产物 01 虽有该表，但行值为摘要表达（如"character 沈逾；owner artifact 04；…"），完整性报告自述"事实追踪表在重建时以摘要表达，未逐字段复述业务表的每个可校验字段"，故严格校验在产物 01 报 trace binding 失败→HLD-TRACE-CLOSURE P1 open→Agent 质量 fail→LLD 阻断【B-E016】。该失败自 2026-07-13 起未闭环，属【历史/旧链口径】遗留。需区分的是：完整性报告同时记载 12 份产物的规则覆盖检查全部通过——失败仅在 trace 严格性一处，"覆盖通过"不能抵销"绑定失败"，两者并存正是该轮 Agent 质量裁定 fail 的构成。同运行另有 v2.0/v3.0 标签混用：manifest 定 canonical-world-facts v3.0 为唯一事实源，而完整性报告内文称"v2.0 is newly presented"；v2.0（2061/赫拉/裂隙网络/D0–D+90）当日废弃、v3.0（M国专家/纬线利益链/D+58）生效，两者完整留存可作版本隔离对照【B-E018】。新版 HLD 引擎侧【当前权威口径】的设计事实：harness `novel-hld-autonomous` 技能契约目录冻结 14 个技能定义，其 §2 机制面覆盖工单门禁、产物角色登记、authority_partition 四层形状、HDD 机制、复合发布器与修订计划算法（含 HB0 准入、HF1 终结、HQ2 消费就绪双任务、HH1 复合组装、§19 23 项验收、§20 六维评估 2/2、§21 评分 ≥12/14）；manifest.yaml 定 13 阶段 HB0→HF1、status=implementation-candidate、supported_runtimes 仅 codex（claude/gemini/openclaw/hermas 列为 unsupported）；releases/0.1.0-acceptance.json 明示 `hld_e2e_fixture_status=declaration-only`、`agentic_qualification=not-run`、42 个 bounded 用例未经 fresh Agents 执行、registered_skill_count=15、registry_token_count=18、structural_test_suites 4 组与 structural_executable_eval_cases 5 例、stable_major=False，releases/0.1.0.md 与 dist 双 zip 加 release-manifest 双格式（json+yaml）并列【B-E035】。【流程规范】发布资格为声明制候选，不得升级为"语义发布通过"，也不得把历史声明冒充新测。对《断线》而言新版 HLD 既未运行也未获作者批准——当前权威断点仍是"构思已批、HLD 未批"。旧链隔离有效：批准构思三投影对旧世界词（赫拉、裂隙网络、纬线利益链、周启明、D+58、陆远、维护例外）零命中，canonical v3.0 对新角色名（程予安、许曼青、秦峥、梁策、伊利亚、德米特里等）零残留，双向检索均为零【B-E043】。
+**版本时间线（均为冻结记录）**：
+
+| 时点 | 对象与状态 | 口径 |
+| --- | --- | --- |
+| 2026-06-06 | `design/specs/2026-06-06-hld-digital-life-novel.md` L10 记 v4.0 收束，风格章现位于 §9（L312–337）（B-E017） | 【历史/旧链口径】 |
+| 2026-06-06 | `design/specs/2026-06-06-lld-digital-life-novel.md` L36–39 反斜杠旧路径（B-E018） | 【历史/旧链口径】 |
+| 2026-06-07 | `duanxian/writing/` 17 件＋`novel-text` 旧正文（B-E013/B-E027） | 【历史/旧链口径】 |
+| 2026-07-05 | `design/specs/2026-07-05-duanxian-proposal.md` L39/L45–46 Agent pass、人审 pending；L276 非冻结声明（B-E016） | 【历史/旧链口径】 |
+| 2026-07-08 | `design/runs/lld/2026-07-08-duanxian-lld-workflow-blocked/manifest.md` blocked/superseded 留痕（B-E024）；引擎侧 `engine/docs/superpowers/runs/design/2026-07-08-hld-lld-design-task-dispatch/manifest.md` 存在（B-E025） | 【历史/旧链口径】 |
+| 2026-07-13 | HLD run：`manifest.md` L12–15 定 canonical v3.0 唯一事实源、人审前不得进入 LLD（B-E019）；`artifacts/12-hld-integrity-report.md` L25 HLD-TRACE-CLOSURE P1 open、L32–34 fail/pending_required/blocked_revision_required（B-E020）；`artifacts/final-hld-package.md` L20–22 fail/pending/blocked（B-E021）；`gate-report.md` 列下一道人类评审门（B-E022） | 【历史/旧链口径】 |
+| 引擎侧 | `engine/harnesses/novel-hld-autonomous/manifest.yaml` L1–27：13 阶段 HB0–HF1、implementation-candidate、codex-only；L44–48 not-run（B-E037） | 【流程规范】＋【未完成项】 |
+
+- 旧链隔离核验（B-E050）：7 个旧链专有词×3 份批准文件＝0 命中（旧链未渗入批准口径）；6 个新批准专名×`canonical-world-facts-v3.0.md`＝0 命中（新链未回写旧文档）；`HLD-TRACE-CLOSURE` 全树 `git grep` 仅 2 文件命中。`canonical-world-facts-v2.0.md` 与 `v3.0.md` 并存（B-E023），以 manifest 指定的 v3.0 为准。
+- **F04 修正后的表述**：2026-07-13 的 open/pending 是**冻结记录内**的状态判定，不延伸为“至今无处置”——现实处置在树外不可知。同理，新版 HLD 在 BASE 未见运行留痕（账本设计不入库），因此**无法判断**新版是否运行过或是否开工，不得写“未运行/零运行/正文未开工”。
+- 层级不外推：proposal 的 Agent pass、旧 HLD 的 pending、引擎 harness 的 implementation-candidate、2026-08-17 构思批准，四者分属不同层与不同版本，任一层状态不得替代另一层的准入判断【流程规范】。
+- 命名与布局两则补充：其一，K1–K10 场景号、“陆远”等旧链专名只在各自来源内使用，未渗入批准口径（零命中核验见 B-E050，人物侧另见第五节）；其二，`engine/README.md:L27` 确立“引擎内部一律以 engine/ 为根做仓库相对寻址”的布局约定（B-E003），因此 engine 内部代码里的旧式相对路径属有效约定，与项目侧自仓库根重复拼 engine 前缀的缺陷性质不同。该 run 交付物 `HLD-断线设计稿.md` 为带引号中文名文件，计入 duanxian 的 148 个文件。
 
 ## 五、写作产物与批准口径一致性
 
-冻结树含四代故事形态，须分层对照后定偏差性质。(a) 6 月代（specs＋正文＋素材）：正文 508 行（序幕＋她·1–6／它·1–3）与场景锚点草稿（四幕八锚点，第 12 周"系统显示已经自行终止"）、17 份写作素材同构；R-07 自行完成成本收益评估后启动关闭序列（呼吸灯由橙转灭），留下含推理链（郑柏舟轮廓 82% 匹配、认知路径 7 节点、未解答问题）的记录区，首尾输出均为一个句号；沈逾隐藏异常日志并写"系统运行正常"【B-E021,B-E022,B-E023】。R07 角色卡行为表明文"执行终结 K9：它启动了关闭序列。不是外部指令——是内部选择"，且按三阶段语言演变（阶段一白板：每行不超六字符、无主语；阶段二区分：第一次使用"我"；阶段三：自主选择）把终结写成语言进化的终点——自终止是该代设计口径而非笔误【B-E023】。K1 场景卡元信息（POV 前序·第三人称有限、时间第 -1 天 23:30–23:50、价值变化"生→死"、16 项验证清单逐项自检）显示该代已按 skill 工作流自检成文。按七类故事风险对照批准版：主体/记忆——"这不是前序的记忆结构。这是我的"与"R-07 不是顾衡复生"同母题，方向同源；当前感官——纯文字会话、无视听身体，一致；权限与现实行动——6 月自终止 vs 批准版"无自行终止权限、关停由沈逾执行"，草稿偏差；亲属同意——6 月无程予安/周岚线与同意议题，缺失；信息分层——6 月仅推理结论保留不输出 vs 批准版行动层/原因层制度分层，前者为雏形；关停/备份——6 月记录区静态留存、无备份与重载议题 vs 批准版关停无活动备份＋重载开放，属演化；开放边界——6 月无法律身份/连续性/互信议题 vs 批准版三项开放。全部记为【历史/旧链口径】草稿偏差：按定义书"草稿偏差与当前正式产物违约区分"，不构成对批准版的违反，但需防误用（见 B-IC009）。(b) 7 月 5–13 日 proposal→PRD→HLD 链：proposal §2 四段式（脑波失败/冒险注入/开锁与危机化解/自毁与余生）、暗恋学长、"设局让研究员终止一切"、§18 风险表 Agent pass/人审 pending/入口 blocked；世界含裂隙网络、纬线利益链、D+58，前序已名顾衡；proposal 自列 P2"旧文档存在强设定惯性"并宣告旧文档非冻结【B-E012,B-E013】。(c) 7 月 17–21 日访谈链（workflow-docs 11 件）：intent-card v0.2 confirmed（R-07 无视觉听觉仅文字、三部曲、目标读者未指定）、叙述契约 v1.1 confirmed（"无自行终止权限，以可能重载的希望让沈逾执行终止"、行动层与周岚等原因层分离、无当前视听——批准版规则骨架的直接前身）、subject-definition v1.1、causal-storyline v1.1（C1–C9）、development-map v1.0（M01–M10）、coverage-matrix 11 项控制、map-check 9 项通过、subject-definition v1.1（双主体）、causal-storyline v1.1（C1–C9 节点确认）、development-map v1.0（M01–M10：M05 关闭 R-07 视角、M09 袭击避免＋终止、M10 未愈后果）、coverage-matrix 11 项控制、map-check 9 项通过、core-character-design v1.0（授权态）、conception-review 9 项控制点通过、结论 ready 待作者最终批准【B-E019】；访谈简报 HTML 离线、三节结构、零脚本，投影合规【B-E020】。(d) 8 月重铸批准版：世界与人物全部重铸（周岚改设儿时守护者等），旧世界词双向清零【B-E043】。命名 lineage 直接证据：6 月前序＝陆远（素材卡标题"前序 / 灰鸟（陆远）"），7 月起为顾衡【B-E024】。写作层上游锚定缺陷三类：其一，17 份素材引用 `docs/superpowers/specs/lld/…` 17 个分文件路径，冻结树零存在，内容实存于 `duanxian/design/specs/lld/` 26 件，且 6 月 LLD 聚合的子文档索引本身即用反斜杠路径指向它们【B-E025】；其二，素材卡与 6 月技能模板引用"HLD §10.2/10.4/10.6/10.8（三阶段语言/记忆/通讯窗口/禁用语）"，而留存 HLD v4.0 的风格章在 §9（§9.2 双主角语言规则、§9.3 全局禁用项），v3/v4 修订记录明言收束重构——编号错位系改号后未同步【B-E026】；其三，T1–T10 风格体系在 `duanxian/design/reference/2026-06-07-style-reference-liu-cixin.md` 有定义留存，K1 场景卡附 T1–T10 全覆盖自检与 16 项验证清单，风格锚点可回溯【B-E027】。
+七类高风险控制逐类双向对照（批准要求→写作片段；检索范围均为 `novel-text` 508 行全文＋`duanxian/writing/` 17 件逐件扫描）：
+
+1. **R-07 新主体、非顾衡复生**：要求 L277–289“记忆非录像”＋隔离套间、L147/L169 关系界定（B-E012）；支持片段 L183–199/L201–205 记忆回放被重构、L474“这不是前序的记忆结构。这是我的。”（B-E013）。判定：支持。【当前权威口径】
+2. **无当前视听/身体/现实行动权**：要求 L239–243 文字会话隔离室；`duanxian-narrative-contract.md` L28 无当前视听（B-E014）；写作侧 L407/L417 私密层为内部状态描写，检索范围内未见越权感官叙述。三个试读样片的局部感官写法按规范不晋升为新设定【流程规范】。
+3. **现实核验与授权链**：要求 L295–309 专家/硬件/授权核验＋跨国处置、L468–475 授权链、L524–531 行动指挥由现实团队完成（B-E012）；检索范围内未见机器输出直接产生权限或自行完成现实行动的段落。判定：支持（限旧稿范围）。
+4. **沈逾与顾衡/R-07 关系**：要求 L382–389/L396 新感情不属顾衡、不写旧爱复活（B-E012）；旧正文情感线未见反向改写。判定：支持。
+5. **程予安/周岚主体性**：要求 L423–427 周岚非情报筹码、L445–449 程予安同意边界（B-E012）；检索范围内未见将亲属工具化的消费段落。判定：未见反例。
+6. **关停且无活动备份**：要求 L510–517 关停不可逆、L271/L283 权限/封存（B-E012）；写作侧证据：正文 L464–476 自终止段（郑柏舟 82%、七节点）与 `writer-R07.md` L67–70/L88–91“它启动了关闭序列。不是外部指令——是内部选择。”（B-E027）。**差异登记**：旧稿写自主终止，新版契约 L26 定“无自行终止权限，以可能重载的希望让沈逾执行终止”（B-E014）——属旧稿与新版契约的差异，非当前违规；新版写作须按契约执行【历史/旧链口径→流程规范】。
+7. **开放边界**：要求 L325–329 法律身份、连续性与互信保持开放（B-E012）；旧正文结尾未封闭这些议题。判定：支持。
+
+- 迁移线索：`writer-qianxu.md` L1/L15“灰鸟（陆远）”属旧链人名设定（B-E027），与批准口径人物表并存，作历史素材对待，不自动进入新版。样片中人物的误解不等于作者叙述违规（B-E011 `characters.constraints`：“人物可能误解，但知情、权限、选择与后果必须分开。”）。
+- 汇总：七类中 5 类获写作层支持、1 类未见反例、1 类登记为旧稿差异；写作产物整体属 2026-06-07 旧链，其一致性不能替代新版 HLD/LLD 之后写作的一致性判断【历史/旧链口径】。
+- 样片非权威与误读处理：批准报告内三个试读场景为非权威体验样片，其中雨声、动作等局部写法不得补为新设定（`final-delivery-contract.md` L26–30 的 P1 权威边界，B-E044）；本报告未将任何样片措辞用作故事事实。文内人物对 R-07 身份或能力的误判属人物认知，不构成口径违规；一致性判定一律回退到批准报告的要求行核对。
 
 ## 六、代码层与流水线契约可用性
 
-**校验器层**：`engine/scripts/` 5 个校验器与 `engine/tests/` 6 个测试文件一一对应（proposal 1119/280 行、prd 2296/2025、hld 4042/4131、hld_release 256/233、design_tasks 1536/660，另 conftest 7 行做 sys.path 注入）【B-E033】。validate_hld_contract 以 `ROOT/"docs/superpowers/specs/…json"` 锚定（ROOT=engine/），重构后仍解析正确；其测试以模块导入直调校验函数，正例如 test_required_hld_skills_exist、test_every_artifact_has_minimum_schema，负例/拒绝类如 test_harness_rejects_open_inventory_coverage 与 schema 强制断言，206 个用例覆盖结构、门禁与拒绝分支。validate_hld_release L193 明文"Resolve CLI paths from the declared repository root, not process cwd"——--root 锚定、CWD 无关设计，测试在 tmp_path 自建 git 仓库（init/config/add/commit 快照）构造 release fixture 并校验 STATIC_RELEASE_ASSETS，为完整正负闭环【B-E034】。**项目 CLI 层（静态破绽）**：`duanxian/conception-production/run.py` L14 定 `ROOT=parents[2]/"engine"`（＝仓库根/engine），而 `_s1_runtime` 与 STAGE_SPECS 五个 stage 的 module_path 均为"engine/skills/…/scripts/run_v2.py"，与 ROOT 组合解析为 `<repo>/engine/engine/skills/…`——五个组合路径在冻结树全部不存在，正确目标 `<repo>/engine/skills/…/run_v2.py` 全部存在（逐一路径解析验证）。静态结论：该 CLI 在冻结布局下无法装载任何 stage 运行时（_load_stage_runtime 必然抛"cannot load stage runtime"），系仓库重构后未同步【B-E028】。同目录 3 个测试 L12–13 以 `parents[4]` 组合 `projects/duanxian/conception-production/run.py`——parents[4] 已逃出仓库（解析到工作区目录），入口文件不存在，entrypoint fixture 的 spec 断言必失败，测试整体对冻结布局失效【B-E029】。**项目 testing 层**：17 件按职责分组——run08 专项构建 3 件、四域构建器 4 件（W1 世界模型、E1 环境、T1 事件、C1 角色）、Q1 语义与交接 2 件、H1 计划/样片/组装/HTML 4 件、总驱动与编辑评审呈现 2 件、测试 2 件（C1 确定性、标题来源）；总驱动按 S1→W1→E1→T1→C1→Q1（controller/semantic/handoff 三工作区）→P1→H1 顺序装载 run_v2 运行时，Q1/P1 装载点对应 novel-conception-reviewer 与 novel-conception-deliverable-assembler 两技能脚本——跨文件调用链在留存代码中完整可追【B-E030】。**对照（8 月实际驱动）**：`duanxian/testing/run_duanxian_conception_v2.py` 的 load_stage_runtime 三段回退（ENGINE→ENGINE.parent→NOVEL），冻结布局下经 ENGINE.parent 正确解析到 `<repo>/engine/skills/…`——这是构思运行能跨重构完成的机制解释；其 MIGRATION 指向 engine/projects/… 旧位置且依赖不入库的 compatibility-migrations 目录，fresh clone 不可复现；PROJECT_DISPLAY_METADATA 严格校验五字段、schema 1.0、authority=author-corrected-project-title 后取权威标题【B-E030】。**harness 层**：novel-conception-autonomous/runtime 共 18 个模块 20446 行，含 production_orchestrator.py 8133 行、production_store.py 2706 行、baseline.py 2184 行、coordinator.py 1388 行、conception_revision.py 1153 行、h1_completion.py 1073 行、migration_handoff.py 501 行、author_decision.py 503 行、final_completion.py 522 行、return_routing.py 262 行及 b0/h1 辅助模块。其中 production_orchestrator.py 为 8133 行状态机，initialize_production_run 闭包为：store 加锁→ensure_uninitialized→ProductionCoordinator.initialize 定 revision-000→SealedDocument 封印持久化→install_initial_contract_qualification 安装契约摘要（CURRENT_CONCEPTION_PRODUCTION_CONTRACT_SHA256）与 E1/T1 生产版本【B-E031】；production_store.py 2706 行承载封印文档与清单完整性；author_decision.py 模块 docstring 明文"never invents, defaults, classifies, or rewrites author intent"——作者权威在代码层显式防护，决策只接受外部封印的单选分支；return_routing.py 提供 route_return/validate_return_request 退回路由；conception_revision 提供权威修订懒桥接【B-E032】。novel-conception-autonomous 留 25 个测试文件（final_completion、gate_authoritative_inputs、production_orchestrator、migration_handoff、h1 系列等），novel-hld-autonomous 留 12 个；engine/testing 六个测试中 test_conception_autonomous_v2_contracts 的 test_all_schema_files_parse（正）与 test_relative_paths_reject_absolute_and_parent_escape（拒）划出 schema/语义边界，e2e 测试注释"production never synthesizes this gate"明确 fixture 与生产数据分离【B-E040,B-E044】；novel-conception-interview 留 5 个验证器（stage_completion/session/harness/fact_dependency_register/control_projection）与 evals.md 正负用例（Prompt/Expected/Forbidden/Scoring 四段式）。**技能层**：82 个 novel-* 目录、669 文件、56 个 test_*.py，按职责分群：novel-hld-* 21 个（HB0 准入到 HF1 终结与 HQ1/HQ2 评审位）、构思 V2 链（storyline/world/environment/event/character 设计位与 reviewer/deliverable-assembler/human-review-assembler/html-generator 等约 12 个）、访谈链 7 个（intent/subject/world/character/causality/narrative 各访谈与简报、审计、B0 迁移）、6 月写作层 7 个（character/scene/space 的 designer 与 writer 及 thread 等）、其余为 proposal/PRD 设计位单文件技能；覆盖 intake→proposal→PRD→HLD→LLD→writing 与各评审位；其中 7 个 6 月代写作技能（character/scene/space-writer 等）无 YAML frontmatter，novel-hld-writer 自标"Legacy status…not an authoritative HLD entry point"【B-E036】。根 README.md:L5 与 engine/README.md:L9 均写"81 个 novel-* 技能"，与冻结树 82 个不符——说明性计数漂移，清单以树为准【B-E036】。**发布与工程资产**：31 个 zip 按 sha256 分组——interview 1.0.0 六件在 docs/ai-novel-workflow/releases/1.0.0 与 harness dist 双份同内容（六组两两相等）；interview 0.1.0 六件独立留存且与 1.0.0 相异；conception-autonomous 的 codex.zip 与 source.zip 字节相同（两处版本亦互异）；stage-1.0.0-source 唯一；kun-workshop 六件相异；hld 0.1.0 两件相异——重复投影记同源关系，二进制不作为源码替代【B-E037】。.gitattributes 对 novel-hld-*、development-baseline-preparer 等强制 LF，与字节精确清单机制配套【B-E038】。engine/docs/design/ 另有 DP-HLD-001..004 契约校验器/harness 技能/全局规格迁移/fixtures 验收四份设计稿与验收评审、rust-implementation-design 引擎实现备选设计，plan-prd-research v2 为前置研究规划——均为工程规范层，追踪到校验器与 fixtures 的实现确有对应物；engine/tasks（design 22/development 90 文件）为 greeting-cli 开发任务样例与 fixtures，【流程规范】不构成《断线》任何完成证据【B-E039】；kun-workshop-intranet-delivery 为通用内网交付 harness（自述不自动建云资源、不读生产数据），同样不算小说构思证据【B-E041】。.zcode 计划即仓库重构方案本身，仅工程历史【B-E042】。
+**项目 CLI（B-E028，全文 1082 行）**：`duanxian/conception-production/run.py` L14 `ROOT` 已解析到 `<仓库根>/engine`；但 `_s1_runtime`（L51–55）、STAGE_SPECS（L58–99）与 Q1/P1 装载（L123–135）共 7 条路径仍写 `"engine/skills/<skill>/scripts/run_v2.py"`（S1/W1/E1/T1/C1/Q1/P1），拼接后为 `<仓库根>/engine/engine/skills/…`——7 条组合路径在 BASE 全部不存在；去掉重复前缀后的正确路径全部存在（novel-storyline-architecture-designer、novel-world-model-designer、novel-environment-system-designer、novel-event-timeline-designer、novel-character-system-designer、novel-conception-reviewer、novel-conception-deliverable-assembler 七个技能目录逐一核对）。
+- **失效机理（F07 修正）**：`_load_stage_runtime` L43–44 仅在 spec/spec.loader 为 None 时抛 `RuntimeError("cannot load stage runtime: …")`，实际装载读取在 L47 `spec.loader.exec_module(module)`。以 `python3 -I` 仅标准库观察（未 import 仓库代码）：`spec_from_file_location` 对不存在的 `.py` 仍返回 spec 与 SourceFileLoader，失败发生在其后 `exec_module` 抛 `FileNotFoundError`。故正确表述为“正常冻结布局下目标源码缺失导致加载不可完成”，撤回“必然抛 cannot load stage runtime”【推断】（静态分析，未运行 CLI）。
+- 影响范围：7 条 runtime 装载路径同型受影响；需要装载对应 runtime 的 issue/start/submit/finalize 子命令不可完成装载，不泛称每条子命令都在入口失败。
+
+**CLI 测试（B-E029）**：`tests/test_attempt_selection_cli.py`、`test_line_sequence_review_cli.py`、`test_topology_review_cli.py` 三件同型：L12 `ROOT=parents[4]`、L13 `ENTRYPOINT=ROOT/"projects"/"duanxian"/"conception-production"/"run.py"`，指向仓库外旧布局。按上述标准库观察，L19–20 的 spec 断言不一定失败，实际失败点在其后 L23 `exec_module`；撤回“fixture 的 spec 断言必失败”【推断】。
+
+**驱动与迁移（B-E030）**：`duanxian/testing/run_duanxian_conception_v2.py` L16–23 RUN_ID 环境变量默认 `20260802-04`——默认值可被覆盖只说明可配置，实际八月运行是否使用该入口、如何多轮迭代不可由代码与命名推出；L27–35 迁移读取旧根 `engine/projects`；L43–55 三段回退 ENGINE→ENGINE.parent→NOVEL。驱动代码仅证明能力设计，**不证明任何实际运行历史**【推断】。
+
+**runtime 存量（F06 修正，B-E031）**：`engine/harnesses/novel-conception-autonomous/runtime/` 直接 `.py` 19 件（分母含 `__init__.py` 189 行，如排除则为 18——前稿“18 模块”与“20446 行”分母不一致，现统一为 19 件 20446 行）、共 20446 行；行数前列：production_orchestrator 8133、production_store 2706、baseline 2184、production_coordinator 1388、conception_revision 1153、h1_completion 1073。行级闭环样本：production_orchestrator.py L3466–3497 `initialize_production_run`；production_store.py L617–620 `ensure_uninitialized` 防重复初始化；author_decision.py L80–88 `_validate_sealed`＋L202–255 P1 不匹配拒绝；return_routing.py L147–156 责任阶段退回。
+
+**契约与 schema（F06 修正，B-E032）**：`engine/docs/ai-novel-workflow/contracts/autonomous-v2/` 为 **32 份 `.schema.json`＋`contract-index.md`＝33 个文件**；前稿“33 份 JSON Schema”计数错误，更正为 32 schema＋1 索引。
+
+**五 validator 与测试（B-E039）**：`engine/scripts/` validate_design_tasks.py、validate_hld_contract.py、validate_hld_release.py、validate_prd_contract.py、validate_proposal_contract.py，与 `engine/tests/` 5 件 `test_validate_*.py`＋conftest 一一对应。行级样本：`engine/tests/test_validate_hld_contract.py` L1185/L1190 正例、L1418/L1500/L1512 拒绝例；validate_hld_release.py L192–193 root-not-cwd 机制及其测试 L80/L90/L130/L160；proposal/prd/design_tasks 校验器与测试入口行同法核对。**IC004 边界反例**：validate_hld_contract.py L13–17 `ROOT=parents[1]`，其路径相对 `engine/` 根有效（`engine/README.md` L27 亦约定引擎内部以 engine/ 为根寻址）——engine 内部旧式相对路径不是缺陷，缺陷仅限自仓库根再拼 engine 前缀的调用点。
+
+**`duanxian/testing/` 归类（17 件，B-E030 及入口核对）**：运行驱动 1 件（run_duanxian_conception_v2.py）；run08 阶段构建辅助 3 件（build_run08_hi1_000230/000237/000238）；阶段构建与装配脚本 10 件（c1/e1/t1/w1 构建器、q1 语义与交接、h1 计划/片段/HTML/装配）；评审生成 1 件（generate_duanxian_editorial_review.py）；树内测试 2 件（test_c1_determinism.py、test_duanxian_title_provenance.py）。该组为项目侧测试与辅助资产，存在不等于通过，本轮仅做只读归类，未执行。
+
+**技能与 harness 存量（B-E033/B-E035/B-E036）**：skills 一级目录 82 个、各含 SKILL.md，其中 `novel-hld-*` 21 个（HLD 阶段技能族，含 Legacy 标记的 novel-hld-writer 与交接提示涉及 14 个既有失败的 novel-hld-lld-readiness-evaluator）；构思生产技能 7 个，与 run.py 的 S1/W1/E1/T1/C1/Q1/P1 路由一一对应；另有 novel-interview-b0-migrator、novel-lld-writer、novel-narrative-contract-designer 等设计、访谈与迁移族，以及测试辅助类技能。树内 `test_*.py` 56 件分布于各技能 tests/ 子目录，构成“一技能一契约一测试”的形态；本轮对 7 个生产技能、b0-migrator、novel-hld-writer、lld-readiness-evaluator 做跨文件核对，其余为结构级核对。harness 文件数：novel-conception-interview 92（0 测试）、novel-conception-autonomous 107（25 测试）、novel-hld-autonomous 152（12 测试）、kun-workshop-intranet-delivery 53（0 测试）。**计数漂移（IC003）**：`README.md` L5 与 `engine/README.md` L9 写“81 个技能”，实测 82。zip 31 个、唯一 sha256 23 个、8 对重复（interview 1.0.0 releases＋dist 六件、autonomous 1.0.0 codex=source、harness releases codex=source）（B-E034）。
+
+**字节稳定（F08 修正，B-E005/B-E006）**：根 `.gitattributes` L3–23 模式为 `harnesses/novel-hld-autonomous/**/*`、`skills/novel-hld-*`、`skills/novel-development-baseline-preparer/**`——均无 `engine/` 前缀，保留旧根布局；对 3 个真实路径（engine/skills/novel-hld-finalizer/SKILL.md、engine/harnesses/novel-hld-autonomous/manifest.yaml、engine/skills/novel-development-baseline-preparer/SKILL.md）执行 `git check-attr --cached text eol`，六项属性全部 `unspecified`。结论：规则文本承载历史意图，**当前布局下未生效**；撤回“已强制 LF/字节稳定策略已生效”，仅登记为未生效的配置缺口，本轮不修改 `.gitattributes`【推断→未完成项】。
+
+**历史与标记类存量**：`engine/skills/novel-hld-writer/SKILL.md` L3–5 标 Legacy（B-E040）；engine/testing 契约测试 L108/L130 与 e2e L119“production never synthesizes this gate”（作者门不可由生产侧合成）（B-E041）；`engine/skills/novel-interview-b0-migrator/SKILL.md` L2–10＋runtime `migration_handoff.py` L1–6 迁移交接（B-E042）；`engine/harnesses/novel-hld-autonomous/releases/0.1.0-acceptance.json` declaration-only（42 bounded、15 skills、18 tokens、stable_major False、4 suites、5 eval cases）＋`0.1.0.md` L3–5【历史/旧链口径】（B-E038）；`engine/harnesses/kun-workshop-intranet-delivery/README.md` L11（B-E047）；`.zcode/plans/plan-sess_316609e2-5263-4909-a27a-c47b17476339.md` 记录 engine 内部旧根布局为当时设计状态（B-E046）。
+
+**测试与运行证据边界**：本轮未执行任何测试（作业契约禁用）。编排交接提到的 engine/tests 12 个、novel-hld-lld-readiness-evaluator 14 个既有失败属交接提示，非本轮实测，也未发现前稿将其冒充新回归——维持边界：测试存量≠通过；负例预期拒绝≠测试失败；历史日志≠当前基线事实【流程规范】。
 
 ## 七、实现程度总评与未决事项
 
-分对象评定，实现程度与证据强度分开表述；历史遗留再分两层——6 月代（已被 7 月链宣告非冻结、又被 8 月重铸整体取代）与 7 月链（曾部分人审确认但止步 HLD fail），两层都不可反悔当前口径，只作演变证据。构思阶段批准链：已完成（限定对象＝留存批准文件与哈希绑定），证据强度＝直接留存＋本轮重算。P1 机器包与运行账本：留存缺口（设计性不入库），"冻结 Git 留存不足以复验机器本体"，强度＝静态可定位的缺失＋契约 schema 在库旁证。开发基线→新版 HLD→LLD→写作：缺口——引擎与技能已建（契约目录、13 阶段 manifest、33 份 schema、82 技能、测试存量），但对《断线》零运行、零作者批准，强度＝直接留存的契约与零运行记录并置。旧 7 月 HLD 链：历史遗留——Agent fail（HLD-TRACE-CLOSURE P1 open，产物 01 trace 摘要化所致）未闭环、人审未放行、LLD 阻断，强度＝终包三连裁定与完整性报告自述直接留存。6 月写作层：历史遗留——四代最早一代，草稿偏差已在上节逐类标记，不可晋升为当前结构或章节凭证。代码层：部分完成——契约校验器/运行时/测试静态齐备且工程痕迹完整（正负例、CWD 无关设计、作者权威防护、字节稳定策略），但项目 CLI 与其 3 个测试在冻结布局下路径失效（静态判定，本轮未运行），HLD 发布资格为声明制候选。【未完成项】汇总：读者定位、最终篇幅、P1 机器本体留存、新版 HLD 运行与批准。未决事项（本轮不可判，交 C）：(1) 三个机器文件是否存在于未入库位置或其他提交；(2) 旧 HLD-TRACE-CLOSURE 是否随新链建立而正式关闭；(3) README 81/82 与 run.py/测试路径修复的归属与优先级；(4) 6 月代历史口径的防误用标注方式。本报告不创建 ISSUE，候选归 C。
+| 对象 | 程度 | 依据与边界 |
+| --- | --- | --- |
+| 构思批准与留存绑定 | 已完成（限定：approved/ready＋3 对象重算一致） | 第三节；不含全链 validator 重放 |
+| P1 机器本体/handoff/运行态留存 | 缺口（留存类） | 三 basename 零命中＋账本设计不入库；是否要求入库交 Owner 裁决【未完成项】 |
+| 旧链隔离（proposal/旧 HLD/旧 LLD/旧稿） | 历史遗留（隔离已核，迁移责任仍在） | 第四节双向零命中 |
+| 新版 HLD/LLD/写作现实进度 | 无法判断 | 留痕未见＋账本不入库；不写“未运行/未开工” |
+| 项目 CLI 可用性 | 部分完成（静态断裂） | 7 条 runtime 路径；静态结论，非实测失败 |
+| 引擎工具链（harness/validator/schema/测试存量） | 部分完成（能力与存量在，发布为历史或候选态） | implementation-candidate＋Legacy 标记 |
+| 文档一致性 | 部分完成（81/82、章节号、旧路径引用） | IC003/IC004/IC005 |
+
+- 不设全仓完成百分比；以上分对象结论与各节一致。下一证据需求及理由：①编排方提供 rint2 阶段执行记录（命令、退出码、忽略区写入范围、模型重派记录）——它是核验红线遵守与自检真实性的共同输入（F10 待提供输入）；②Owner 裁决机器本体留存政策——决定 IC008 应否立为缺陷还是政策选择；③新版 HLD 人审门记录——判断“构思之后”阶段是否推进的唯一合规依据；④路径修复须在授权后以 CLI selftest 与 validator 实测复核，静态复验只能确认路径存在与拼装正确。
 
 ## 八、ISSUE 候选清单
 
-**B-IC001**（路径失效·当前树）：run.py 五个 stage 运行时路径双重 engine 前缀，冻结布局下 CLI 必然装载失败。应然依据：STAGE_SPECS 应解析到实存 run_v2.py；实际证据：`duanxian/conception-production/run.py:L14,L50-54,L63-95`（五个组合路径 engine/engine/* 静态解析均不存在，直接目标均存在）；影响对象：项目生产 CLI 全部 stage；版本归属：当前树（f7ac2db 重构未同步）；证据强度：静态可定位；根因判断：目录重构后相对路径未改；建议方向：module_path 去 engine 前缀或改用 testing 驱动的三段回退装载；建议验证方式：路径解析单测（静态断言，无需运行 CLI）；归并关系：与 B-IC002 同因，可并为一案。**B-IC002**（测试失效·当前树）：3 个 CLI 测试入口指向 projects/duanxian 旧布局。证据：`tests/test_attempt_selection_cli.py:L12-13` 及另两件同构（parents[4] 逃出仓库、入口不存在、fixture 必断言失败）；建议：随 B-IC001 一并修层级与入口。**B-IC003**（文档计数漂移）：README.md:L5 与 engine/README.md:L9 写 81 技能，冻结树 82。证据强度：静态可定位；建议：以 ls-tree 清单为准更新两处说明。**B-IC004**（悬空路径引用·历史层）：79 处 `docs/superpowers` 引用与 17 处 lld 分文件引用在冻结树无目标（内容分别实存于 engine/docs/superpowers/ 9 件与 duanxian/design/specs/lld/ 26 件；6 月 LLD 聚合索引用反斜杠路径）。证据：全树 grep＋存在性对照；影响：历史层可追溯性与链接可用性；建议：批量改链或加迁移说明页；归并：同型合并为一 ISSUE。**B-IC005**（编号错位·历史层）：6 月素材卡与技能模板引用 HLD §10.x 风格章，留存 HLD v4.0 风格章在 §9；7 个写作技能无 frontmatter。证据：`writing/characters/*:L14-15` 与 `2026-06-06-hld-digital-life-novel.md` 章节目录对照；根因：v4.0 收束改号后写作层未同步；建议：历史层加勘误说明。**B-IC006**（旧链未闭环·历史遗留）：HLD-TRACE-CLOSURE P1 自 2026-07-13 open 至今无处置或终结标记，与新引擎建成状态并存。证据：`runs/hld/2026-07-13…/artifacts/12-hld-integrity-report.md`（"未逐字段复述…"）与 final-hld-package 裁定；建议：由 Owner 决定随旧链废弃正式关闭或补记。**B-IC007**（标签混用·历史遗留）：同运行内文"v2.0 is newly presented"与 manifest"v3.0 唯一事实源"并存。证据：artifacts/12 内文与 manifest.md 对照；影响：版本误读风险；建议：补隔离说明。**B-IC008**（留存缺口·设计性）：P1 机器包三文件名零匹配；testing 驱动 MIGRATION 指向不入库目录，fresh clone 不可复现机器链。依据：.gitignore 设计与 33 份 schema 在库的事实并置；注意此为流程决定而非违约；建议：入库存档机器本体或显式登记外部留存位置与取回方式。**B-IC009**（草稿偏差防误用）：6 月正文自终止等口径与批准版硬规则相反，仓库仅有"草稿"级标注，无历史口径声明。证据：正文它·3 终结段与 R07 卡 §3.1 对照批准版"无自行终止权限"；建议：在写作层目录加显式历史口径警示。以上候选证据强度均为静态可定位或直接留存，问题归属、查重与提交由 C 裁决，本清单不预设优先级。
+每条含问题、应然依据、实际证据、影响、版本、强度、根因、建议、验证、归并；均未创建 ISSUE、不预填编号。已具证问题与线索/建议分列。
+
+- **B-IC001**（已具证，强）run.py 七条 runtime 路径重复 engine 前缀。应然：CLI 应能在冻结布局下装载各阶段 runtime（`run.py` L14 自身 ROOT 约定）。实际：`duanxian/conception-production/run.py:L14,L41–55,L58–99,L123–135`；7 条组合路径全不存在、正确路径全存在。影响：S1/W1/E1/T1/C1/Q1/P1 装载不可完成（静态）。版本：当前。强度：静态可定位。根因：目录重构未同步路径前缀（高置信，未运行验证）。建议：去除重复前缀或改为 ROOT 相对拼装。验证：修复后 `python3 -I` 两步装载观察＋获授权 selftest。归并：与 IC002/IC004 同族（根路径迁移）。
+- **B-IC002**（已具证，强）3 件 CLI 测试 ENTRYPOINT 指向仓库外旧布局。应然：测试应自足定位被测入口。实际：`duanxian/conception-production/tests/test_attempt_selection_cli.py:L12–13,L19–23` 及 `test_line_sequence_review_cli.py`、`test_topology_review_cli.py` 同型（parents[4]＋projects 拼装）。影响：测试无法在当前布局定位入口；spec 断言不一定失败，失败点在 exec_module。版本：当前。强度：静态可定位。根因：同 IC001。建议：改仓库相对定位。验证：静态路径核对＋获授权 pytest。归并：可并入 IC001。
+- **B-IC003**（已具证，中）技能计数漂移。实际：`README.md:L5`、`engine/README.md:L9` 写 81，BASE 实测 82（B-E033/B-E036）。应然：导览计数与树一致。影响：误导存量认知，不损运行。版本：当前。强度：直接留存。根因：新增技能后未同步文档。建议：两处改 82 或去掉具体数字。验证：一级目录计数复跑。归并：独立文档缺陷。
+- **B-IC004**（已具证，中）全树旧根路径引用。实际：superpowers 专项 79 文件 219 行（duanxian 31 文件 88 行、engine 47 文件 119 行，B-E045）；`duanxian/writing/` 17 件各 1 个反引号 LLD 旧路径（B-E027），替换为 `duanxian/design/specs/lld/` 后均可定位。应然：重构后引用应可解析。**边界规则**：自仓库根再拼 engine 前缀的引用失效；engine 内部相对 engine/ 根的引用有效（反例 `engine/scripts/validate_hld_contract.py:L13–17`、`engine/README.md:L27`），不得全树一律改链。影响：文档与素材可解析性。版本：历史遗留兼当前。强度：静态可定位。根因：目录重构（f7ac2db 一族）。建议：按上述两分规则修复。验证：grep 抽样回放＋engine 例外人工复核。归并：IC001/IC002 与 `.gitattributes` 前缀缺失（B-E005/B-E006）同族，可合立一项。
+- **B-IC005a**（已具证，中）HLD 章节号错位。实际：`duanxian/writing/characters/2026-06-07-writer-R07.md:L13–16` 引 §10.x，现 HLD 风格章为 §9（`duanxian/design/specs/2026-06-06-hld-digital-life-novel.md:L312–337`；L10 记 v4.0 重构）。影响：写作素材引用悬空。版本：历史遗留。强度：静态可定位。根因：v4.0 重构改号未同步引用（静态推断）。建议：素材改引 §9 或加迁移注。验证：章节号核对。归并：并入 IC004 迁移族。
+- **B-IC005b**（线索，待取证）部分 writing 素材无 frontmatter。与 005a 根因不同，且未见明确规范要求素材必须带 frontmatter，降为线索：须先取证规范依据再定是否立项。
+- **B-IC006**（已具证，中）HLD-TRACE-CLOSURE P1 open。实际：`duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/12-hld-integrity-report.md:L25,L32–34,L57–58`；同 run `final-hld-package.md:L20–22`。影响：该 run 记录内 LLD 准入被阻。版本：历史遗留（记录属 2026-07-13）。强度：直接留存。根因：trace 未逐字段绑定（记录自述）。建议：新版 HLD 流程接管时关闭或显式作废该门槛。验证：新版 integrity 复核。表述边界：仅判定冻结记录仍 open，现实处置不可知（检索范围：全树 `git grep`，仅 2 文件命中）。归并：独立或与 IC007 同 run 记录族。
+- **B-IC007**（已具证，中）v2.0/v3.0 标签混用。实际：integrity 报告 L33“v2.0 is newly presented after material world reconstruction.”而同 run `manifest.md` L12–15 定 v3.0 唯一事实源；`canonical-world-facts-v2.0.md` 与 `v3.0.md` 并存（B-E023）。影响：版本指称混乱，不改变 v3.0 权威。版本：历史遗留。强度：直接留存。根因：同 run 内报告与 manifest 口径未对齐（推断）。建议：以 manifest 为准，后续报告统一版本指称。验证：两文件对读。归并：可并入 IC006。
+- **B-IC008**（已具证，中；处置归 Owner）机器本体留存缺口。实际：`conception-completion.json` `/p1_manifest`、`/development_handoff`、`/run_state` 等 Pointer 引用的本体未入库（B-E009）；根 `.gitignore:L11–18` 设计性忽略（B-E004）；三机器 basename 全树零命中（B-E048）。应然：`engine/harnesses/novel-conception-autonomous/docs/final-delivery-contract.md` L26–30 定 P1 为构思事实最终权威，其机器本体留存政策应有明示。影响：下游无法在仓库内消费机器包。版本：当前政策缺口（不作违约断言）。强度：直接留存（缺口事实）＋引用值。根因：入库政策未定。建议：Owner 裁决脱敏入库或另设留存库；**留存政策与路径缺陷（IC001/IC004）分别处理**。验证：裁决后复跑 basename 检索。归并：独立。
+- **B-IC009**（建议性，弱）写作目录局部口径提示。实际反证：`duanxian/README.md:L22–23` 已声明历史链与批准优先、旧 proposal L276 亦有非冻结说明——前稿“仓库缺历史口径声明”的判断予以撤回。剩余改进点：`duanxian/writing/` 文件内无就地提示，读者直达旧稿时可能误当现行设定。建议：writing 目录加局部 README 或迁移注。影响：低。版本：建议。强度：建议性归纳【推断】。验证：采纳后以评审确认。归并：可并入 IC004 迁移族或独立小项。
 
 ## 九、证据索引与自检记录
 
-证据登记（主项，均可在 BASE 定位）：B-E001 ls-tree 1444 分层计数与根 6 件；B-E004/B-E005 批准链哈希重算五组一致（html 80cfc4d8…、manifest bba81d35…、author_decision 4f5a070d…、completion 4eabd4af…、handoff d48194db…）；B-E006–B-E008 人审三投影、离线与预算核验；B-E009–B-E011 机器文件零匹配＋gitignore＋33 份 schema；B-E012–B-E018 旧链五运行门禁、trace 失败机制闭环、v2/v3 版本隔离；B-E019/B-E020 访谈链 11 件与简报投影；B-E021–B-E027 写作层四代对照、七类风险表、命名 lineage 与锚定缺陷；B-E028–B-E034 项目 CLI/测试/驱动/校验器静态核验（含存在性矩阵）；B-E035–B-E041 引擎 manifest/acceptance、技能 82、zip 分组、gitattributes、tasks、kun-workshop；B-E042 .zcode 重构计划；B-E043 双向零命中检索；B-E044 e2e fixture 分离注释。自检记录：报告为唯一新增文件，未修改任何既有文件，未创建 ISSUE；本轮未运行 CLI、pytest、构建或解包（宪法 out_of_scope），全部裁定来自静态阅读、本地哈希重算与路径解析；定义书 §6.1 两段机械脚本已在本提交前于仓库根运行，以 FILE-PASS/SCOPE-PASS 输出为准；秘密零打印零写入，凭据仅经命令替换用于本次推送且不入文件、日志与提交内容。限制声明：2.8MB 人审 JSON 按字段走查而非逐值重算全部 4602 条 drilldown 哈希；同构素材与技能源码以代表深读＋全目录结构化读取覆盖，比例与原因见第一节；所有关键结论均锚定于全文已读文件，未读部分不影响本报告任一裁定。
+**唯一键索引（B-E→完整路径＋定位）**：
+
+| 键 | 定位 |
+| --- | --- |
+| B-E001 | `duanxian/novel-goals.md`：六章＋S01–S23 索引；L25、L49–51、L79–89、L113–119 |
+| B-E002 | 根 `README.md:L5`（“81 个技能”声明） |
+| B-E003 | `engine/README.md:L9`（同 81）；L27（引擎内部以 engine/ 为根寻址） |
+| B-E004 | 根 `.gitignore:L11–18`（duanxian 运行账本目录忽略）；L19（.kunora/） |
+| B-E005 | 根 `.gitattributes:L3–23`（harnesses/novel-hld-autonomous/**/* 等旧根模式） |
+| B-E006 | `git check-attr --cached text eol` 三真实路径输出均 unspecified（命令记录） |
+| B-E007 | `duanxian/conception-approved/README.md`：L3 留存声明；L18/L21 终态 revision-038 与 SHA；L22 completion SHA |
+| B-E008 | `duanxian/conception-approved/author-decision.json`：/approval_scope、/decision、/run_id、/approval_record/text、/human_review_package/*、/machine_package/* |
+| B-E009 | `duanxian/conception-approved/conception-completion.json`：/status、/run_id、/author_decision/sha256、/p1_manifest、/development_handoff、/h1_html_manifest、/run_state、/stage_completions 九键（B0=774ac64a…、C1=83994b8d…、E1=b5d777c8…、H1=28ec088d…、P1=42e307d1…、Q1=4dab74a1…、S1=04d25ec9…、T1=6e462e88…、W1=dd719e9f…）、/validation/sha256、/review_path 五项 |
+| B-E010 | `duanxian/conception-approved/human-review-report.html`：sha256 见第三节；5 svg、0 外链、0 script |
+| B-E011 | `duanxian/conception-approved/human-review-report.json`：characters.constraints 等结构化字段 |
+| B-E012 | `duanxian/conception-approved/human-review-report.md`：L147/L169、L239–243、L251–255、L271/L283、L277–289、L295–309、L325–329、L382–389/L396、L423–427、L445–449、L468–475、L510–517、L524–531、L608–615 |
+| B-E013 | `duanxian/novel-text/2026-06-07-duanxian-novel.md`：L161、L183–199、L201–205、L407/L417、L464–476 |
+| B-E014 | `duanxian/design/workflow-docs/duanxian-narrative-contract.md`：L26、L28 |
+| B-E015 | `duanxian/design/workflow-docs/duanxian-intent-card.md`：L7–11、L31 |
+| B-E016 | `duanxian/design/specs/2026-07-05-duanxian-proposal.md`：L39、L45–46、L276 |
+| B-E017 | `duanxian/design/specs/2026-06-06-hld-digital-life-novel.md`：L10、L312–337 |
+| B-E018 | `duanxian/design/specs/2026-06-06-lld-digital-life-novel.md`：L36–39 |
+| B-E019 | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/manifest.md`：L12–15 |
+| B-E020 | 同 run `artifacts/12-hld-integrity-report.md`：L25、L32–34、L57–58 |
+| B-E021 | 同 run `artifacts/final-hld-package.md`：L20–22 |
+| B-E022 | 同 run `gate-report.md`（下一道人类评审门） |
+| B-E023 | 同 run `canonical-world-facts-v2.0.md`、`canonical-world-facts-v3.0.md` |
+| B-E024 | `duanxian/design/runs/lld/2026-07-08-duanxian-lld-workflow-blocked/manifest.md` |
+| B-E025 | `engine/docs/superpowers/runs/design/2026-07-08-hld-lld-design-task-dispatch/manifest.md` |
+| B-E026 | `duanxian/README.md`：L22–23 |
+| B-E027 | `duanxian/writing/` 17 件；`characters/2026-06-07-writer-R07.md` L13–16、L67–70、L88–91；`characters/2026-06-07-writer-qianxu.md` L1、L15 |
+| B-E028 | `duanxian/conception-production/run.py`：L14、L41–48、L51–55、L58–99、L123–135、L921–944 |
+| B-E029 | `duanxian/conception-production/tests/test_attempt_selection_cli.py` L12–13、L19–23；`test_line_sequence_review_cli.py`、`test_topology_review_cli.py` 同型 |
+| B-E030 | `duanxian/testing/run_duanxian_conception_v2.py`：L16–23、L27–35、L43–55 |
+| B-E031 | `engine/harnesses/novel-conception-autonomous/runtime/`：19 `.py`＝20446 行；production_orchestrator.py L3466–3497；production_store.py L617–620；author_decision.py L80–88、L202–255；return_routing.py L147–156；migration_handoff.py L1–6 |
+| B-E032 | `engine/docs/ai-novel-workflow/contracts/autonomous-v2/`：32 `.schema.json`＋contract-index.md |
+| B-E033 | `engine/skills/` 82 一级目录各含 SKILL.md；21 个 novel-hld-*；树内 test_*.py 56 |
+| B-E034 | zip 31 个、唯一 sha256 23、8 重复对（interview/autonomous/harness releases 族） |
+| B-E035 | 四 harness 文件数：interview 92/0、autonomous 107/25、hld-autonomous 152/12、kun-workshop 53/0 |
+| B-E036 | 实测 82 对 `README.md:L5`、`engine/README.md:L9` 的 81 |
+| B-E037 | `engine/harnesses/novel-hld-autonomous/manifest.yaml`：L1–27、L44–48 |
+| B-E038 | `engine/harnesses/novel-hld-autonomous/releases/0.1.0-acceptance.json` 与 `0.1.0.md` L3–5 |
+| B-E039 | `engine/scripts/validate_{design_tasks,hld_contract,hld_release,prd_contract,proposal_contract}.py`；对应 `engine/tests/test_validate_*.py` |
+| B-E040 | `engine/skills/novel-hld-writer/SKILL.md`：L3–5 |
+| B-E041 | `engine/testing/test_conception_autonomous_v2_contracts.py` L108/L130；`test_conception_autonomous_v2_e2e.py` L119 |
+| B-E042 | `engine/skills/novel-interview-b0-migrator/SKILL.md`：L2–10 |
+| B-E043 | `engine/docs/ai-novel-workflow/development-phase.md`：L137–152 |
+| B-E044 | `engine/harnesses/novel-conception-autonomous/docs/final-delivery-contract.md`：L26–30、L64–79 |
+| B-E045 | superpowers 旧根引用专项：79 文件 219 行（duanxian 31/88、engine 47/119；另根 1 文件 11 行） |
+| B-E046 | `.zcode/plans/plan-sess_316609e2-5263-4909-a27a-c47b17476339.md` |
+| B-E047 | `engine/harnesses/kun-workshop-intranet-delivery/README.md`：L11 |
+| B-E048 | 三机器 basename 全树零命中（`git ls-tree -r --name-only` 全名单精确匹配） |
+| B-E049 | 树总量 1444＝根 6＋duanxian 148＋engine 1290 |
+| B-E050 | 双向零命中：7 旧词×3 批准文件＝0；6 新名×canonical v3.0＝0；HLD-TRACE-CLOSURE 全树 2 文件 |
+
+**自检记录（F10 时序更正）**：定义书 §6.1 文件检查（UTF-8、6000–12000 中文字、九节、五口径、BASE 串、秘密/占位模式）在**提交前**对本文件运行，通过后连同 `git status --short --untracked-files=all`、`git diff --check` 作为提交前置门；**范围检查**（BASE..HEAD 单文件新增/修改、逐提交历史、HEAD 内文件与工作树一致）必须在**提交后**对完整候选运行，其结果连同完整提交号、报告 SHA-256、远端 SHA 写入交付交接，本报告不预写该通过状态。前稿“本提交前运行两段”的时序表述错误，予以更正。
+- 本轮执行边界：未运行仓库 CLI/pytest/validator/构建；除最终推送外无网络动作；未向忽略区写入业务文件；凭据零打印零写入，仅经命令替换引用并脱敏输出。
+- 剩余限制：全量逐字阅读未完成（第一节账目如实保留）；机器本体不可复验（第三节）；现实运行史不可判断（第四节）；以上缺口均不反向推断为“未发生”。
