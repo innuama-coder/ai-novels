@@ -44,11 +44,11 @@
 
 这本小说不能把构思批准扩写为整部小说完成。项目导览把正文标为草稿，并把推进方向写为 HLD→LLD；但 2026-07-13 旧 HLD manifest 的收敛状态仍是 `pending_hld_human_review`，gate 明确人审前不得进入 LLD。旧 proposal 中 Agent `pass` 与人审 `pending` 也属于当时阶段，既不能否定后来的构思批准，也不能替代新版 HLD 批准（【当前权威口径】，S01「目录」「权威与状态」；【历史/旧链口径】，S16「18 节」；S17；S18）。
 
-这本小说在冻结 Git 树中未找到完整 `novel-conception-package.json`、`development-handoff.json` 或 `hld-completion.json`，运行账本也按项目说明不入库；这是【未完成项】的留存证据缺口，不代表现实中不存在或此前批准无效（S02；G00「二、1. 从批准构思到可审校手稿」）。【流程规范】下一阶段必须取得并重验同版 P1 机器本体、开发 handoff、正式开发基线及运行证据，再经新版 HLD 的语义、消费和作者准入门（S06「2、4 节」；S13「2、4 节」）。法律身份、重载连续性与两国互信继续属于【当前权威口径】的开放边界（S05「开放边界」）；目标读者和最终篇幅则是【未完成项】（G00「一、3」「五、2」），都不能由本总结代答。
+这本小说在冻结 Git 树中未找到完整 `novel-conception-package.json`、`development-handoff.json` 或 `hld-completion.json`，运行账本也按项目说明不入库；这是【未完成项】的留存证据缺口，不代表现实中不存在或此前批准无效（S02；G00「二、3. 内容权威与呈现分离」）。【流程规范】下一阶段必须取得并重验同版 P1 机器本体、开发 handoff、正式开发基线及运行证据，再经新版 HLD 的语义、消费和作者准入门（S06「2、4 节」；S13「2、4 节」）。法律身份、重载连续性与两国互信继续属于【当前权威口径】的开放边界（S05「开放边界」）；目标读者和最终篇幅则是【未完成项】（G00「一、3」「五、2」），都不能由本总结代答。
 
 ### 来源索引
 
-- **G00** — `duanxian/novel-goals.md`：第一、四、五章及对应小节；G00 仅为本文件的目标文档引用键，不改变原 S 编号。
+- **G00** — `duanxian/novel-goals.md`：第一、二、四、五章及对应小节；G00 仅为本文件的目标文档引用键，不改变原 S 编号。
 - **S01** — `duanxian/README.md`：目录、权威与状态。
 - **S02** — `duanxian/conception-approved/README.md`：交付物、正式状态与留存范围。
 - **S03** — `duanxian/conception-approved/author-decision.json`：`approval_scope`、`decision`、`run_id`、`human_review_package`。
