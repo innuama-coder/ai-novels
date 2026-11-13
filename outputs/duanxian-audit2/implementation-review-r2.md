@@ -188,7 +188,7 @@ Markdown 行号均按 BASE 的工作树同版文件核对；JSON 使用原文件
 - 定义书 SHA-256：`ce034561ee6e2ed97295d6640349a916576c0a1e12584873e9657d89e87d0237`，与冻结预期一致。
 - 121 文件集合由 `git ls-tree -rz --name-only 92573f1cca40f37cee04d2beb8708ff33ba603d6 -- …` 重建；逐文件账见下。
 - 冻结机械检查实测 `MECHANICAL-PASS Chinese_chars= 8994 inventory= 121`：第一至八节中文字数在 8000—15000 内，九个二级标题逐字且顺序正确，五类标签、BASE 和全部 121 路径齐全，未命中秘密模式。
-- 冻结补充机械检查实测 `MECHANICAL-PASS bytes=71273`：报告 UTF-8 可解码，规定关键词齐全，未命中秘密模式。`git diff --check` 退出码 0。提交白名单在暂存后复核；IMPL 和远端 SHA 在交接回复中提供，不写入本文件形成自指。
+- 冻结补充机械检查实测 `MECHANICAL-PASS bytes=71277`：报告 UTF-8 可解码，规定关键词齐全，未命中秘密模式。`git diff --check` 退出码 0。提交白名单在暂存后复核；IMPL 和远端 SHA 在交接回复中提供，不写入本文件形成自指。
 
 ### 3. §6 语义检查单自检
 
