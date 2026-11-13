@@ -100,8 +100,8 @@
 | G-004｜设计 | 同上 §一.2、§四.1 | 批准 MD 周岚、程予安；JSON `/characters/supporting_characters/1`、`/2` | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/canonical-world-facts-v3.0.md` §5；`artifacts/04-character-system.md` HLD-04-04 | 旧 HLD 主稿 §3 | 历史设计 | 【历史/旧链口径】【未完成项】【推断】 | 不一致 | E2 | 周岚主动写入维护例外并关联攻击，触及批准禁止；复杂依恋、亲属责任与程予安功能均未建立当前对应 | F-003 |
 | G-005｜设计 | 同上 §四.1 | 批准 MD R-07 隔离套间、记忆沙箱；JSON `/world/environments/2/must_not_imply` | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/03-trunk-scenes.md` PRD-S06、S13；对照 `duanxian/design/workflow-docs/duanxian-narrative-contract.md` §4 | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/final-prd-package.md` §6 | 历史设计 | 【历史/旧链口径】【推断】 | 不一致 | E2 | PRD 明写当前光线、声音感知和“听见沉默”；七月叙述契约虽可复用，旧稿相反能力不能静默保留 | F-004 |
 | G-006｜设计 | 同上 §一.1、§四.1 | 批准 MD 跨国威胁处置、八次推进；JSON `/world/event_conditions/1` | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/canonical-world-facts-v3.0.md` §3—4；`artifacts/06-event-system.md` HLD-06-03—06 | `duanxian/design/workflow-docs/duanxian-development-map.md` M06—M09 | 历史设计 | 【历史/旧链口径】 | 部分一致 | E2 | 专家、模块、救援、授权、D+57 纠偏具体；17 人职责及当前 C/M 最低合作尚未逐项重映射 | F-006 |
-| G-007｜设计 | 同上 §四.2 | 批准 MD 第六阶段；JSON `/decision_controls/4` | `duanxian/design/workflow-docs/duanxian-narrative-contract.md` N1—N6、A2；`duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/07-time-information-system.md` HLD-07-06 | `duanxian/design/workflow-docs/duanxian-development-map.md` M05、M09 | 历史设计 | 【历史/旧链口径】 | 部分一致 | E2 | 旧契约的外部证据和 C5 后关闭内心很具体；C5/K9 与当前八阶段尚无正式映射，旧 PRD 事后知骗也需调整 | F-002 |
-| G-008｜设计 | 同上 §三.1、§四.1 | 批准 MD 第八阶段、唐黎、苏望舒；JSON `/world/environments/7/must_hold` | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/06-freeze-boundaries.md` PRD-FREEZE-09；`duanxian/design/specs/2026-06-06-hld-digital-life-novel.md` K9 | `duanxian/design/workflow-docs/duanxian-development-map.md` M09 | 历史设计 | 【历史/旧链口径】【推断】 | 部分一致 | E2 | 七月 M09 保留沈逾执行；旧 K9 与写作模板却让 R-07 自己关闭，静态保管与多人复核也未完整 | F-005 |
+| G-007｜设计 | 同上 §四.2 | 批准 MD 第六阶段；JSON `/decision_controls/4` | `duanxian/design/workflow-docs/duanxian-narrative-contract.md` N1—N6、A2；`duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/07-time-information-system.md` HLD-07-06 | `duanxian/design/workflow-docs/duanxian-development-map.md` M05、M09 | 历史设计 | 【历史/旧链口径】 | 不一致 | E2 | 旧契约的外部证据和 C5 后关闭内心很具体；C5/K9 与当前八阶段尚无正式映射，旧 PRD 事后知骗也需调整 | F-005 |
+| G-008｜设计 | 同上 §三.1、§四.1 | 批准 MD 第八阶段、唐黎、苏望舒；JSON `/world/environments/7/must_hold` | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/06-freeze-boundaries.md` PRD-FREEZE-09；`duanxian/design/specs/2026-06-06-hld-digital-life-novel.md` K9 | `duanxian/design/workflow-docs/duanxian-development-map.md` M09 | 历史设计 | 【历史/旧链口径】【推断】 | 不一致 | E2 | 七月 M09 保留沈逾执行；旧 K9 与写作模板却让 R-07 自己关闭，静态保管与多人复核也未完整 | F-005 |
 | G-009｜设计 | 同上 §三.1、§四.1 | 批准 MD 开放边界、苏望舒；JSON `/world/boundaries` | `duanxian/design/workflow-docs/duanxian-causal-storyline.md` §6；对照 `duanxian/design/specs/2026-06-06-prd-digital-life-novel.md` §7 | `duanxian/design/workflow-docs/duanxian-development-map.md` M10 | 历史设计 | 【历史/旧链口径】【未完成项】 | 部分一致 | E2 | 七月保留重载和两国未决；六月固定三部曲内容与“技术种子”不能升级为当前作者决定 | — |
 | G-010｜设计 | 同上 §五.2 | 批准 MD 八次推进、十线、17 人、43 事件；JSON `/visual_models/2` | `duanxian/design/workflow-docs/duanxian-development-map.md` M01—M10；`duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/final-prd-package.md` §4 | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/08-thread-system.md` 六线程 | 历史设计 | 【历史/旧链口径】【未完成项】 | 部分一致 | E2 | C/M/PRD-S/K 各有功能，但没有当前八阶段、十线、43 事件的正式映射；六线程不等于十线 | F-006 |
 | G-011｜设计 | 同上 §四.1、§五.2 | 批准 MD 17 人；JSON `/characters` | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/04-character-system.md` 全表；`duanxian/design/specs/lld/characters/` 七篇 | `duanxian/design/workflow-docs/duanxian-core-character-design.md` 双核心 | 历史设计 | 【历史/旧链口径】【未完成项】 | 部分一致 | E2 | 旧人物各自有动机和权限，但只覆盖少数当前功能；郑柏舟等无一一对应，17 人完整责任网未形成 | F-006 |
@@ -122,7 +122,7 @@
 | G-ID｜层次 | 目标路径+定位 | 批准路径+定位 | 设计路径+定位 | 实现路径+定位 | 材料版本/身份 | 五种口径标签 | 一致性 | 程度 | 证据限度 | 关联发现 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | G-001｜实现 | `duanxian/novel-goals.md` §一.1 | 批准 MD 顾衡、R-07；JSON `/decision_controls/0` | `duanxian/design/specs/lld/characters/2026-06-07-character-it.md` 角色功能 | `duanxian/novel-text/2026-06-07-duanxian-novel.md` 它·2“我看到了另一个”、它·3“这是我的”；`duanxian/writing/characters/2026-06-07-writer-R07.md` §5 | 旧素材／旧草稿 | 【历史/旧链口径】 | 部分一致 | E2 | 能证明新判断不同于前序，未覆盖当前八阶段主体形成与危机选择 | — |
-| G-002｜实现 | 同上 §一.1、§四.1 | 批准 MD 准入样片、核心实验室；JSON `/world/systems/1` | `duanxian/design/workflow-docs/duanxian-development-map.md` M02、M09 | 连续正文她·1直接操作；`duanxian/writing/characters/2026-06-07-writer-shenyu.md` K2 | 旧素材／旧草稿 | 【历史/旧链口径】【未完成项】 | 未覆盖 | E0 | 无受命、知情异议、团队启动、独立授权、现实行动或静态保管；直接操作不能替代这些责任 | F-008 |
+| G-002｜实现 | 同上 §一.1、§四.1 | 批准 MD 准入样片、核心实验室；JSON `/world/systems/1/must_hold`、`/world/environments/7/must_hold` | `duanxian/design/workflow-docs/duanxian-development-map.md` M02、M09 | `duanxian/novel-text/2026-06-07-duanxian-novel.md:58-76` 沈逾依次完成 M1—M6，`:421-443` R-07 自行关闭；`duanxian/writing/characters/2026-06-07-writer-shenyu.md` K2 | 旧素材／旧草稿 | 【历史/旧链口径】【推断】 | 不一致 | E2 | 沈逾独自完成激活与 R-07 自行终止均有明确相反命题，分别抵触她不是项目启动者和当前实例不能自行终止；其余受命、核验和保管仍缺 | F-010 |
 | G-003｜实现 | 同上 §一.2 | 批准 MD 沈逾、R-07 新感情；JSON `/characters/relationship_networks/0` | `duanxian/design/specs/lld/characters/2026-06-07-character-shenyu.md` 行为标记 | 连续正文她·4“害怕”问答；`duanxian/writing/characters/2026-06-07-writer-shenyu.md` K7 | 旧素材／旧草稿 | 【历史/旧链口径】 | 部分一致 | E2 | 一次非任务问答能支持关系萌芽，不能证明持续交流形成新感情及告别确认 | — |
 | G-004｜实现 | 同上 §一.2、§四.1 | 批准 MD 周岚、程予安；JSON `/characters/supporting_characters/1`、`/2` | 旧 LLD 仅有前序妻子/背叛者，无当前对应 | 连续正文未出现周岚、程予安；`duanxian/writing/characters/2026-06-07-writer-qianxu.md` 仅有妻子承诺 | 旧素材／旧草稿 | 【历史/旧链口径】【未完成项】 | 未覆盖 | E0 | 当前两位亲属的同意与在世状态均未写；泛称妻子不能替代程予安，旧维护例外未入正文 | F-008 |
 | G-005｜实现 | 同上 §四.1 | 批准 MD R-07 隔离套间；JSON `/world/environments/2/must_not_imply`、`/7/must_hold` | `duanxian/design/specs/lld/spaces/2026-06-07-space-digital-realm.md` 非物理空间 | 连续正文她·1记忆视觉片段、它·3会议室十秒；`duanxian/writing/spaces/2026-06-07-writer-digital-realm.md` §9 | 旧素材／旧草稿 | 【历史/旧链口径】【推断】 | 部分一致 | E2 | 视觉明确标为提取记忆，非当前感官；但它·3获知会议室沉默没有文字输入来源，当前知识通道未建立 | F-007 |
@@ -148,9 +148,9 @@ writing 素材也需分类使用。R-07、沈逾和前序人物稿提供语言�
 
 | 层次 | E0 未见承载 | E1 只有声明 | E2 局部落实 | E3 完整可核对 | EU | 有实质承载义务（含历史） | 明确不一致 |
 |---|---:|---:|---:|---:|---:|---|---:|
-| 构思层 | 0 | 0 | 3（G-010/013/014） | 11 | 0 | 14/14 | 1（G-013） |
+| 构思层 | 0 | 0 | 2（G-010/014） | 11 | 0 | 14/14 | 1（G-013） |
 | 设计层 | 1（G-013） | 0 | 13 | 0 | 0 | 13/14 | 4（G-004/005/007/008） |
-| 实现层 | 3（G-002/004/006） | 1（G-009） | 9 | 0 | 1（G-013） | 10/14 | 2（G-007/008） |
+| 实现层 | 2（G-004/006） | 1（G-009） | 10 | 0 | 1（G-013） | 11/14 | 3（G-002/007/008） |
 
 【未完成项】构思层的下一创作条件不是撤销批准，而是澄清两处呈现统计，并在可取得的正式机器包中复核十线、43 事件及其关系。设计层需要以当前 17 人、12 环境和八阶段重建 HLD/LLD 映射，优先解决亲属、感知、终止和披露四类硬冲突，再复用旧因果功能与空间素材。实现层需要按当前批准设计形成连续正文，先补受命与双前置，再补分层核验、现实阻断、沈逾执行的告别和静态保管，不能用润色旧终止段替代结构创作。
 
@@ -169,10 +169,11 @@ writing 素材也需分类使用。R-07、沈逾和前序人物稿提供语言�
 | F-005 | 设计与实现/G-005、G-007、G-008/P0 | 目标 §四.1及批准 JSON `/world/environments/7/must_hold` 禁止自行终止，`/decision_controls/4` 禁止提前展示；旧 K9、`duanxian/writing/characters/2026-06-07-writer-R07.md` 片段 D、正文它·3均自行关闭并直示“选择：终止” | 历史设计与旧正文冲突；影响执行者、告别、披露和静态保管。设计责任在终局/场景，正文须按新版重作；保留 R-07 选择结束与沈逾执行的区别 | E2 | 是 |
 | F-006 | 设计/G-006、G-010—012、G-014/P1 | 目标 §五要求结构可核对，批准 MD 有 17 人、12 环境、八阶段；旧 HLD `artifacts/04-character-system.md` 和 `05-environment-system.md` 仅部分人物空间，旧 K 系又多为模板 | 当前目标未落实；旧危机链丰富但人物、环境、事件与正式 ID 未重建。责任在正式 HLD/LLD，不以历史 covered 代替当前覆盖 | E2 | 否（系统性设计未完成项，先重建映射） |
 | F-007 | 实现/G-005、G-011/P1 | 目标 §四.1限定文字知识且 17 人已定；正文它·3无文字来源获知会议室沉默，并明确郑柏舟与遇袭直接关联；批准 17 人无郑柏舟 | 旧正文新增知识/人物事实；影响信息公平和人物授权。需查其历史设计依据并标新增/适配待核，不能把主管职位当映射证据 | E2 | 是 |
-| F-008 | 实现/G-002、G-004、G-006、G-009—012/P1 | 目标 §一.1、§三.1、§四.1要求完整选择链；508 行正文只有早期转移、异常访问、审查与终止，writing 17 份也无当前危机闭环 prose | 当前正文未完成；影响受命、亲属、现实阻断、开放余波和多数角色环境。责任在连续创作而非单句修订；不能以批准样片抵补 | E0—E2 | 否（创作未完成项） |
+| F-008 | 实现/G-004、G-006、G-009—012/P1 | 目标 §一.1、§三.1、§四.1要求完整选择链；508 行正文只有早期转移、异常访问、审查与终止，writing 17 份也无当前危机闭环 prose | 当前正文未完成；影响受命、亲属、现实阻断、开放余波和多数角色环境。责任在连续创作而非单句修订；不能以批准样片抵补 | E0—E2 | 否（创作未完成项） |
 | F-009 | 实现/G-007、G-014/P2 | 目标 §五.3要求知识连续；正文“她·4”先写 R-07 的输入模式分析再写沈逾，标题聚焦不清；同篇记忆片段则有明确“提取的记忆”标记 | 局部视角连续性风险；不应误判所有视觉为当前感官。责任在正文视角标记与段落整理；反证条件是标题仅作交替编号而非聚焦声明 | E2 | 是（低优先级，可随正文适配整理） |
+| F-010 | 实现/G-002/P0 | 目标 §一.1、§四.1要求责任分立；批准 JSON `/world/systems/1/must_hold` 明确沈逾不是项目启动者，`/world/environments/7/must_hold` 明确当前实例不能自行终止；`duanxian/novel-text/2026-06-07-duanxian-novel.md:58-76` 写沈逾依次完成 M1—M6 激活，`:421-443` 写 R-07 自行关闭 | 旧正文明确权限冲突；分别影响启动责任与关停执行，不再按单纯未覆盖处理。责任在正文权限与终局设计；其余受命、核验和保管缺口仍归 F-008 | E2 | 是 |
 
-交接建议只指定责任，不预写故事：先由构思/呈现责任方处理 F-001；正式 HLD 处理 F-002—F-004 和 F-006；终局设计与连续正文共同处理 F-005、F-007—F-009。C 后续可整理 F-001—F-005、F-007、F-009，其中 F-002 必须先确认 preserved-open 的语义范围；F-006、F-008 是正常创作未完成项，不应为凑数转缺陷。证据不足或开放项（重载、法律身份、长期互信、读者画像、章数和总字数）均保留给作者。
+交接建议只指定责任，不预写故事：先由构思/呈现责任方处理 F-001；正式 HLD 处理 F-002—F-004 和 F-006；终局设计与连续正文共同处理 F-005、F-007—F-010。C 后续可整理 F-001—F-005、F-007、F-009、F-010，其中 F-002 必须先确认 preserved-open 的语义范围；F-006、F-008 是正常创作未完成项，不应为凑数转缺陷。证据不足或开放项（重载、法律身份、长期互信、读者画像、章数和总字数）均保留给作者。
 
 ## 九、证据索引与自检记录
 
@@ -186,8 +187,8 @@ Markdown 行号均按 BASE 的工作树同版文件核对；JSON 使用原文件
 
 - 定义书 SHA-256：`ce034561ee6e2ed97295d6640349a916576c0a1e12584873e9657d89e87d0237`，与冻结预期一致。
 - 121 文件集合由 `git ls-tree -rz --name-only 92573f1cca40f37cee04d2beb8708ff33ba603d6 -- …` 重建；逐文件账见下。
-- 冻结机械检查实测 `MECHANICAL-PASS Chinese_chars= 8869 inventory= 121`：第一至八节中文字数在 8000—15000 内，九个二级标题逐字且顺序正确，五类标签、BASE 和全部 121 路径齐全，未命中秘密模式。
-- 冻结补充机械检查实测 `MECHANICAL-PASS bytes=70541`：报告 UTF-8 可解码，规定关键词齐全，未命中秘密模式。`git diff --check` 退出码 0。提交白名单在暂存后复核；IMPL 和远端 SHA 在交接回复中提供，不写入本文件形成自指。
+- 冻结机械检查实测 `MECHANICAL-PASS Chinese_chars= 8994 inventory= 121`：第一至八节中文字数在 8000—15000 内，九个二级标题逐字且顺序正确，五类标签、BASE 和全部 121 路径齐全，未命中秘密模式。
+- 冻结补充机械检查实测 `MECHANICAL-PASS bytes=71273`：报告 UTF-8 可解码，规定关键词齐全，未命中秘密模式。`git diff --check` 退出码 0。提交白名单在暂存后复核；IMPL 和远端 SHA 在交接回复中提供，不写入本文件形成自指。
 
 ### 3. §6 语义检查单自检
 
