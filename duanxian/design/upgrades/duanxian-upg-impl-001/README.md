@@ -45,4 +45,5 @@
 
 ## 版本
 
-- v1.0（首次实施候选；LOOP 预算=首次＋最多两次定向修订）。修订即递增包版本并使旧 manifest/回归结果失效。
+- v1.1（r2 定向修订，ACC-R1-01）：manifest `dependency_refs.definition_sha256` 由抄录失实改为对定义书实际字节实算（＝f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52，与 `00` 一致）；实施自检 C11 扩展覆盖 dependency_refs 双 hash 实算核验。本次仅更新 README／13／manifest 三文件，其余 13 文件字节不变。
+- v1.0（首次实施候选；LOOP 预算=首次＋最多两次定向修订）。修订即递增包版本并使旧 manifest/回归结果失效——v1.0 的 manifest 与 `13` 回归绑定已随本次修订失效。

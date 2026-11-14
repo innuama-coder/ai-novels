@@ -2,8 +2,8 @@
 
 - 包：`duanxian-upg-impl-001`。本文件是**实施者自检**记录；第三步（duanxian-upg-acc-001）必须独立重做而非照抄本表。
 - 允许值（两列各自取值，互不覆盖）：`PASS / FAIL / BLOCKED_OWNER / BLOCKED_EVIDENCE / DEFERRED_ENGINEERING / PENDING_WRITING`。不得把未执行记为 PASS。
-- 绑定：本表结果绑定本包首版候选提交与 `manifest.json`（15 文件实际字节实算）；修订后旧结果失效。
-- 机械核对：自检器共 73 项检查（C1–C12：存在性/JSON/CSV 结构与行数/07 时序/交叉引用闭合/12 映射/历史指称语境/秘密扫描/manifest 复算/git 白名单），除依赖本表定稿的项外全部通过；本表定稿并再生成 manifest 后复跑为 **TOTAL=73 FAIL=0**（见 §C-3 复现记录）。
+- 绑定：本表结果绑定 v1.1 候选提交（r2 定向修订后）与 `manifest.json`（15 文件实际字节实算）；v1.0 结果已随 r2 修订失效，其后每次修订同样使本表失效。
+- 机械核对：自检器共 74 项检查（C1–C12：存在性/JSON/CSV 结构与行数/07 时序/交叉引用闭合/12 映射/历史指称语境/秘密扫描/manifest 复算＋dependency_refs 实算核验/git 白名单），除依赖本表定稿的项外全部通过；本表定稿并再生成 manifest 后复跑为 **TOTAL=74 FAIL=0**（见 §C-3 复现记录）。
 
 ## A. 执行记录（定义书 §5 步骤 0–10，逐步登记）
 
@@ -103,7 +103,7 @@
 | D | 条件门→节点定位（D01→PROTECTION、D02→R15、D03→FAREWELL；五门齐全） | PASS |
 | E | 旧资产入口唯一（02 十六处置行＋03 22 行 BASE 统一＋12 无旧 run 状态引用） | PASS |
 
-复现记录：本表定稿并再生成 manifest 后，对最终冻结候选复跑自检器与 NEG 七例，结果与本表一致（TOTAL=73 FAIL=0；NEG 7/7 检出）。
+复现记录：本表定稿并再生成 manifest 后，对最终冻结候选复跑自检器与 NEG 七例，结果与本表一致（TOTAL=74 FAIL=0；NEG 7/7 检出；r2 修订后同样复现）。
 
 ## D. 缺口与未决清单
 
@@ -122,5 +122,6 @@
 2. `07` 三处生成缺陷 → 脚本校验发现后修正：表头 `witheld_reason`→`withheld_reason`；UPG-IO-15 的 event_id 误植串复位；UPG-IO-21/22/23 的 sent_at 由「E-11.3（封存）」改为「E-10.4（内容形成）」（封存点移至 received_at，保持发送≤接收≤使用）。
 3. `01` 生成期控制 ID 前缀重复（SUBJECT/RHYTHM 各 ×2）与七个 E01 平面指针统一误标 L81 → 修正为独立前缀（LINE-n/CONN-n/MEVT-n）与 L81–L87 逐行指针；修后 72 控制零重复。
 4. 演练脚本初版把 REC 披露探针误标到 #13（实为 #10）且 E3 断言过字面 → 修正演练侧断言；包内文件经核对无对应错误（演练缺陷如实记录，不回写为包缺陷）。
+5. r2 定向修订（ACC-R1-01，独立验收 verdict=FAIL 的唯一缺陷）：manifest `dependency_refs.definition_sha256` 抄录失实（f2474997a235…4a52，全树无对应字节，与 `00` 正确值自相矛盾）→ 生成器改为对定义书实际字节实算（＝f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52，70796 字节）；实施自检 C11 相应扩展至 dependency_refs 双 hash（definition/issue_snapshot）实算核验，堵住「manifest 生成时抄录失实而自检不覆盖 dependency_refs」的缺口。本次修订仅触 README／本文件／manifest 三文件。
 
-LOOP 修订计数：首次实施完成，**0 次定向修订**；包版本 v1.0。
+LOOP 修订计数：首次实施＋**1 次定向修订（r2／ACC-R1-01）**；包版本 v1.1（LOOP 预算内余 1 次定向修订额度）。

@@ -6,7 +6,7 @@
   "note": "hash 覆盖 15 个文件的实际 UTF-8 字节；manifest.json 自身不自哈希（再生成即覆盖本文件）。",
   "dependency_refs": {
     "definition": "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md @ 4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
-    "definition_sha256": "f2474997a235cd438084654090686d298d334c0e28b5ab912d43b40c571a4a52",
+    "definition_sha256": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52",
     "evidence_base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
     "issue_snapshot": ".kunora/inputs/open-issues-snapshot-20261114.md",
     "issue_snapshot_sha256": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67"
@@ -14,8 +14,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 3901,
-      "sha256": "267f0ed396cf2035b299efe193ff1cf0a613f7d22d07fee49a82794ae6f57594"
+      "bytes": 4355,
+      "sha256": "4759f22e2d7f0834a1ddbb23b3079a37b7d73bead758ecc4fda0a2d863fcbaca"
     },
     {
       "path": "00-baseline-and-authority.json",
@@ -84,8 +84,8 @@
     },
     {
       "path": "13-regression-results.md",
-      "bytes": 19564,
-      "sha256": "109d3fbb809b1d4009c17ea7390c5b271c0f1c63d5079257eae275beae2dfb5f"
+      "bytes": 20364,
+      "sha256": "78b5befcfea9869995a85ce70f5529918c5e9876cdab7f32fc7379e580a7ec0b"
     }
   ]
 }
