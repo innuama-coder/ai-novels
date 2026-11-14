@@ -8,7 +8,7 @@
 ## 这不是什么（先读）
 
 1. **不是**正式 HLD/LLD 准入凭证，**不是** `lld-handoff.json`，**不是**任何 stage completion——正式 HLD 生产若获授权须从重验通过的 canonical 机器基线进入（#7 门未过，本包不冒充）。
-2. **不是**重新批准构思；作者批准权不受本包影响（D01–D03 均 `owner_pending`，见 `11-owner-decisions.md`）。
+2. **不是**重新批准构思；作者批准权不受本包影响（D01–D03 均已签认＝A，2026-11-14，见 `11-owner-decisions.md` §决定记录；其持续约束——新袭击机制/物证/责任人细化与任何显名边界——仍须作者另行审定）。
 3. **不是**正文：旧正文零改动；`10-text-adaptation-map.csv` 全部 `writing_status=PENDING_WRITING`。
 4. **不宣称**任何 GitHub ISSUE 已关闭；不宣称「所有 ISSUE 已解决」。处置权在 Owner。
 
@@ -16,9 +16,9 @@
 
 | 面 | 状态 |
 | --- | --- |
-| 包状态 | candidate_for_independent_acceptance（候选，交第三步 duanxian-upg-acc-001 独立验收） |
-| 设计层 | 16 文件齐备（本 README＋15）；自检见 `13-regression-results.md` |
-| 正式 HLD 准入 | blocked_by_evidence_and_pending_gates（#7 机器本体取证；#5 替代记录已立但正式人审另议；#6 歧义保留；D01–D03 待签） |
+| 包状态 | candidate_for_independent_acceptance（候选，交第三步下一轮独立验收） |
+| 设计层 | 16 文件齐备（本 README＋15）；自检见 `13-regression-results.md`（含 r4 Owner 追加轮记录） |
+| 正式 HLD 准入 | blocked_by_evidence_gates（#7 机器本体取证；#5 替代记录已立但正式人审另议；#6 歧义保留；D01–D03 已签认＝A，2026-11-14） |
 | 正文 | 未授权（PENDING_WRITING） |
 | 工程（#1/#2/#4/#6） | DEFERRED_ENGINEERING（另行授权处置） |
 
@@ -26,7 +26,7 @@
 
 **下游只从本包消费设计，不得到旧目录自行拼材料**（旧 run `pass/canonical/covered` 字样一律不得引用）：
 
-1. `README.md`（本文件）→ 2. `00-baseline-and-authority.json`（基线/权威/缺口）→ 3. `01-control-register.json`（批准控制原子登记）→ 4. `02-legacy-disposition.md`＋`03-source-migration.csv`（旧资产唯一入口）→ 5. `11-owner-decisions.md`（条件分支）→ 6. `04`/`05`（人物/能力证据）→ 7. `06`/`07`（因果/信息）→ 8. `08`（终局/POV）→ 9. `09`/`10`（场景/逐段适配）→ 10. `12-traceability-and-handoff.json`（追踪与交接）→ 11. `13-regression-results.md`＋`manifest.json`（验证锚）。
+1. `README.md`（本文件）→ 2. `00-baseline-and-authority.json`（基线/权威/缺口）→ 3. `01-control-register.json`（批准控制原子登记）→ 4. `02-legacy-disposition.md`＋`03-source-migration.csv`（旧资产唯一入口）→ 5. `11-owner-decisions.md`（决定记录：D01–D03 已签认＝A，2026-11-14）→ 6. `04`/`05`（人物/能力证据）→ 7. `06`/`07`（因果/信息）→ 8. `08`（终局/POV）→ 9. `09`/`10`（场景/逐段适配）→ 10. `12-traceability-and-handoff.json`（追踪与交接）→ 11. `13-regression-results.md`＋`manifest.json`（验证锚）。
 
 ## 当前批准引用（Authority）
 
@@ -36,15 +36,16 @@
 
 - 七月 HLD run（含 canonical-world-facts-v3.0）＝历史证据，仅经 `02` 处置表进入；其 `pending_hld_human_review`/`blocked_revision_required`/P1-open 状态原样有效（`02` §C/D）。
 - 六月 PRD/LLD/写作素材/正文＝历史链；17 个旧路径引用与 5 个旧章节指称的映射见 `03`（路径可达≠内容获准复用）。
-- 周岚参与链（维护例外/周启明/纬线链/D+58）pending D01，A 候选下整体退出；郑柏舟支线 pending D02，A 候选下退出且**禁止**换名为罗景明；完整记忆/像素重建/自行关停/会议室十秒依赖＝已撤出新版设计（详见 `02`/`10`）。
+- 周岚参与链（维护例外/周启明/纬线链/D+58）已按 D01-A（签认 2026-11-14）整体退出新版；郑柏舟支线已按 D02-A（签认 2026-11-14）退出且**禁止**换名为罗景明（身份披露上限＝L2 归属、无姓名指称）；完整记忆/像素重建/自行关停/会议室十秒依赖＝已撤出新版设计（详见 `02`/`10`）。
 
 ## 验证锚
 
 - 文件级：`manifest.json`（逐文件 bytes/sha256，对实际 UTF-8 字节实算；manifest 自身不自哈希）。
-- 内容级：`13-regression-results.md`（REG-01..13 双列＋NEG 七例＋r3 新增负例六例＋22 行迁移表＋消费演练；实施者自检，第三步独立重做）。
+- 内容级：`13-regression-results.md`（REG-01..13 双列＋NEG 七例＋r3 新增负例六例＋r4 Owner 追加轮记录（ACC2-001..003＋D01/D02/D03 签认）＋22 行迁移表＋消费演练；实施者自检，第三步独立重做）。
 
 ## 版本
 
+- v1.3（r4 Owner 追加修订轮，ACC2-001..003＋D01/D02/D03 签认；**非原预算内**，授权依据＝定义书 §4.3＋Owner 2026-11-14 裁决）：第三步二验（duanxian-upg-acc2-001）修正单三条全量执行——ACC2-001 重写 `12` entries/50/65/71 三处控制映射失读（LIFE＝贯穿实验全程的生命条件而非仅 S6 时点；FRAGMENTS-EVIDENCE＝六阶段样章覆盖而非空场景；CONN-1＝悬念/视角义务而非 IO-11 私人转述通道），`04` §R18 改为组级/人物级双口径 BFS 复算（组级＝批准三层 2+6+4+5；人物级六层 2/7/4/2/1/1；18 条树内 REL 覆盖、5 条未挂 REL 登记为 GAP-MACHINE #7 证据依赖），`05` §E2 增「创作样章片段 vs 叙事内记忆片段」概念区分注；ACC2-002 重述 `07` IO-09 材料来源＝项目运行管理记录（排班/出勤/操作登记，**非实例日志**；条目形成=E-04、调取=E-06.2，时序成立≠能力证明）并同步 `06` E-04／`09` REVIEW／`10` M-25；ACC2-003 拆分 `06` UPG-E-11 事件入口前提与 E-11.1→E-11.2→E-11.3 子动作偏序（IO-17/19/19.1 分记）并同步 `08` §A／`09` FAREWELL／`10` M-23；Owner 于 2026-11-14 签认 D01-A/D02-A/D03-A（`11` §决定记录，受控引用＝duanxian-upg-impl3-001 冻结契约 Owner 口径段），原 conditional_on_D0X 节点在 00/02/03/04/06/07/08/09/10/11/12 全部定稿，`00` 门「D01–D03 Owner 签认」＝passed、GAP-OWNER 解除（持续约束保留）。manifest 全量重算；v1.2 的 manifest 与 `13` 回归绑定已随本次修订失效。
 - v1.2（r3 修订，ACC-001..006）：第三步独立验收修正单六条全量执行——`01` 补登三条遗漏控制（RELATIONS／COVERAGE／CHAR-BOUNDARIES，源=E02 人审报告）并以 `04` §R18 落点（EDGE-CHAR 最短距离复算＝核心 2＋6＋4＋5＝17）；`07` 台账增至 35 行（新增 IO-06.0/16.1/19.1/21V；项目获知与实例获知分记；REC-1 主观记录与 REC-1V 核验批注分栏）；`08` 新增 §A-2 终局知识对象表（KO-1..KO-4，S2 请求可见≠意图确认）并修正两版旧终局负例分栏（六月＝未落实 E10:123；七月真早知证据唯一指认 E07:26，:40 anchor≠reveal）；D02「A 候选定值、未签认不生效」在 06/07/09/10/11/12 六处门禁统一；`13` 按定义书旁挂路线改判 REG-03=PASS、REG-06=DEFERRED_ENGINEERING（责任=历史记录核实，不断言与 #7 同源）。manifest 全量重算；v1.1 的 manifest 与 `13` 回归绑定已随本次修订失效（LOOP 计数=2，定向修订预算用尽）。
 - v1.1（r2 定向修订，ACC-R1-01）：manifest `dependency_refs.definition_sha256` 由抄录失实改为对定义书实际字节实算（＝f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52，与 `00` 一致）；实施自检 C11 扩展覆盖 dependency_refs 双 hash 实算核验。本次仅更新 README／13／manifest 三文件，其余 13 文件字节不变。v1.1 的 manifest 与回归绑定已随 r3 修订失效。
 - v1.0（首次实施候选；LOOP 预算=首次＋最多两次定向修订）。修订即递增包版本并使旧 manifest/回归结果失效——v1.0 的 manifest 与 `13` 回归绑定已随本次修订失效。

@@ -30,28 +30,34 @@
  "blocks_and_pauses": [
   {
    "gate": "D01",
+   "status": "resolved",
+   "resolution": "Owner 已签认＝A（approved，2026-11-14）；决定记录见 11 §D01（受控引用＝duanxian-upg-impl3-001 冻结契约 Owner 口径段）",
    "nodes": [
-    "06-UPG-E-05 原因层子字段（A 候选定值，未签认不生效；B 分支差异已登记——ACC-005 r3）",
-    "09-UPG-S-PROTECTION 原因层机制块（同上；分支无关公共块可消费）",
-    "10-UPG-M-01/02 分支差异"
+    "06-UPG-E-05 原因层子字段（D01-A 定稿：保护理由＝无辜关联暴露，无任何参与前提；B 分支差异仅存 02 历史登记，不生效）",
+    "09-UPG-S-PROTECTION 原因层机制块（同上定稿；分支无关公共块不变）",
+    "10-UPG-M-01/02 分支差异（按 A 定稿）"
    ],
-   "effect": "上述条件节点不得写成确定稿；共同门槛（公共救援/解耦/同意结构）与分支无关节点正常消费"
+   "effect": "上述节点现为确定设计，可无条件消费；持续约束（非本门禁）：D01-A 下新袭击机制/物证/责任人细化仍须作者另行审定（11 纪律项），该类细化重新进入决策点流程"
   },
   {
    "gate": "D02",
+   "status": "resolved",
+   "resolution": "Owner 已签认＝A（approved，2026-11-14）；决定记录见 11 §D02（受控引用同上）",
    "nodes": [
-    "06-UPG-E-07 责任归属子字段（A 候选定值，未签认不生效；B 分支差异已登记——ACC-005 r3）",
-    "09-UPG-S-VERIFY 结论披露块（A 候选：不得生成确定归属或删角；核验门槛与分级结构分支无关）",
-    "07-UPG-IO-24.3 的 receiver/reader_reveal（A 候选定值；24.1/24.2 的 L0/L1 结构分支无关可消费）",
-    "08 REC-1V 的 L2 级内容披露上限（A 候选）",
-    "10-UPG-M-13/19/22/24/26/27 分支差异"
+    "06-UPG-E-07 责任归属子字段（D02-A 定稿：旧出卖者支线退出，功能由已批职责承载，不按职务自动映射、不预认定罪）",
+    "09-UPG-S-VERIFY 结论披露块（定稿：披露上限＝读到 L2 归属、无姓名指称；核验门槛与分级结构不变）",
+    "07-UPG-IO-24.3 的 receiver/reader_reveal（按 A 定稿；24.1/24.2 的 L0/L1 结构不变）",
+    "08 REC-1V 的 L2 级内容披露上限（按 A 定稿）",
+    "10-UPG-M-13/19/22/24/26/27 分支差异（按 A 定稿）"
    ],
-   "effect": "同上；本门禁与 11 依赖汇总 D02 行逐项一致（ACC-005 r3）"
+   "effect": "上述节点现为确定设计；本门禁与 11 依赖汇总 D02 行逐项一致（r4）；持续约束：D02-A 下任何显名边界变化须新的 Owner 决策"
   },
   {
    "gate": "D03",
+   "status": "resolved",
+   "resolution": "Owner 已签认＝A（approved，2026-11-14）；决定记录见 11 §D03（受控引用同上）",
    "nodes": [],
-   "effect": "A 路径无新增事实；若 Owner 提 B 机制则 08/09 终局节点回构思阶段"
+   "effect": "A 路径无新增事实（06-UPG-E-10/E-11 与 08/09 终局单元已按 A 定稿，含 E-11.1→E-11.2→E-11.3 子动作偏序——ACC2-003）；若 Owner 此后要求任何 B 类机制（告警/承诺条件/记录释放），受影响节点转 BLOCKED_OWNER 并回构思阶段"
   },
   {
    "gate": "#7 机器本体",
@@ -844,13 +850,20 @@
     "control_id": "UPG-CTRL-LIFE",
     "source_pointer": "/world/event_conditions/0",
     "design_fields": [
-     "06-UPG-E-10/11（评估→请求→执行链）",
-     "08§A S1–S5 行＋§A-2 KO-2 行（推导：生命条件决定意图确认唯一时点=S6）"
+     "06-UPG-E-02/E-03/E-04/E-10/E-11/E-13 source_ids 与 cost/preconditions 字段（ACC2-001 纠正：LIFE 约束贯穿实验全程——启动→运行→偏离→评估→请求→授权→执行→保管，非仅终局时点；must_not_imply「不得把加载、运行、关停和重载合并成一个按钮」落在 E-11 子动作偏序）",
+     "08§A S1–S6 状态机全表＋§A-2 KO-2 行＋§F 保管边界（推导：生命伦理责任决定各认知状态转移次序与终局后保管，非仅「意图确认唯一时点=S6」）",
+     "04§R0/R1（推导：实验过程同时产生情报价值与生命伦理责任＝主体与沈逾职责行的双面约束）",
+     "07-UPG-IO-05/IO-12/IO-17/IO-21/IO-22（推导：台账中承载实验各阶段与终止序列的信息对象，其 sent/received/披露次序受本控制）"
     ],
     "scene_units": [
-     "UPG-S-FAREWELL"
+     "UPG-S-OPEN",
+     "UPG-S-AWAKE",
+     "UPG-S-REVIEW",
+     "UPG-S-FAREWELL",
+     "UPG-S-AFTERMATH"
     ],
     "regression_ids": [
+     "REG-09",
      "REG-10"
     ],
     "status": "approved_constraint"
@@ -1059,11 +1072,22 @@
     "control_id": "UPG-CTRL-FRAGMENTS-EVIDENCE",
     "source_pointer": "/decision_controls/7",
     "design_fields": [
-     "01 projection_note",
-     "05§E2/E4"
+     "01 projection（must_hold「片段只验证构思，不新增权威事实」；statement「六个样章片段覆盖前置、启动、关系、低谷、行动和告别的阅读体验」）",
+     "02/03 入口纪律（样章片段只经 UPG-LEG 处置表与 03 迁移表作为作者层设计证据进入消费，不得直接复用为叙事内事实）",
+     "05§E2 概念区分注（ACC2-001：创作样章片段≠叙事内记忆片段，两概念不得互相改写证据地位）",
+     "08§C 外部迹象清单与 09 场景单元（推导：六阶段阅读体验以场景覆盖承接——前置=OPEN、启动=AWAKE、关系=PROTECTION、低谷=REVIEW、行动=VERIFY+BLOCKADE、告别=FAREWELL；phase→unit 映射为设计推导）"
     ],
-    "scene_units": [],
+    "scene_units": [
+     "UPG-S-OPEN",
+     "UPG-S-AWAKE",
+     "UPG-S-PROTECTION",
+     "UPG-S-REVIEW",
+     "UPG-S-VERIFY",
+     "UPG-S-BLOCKADE",
+     "UPG-S-FAREWELL"
+    ],
     "regression_ids": [
+     "REG-03",
      "REG-13"
     ],
     "status": "approved_constraint"
@@ -1137,11 +1161,20 @@
     "control_id": "UPG-CTRL-CONN-1",
     "source_pointer": "/storylines/connections/1",
     "design_fields": [
-     "07-UPG-IO-11 沈逾转述行（推导：该连接=私人转述通道的信息承载对象）"
+     "01 projection（must_hold「告别前只展示 R-07 可观察迹象和过程性心理」；consumers 06/07——r4 纠正 ACC2-001：本控制对象＝悬念/视角义务，v1.2 曾误读为「IO-11 私人转述通道的信息承载对象」，该读法废止）",
+     "06-UPG-E-10/E-11 source_ids 与 conditional_notes（两事件的 R-07 侧呈现义务由本控制直接约束）",
+     "07-UPG-IO-11/12/17（推导：转述/自记/终止请求文字只是执行本控制的信息器械，约束其呈现时点与视角；不与任何单一 IO 行画等号）",
+     "08§A S1–S2 行＋§A-2 KO-1 行＋§C 外部迹象清单（推导：「告别前只展示可观察迹象」义务的直接设计载体）",
+     "05§E3 推断上限（R-07 对沈逾处境的推断限于已接收文字＋可观察迹象）",
+     "04§R0 主体定义行（过程性心理呈现边界）"
     ],
-    "scene_units": [],
+    "scene_units": [
+     "UPG-S-REVIEW",
+     "UPG-S-FAREWELL"
+    ],
     "regression_ids": [
-     "REG-08"
+     "REG-10",
+     "REG-11"
     ],
     "status": "approved_constraint"
    },
@@ -1272,7 +1305,7 @@
     "11-D01"
    ],
    "regression": "REG-08",
-   "closure_state": "设计候选（D01-A）；正文 PENDING_WRITING"
+   "closure_state": "设计定稿（D01-A 已签认 2026-11-14，11 §D01）；正文 PENDING_WRITING"
   },
   {
    "issue": 9,
@@ -1296,7 +1329,7 @@
     "11-D03"
    ],
    "regression": "REG-10",
-   "closure_state": "设计层闭合；正文 PENDING_WRITING"
+   "closure_state": "设计层闭合（D03-A 已签认 2026-11-14；E-11 子动作偏序按 ACC2-003 拆分）；正文 PENDING_WRITING"
   },
   {
    "issue": 11,
@@ -1321,7 +1354,7 @@
     "11-D02"
    ],
    "regression": "REG-12",
-   "closure_state": "BLOCKED_OWNER（D02）；正文 PENDING_WRITING"
+   "closure_state": "设计定稿（D02-A 已签认 2026-11-14，11 §D02：无 L3 指称、不预认定罪；原 BLOCKED_OWNER 解除）；正文 PENDING_WRITING"
   },
   {
    "issue": 13,

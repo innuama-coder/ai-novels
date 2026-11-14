@@ -14,13 +14,13 @@
  "files": [
   {
    "path": "README.md",
-   "bytes": 5446,
-   "sha256": "bd3b55f861b4e05d9f0a2aa8941a63d0460dc317095462111e04cdb0e69b2c7b"
+   "bytes": 7371,
+   "sha256": "6aea4496107af171c871afaa76f06893492a1a05372bbf718b9aeb9e198d1c34"
   },
   {
    "path": "00-baseline-and-authority.json",
-   "bytes": 10413,
-   "sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2"
+   "bytes": 10879,
+   "sha256": "da529f82c065972e152fe054aeb1e5ba438ab952bedc71c34a67f254c81e390a"
   },
   {
    "path": "01-control-register.json",
@@ -29,63 +29,63 @@
   },
   {
    "path": "02-legacy-disposition.md",
-   "bytes": 17543,
-   "sha256": "bad0771e70524939606e94179cc8fe29ff25cb675a9afb3eb98fa2d32bfc6c95"
+   "bytes": 19002,
+   "sha256": "1007a94204e5b401f2a7ad43ab41d6014a9430030424fc431ce6a9a4f9abd609"
   },
   {
    "path": "03-source-migration.csv",
-   "bytes": 11163,
-   "sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83"
+   "bytes": 11215,
+   "sha256": "6c23960a8be23869b89f72c54da246c0bce25998028750170989676b8a6bd311"
   },
   {
    "path": "04-character-responsibility.md",
-   "bytes": 18404,
-   "sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646"
+   "bytes": 22143,
+   "sha256": "c76e29f42189b798b596a95e45d178e0a28dcadfaabef80bce88fd0aa0403a70"
   },
   {
    "path": "05-capability-and-evidence.md",
-   "bytes": 7782,
-   "sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258"
+   "bytes": 8367,
+   "sha256": "a15f900c070ab963381da38e0a3d6dd284eff788c51ce75a32cd2fc1b00d5cc9"
   },
   {
    "path": "06-causal-and-event-map.json",
-   "bytes": 23553,
-   "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f"
+   "bytes": 25625,
+   "sha256": "6c80c99b684112c41cc78208ce76a29e2306fd3fca8bdfa714a19c03d9ed889d"
   },
   {
    "path": "07-information-ledger.csv",
-   "bytes": 15912,
-   "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a"
+   "bytes": 16399,
+   "sha256": "756b42dfca380c8108b882851e9be7c26748f352a6b82ac067c7150f9a696ddb"
   },
   {
    "path": "08-ending-and-pov.md",
-   "bytes": 11622,
-   "sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c"
+   "bytes": 12494,
+   "sha256": "4eab420016c08c4047de78ff0e5d82f64e6bcc3719389e89b6eecb849e2616bc"
   },
   {
    "path": "09-scene-specs.md",
-   "bytes": 16150,
-   "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9"
+   "bytes": 17754,
+   "sha256": "4622f1deba6f4394c9b5c22623d544286003f593b69985e52aa81cf88f0419b0"
   },
   {
    "path": "10-text-adaptation-map.csv",
-   "bytes": 19183,
-   "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6"
+   "bytes": 19746,
+   "sha256": "d6d4329d01585ad7beb0f6cb38fce9043690b96fd2de6878660b15387fffcb2d"
   },
   {
    "path": "11-owner-decisions.md",
-   "bytes": 10722,
-   "sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1"
+   "bytes": 15233,
+   "sha256": "d09d2b4f1f2d9fddda5386a7d1ca9628c5da7b99f94feed22a59e478371c823f"
   },
   {
    "path": "12-traceability-and-handoff.json",
-   "bytes": 32074,
-   "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793"
+   "bytes": 35752,
+   "sha256": "25e8e981dba1652646a273d54f066d88afbc7ba0f990987b5b7e732f2456eab0"
   },
   {
    "path": "13-regression-results.md",
-   "bytes": 29491,
-   "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a"
+   "bytes": 37945,
+   "sha256": "6c30e816e41d3081f7beaefe850e4c904bd17b9d0fcd53fe143fc1efd6a534ac"
   }
  ]
 }

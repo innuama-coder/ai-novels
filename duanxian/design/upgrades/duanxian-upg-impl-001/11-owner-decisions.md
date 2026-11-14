@@ -1,7 +1,7 @@
 # 11 · Owner 决策点登记（D01–D03）
 
-- 状态总览：**D01、D02、D03 均为 `owner_pending`**（未签认）。本文件是可审定提案，不是生效事实。
-- 纪律：未签认的选择不得标 `approved`；依赖节点保持条件分支／`BLOCKED_OWNER` 语义；不阻塞独立节点；不进入无条件 handoff。Owner 选择 `revise/rejected` 时回到最早事实层重新提案，不由实施 Agent 改措辞视作通过。
+- 状态总览（r4 更新）：**D01、D02、D03 均已签认＝A（approved，2026-11-14）**——Owner 于 2026-11-14 裁决追加修订轮（定义书 §4.3）并逐项签认三决策的 A 方案；决定记录（§3.5 最小格式）见各节「决定记录」块，受控引用＝「duanxian-upg-impl3-001 冻结契约 Owner 口径段（编排方经 Owner AskUserQuestion 答案转录）」。B 方案均未获签认，相关素材保留于 `02` 作历史分支、不生效。
+- 纪律：未签认的选择不得标 `approved`；依赖节点保持条件分支／`BLOCKED_OWNER` 语义；不阻塞独立节点；不进入无条件 handoff。Owner 选择 `revise/rejected` 时回到最早事实层重新提案，不由实施 Agent 改措辞视作通过。——本轮三项签认后：原 `conditional_on_D0X` 节点按 A 定稿（不再是条件分支）；D01-A 的「新袭击机制/物证/责任人细化须作者另行审定」与 D02-A 的「不预认定罪」仍是**持续约束**，任何超出现有批准内容的细化均需新的 Owner 决策（本纪律不变）。
 - 决定记录最小格式（签认时使用）：
 
 ```yaml
@@ -34,7 +34,25 @@ revalidation_list: [<需重验的场景/信息对象/回归 ID>]
 | 决策前禁止 | 自行指定谁接替旧责任；照搬 D+58 等旧时间事实；把旧链任何角色机械换名进新版 |
 | 依赖节点状态 | `06` UPG-E-05（保护识别）原因层子字段、`09` UPG-S-PROTECTION 的原因层机制块：`conditional_on_D01`（本包按 A 出候选，B 分支登记于条件块）；其余节点（行动层、救援推进、主体性场景）分支无关、已无碍消费 |
 | 需重验清单（决定后） | REG-08 全链走读；`04` §周岚；`06` UPG-E-05/07/09；`07` 原因层对象组；`09` UPG-S-PROTECTION；`10` 行 E04-01/E05-01 |
-| 决定 | **待 Owner 批准**（决定栏空） |
+| 决定 | **已签认＝A（approved，2026-11-14）**——决定记录见下块 |
+
+**决定记录（定义书 §3.5 最小格式）**：
+
+```yaml
+decision_id: D01
+proposal_version: duanxian-upg-impl-001@311b29af7fec928ea987c5e469d2389442cd6348
+proposal_refs: [UPG-CTRL-ZHOULAN, UPG-CTRL-E01-05, UPG-CTRL-E01-06, UPG-CTRL-PROTECTION]
+options: [A, B]
+owner_decision: >-
+  approved＝方案A：不继承旧周岚参与机制，以批准主轴的有限线索、现实核验和无辜亲属风险重建；
+  若细化到新袭击机制/物证/责任人仍须作者另行审定。
+decided_at: 2026-11-14
+signature_or_controlled_ref: duanxian-upg-impl3-001 冻结契约 Owner 口径段（编排方经 Owner AskUserQuestion 答案转录）
+affected_nodes: [02-UPG-LEG-01, 02-UPG-LEG-02, 04-§R3, 06-UPG-E-05, 07-UPG-IO-02, 07-UPG-IO-28,
+  09-UPG-S-PROTECTION, 10-E04-01/E05-01, 00-formal_hld_admission.gates[D01–D03], 12-blocks_and_pauses]
+revalidation_list: [REG-08 全链走读, 04-§周岚(R3), 06-UPG-E-05/07/09, 07-原因层对象组(IO-02/03/28),
+  09-UPG-S-PROTECTION, 10-行 E04-01/E05-01]
+```
 
 ---
 
@@ -52,7 +70,27 @@ revalidation_list: [<需重验的场景/信息对象/回归 ID>]
 | 决策前禁止 | 把郑柏舟改名为罗景明（或其他已批角色）并继承罪责；提前定罪；宣称已删角或已隐名 |
 | 依赖节点状态 | `06` UPG-E-07（身份/证据核验）的责任归属子字段、`09` UPG-S-VERIFY 的结论披露块：`conditional_on_D02`（本包按 A 出候选）；`07` UPG-IO-24.1/24.2/24.3 的 receiver/reader_reveal 按 A 上限出**候选定值**并登记 B 分支差异（签认前不得无条件消费——与 `12` blocks_and_pauses 门禁一致，ACC-005 r3）；其余节点分支无关 |
 | 需重验清单（决定后） | REG-12 正负例；`04` §身份识别；`06` UPG-E-07；`07` UPG-IO-24.1/24.2/24.3；`09` UPG-S-VERIFY；`10` 行 E11-187/E11-278/E11-351/E11-448/E12a-01/E12b-01/E13-01 |
-| 决定 | **待 Owner 批准**（决定栏空） |
+| 决定 | **已签认＝A（approved，2026-11-14）**——决定记录见下块 |
+
+**决定记录（定义书 §3.5 最小格式）**：
+
+```yaml
+decision_id: D02
+proposal_version: duanxian-upg-impl-001@311b29af7fec928ea987c5e469d2389442cd6348
+proposal_refs: [UPG-CTRL-QIN-ZHENG, UPG-CTRL-LIANG-CE, UPG-CTRL-HE-WENJUN, UPG-CTRL-LUO-JINGMING, UPG-CTRL-R07]
+options: [A, B]
+owner_decision: >-
+  approved＝方案A：旧出卖者（郑柏舟）支线退出新版，当前人物按已批职责重新承载必要功能；
+  不按职务自动映射、不预认定罪。
+decided_at: 2026-11-14
+signature_or_controlled_ref: duanxian-upg-impl3-001 冻结契约 Owner 口径段（编排方经 Owner AskUserQuestion 答案转录）
+affected_nodes: [02-UPG-LEG-06, 02-UPG-LEG-09, 02-UPG-LEG-10, 04-§R0/§R1/§R2/§R15/§R16, 06-UPG-E-07,
+  06-UPG-E-14, 07-UPG-IO-24.3, 07-UPG-IO-21V, 08-REC-1/REC-1V 披露上限, 09-UPG-S-VERIFY,
+  09-UPG-S-AFTERMATH, 10-M-13/19/22/24/26/27, 03-行8(notes), 00-formal_hld_admission.gates[D01–D03],
+  12-blocks_and_pauses]
+revalidation_list: [REG-12 正负例, 04-§身份识别(§R15), 06-UPG-E-07, 07-UPG-IO-24.1/24.2/24.3/21V,
+  08-REC-1/REC-1V, 09-UPG-S-VERIFY/AFTERMATH, 10-行 E11-187/E11-278/E11-351/E11-448/E12a-01/E12b-01/E13-01]
+```
 
 ---
 
@@ -70,14 +108,35 @@ revalidation_list: [<需重验的场景/信息对象/回归 ID>]
 | 决策前禁止 | 伪造系统权限；保证复活；把沈逾写成事先全知；新增任何机制性装置作为既成事实 |
 | 依赖节点状态 | 全部终局节点按 A 出候选，且 A 为「不新增事实」路径——若 Owner 认可 A 即签认生效；若 Owner 要求任何 B 类机制，受影响节点转 `BLOCKED_OWNER` 并回构思阶段。本包无节点依赖 B |
 | 需重验清单（决定后） | REG-10 正负例；`08` 全文；`06` UPG-E-10..13；`07` UPG-IO-17..23 与 REC-1/1V/2/3 披露点；`09` UPG-S-FAREWELL/AFTERMATH；`10` 行 E08-01/E09-01/E09-02/E10-01/E10-02/E11-409/E11-448 |
-| 决定 | **待 Owner 批准**（决定栏空） |
+| 决定 | **已签认＝A（approved，2026-11-14）**——决定记录见下块 |
+
+**决定记录（定义书 §3.5 最小格式）**：
+
+```yaml
+decision_id: D03
+proposal_version: duanxian-upg-impl-001@311b29af7fec928ea987c5e469d2389442cd6348
+proposal_refs: [UPG-CTRL-STORY-SUSPENSE, UPG-CTRL-CUSTODY, UPG-CTRL-FUTURE-CUSTODIAN,
+  UPG-CTRL-BOUNDARIES, UPG-CTRL-SHEN-YU]
+options: [A, B]
+owner_decision: >-
+  approved＝方案A：只在现有批准的「沈逾相信可能重载、最终执行、静态保管」内安排外部迹象及披露顺序；
+  不新增告警/承诺条件/记录释放机制。
+decided_at: 2026-11-14
+signature_or_controlled_ref: duanxian-upg-impl3-001 冻结契约 Owner 口径段（编排方经 Owner AskUserQuestion 答案转录）
+affected_nodes: [06-UPG-E-10/E-11/E-13, 07-UPG-IO-12/17/18/21/22, 08-§A/§A-2/§D/§E/§F,
+  09-UPG-S-FAREWELL/AFTERMATH, 10-相关行, 00-formal_hld_admission.gates[D01–D03], 12-blocks_and_pauses]
+revalidation_list: [REG-10 正负例, 08-全文, 06-UPG-E-10..13, 07-UPG-IO-17..23 与 REC-1/1V/2/3 披露点,
+  09-UPG-S-FAREWELL/AFTERMATH, 10-行 E08-01/E09-01/E09-02/E10-01/E10-02/E11-409/E11-448]
+```
 
 ---
 
-## 依赖汇总（供 00/12 引用）
+## 依赖汇总（供 00/12 引用；r4 全表更新为已签认状态）
 
-| 决策 | 状态 | 条件节点 | 独立可消费节点（不受待批影响） |
+| 决策 | 状态 | 原条件节点（现状态） | 独立可消费节点 |
 | --- | --- | --- | --- |
-| D01 | owner_pending | 06-UPG-E-05 原因层子字段；09-UPG-S-PROTECTION 原因层机制块（两者均按 A 出候选定值，未签认不生效；分支无关的公共救援/解耦/同意结构可消费） | 00–05、07 行动层对象、08、09 其余单元、10 其余行、12、13 |
-| D02 | owner_pending | 06-UPG-E-07 责任归属子字段；09-UPG-S-VERIFY 结论披露块；07-UPG-IO-24.3 的 receiver/reader_reveal（A 候选定值）与 B 分支差异；08 REC-1V 的 L2 级内容披露上限（A 候选） | 同上**不含 07 身份组的分支特定字段**：UPG-IO-24.3 与 REC-1V 的 L2 级内容按 A 出候选定值，未获签认**不得无条件消费**（12 blocks_and_pauses 门禁同步——ACC-005 r3）；B 分支差异登记。分支无关面（24.1/24.2 的 L0/L1 结构、核验门槛、分级结构）可消费 |
-| D03 | owner_pending（A 路径无新增事实，签认即生效） | 无 B 依赖节点 | 08/09 终局单元按 A 候选出设计（未签认前不得写成确定稿——09 U0 规则 3）；Owner 若提 B 机制则回构思 |
+| D01 | **approved＝A（2026-11-14）** | 06-UPG-E-05 原因层子字段、09-UPG-S-PROTECTION 原因层机制块：原 `conditional_on_D01` **已定稿**（保护理由=无辜关联暴露；无任何参与前提）；07-UPG-IO-02/28 withheld_reason 已按 A 更新；02-UPG-LEG-01/02 按 A 落定（见 02 §r4 注） | 00–05、07 行动层对象、08、09 全部单元（PROTECTION 含已定稿块）、10 全部行、12、13 |
+| D02 | **approved＝A（2026-11-14）** | 06-UPG-E-07 责任归属子字段、09-UPG-S-VERIFY 结论披露块：原 `conditional_on_D02` **已定稿**（支线退出、功能按已批职责承载、无 L3 指称）；07-UPG-IO-24.3/21V 按 A 定稿；08 REC-1/REC-1V 披露上限按 A 定稿；02-UPG-LEG-06/09/10 按 A 落定；03 行 8 notes 已同步 | 同上（全部单元含已定稿身份组；B 分支素材仅存 02 历史分支，不消费） |
+| D03 | **approved＝A（2026-11-14）** | 08 状态机/披露表/§F、09 UPG-S-FAREWELL/AFTERMATH、06 UPG-E-10..13、07 终局对象：原 `conditional_on_D03` **已定稿**（无新增告警/承诺条件/记录释放机制） | 08/09 终局单元现为确定设计（09 U0 规则 3 已注签认状态）；B 机制不批不改 |
+
+- r4 注：三决策签认后，`12` blocks_and_pauses 的 D01/D02/D03 门禁转为已解（resolved by 11 §决定记录）；`00` formal_hld_admission.gates 的「D01–D03 Owner 签认」门转为 passed。剩余门禁（正式 HLD 人审、#7 机器本体）不变。
