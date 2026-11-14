@@ -11,7 +11,7 @@
   "evidence_unavailable"
  ],
  "counts": {
-  "total": 72
+  "total": 75
  },
  "controls": [
   {
@@ -691,6 +691,118 @@
     "04-character-responsibility.md"
    ],
    "status": "approved_constraint"
+  },
+  {
+   "control_id": "UPG-CTRL-RELATIONS",
+   "source_path": "duanxian/conception-approved/human-review-report.json",
+   "source_pointer": "/characters/relationship_networks/0",
+   "source_hash": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640",
+   "source_ids": [
+    "MOD-CHAR-RELATIONS",
+    "REL-CSTATE-DIPLO",
+    "REL-DIPLO-MSTATE",
+    "REL-GU-LIANG",
+    "REL-GU-QIN",
+    "REL-HE-DMITRI",
+    "REL-ILYA-DMITRI",
+    "REL-ILYA-MSTATE",
+    "REL-LIANG-HE",
+    "REL-LIANG-ILYA",
+    "REL-QIN-CSTATE",
+    "REL-QIN-LIANG",
+    "REL-QIN-LUO",
+    "REL-R07-CHENG",
+    "REL-R07-GUHENG",
+    "REL-R07-LUO",
+    "REL-R07-SHENYU",
+    "REL-R07-TANG",
+    "REL-R07-ZHOULAN",
+    "REL-SHEN-HE",
+    "REL-SHEN-LUO",
+    "REL-SHEN-TANG",
+    "REL-SHEN-XU",
+    "REL-TANG-FUTURE"
+   ],
+   "must_hold": [
+    "关系只改变支持、阻力、信息与代价，不能替人作选择。"
+   ],
+   "must_not_imply": [
+    "不得把沈逾旧情误写成顾衡爱情或 R-07 继承爱情。"
+   ],
+   "owner_stage": "conception",
+   "consumers": [
+    "04-character-responsibility.md",
+    "06-causal-and-event-map.json"
+   ],
+   "status": "approved_constraint",
+   "title": "关系变化网",
+   "definition": "亲密关系改变告别，机构关系决定权限，外部关系把后果推向两国与未来。",
+   "responsibility": "让亲密、机构与外部关系改变人物选择。",
+   "note": "ACC-001 r3 补登记：E02 已批对象，v1.1 漏投影。可视等价模型 VIS-CHAR-NETWORK（/visual_models/4，text_equivalent_module_id=MOD-CHAR-RELATIONS）。设计落点：04 §R18 关系网落点行与 §R17 三组必选关系变化；06 事件的支持/阻力/信息/代价字段为消费位。与 UPG-CTRL-CONN-0（/storylines/connections/0，故事线连接）互补：本条管人物关系轴。"
+  },
+  {
+   "control_id": "UPG-CTRL-COVERAGE",
+   "source_path": "duanxian/conception-approved/human-review-report.json",
+   "source_pointer": "/characters/role_coverage/0",
+   "source_hash": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640",
+   "source_ids": [
+    "MOD-CHAR-COVERAGE",
+    "COV-C1-SL-001",
+    "COV-C1-SL-002",
+    "COV-C1-SL-003",
+    "COV-C1-SL-004",
+    "COV-C1-SL-005",
+    "COV-C1-SL-006",
+    "COV-C1-SL-007",
+    "COV-C1-SL-008",
+    "COV-C1-SL-009"
+   ],
+   "must_hold": [
+    "层级按关系最短距离计算，不按重要性随意分层。"
+   ],
+   "must_not_imply": [
+    "不得把三层关系理解成只列亲疏关系。"
+   ],
+   "owner_stage": "conception",
+   "consumers": [
+    "04-character-responsibility.md"
+   ],
+   "status": "approved_constraint",
+   "title": "三层延伸与职责覆盖",
+   "definition": "R-07 与沈逾居中，17 名角色分三层推动十条故事线和 43 个主要事件。",
+   "responsibility": "让 17 名角色在三层关系中覆盖十条故事线。",
+   "note": "ACC-001 r3 补登记：v1.1 无条目且无可核验设计落点。可核验落点＝04 §R18：以双中心在 VIS-CHAR-NETWORK 边集（EDGE-CHAR-01..08）上按最短距离机械复算——核心 2（NODE-CHAR-01/02）＋第一层 6（d=1，NODE-CHAR-03/04）＋第二层 4（d=2，NODE-CHAR-05/08）＋第三层 5（d=3，NODE-CHAR-06/07）＝17，与 definition 逐字对账；COV-C1-SL-001..009（分线覆盖行）为源引用。"
+  },
+  {
+   "control_id": "UPG-CTRL-CHAR-BOUNDARIES",
+   "source_path": "duanxian/conception-approved/human-review-report.json",
+   "source_pointer": "/characters/role_coverage/1",
+   "source_hash": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640",
+   "source_ids": [
+    "MOD-CHAR-CONSTRAINTS",
+    "CHR-BOUNDARIES",
+    "CHR-GU-HENG-MEMORY",
+    "CHR-RELATIONSHIP-EVOLUTION",
+    "OPEN-C1-001",
+    "OPEN-C1-002",
+    "OPEN-C1-003"
+   ],
+   "must_hold": [
+    "程予安在世；周岚是儿时守护者；沈逾对回应对象保持疑惑。"
+   ],
+   "must_not_imply": [
+    "不得替角色消解伦理矛盾或自动赋予数字生命现实关系能力。"
+   ],
+   "owner_stage": "conception",
+   "consumers": [
+    "04-character-responsibility.md",
+    "08-ending-and-pov.md"
+   ],
+   "status": "approved_constraint",
+   "title": "人物边界",
+   "definition": "人物可能误解，但知情、权限、选择与后果必须分开。",
+   "responsibility": "让人物误解不被叙述当成事实。",
+   "note": "ACC-001 r3 补登记。设计承接（04 §R18 人物边界行）：程予安在世＝R4；周岚儿时守护者＝R3；沈逾对回应对象保持疑惑＝R1（08 终局保留该疑惑）。与 UPG-CTRL-CHARCONST（/characters/constraints/0）为不同源对象，互补不重复。"
   },
   {
    "control_id": "UPG-CTRL-WORLD-DEF",

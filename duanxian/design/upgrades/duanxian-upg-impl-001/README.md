@@ -41,9 +41,10 @@
 ## 验证锚
 
 - 文件级：`manifest.json`（逐文件 bytes/sha256，对实际 UTF-8 字节实算；manifest 自身不自哈希）。
-- 内容级：`13-regression-results.md`（REG-01..13 双列＋NEG 七例＋22 行迁移表＋消费演练；实施者自检，第三步独立重做）。
+- 内容级：`13-regression-results.md`（REG-01..13 双列＋NEG 七例＋r3 新增负例六例＋22 行迁移表＋消费演练；实施者自检，第三步独立重做）。
 
 ## 版本
 
-- v1.1（r2 定向修订，ACC-R1-01）：manifest `dependency_refs.definition_sha256` 由抄录失实改为对定义书实际字节实算（＝f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52，与 `00` 一致）；实施自检 C11 扩展覆盖 dependency_refs 双 hash 实算核验。本次仅更新 README／13／manifest 三文件，其余 13 文件字节不变。
+- v1.2（r3 修订，ACC-001..006）：第三步独立验收修正单六条全量执行——`01` 补登三条遗漏控制（RELATIONS／COVERAGE／CHAR-BOUNDARIES，源=E02 人审报告）并以 `04` §R18 落点（EDGE-CHAR 最短距离复算＝核心 2＋6＋4＋5＝17）；`07` 台账增至 35 行（新增 IO-06.0/16.1/19.1/21V；项目获知与实例获知分记；REC-1 主观记录与 REC-1V 核验批注分栏）；`08` 新增 §A-2 终局知识对象表（KO-1..KO-4，S2 请求可见≠意图确认）并修正两版旧终局负例分栏（六月＝未落实 E10:123；七月真早知证据唯一指认 E07:26，:40 anchor≠reveal）；D02「A 候选定值、未签认不生效」在 06/07/09/10/11/12 六处门禁统一；`13` 按定义书旁挂路线改判 REG-03=PASS、REG-06=DEFERRED_ENGINEERING（责任=历史记录核实，不断言与 #7 同源）。manifest 全量重算；v1.1 的 manifest 与 `13` 回归绑定已随本次修订失效（LOOP 计数=2，定向修订预算用尽）。
+- v1.1（r2 定向修订，ACC-R1-01）：manifest `dependency_refs.definition_sha256` 由抄录失实改为对定义书实际字节实算（＝f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52，与 `00` 一致）；实施自检 C11 扩展覆盖 dependency_refs 双 hash 实算核验。本次仅更新 README／13／manifest 三文件，其余 13 文件字节不变。v1.1 的 manifest 与回归绑定已随 r3 修订失效。
 - v1.0（首次实施候选；LOOP 预算=首次＋最多两次定向修订）。修订即递增包版本并使旧 manifest/回归结果失效——v1.0 的 manifest 与 `13` 回归绑定已随本次修订失效。

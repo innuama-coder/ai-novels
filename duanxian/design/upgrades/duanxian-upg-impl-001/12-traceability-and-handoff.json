@@ -31,21 +31,22 @@
   {
    "gate": "D01",
    "nodes": [
-    "06-UPG-E-05 原因层子字段",
-    "09-UPG-S-PROTECTION 原因层机制块",
+    "06-UPG-E-05 原因层子字段（A 候选定值，未签认不生效；B 分支差异已登记——ACC-005 r3）",
+    "09-UPG-S-PROTECTION 原因层机制块（同上；分支无关公共块可消费）",
     "10-UPG-M-01/02 分支差异"
    ],
-   "effect": "上述节点不得写成确定稿；其余节点正常消费"
+   "effect": "上述条件节点不得写成确定稿；共同门槛（公共救援/解耦/同意结构）与分支无关节点正常消费"
   },
   {
    "gate": "D02",
    "nodes": [
-    "06-UPG-E-07 责任归属子字段",
-    "09-UPG-S-VERIFY 结论披露块",
-    "07-UPG-IO-24.x B 分支差异",
+    "06-UPG-E-07 责任归属子字段（A 候选定值，未签认不生效；B 分支差异已登记——ACC-005 r3）",
+    "09-UPG-S-VERIFY 结论披露块（A 候选：不得生成确定归属或删角；核验门槛与分级结构分支无关）",
+    "07-UPG-IO-24.3 的 receiver/reader_reveal（A 候选定值；24.1/24.2 的 L0/L1 结构分支无关可消费）",
+    "08 REC-1V 的 L2 级内容披露上限（A 候选）",
     "10-UPG-M-13/19/22/24/26/27 分支差异"
    ],
-   "effect": "同上"
+   "effect": "同上；本门禁与 11 依赖汇总 D02 行逐项一致（ACC-005 r3）"
   },
   {
    "gate": "D03",
@@ -69,7 +70,7 @@
  ],
  "independent_consumption_requirement": "第三步验收的消费演练应仅凭本包（含 12 指定的允许交付材料）重建重点场景的输入/动作/边界/验收，密封后对照正式候选；凡需自行找旧正文/旧 run 补事实即消费失败。",
  "control_trace": {
-  "coverage_statement": "01 登记 72 条控制，本表逐条映射到设计字段、场景单元与回归 ID。",
+  "coverage_statement": "01 登记 75 条控制（ACC-001 r3 补登 RELATIONS/COVERAGE/CHAR-BOUNDARIES 三条），本表逐条映射到设计字段、场景单元与回归 ID。",
   "unmapped_controls": [],
   "entries": [
    {
@@ -173,7 +174,7 @@
     "control_id": "UPG-CTRL-E01-07",
     "source_pointer": "L87",
     "design_fields": [
-     "08 全文"
+     "08§A 状态机 S0–S7 全表＋§A-2 知识对象表＋§F 保管边界（推导：终局呈现契约与禁止项由 08 承载）"
     ],
     "scene_units": [
      "UPG-S-FAREWELL",
@@ -274,10 +275,10 @@
     "control_id": "UPG-CTRL-R07",
     "source_pointer": "/characters/core_characters/0",
     "design_fields": [
-     "04§R0",
-     "05 全文",
-     "06-UPG-E-03/04/08/10/11",
-     "08 全文"
+     "04§R0 主体定义行",
+     "05§E1 输入白名单＋§E2 认知状态机＋§E3 外部迹象＋§E4 证据分层（推导：R-07 能力面=输入/状态/呈现/证据四节）",
+     "06-UPG-E-03/04/08/10/11 各事件 R-07 侧 choices/obstacles/evidence 字段",
+     "08§A S0–S7＋§A-2 KO 表＋§B POV 截断点＋§C 外部迹象清单（推导：主体呈现与 POV 关闭时点落点）"
     ],
     "scene_units": [
      "UPG-S-AWAKE",
@@ -558,11 +559,56 @@
     "status": "approved_constraint"
    },
    {
+    "control_id": "UPG-CTRL-RELATIONS",
+    "source_pointer": "/characters/relationship_networks/0",
+    "design_fields": [
+     "04§R18 关系网落点行（EDGE-CHAR-01..08 最短距离复算口径；推导：01 must_hold「关系只改变支持/阻力/信息/代价」逐字落在该行与 06 四类要素字段）",
+     "04§R17 三组必选关系行",
+     "06 各事件 inputs/obstacles/evidence 的支持/阻力/信息/代价字段"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-COVERAGE",
+    "source_pointer": "/characters/role_coverage/0",
+    "design_fields": [
+     "04§R18 三层覆盖表（核心 2＋第一层 6＋第二层 4＋第三层 5＝17；推导：按 EDGE-CHAR 最短距离机械复算，与定义书「17 名角色」逐字一致）"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CHAR-BOUNDARIES",
+    "source_pointer": "/characters/role_coverage/1",
+    "design_fields": [
+     "04§R18 人物边界行（程予安在世；周岚是儿时守护者；沈逾对回应对象保持疑惑）",
+     "04§R4/R3/R1（推导：三条边界事实分别对应程予安/周岚/沈逾职责行，以否定式禁止项落进对应场景）",
+     "08§D 三方表沈逾行（相信非全知）"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-FAREWELL",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
     "control_id": "UPG-CTRL-WORLD-DEF",
     "source_pointer": "/world/definition",
     "design_fields": [
-     "04",
-     "06"
+     "04§R0–R16 职责总表（推导：世界定义的角色职责面全覆盖）",
+     "06-UPG-E-01..E-14 事件图全体（推导：世界定义的因果承载面全覆盖）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -604,7 +650,8 @@
     "control_id": "UPG-CTRL-DIALOGUE",
     "source_pointer": "/world/environments/2",
     "design_fields": [
-     "05§E1"
+     "05§E1",
+     "07-UPG-IO-06.0（E-03.1 沈逾首条核对输入——ACC-002 r3：通道首个对象，先输入后回应）"
     ],
     "scene_units": [
      "UPG-S-AWAKE"
@@ -665,7 +712,8 @@
     "control_id": "UPG-CTRL-LIAISON",
     "source_pointer": "/world/environments/6",
     "design_fields": [
-     "06-UPG-E-09"
+     "06-UPG-E-09",
+     "07-UPG-IO-16/16.1（E-09.4 项目收讫与 E-09.5 实例转达分记——ACC-002 r3）"
     ],
     "scene_units": [
      "UPG-S-BLOCKADE"
@@ -757,8 +805,8 @@
     "control_id": "UPG-CTRL-DEFINITION",
     "source_pointer": "/world/systems/0",
     "design_fields": [
-     "04",
-     "06"
+     "04§R0/R1（推导：系统定义落在主体与权限职责行）",
+     "06-UPG-E-01..E-14 事件图全体（推导：系统定义的因果承载面全覆盖）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -770,8 +818,8 @@
     "control_id": "UPG-CTRL-SYSTEMS",
     "source_pointer": "/world/systems/1",
     "design_fields": [
-     "04§R1 权限",
-     "06"
+     "04§R1 权限边界行",
+     "06 各事件 permissions 字段（推导：系统权限矩阵落地处）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -783,8 +831,8 @@
     "control_id": "UPG-CTRL-LOGIC",
     "source_pointer": "/world/systems/2",
     "design_fields": [
-     "05",
-     "06"
+     "05§E2 认知状态机＋§E4 证据分层（推导：运行逻辑落在能力与证据规则）",
+     "06 各事件 preconditions/outcome 字段（推导：事件逻辑落地处）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -796,8 +844,8 @@
     "control_id": "UPG-CTRL-LIFE",
     "source_pointer": "/world/event_conditions/0",
     "design_fields": [
-     "06-UPG-E-10/11",
-     "08"
+     "06-UPG-E-10/11（评估→请求→执行链）",
+     "08§A S1–S5 行＋§A-2 KO-2 行（推导：生命条件决定意图确认唯一时点=S6）"
     ],
     "scene_units": [
      "UPG-S-FAREWELL"
@@ -842,7 +890,7 @@
     "source_pointer": "/world/event_conditions/3",
     "design_fields": [
      "05§E4",
-     "06"
+     "06 各事件 obstacles/permissions 字段（推导：事件条件约束落在阻力与权限）"
     ],
     "scene_units": [
      "UPG-S-PROTECTION",
@@ -872,7 +920,7 @@
     "control_id": "UPG-CTRL-WCONST",
     "source_pointer": "/world/constraints/0",
     "design_fields": [
-     "05"
+     "05§E2/E4（推导：世界约束收敛于认知状态与证据分层规则）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -898,8 +946,8 @@
     "control_id": "UPG-CTRL-WORLD-LOGIC",
     "source_pointer": "/world/operating_logic",
     "design_fields": [
-     "05",
-     "06"
+     "05§E1–E4（推导：运行逻辑四节全覆盖）",
+     "06 各事件 preconditions/obstacles 字段（推导：事件前置与阻力落地处）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -911,8 +959,8 @@
     "control_id": "UPG-CTRL-WORLD-ONTOLOGY",
     "source_pointer": "/decision_controls/0",
     "design_fields": [
-     "04§R0",
-     "08"
+     "04§R0 主体定义行",
+     "08§E REC-2 行（推导：「这是我的」主观认知表达的本体落点）"
     ],
     "scene_units": [
      "UPG-S-FAREWELL",
@@ -1050,7 +1098,7 @@
     "control_id": "UPG-CTRL-LINE-0",
     "source_pointer": "/storylines/lines/0",
     "design_fields": [
-     "06"
+     "06 mainline_source 字段＋UPG-E-01..E-14 主线链（推导：主线覆盖在事件图的落点）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -1089,7 +1137,7 @@
     "control_id": "UPG-CTRL-CONN-1",
     "source_pointer": "/storylines/connections/1",
     "design_fields": [
-     "07"
+     "07-UPG-IO-11 沈逾转述行（推导：该连接=私人转述通道的信息承载对象）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -1101,7 +1149,7 @@
     "control_id": "UPG-CTRL-MEVT-0",
     "source_pointer": "/storylines/major_events/0",
     "design_fields": [
-     "06"
+     "06-UPG-E-09（推导：重大事件=现实阻断的因果承载单元）"
     ],
     "scene_units": [],
     "regression_ids": [
@@ -1242,7 +1290,7 @@
    "title": "终止执行与披露顺序",
    "design_anchors": [
     "08 全文",
-    "07 终局对象",
+    "07 终局对象（IO-17/18/19/19.1/21/21V/22/23）",
     "09-UPG-S-FAREWELL/AFTERMATH",
     "10-UPG-M-08..M-15/23",
     "11-D03"
@@ -1267,7 +1315,7 @@
    "title": "郑柏舟显名与旧素材禁令",
    "design_anchors": [
     "04§R15/R16",
-    "07-UPG-IO-24.x",
+    "07-UPG-IO-24.1/24.2/24.3",
     "09-UPG-S-VERIFY",
     "10-UPG-M-13/19/20/22/24/26/27",
     "11-D02"
