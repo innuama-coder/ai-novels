@@ -1,0 +1,3903 @@
+{
+  "schema_version": "1.0",
+  "job_ref": "duanxian-upg-acc2-001",
+  "design_verdict": "FAIL",
+  "definition_commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+  "implementation_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+  "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+  "evidence_base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "loop_index": 3,
+  "remaining_revision_budget": 0,
+  "manual_review": "OWNER_PENDING",
+  "formal_admission": "NOT_GRANTED",
+  "created_at_utc": "2026-11-14T06:56:24.416717+00:00",
+  "sources": {
+    "files": {
+      "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md": {
+        "bytes": 70796,
+        "sha256": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52"
+      },
+      ".kunora/inputs/open-issues-snapshot-20261114.md": {
+        "bytes": 60713,
+        "sha256": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67"
+      },
+      "duanxian/novel-goals.md": {
+        "bytes": 24677,
+        "sha256": "5ebbce4fe46c17b787c628b15ab8a16e9d0e29fdd6831c25ed541790e5f0f297"
+      },
+      "duanxian/conception-approved/human-review-report.json": {
+        "bytes": 2836536,
+        "sha256": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640"
+      },
+      "duanxian/README.md": {
+        "bytes": 1695,
+        "sha256": "29994df72183464d0d3344c51a4092dc98e37eb63f7a7b94a65d0119d95f1901"
+      },
+      "duanxian/conception-approved/author-decision.json": {
+        "bytes": 965,
+        "sha256": "4f5a070d22a92fb211b9e99709e04e05b16460aa52ae40c7ebb0eaf49249e2bd"
+      },
+      "duanxian/conception-approved/conception-completion.json": {
+        "bytes": 2174,
+        "sha256": "4eabd4af2b249493f3aae1a2668c4de9b37dea7f61628e1b454293e49587d127"
+      },
+      "duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/canonical-world-facts-v3.0.md": {
+        "bytes": 7376,
+        "sha256": "b47832f15df2251700ac127dd9d2ad6a10905789b4bb5438c9b885cf92ce1a88"
+      },
+      "duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/04-character-system.md": {
+        "bytes": 11761,
+        "sha256": "23149f5e1bc105d8ca141bb5d32e1fdaef7c3d4a815fa603a79a8360007f3044"
+      },
+      "duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/03-trunk-scenes.md": {
+        "bytes": 32305,
+        "sha256": "43dbe9e09bf500fb2308101e5ef4c41a06b80cc4c2bd095abe39d2151ba02095"
+      },
+      "duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/05-information-flow.md": {
+        "bytes": 9549,
+        "sha256": "7bdfce8a0b63a3a96c41692fdbe0d082700e341358832e125d5312f65899402a"
+      },
+      "duanxian/design/specs/lld/scenes/2026-06-07-scene-K9.md": {
+        "bytes": 3413,
+        "sha256": "bdde2fcfc2ca3a6eeccd52e4162279923568ca0b2bb32b95c61bb043541c3e26"
+      },
+      "duanxian/writing/characters/2026-06-07-writer-R07.md": {
+        "bytes": 21677,
+        "sha256": "df3471cffd7aaba4e11354fccfff39b859da2d4f6d7e1fd712c0229bf5c6cd3f"
+      },
+      "duanxian/writing/spaces/2026-06-07-writer-digital-realm.md": {
+        "bytes": 12064,
+        "sha256": "a416e3909ca1c492ea825a5044bd3930e77eb8a56bf088aca7d18ca2ed8ec209"
+      },
+      "duanxian/novel-text/2026-06-07-duanxian-novel.md": {
+        "bytes": 24675,
+        "sha256": "25ac556d05f35ff094152269cdcc70ac8117dceee57b5eacbc72424f74315eda"
+      },
+      "duanxian/writing/characters/2026-06-07-writer-betrayer.md": {
+        "bytes": 5687,
+        "sha256": "8416ba5ef6cccca60f450b7e04017ce9aa9601916f432a7d9aa1e6e329153752"
+      },
+      "duanxian/writing/characters/2026-06-07-writer-zhengbozhou.md": {
+        "bytes": 22906,
+        "sha256": "9a695da68db78ec38df8772dda7bdfb54b01a8210416fb681aabdddfc74937cb"
+      },
+      "duanxian/design/specs/lld/characters/2026-06-07-character-betrayer.md": {
+        "bytes": 3358,
+        "sha256": "fcc77db7d34b94610fbe5b959e9d12602d63c2a248f2804c52876d882cd1474e"
+      },
+      "duanxian/design/specs/2026-06-06-digital-life-novel-design.md": {
+        "bytes": 15182,
+        "sha256": "40661e2201097456d40c64c0565c1b3bc9aa05800fc1482cdfd17a103a008250"
+      },
+      "duanxian/design/workflow-docs/duanxian-narrative-contract.md": {
+        "bytes": 28522,
+        "sha256": "0b647986c548050245af2a0c870b7a957f58779aabf54b40d21b6af10b27d6ac"
+      },
+      "duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/12-hld-integrity-report.md": {
+        "bytes": 6170,
+        "sha256": "41b0b7fb2e062c977bafede60865491eb7662547566504a2ed1651df902ca3c1"
+      },
+      "engine/harnesses/novel-conception-autonomous/docs/final-delivery-contract.md": {
+        "bytes": 7853,
+        "sha256": "cbfd7c952c9f0c9a8048fe152e7cd1928f32322feb774b6fb44fd53f9b11ee44"
+      },
+      "duanxian/conception-production/run.py": {
+        "bytes": 37770,
+        "sha256": "f51a16b56804c998ce943a76b03a73ca9266566d91c24d3f51b9262e1fd4a76e"
+      },
+      "README.md": {
+        "bytes": 1421,
+        "sha256": "2ca2bbdb1d79da7c387a254097246c7c585a1f5c47ba8b203c96000b8dd04f39"
+      },
+      "engine/README.md": {
+        "bytes": 1891,
+        "sha256": "520e3f65238f8d0b6771d5094a34f0ce65efe45d53fab5952af9c87d729ba95f"
+      },
+      "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md": {
+        "bytes": 23747,
+        "sha256": "92a8230d4c888054ee2467609153b4f823881198f4bacb6ff200ab4da2e302f1"
+      },
+      ".gitattributes": {
+        "bytes": 1096,
+        "sha256": "d6e21fd0e7747f19e0eef24b2660f3941ebc18fe43a742e7aaa70f3fc811889d"
+      },
+      "duanxian/conception-approved/README.md": {
+        "bytes": 954,
+        "sha256": "652be2cc1494199c84839733c5b5e496cfc28fb8a8a46020fb8b1fd3cdf7bd6f"
+      },
+      ".gitignore": {
+        "bytes": 337,
+        "sha256": "6856813be4aee901af1475ac320dc2cdafa53e29ced0e9e34109e1fd4634d27f"
+      },
+      "duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/final-hld-package.md": {
+        "bytes": 1309,
+        "sha256": "e62bc16dcdb7d839d8d1e2c8a1248b2f57c4811f9c4a73bef9c74d5a66171278"
+      },
+      "duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/manifest.md": {
+        "bytes": 764,
+        "sha256": "89b72da55af08610719ada072c55944739d467bae4e04e1871ab2e249ee6b3c5"
+      },
+      "outputs/duanxian-upgrade/duanxian-upg-acc-001/findings.md": {
+        "bytes": 8747,
+        "sha256": "56915bb352c93f33934187495fab905cc104a1df2a4b25d077884b1ee6d515db"
+      },
+      "outputs/duanxian-upgrade/duanxian-upg-acc-001/correction-instructions.md": {
+        "bytes": 19488,
+        "sha256": "5caa767dfaec1f2f96e9df395f9a8b614f14ffc8b82c8f4bc5ae944efd6626bb"
+      }
+    },
+    "definition_source_index_verbatim": "| E01 | `duanxian/novel-goals.md:11–21,57–71,79–97,103–151` | 主体、责任、权限、信息、记忆、终局及交接门 |\n| E02 | `duanxian/conception-approved/human-review-report.json`，`/characters/core_characters`、`/characters/supporting_characters`、`/world/environments`、`/world/systems`、`/world/event_conditions`、`/decision_controls` | 批准版人物与必须保持／禁止暗示的约束 |\n| E03 | `duanxian/conception-approved/author-decision.json`，`/run_id`、`/decision`、`/approval_scope`、`/machine_package/manifest_sha256`、`/unresolved_items`；`duanxian/conception-approved/conception-completion.json`，`/status`、`/development_handoff`、`/p1_manifest` | 已批准构思与受控复验需求 |\n| E04 | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/canonical-world-facts-v3.0.md:38–44,59–73` | 周岚维护例外参与链及其限度 |\n| E05 | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/04-character-system.md:20,34` | 同一参与链在人物表及事实追踪中的传播 |\n| E06 | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/03-trunk-scenes.md:23,30,53–54,67–74` | 初醒、审查、终止场景及细化单元 |\n| E07 | `duanxian/design/runs/prd/2026-07-07-duanxian-prd-workflow/artifacts/05-information-flow.md:26–28,40` | 读者提前得知终止、研究员执行与事后知识安排 |\n| E08 | `duanxian/design/specs/lld/scenes/2026-06-07-scene-K9.md:24–33,71–78` | 旧 K9 的自主终结及内部 POV |\n| E09 | `duanxian/writing/characters/2026-06-07-writer-R07.md:13–16,67–91,241–253,325–338` | 引用错位、自行关闭、身份知识的不同旧写法 |\n| E10 | `duanxian/writing/spaces/2026-06-07-writer-digital-realm.md:56–63,123–125` | 数字空间终止与同步阅读约束 |\n| E11 | `duanxian/novel-text/2026-06-07-duanxian-novel.md:1–508` | 完整旧正文上下文；具体反例另列 |\n| E12 | `duanxian/writing/characters/2026-06-07-writer-betrayer.md:15,40,76–88,102`；`duanxian/writing/characters/2026-06-07-writer-zhengbozhou.md:211,260` | 隐名、识别上限及接收者旧约束 |\n| E13 | `duanxian/design/specs/lld/characters/2026-06-07-character-betrayer.md:24–29` | 另一旧方案的显名材料点条件 |\n| E14 | `duanxian/design/specs/2026-06-06-digital-life-novel-design.md:12,25–26` | 完整记忆／意识输入旧设定 |\n| E15 | `duanxian/design/workflow-docs/duanxian-narrative-contract.md:53–73,107–118` | 相容的有限 POV、片段记忆、文字通道方法；旧 C 编号不直接继承 |\n| E16 | `duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/12-hld-integrity-report.md:8–11,25–34,57–58`；同 run 的 `artifacts/final-hld-package.md:20–24`、`manifest.md:11–15` | 历史追踪门、评审版本与准入状态 |\n| E17 | `engine/harnesses/novel-conception-autonomous/docs/final-delivery-contract.md:17–24,48–58,64–91` | 同版包、来源链、正式验证与作者权 |"
+  },
+  "audit": {
+    "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+    "definition_commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+    "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+    "checks": [
+      {
+        "id": "candidate_head",
+        "result": "PASS",
+        "evidence": "311b29af7fec928ea987c5e469d2389442cd6348"
+      },
+      {
+        "id": "branch",
+        "result": "PASS",
+        "evidence": "remote-agent/duanxian-upg-acc2-001"
+      },
+      {
+        "id": "manifest_15_files",
+        "result": "PASS",
+        "evidence": [
+          {
+            "path": "README.md",
+            "bytes": 5446,
+            "sha256": "bd3b55f861b4e05d9f0a2aa8941a63d0460dc317095462111e04cdb0e69b2c7b",
+            "actual_sha256": "bd3b55f861b4e05d9f0a2aa8941a63d0460dc317095462111e04cdb0e69b2c7b",
+            "actual_bytes": 5446,
+            "match": true
+          },
+          {
+            "path": "00-baseline-and-authority.json",
+            "bytes": 10413,
+            "sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2",
+            "actual_sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2",
+            "actual_bytes": 10413,
+            "match": true
+          },
+          {
+            "path": "01-control-register.json",
+            "bytes": 96007,
+            "sha256": "87e839586bdf4de5a1ccc77f6ba4ff58034c0359afb85bfc4bc9a5648ffc10b6",
+            "actual_sha256": "87e839586bdf4de5a1ccc77f6ba4ff58034c0359afb85bfc4bc9a5648ffc10b6",
+            "actual_bytes": 96007,
+            "match": true
+          },
+          {
+            "path": "02-legacy-disposition.md",
+            "bytes": 17543,
+            "sha256": "bad0771e70524939606e94179cc8fe29ff25cb675a9afb3eb98fa2d32bfc6c95",
+            "actual_sha256": "bad0771e70524939606e94179cc8fe29ff25cb675a9afb3eb98fa2d32bfc6c95",
+            "actual_bytes": 17543,
+            "match": true
+          },
+          {
+            "path": "03-source-migration.csv",
+            "bytes": 11163,
+            "sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+            "actual_sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+            "actual_bytes": 11163,
+            "match": true
+          },
+          {
+            "path": "04-character-responsibility.md",
+            "bytes": 18404,
+            "sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+            "actual_sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+            "actual_bytes": 18404,
+            "match": true
+          },
+          {
+            "path": "05-capability-and-evidence.md",
+            "bytes": 7782,
+            "sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258",
+            "actual_sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258",
+            "actual_bytes": 7782,
+            "match": true
+          },
+          {
+            "path": "06-causal-and-event-map.json",
+            "bytes": 23553,
+            "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+            "actual_sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+            "actual_bytes": 23553,
+            "match": true
+          },
+          {
+            "path": "07-information-ledger.csv",
+            "bytes": 15912,
+            "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+            "actual_sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+            "actual_bytes": 15912,
+            "match": true
+          },
+          {
+            "path": "08-ending-and-pov.md",
+            "bytes": 11622,
+            "sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+            "actual_sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+            "actual_bytes": 11622,
+            "match": true
+          },
+          {
+            "path": "09-scene-specs.md",
+            "bytes": 16150,
+            "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+            "actual_sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+            "actual_bytes": 16150,
+            "match": true
+          },
+          {
+            "path": "10-text-adaptation-map.csv",
+            "bytes": 19183,
+            "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+            "actual_sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+            "actual_bytes": 19183,
+            "match": true
+          },
+          {
+            "path": "11-owner-decisions.md",
+            "bytes": 10722,
+            "sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+            "actual_sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+            "actual_bytes": 10722,
+            "match": true
+          },
+          {
+            "path": "12-traceability-and-handoff.json",
+            "bytes": 32074,
+            "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+            "actual_sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+            "actual_bytes": 32074,
+            "match": true
+          },
+          {
+            "path": "13-regression-results.md",
+            "bytes": 29491,
+            "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+            "actual_sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+            "actual_bytes": 29491,
+            "match": true
+          }
+        ]
+      },
+      {
+        "id": "manifest_inventory",
+        "result": "PASS",
+        "evidence": [
+          "00-baseline-and-authority.json",
+          "01-control-register.json",
+          "02-legacy-disposition.md",
+          "03-source-migration.csv",
+          "04-character-responsibility.md",
+          "05-capability-and-evidence.md",
+          "06-causal-and-event-map.json",
+          "07-information-ledger.csv",
+          "08-ending-and-pov.md",
+          "09-scene-specs.md",
+          "10-text-adaptation-map.csv",
+          "11-owner-decisions.md",
+          "12-traceability-and-handoff.json",
+          "13-regression-results.md",
+          "README.md",
+          "manifest.json"
+        ]
+      },
+      {
+        "id": "definition_hash",
+        "result": "PASS",
+        "evidence": {
+          "path": "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md",
+          "bytes": 70796,
+          "sha256": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52"
+        }
+      },
+      {
+        "id": "snapshot_hash",
+        "result": "PASS",
+        "evidence": {
+          "path": ".kunora/inputs/open-issues-snapshot-20261114.md",
+          "bytes": 60713,
+          "sha256": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67"
+        }
+      },
+      {
+        "id": "definition_commit_bytes",
+        "result": "PASS",
+        "evidence": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d"
+      },
+      {
+        "id": "old_tracked_files_unchanged",
+        "result": "PASS",
+        "evidence": {
+          "base_count": 1444,
+          "modified_or_deleted_base_files": []
+        }
+      },
+      {
+        "id": "candidate_revision_scope",
+        "result": "PASS",
+        "evidence": [
+          "duanxian/design/upgrades/duanxian-upg-impl-001/01-control-register.json",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/02-legacy-disposition.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/04-character-responsibility.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/06-causal-and-event-map.json",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/07-information-ledger.csv",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/08-ending-and-pov.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/09-scene-specs.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/10-text-adaptation-map.csv",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/11-owner-decisions.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/12-traceability-and-handoff.json",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/13-regression-results.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/README.md",
+          "duanxian/design/upgrades/duanxian-upg-impl-001/manifest.json"
+        ]
+      },
+      {
+        "id": "control_projection_hash_pointer_fields",
+        "result": "PASS",
+        "evidence": [
+          {
+            "index": 0,
+            "control_id": "UPG-CTRL-E01-01",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L81",
+            "errors": []
+          },
+          {
+            "index": 1,
+            "control_id": "UPG-CTRL-E01-02",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L82",
+            "errors": []
+          },
+          {
+            "index": 2,
+            "control_id": "UPG-CTRL-E01-03",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L83",
+            "errors": []
+          },
+          {
+            "index": 3,
+            "control_id": "UPG-CTRL-E01-04",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L84",
+            "errors": []
+          },
+          {
+            "index": 4,
+            "control_id": "UPG-CTRL-E01-05",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L85",
+            "errors": []
+          },
+          {
+            "index": 5,
+            "control_id": "UPG-CTRL-E01-06",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L86",
+            "errors": []
+          },
+          {
+            "index": 6,
+            "control_id": "UPG-CTRL-E01-07",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L87",
+            "errors": []
+          },
+          {
+            "index": 7,
+            "control_id": "UPG-CTRL-E01-08",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L89",
+            "errors": []
+          },
+          {
+            "index": 8,
+            "control_id": "UPG-CTRL-NC-01",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L93-97",
+            "errors": []
+          },
+          {
+            "index": 9,
+            "control_id": "UPG-CTRL-NC-02",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L93-97",
+            "errors": []
+          },
+          {
+            "index": 10,
+            "control_id": "UPG-CTRL-NC-03",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L93-97",
+            "errors": []
+          },
+          {
+            "index": 11,
+            "control_id": "UPG-CTRL-NC-04",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L93-97",
+            "errors": []
+          },
+          {
+            "index": 12,
+            "control_id": "UPG-CTRL-NC-05",
+            "source_path": "duanxian/novel-goals.md",
+            "pointer": "L93-97",
+            "errors": []
+          },
+          {
+            "index": 13,
+            "control_id": "UPG-CTRL-R07",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/core_characters/0",
+            "errors": []
+          },
+          {
+            "index": 14,
+            "control_id": "UPG-CTRL-SHEN-YU",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/core_characters/1",
+            "errors": []
+          },
+          {
+            "index": 15,
+            "control_id": "UPG-CTRL-GUHENG",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/0",
+            "errors": []
+          },
+          {
+            "index": 16,
+            "control_id": "UPG-CTRL-ZHOULAN",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/1",
+            "errors": []
+          },
+          {
+            "index": 17,
+            "control_id": "UPG-CTRL-CHENG-YUAN",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/2",
+            "errors": []
+          },
+          {
+            "index": 18,
+            "control_id": "UPG-CTRL-XU-MANQING",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/3",
+            "errors": []
+          },
+          {
+            "index": 19,
+            "control_id": "UPG-CTRL-QIN-ZHENG",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/4",
+            "errors": []
+          },
+          {
+            "index": 20,
+            "control_id": "UPG-CTRL-LIANG-CE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/5",
+            "errors": []
+          },
+          {
+            "index": 21,
+            "control_id": "UPG-CTRL-LUO-JINGMING",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/6",
+            "errors": []
+          },
+          {
+            "index": 22,
+            "control_id": "UPG-CTRL-TANG-LI",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/7",
+            "errors": []
+          },
+          {
+            "index": 23,
+            "control_id": "UPG-CTRL-HE-WENJUN",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/8",
+            "errors": []
+          },
+          {
+            "index": 24,
+            "control_id": "UPG-CTRL-ILYA-SAVIN",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/9",
+            "errors": []
+          },
+          {
+            "index": 25,
+            "control_id": "UPG-CTRL-DMITRI-VOLKOV",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/10",
+            "errors": []
+          },
+          {
+            "index": 26,
+            "control_id": "UPG-CTRL-C-STATE-REP",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/11",
+            "errors": []
+          },
+          {
+            "index": 27,
+            "control_id": "UPG-CTRL-M-STATE-REP",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/12",
+            "errors": []
+          },
+          {
+            "index": 28,
+            "control_id": "UPG-CTRL-DIPLOMATIC-LIAISON",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/13",
+            "errors": []
+          },
+          {
+            "index": 29,
+            "control_id": "UPG-CTRL-FUTURE-CUSTODIAN",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/supporting_characters/14",
+            "errors": []
+          },
+          {
+            "index": 30,
+            "control_id": "UPG-CTRL-CHARCONST",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/constraints/0",
+            "errors": []
+          },
+          {
+            "index": 31,
+            "control_id": "UPG-CTRL-RELATIONS",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/relationship_networks/0",
+            "errors": []
+          },
+          {
+            "index": 32,
+            "control_id": "UPG-CTRL-COVERAGE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/role_coverage/0",
+            "errors": []
+          },
+          {
+            "index": 33,
+            "control_id": "UPG-CTRL-CHAR-BOUNDARIES",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/characters/role_coverage/1",
+            "errors": []
+          },
+          {
+            "index": 34,
+            "control_id": "UPG-CTRL-WORLD-DEF",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/definition",
+            "errors": []
+          },
+          {
+            "index": 35,
+            "control_id": "UPG-CTRL-FIELD",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/0",
+            "errors": []
+          },
+          {
+            "index": 36,
+            "control_id": "UPG-CTRL-INDUCTION",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/1",
+            "errors": []
+          },
+          {
+            "index": 37,
+            "control_id": "UPG-CTRL-DIALOGUE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/2",
+            "errors": []
+          },
+          {
+            "index": 38,
+            "control_id": "UPG-CTRL-COMMAND",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/3",
+            "errors": []
+          },
+          {
+            "index": 39,
+            "control_id": "UPG-CTRL-PROTECTION",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/4",
+            "errors": []
+          },
+          {
+            "index": 40,
+            "control_id": "UPG-CTRL-OVERSIGHT",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/5",
+            "errors": []
+          },
+          {
+            "index": 41,
+            "control_id": "UPG-CTRL-LIAISON",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/6",
+            "errors": []
+          },
+          {
+            "index": 42,
+            "control_id": "UPG-CTRL-CORE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/7",
+            "errors": []
+          },
+          {
+            "index": 43,
+            "control_id": "UPG-CTRL-MEMORY",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/8",
+            "errors": []
+          },
+          {
+            "index": 44,
+            "control_id": "UPG-CTRL-CUSTODY",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/9",
+            "errors": []
+          },
+          {
+            "index": 45,
+            "control_id": "UPG-CTRL-11",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/10",
+            "errors": []
+          },
+          {
+            "index": 46,
+            "control_id": "UPG-CTRL-12",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/environments/11",
+            "errors": []
+          },
+          {
+            "index": 47,
+            "control_id": "UPG-CTRL-DEFINITION",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/systems/0",
+            "errors": []
+          },
+          {
+            "index": 48,
+            "control_id": "UPG-CTRL-SYSTEMS",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/systems/1",
+            "errors": []
+          },
+          {
+            "index": 49,
+            "control_id": "UPG-CTRL-LOGIC",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/systems/2",
+            "errors": []
+          },
+          {
+            "index": 50,
+            "control_id": "UPG-CTRL-LIFE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/event_conditions/0",
+            "errors": []
+          },
+          {
+            "index": 51,
+            "control_id": "UPG-CTRL-CRISIS",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/event_conditions/1",
+            "errors": []
+          },
+          {
+            "index": 52,
+            "control_id": "UPG-CTRL-CARE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/event_conditions/2",
+            "errors": []
+          },
+          {
+            "index": 53,
+            "control_id": "UPG-CTRL-CONSTRAINTS",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/event_conditions/3",
+            "errors": []
+          },
+          {
+            "index": 54,
+            "control_id": "UPG-CTRL-BOUNDARIES",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/event_conditions/4",
+            "errors": []
+          },
+          {
+            "index": 55,
+            "control_id": "UPG-CTRL-WCONST",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/constraints/0",
+            "errors": []
+          },
+          {
+            "index": 56,
+            "control_id": "UPG-CTRL-WBOUND",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/boundaries/0",
+            "errors": []
+          },
+          {
+            "index": 57,
+            "control_id": "UPG-CTRL-WORLD-LOGIC",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/world/operating_logic",
+            "errors": []
+          },
+          {
+            "index": 58,
+            "control_id": "UPG-CTRL-WORLD-ONTOLOGY",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/0",
+            "errors": []
+          },
+          {
+            "index": 59,
+            "control_id": "UPG-CTRL-WORLD-BEARING",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/1",
+            "errors": []
+          },
+          {
+            "index": 60,
+            "control_id": "UPG-CTRL-STORY-ARCH",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/2",
+            "errors": []
+          },
+          {
+            "index": 61,
+            "control_id": "UPG-CTRL-STORY-CAUSAL",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/3",
+            "errors": []
+          },
+          {
+            "index": 62,
+            "control_id": "UPG-CTRL-STORY-SUSPENSE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/4",
+            "errors": []
+          },
+          {
+            "index": 63,
+            "control_id": "UPG-CTRL-CHAR-AGENCY",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/5",
+            "errors": []
+          },
+          {
+            "index": 64,
+            "control_id": "UPG-CTRL-CHAR-NETWORK",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/6",
+            "errors": []
+          },
+          {
+            "index": 65,
+            "control_id": "UPG-CTRL-FRAGMENTS-EVIDENCE",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/decision_controls/7",
+            "errors": []
+          },
+          {
+            "index": 66,
+            "control_id": "UPG-CTRL-SUBJECT",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/story_subject",
+            "errors": []
+          },
+          {
+            "index": 67,
+            "control_id": "UPG-CTRL-RHYTHM",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/suspense_conflict_rhythm",
+            "errors": []
+          },
+          {
+            "index": 68,
+            "control_id": "UPG-CTRL-LINE-0",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/lines/0",
+            "errors": []
+          },
+          {
+            "index": 69,
+            "control_id": "UPG-CTRL-LINE-1",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/lines/1",
+            "errors": []
+          },
+          {
+            "index": 70,
+            "control_id": "UPG-CTRL-CONN-0",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/connections/0",
+            "errors": []
+          },
+          {
+            "index": 71,
+            "control_id": "UPG-CTRL-CONN-1",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/connections/1",
+            "errors": []
+          },
+          {
+            "index": 72,
+            "control_id": "UPG-CTRL-MEVT-0",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/major_events/0",
+            "errors": []
+          },
+          {
+            "index": 73,
+            "control_id": "UPG-CTRL-MEVT-1",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/major_events/1",
+            "errors": []
+          },
+          {
+            "index": 74,
+            "control_id": "UPG-CTRL-STORYCONST",
+            "source_path": "duanxian/conception-approved/human-review-report.json",
+            "pointer": "/storylines/constraints/0",
+            "errors": []
+          }
+        ]
+      },
+      {
+        "id": "control_trace_inventory",
+        "result": "PASS",
+        "evidence": {
+          "registered": 75,
+          "trace": 75
+        }
+      },
+      {
+        "id": "event_control_refs",
+        "result": "PASS",
+        "evidence": []
+      },
+      {
+        "id": "all_full_control_tokens",
+        "result": "PASS",
+        "evidence": []
+      },
+      {
+        "id": "ledger_numeric_order",
+        "result": "PASS",
+        "evidence": [
+          {
+            "object_id": "UPG-IO-01",
+            "times": [
+              "UPG-E-01.2",
+              "UPG-E-01.2",
+              "UPG-E-02"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-02",
+            "times": [
+              "UPG-E-05.1",
+              "UPG-E-05.1",
+              "UPG-E-05.2（分流打包时仅取行动层必要要素）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-03",
+            "times": [
+              "UPG-E-05.2",
+              "UPG-E-05.2",
+              "UPG-E-06"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-04",
+            "times": [
+              "UPG-E-02.1",
+              "UPG-E-02.1",
+              "UPG-E-02.2"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-05",
+            "times": [
+              "UPG-E-02.0（先于沈逾接受）",
+              "UPG-E-02.0",
+              "UPG-E-03（启动前提之一）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-06.0",
+            "times": [
+              "UPG-E-03.1",
+              "UPG-E-03.1",
+              "UPG-E-03.2（R-07 首个输出以本输入到达为回应依赖；发送≤接收≤使用）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-06",
+            "times": [
+              "UPG-E-03.2",
+              "UPG-E-03.2",
+              "UPG-E-03.2（其回应依赖 UPG-IO-06.0 已于 E-03.1 到达）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-07",
+            "times": [
+              "UPG-E-04.1",
+              "UPG-E-04.1",
+              "UPG-E-04.2"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-08",
+            "times": [
+              "UPG-E-03.2",
+              "UPG-E-03.2",
+              "UPG-E-04.1"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-09",
+            "times": [
+              "UPG-E-02.2（异常发生并留痕）",
+              "UPG-E-06.2（交叉检查发现；证据最早使用＝发现时点，非留痕时点，两栏分记）",
+              "UPG-E-06.2（审查依据）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-10",
+            "times": [
+              "UPG-E-06.1",
+              "UPG-E-06.1",
+              "UPG-E-06.2"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-11",
+            "times": [
+              "UPG-E-06.3",
+              "UPG-E-06.3",
+              "UPG-E-10（成为 R-07 评估输入之一）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-12",
+            "times": [
+              "未发送",
+              "未发送",
+              "UPG-E-10（仅自身评估使用）"
+            ],
+            "result": "MANUAL"
+          },
+          {
+            "object_id": "UPG-IO-13",
+            "times": [
+              "UPG-E-08.1",
+              "UPG-E-08.1",
+              "UPG-E-09（核验使用）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-14",
+            "times": [
+              "UPG-E-09.1",
+              "UPG-E-09.1",
+              "UPG-E-09.2（行动决策）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-15",
+            "times": [
+              "UPG-E-09.2",
+              "UPG-E-09.2",
+              "UPG-E-09.3（阻断执行）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-16",
+            "times": [
+              "UPG-E-09.4",
+              "UPG-E-09.4",
+              "UPG-E-09.5（沈逾据此向实例转达，生成 UPG-IO-16.1；实例侧 earliest_use 见该行）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-16.1",
+            "times": [
+              "UPG-E-09.5",
+              "UPG-E-09.5",
+              "UPG-E-10（危机后存在评估的合法输入）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-17",
+            "times": [
+              "UPG-E-11.1",
+              "UPG-E-11.1",
+              "UPG-E-11.2（授权与执行流程）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-18",
+            "times": [
+              "UPG-E-11.2",
+              "UPG-E-11.2",
+              "UPG-E-11.3（作为告别语境）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-19",
+            "times": [
+              "UPG-E-11.2",
+              "UPG-E-11.2",
+              "UPG-E-11.3（执行依据；授权与执行分记，不合并）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-19.1",
+            "times": [
+              "UPG-E-11.3",
+              "UPG-E-11.3",
+              "UPG-E-12（核验依据）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-20",
+            "times": [
+              "UPG-E-12.1",
+              "UPG-E-12.1",
+              "UPG-E-13（移交前提）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-21",
+            "times": [
+              "UPG-E-10.4（内容形成）",
+              "UPG-E-11.3（封存入保管）",
+              "UPG-E-13.2（她的受控阅读）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-21V",
+            "times": [
+              "UPG-E-09.6（核验收束时批注形成，基于 UPG-IO-14/16 核验结果与 UPG-IO-24.3 分级结论）",
+              "UPG-E-11.3（随记录封存）",
+              "UPG-E-13.2（她的受控阅读）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-22",
+            "times": [
+              "UPG-E-10.4（内容形成）",
+              "UPG-E-11.3（封存入保管）",
+              "UPG-E-13.2"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-23",
+            "times": [
+              "UPG-E-11.3（封存）",
+              "UPG-E-13.1",
+              "UPG-E-14（余波开放问题的实证来源）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-24.1",
+            "times": [
+              "UPG-E-01.2",
+              "UPG-E-01.2",
+              "UPG-E-07.1（反查启动）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-24.2",
+            "times": [
+              "UPG-E-07.2",
+              "UPG-E-07.2",
+              "UPG-E-09（行动侧防内泄安排）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-24.3",
+            "times": [
+              "UPG-E-07.3",
+              "UPG-E-07.3（沈逾于告知节点收到）",
+              "UPG-E-09（行动决策参考）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-25",
+            "times": [
+              "UPG-E-13.1",
+              "UPG-E-13.1",
+              "UPG-E-13.2（访问级别生效）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-26",
+            "times": [
+              "UPG-E-13.1",
+              "UPG-E-13.1",
+              "UPG-E-14（余波中的希望来源，非保证）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-27",
+            "times": [
+              "UPG-E-14.1",
+              "UPG-E-14.1",
+              "不适用（终态）"
+            ],
+            "result": "MANUAL"
+          },
+          {
+            "object_id": "UPG-IO-28",
+            "times": [
+              "UPG-E-05.3",
+              "UPG-E-05.3",
+              "UPG-E-05.3（仅取行动层必要要素时脱敏使用）"
+            ],
+            "result": "PASS"
+          },
+          {
+            "object_id": "UPG-IO-29",
+            "times": [
+              "未发送",
+              "未发送",
+              "UPG-E-10（评估输入）"
+            ],
+            "result": "MANUAL"
+          }
+        ]
+      },
+      {
+        "id": "migration_17_paths",
+        "result": "PASS",
+        "evidence": [
+          {
+            "row": 1,
+            "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-it.md",
+            "target_locator": "BASE 树实际路径（前缀 docs/superpowers/specs/lld/ → duanxian/design/specs/lld/）",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 2,
+            "source": "duanxian/writing/characters/2026-06-07-writer-betrayer.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-betrayer.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 3,
+            "source": "duanxian/writing/characters/2026-06-07-writer-colleagues.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-colleagues.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 4,
+            "source": "duanxian/writing/characters/2026-06-07-writer-jiling.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-jiling.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 5,
+            "source": "duanxian/writing/characters/2026-06-07-writer-qianxu.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-qianxu.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 6,
+            "source": "duanxian/writing/characters/2026-06-07-writer-shenyu.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-shenyu.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 7,
+            "source": "duanxian/writing/characters/2026-06-07-writer-zhengbozhou.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/characters/2026-06-07-character-zhengbozhou.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 8,
+            "source": "duanxian/writing/scenes/2026-06-07-scene-K1.md",
+            "source_line": 15,
+            "target": "duanxian/design/specs/lld/scenes/2026-06-07-scene-K1.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 9,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-apartment.md",
+            "source_line": 15,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-apartment.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 10,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-city.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-city.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 11,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-corridor.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-corridor.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 12,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-digital-realm.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-digital-realm.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 13,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-hotel-room.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-hotel-room.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 14,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-meeting-room.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-meeting-room.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 15,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-operation-room.md",
+            "source_line": 13,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-operation-room.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 16,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-security-hall.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-security-hall.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          },
+          {
+            "row": 17,
+            "source": "duanxian/writing/spaces/2026-06-07-writer-server-room.md",
+            "source_line": 14,
+            "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-server-room.md",
+            "target_locator": "BASE 树实际路径",
+            "source_line_exact": true,
+            "target_exists": true,
+            "equivalence": "full_prefix_remap",
+            "declared_status": "mapped_verified",
+            "mechanical_result": "PASS",
+            "semantic_review_required": false
+          }
+        ]
+      },
+      {
+        "id": "BASE_skill_count",
+        "result": "PASS",
+        "evidence": {
+          "count": 82,
+          "method": "git ls-tree -rz --name-only BASE; exact one-level pattern"
+        }
+      },
+      {
+        "id": "BASE_machine_absence_only",
+        "result": "PASS",
+        "evidence": {
+          "novel-conception-package.json": [],
+          "development-handoff.json": [],
+          "hld-completion.json": []
+        }
+      },
+      {
+        "id": "attribute_risk_reproduced",
+        "result": "PASS",
+        "evidence": [
+          "engine/skills/novel-hld-finalizer/SKILL.md: text: unspecified",
+          "engine/skills/novel-hld-finalizer/SKILL.md: eol: unspecified",
+          "engine/harnesses/novel-hld-autonomous/manifest.yaml: text: unspecified",
+          "engine/harnesses/novel-hld-autonomous/manifest.yaml: eol: unspecified",
+          "engine/skills/novel-development-baseline-preparer/SKILL.md: text: unspecified",
+          "engine/skills/novel-development-baseline-preparer/SKILL.md: eol: unspecified"
+        ]
+      },
+      {
+        "id": "writing_not_claimed",
+        "result": "PASS",
+        "evidence": {
+          "rows": 28,
+          "states": [
+            "PENDING_WRITING"
+          ]
+        }
+      },
+      {
+        "id": "candidate_secret_pattern_scan",
+        "result": "PASS",
+        "evidence": {
+          "matched_paths": [],
+          "scope": "duanxian/design/upgrades/duanxian-upg-impl-001"
+        }
+      },
+      {
+        "id": "authority_local_hashes",
+        "result": "PASS",
+        "evidence": [
+          {
+            "path": "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md",
+            "expected": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52",
+            "actual": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52"
+          },
+          {
+            "path": ".kunora/inputs/open-issues-snapshot-20261114.md",
+            "expected": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67",
+            "actual": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67"
+          },
+          {
+            "path": "duanxian/novel-goals.md",
+            "expected": "5ebbce4fe46c17b787c628b15ab8a16e9d0e29fdd6831c25ed541790e5f0f297",
+            "actual": "5ebbce4fe46c17b787c628b15ab8a16e9d0e29fdd6831c25ed541790e5f0f297"
+          },
+          {
+            "path": "duanxian/conception-approved/author-decision.json",
+            "expected": "4f5a070d22a92fb211b9e99709e04e05b16460aa52ae40c7ebb0eaf49249e2bd",
+            "actual": "4f5a070d22a92fb211b9e99709e04e05b16460aa52ae40c7ebb0eaf49249e2bd"
+          },
+          {
+            "path": "duanxian/conception-approved/conception-completion.json",
+            "expected": "4eabd4af2b249493f3aae1a2668c4de9b37dea7f61628e1b454293e49587d127",
+            "actual": "4eabd4af2b249493f3aae1a2668c4de9b37dea7f61628e1b454293e49587d127"
+          },
+          {
+            "path": "duanxian/conception-approved/human-review-report.json",
+            "expected": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640",
+            "actual": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640"
+          },
+          {
+            "path": "duanxian/conception-approved/README.md",
+            "expected": "652be2cc1494199c84839733c5b5e496cfc28fb8a8a46020fb8b1fd3cdf7bd6f",
+            "actual": "652be2cc1494199c84839733c5b5e496cfc28fb8a8a46020fb8b1fd3cdf7bd6f"
+          }
+        ]
+      },
+      {
+        "id": "engineering_7_plus_3_static_only",
+        "result": "PASS",
+        "evidence": {
+          "runtimes": [
+            {
+              "path": "engine/skills/novel-storyline-architecture-designer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-world-model-designer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-environment-system-designer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-event-timeline-designer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-character-system-designer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-conception-reviewer/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            },
+            {
+              "path": "engine/skills/novel-conception-deliverable-assembler/scripts/run_v2.py",
+              "correct_in_BASE": true,
+              "duplicated_engine_in_BASE": false
+            }
+          ],
+          "tests": [
+            {
+              "path": "duanxian/conception-production/tests/test_attempt_selection_cli.py",
+              "line12": "ROOT = Path(__file__).resolve().parents[4]",
+              "line13": "ENTRYPOINT = ROOT / \"projects\" / \"duanxian\" / \"conception-production\" / \"run.py\"",
+              "bad_old_root": true
+            },
+            {
+              "path": "duanxian/conception-production/tests/test_topology_review_cli.py",
+              "line12": "ROOT = Path(__file__).resolve().parents[4]",
+              "line13": "ENTRYPOINT = ROOT / \"projects\" / \"duanxian\" / \"conception-production\" / \"run.py\"",
+              "bad_old_root": true
+            },
+            {
+              "path": "duanxian/conception-production/tests/test_line_sequence_review_cli.py",
+              "line12": "ROOT = Path(__file__).resolve().parents[4]",
+              "line13": "ENTRYPOINT = ROOT / \"projects\" / \"duanxian\" / \"conception-production\" / \"run.py\"",
+              "bad_old_root": true
+            }
+          ],
+          "execution": "NOT_RUN: no engineering repair/runtime authorization; static read only"
+        }
+      },
+      {
+        "id": "visual_edges_cover_claimed_23_relations",
+        "result": "FAIL",
+        "evidence": {
+          "group_node_shortest_distances": {
+            "NODE-CHAR-01": 0,
+            "NODE-CHAR-02": 0,
+            "NODE-CHAR-03": 1,
+            "NODE-CHAR-04": 1,
+            "NODE-CHAR-05": 2,
+            "NODE-CHAR-08": 2,
+            "NODE-CHAR-06": 3,
+            "NODE-CHAR-07": 3
+          },
+          "edge_source_relation_count": 18,
+          "registered_relations": 23,
+          "missing_from_visual_edges": [
+            "REL-ILYA-DMITRI",
+            "REL-ILYA-MSTATE",
+            "REL-LIANG-HE",
+            "REL-QIN-LIANG",
+            "REL-QIN-LUO"
+          ],
+          "note": "Aggregated visual node distances do not prove individual relationship distances; no canonical machine graph available."
+        }
+      }
+    ],
+    "migration_22": [
+      {
+        "row": 1,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-it.md",
+        "target_locator": "BASE 树实际路径（前缀 docs/superpowers/specs/lld/ → duanxian/design/specs/lld/）",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 2,
+        "source": "duanxian/writing/characters/2026-06-07-writer-betrayer.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-betrayer.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 3,
+        "source": "duanxian/writing/characters/2026-06-07-writer-colleagues.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-colleagues.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 4,
+        "source": "duanxian/writing/characters/2026-06-07-writer-jiling.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-jiling.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 5,
+        "source": "duanxian/writing/characters/2026-06-07-writer-qianxu.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-qianxu.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 6,
+        "source": "duanxian/writing/characters/2026-06-07-writer-shenyu.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-shenyu.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 7,
+        "source": "duanxian/writing/characters/2026-06-07-writer-zhengbozhou.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-zhengbozhou.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 8,
+        "source": "duanxian/writing/scenes/2026-06-07-scene-K1.md",
+        "source_line": 15,
+        "target": "duanxian/design/specs/lld/scenes/2026-06-07-scene-K1.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 9,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-apartment.md",
+        "source_line": 15,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-apartment.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 10,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-city.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-city.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 11,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-corridor.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-corridor.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 12,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-digital-realm.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-digital-realm.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 13,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-hotel-room.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-hotel-room.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 14,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-meeting-room.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-meeting-room.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 15,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-operation-room.md",
+        "source_line": 13,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-operation-room.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 16,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-security-hall.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-security-hall.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 17,
+        "source": "duanxian/writing/spaces/2026-06-07-writer-server-room.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-server-room.md",
+        "target_locator": "BASE 树实际路径",
+        "source_line_exact": true,
+        "target_exists": true,
+        "equivalence": "full_prefix_remap",
+        "declared_status": "mapped_verified",
+        "mechanical_result": "PASS",
+        "semantic_review_required": false
+      },
+      {
+        "row": 18,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.2 双主角语言规则（L312–339 内）",
+        "source_line_exact": false,
+        "target_exists": true,
+        "equivalence": "partial",
+        "declared_status": "mapped_partial__historical_dependency",
+        "mechanical_result": "PASS",
+        "semantic_review_required": true
+      },
+      {
+        "row": 19,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.1 情感行＋§9.3 禁用项（L312–339 内）",
+        "source_line_exact": false,
+        "target_exists": true,
+        "equivalence": "substantial",
+        "declared_status": "mapped_substantial",
+        "mechanical_result": "PASS",
+        "semantic_review_required": true
+      },
+      {
+        "row": 20,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 14,
+        "target": "（无 §9 完整同名条款）",
+        "target_locator": "§9.1–9.3 风格章 L312–339 内无对应条款",
+        "source_line_exact": false,
+        "target_exists": false,
+        "equivalence": "missing_in_style_chapter",
+        "declared_status": "historical_version_dependency__pending",
+        "mechanical_result": "PASS",
+        "semantic_review_required": true
+      },
+      {
+        "row": 21,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 14,
+        "target": "（无 §9 完整同名条款）",
+        "target_locator": "§9.1–9.3 风格章 L312–339 内无对应条款",
+        "source_line_exact": false,
+        "target_exists": false,
+        "equivalence": "missing_in_style_chapter",
+        "declared_status": "historical_version_dependency__pending",
+        "mechanical_result": "PASS",
+        "semantic_review_required": true
+      },
+      {
+        "row": 22,
+        "source": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "source_line": 14,
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.3 全局禁用项（L312–339 内）",
+        "source_line_exact": false,
+        "target_exists": true,
+        "equivalence": "comparable_itemized_only",
+        "declared_status": "mapped_itemized",
+        "mechanical_result": "PASS",
+        "semantic_review_required": true
+      }
+    ],
+    "graph": {
+      "group_node_shortest_distances": {
+        "NODE-CHAR-01": 0,
+        "NODE-CHAR-02": 0,
+        "NODE-CHAR-03": 1,
+        "NODE-CHAR-04": 1,
+        "NODE-CHAR-05": 2,
+        "NODE-CHAR-08": 2,
+        "NODE-CHAR-06": 3,
+        "NODE-CHAR-07": 3
+      },
+      "edge_source_relation_count": 18,
+      "registered_relations": 23,
+      "missing_from_visual_edges": [
+        "REL-ILYA-DMITRI",
+        "REL-ILYA-MSTATE",
+        "REL-LIANG-HE",
+        "REL-QIN-LIANG",
+        "REL-QIN-LUO"
+      ],
+      "note": "Aggregated visual node distances do not prove individual relationship distances; no canonical machine graph available."
+    },
+    "scope_note": "Mechanical PASS does not establish semantic closure. MANUAL ledger rows are internal/terminal states; cross-object timing reviewed separately."
+  },
+  "retests": [
+    {
+      "finding_id": "ACC-001",
+      "result": "FAIL",
+      "expected_outputs": [
+        {
+          "path": "U/01-control-register.json",
+          "sha256": "87e839586bdf4de5a1ccc77f6ba4ff58034c0359afb85bfc4bc9a5648ffc10b6",
+          "result": "PASS",
+          "assessment": "PASS：75条投影，三个遗漏源对象已登记；逐源hash/Pointer/承接字段核对成立。"
+        },
+        {
+          "path": "U/06-causal-and-event-map.json",
+          "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+          "result": "PASS",
+          "assessment": "PASS：原ACT-LIFE、ACT-CRISIS、EVENTS未注册ID消失；完整控制token均能解析。仅指ID修复。"
+        },
+        {
+          "path": "U/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+          "result": "FAIL",
+          "assessment": "FAIL：entries/71、50仍不忠实推导源；04 R18聚合关系距离证据不足，ACC2-001。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "FAIL",
+          "assessment": "FAIL：新版报告仍声称追踪闭合；本轮实读发现上述反例，不能复用其PASS。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：15项实际字节/hash一致；只证明完整性。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    },
+    {
+      "finding_id": "ACC-002",
+      "result": "FAIL",
+      "expected_outputs": [
+        {
+          "path": "U/06-causal-and-event-map.json",
+          "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+          "result": "FAIL",
+          "assessment": "FAIL：E03首输入、E10危机结果依赖已修；E11入口授权与动作冲突、执行记录指错。"
+        },
+        {
+          "path": "U/07-information-ledger.csv",
+          "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+          "result": "FAIL",
+          "assessment": "FAIL：06.0首输入及16.1转达已补；09当前实例E02.2日志与启动冲突。19/19.1拆分本身正确。"
+        },
+        {
+          "path": "U/09-scene-specs.md",
+          "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+          "result": "PASS",
+          "assessment": "PASS（局部）：AWAKE先收06.0后输出；BLOCKADE/FAREWELL有16.1，不再留后续登记；与06/07全链仍FAIL。"
+        },
+        {
+          "path": "U/10-text-adaptation-map.csv",
+          "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+          "result": "PASS",
+          "assessment": "PASS（局部）：M05/07等初醒映射和M09/10终局适配同步台账；28项仍PENDING_WRITING。"
+        },
+        {
+          "path": "U/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+          "result": "FAIL",
+          "assessment": "FAIL：具备更新入口和场景引用，但消费者仍需自行改06/07才能执行，见密封对照C1/C2。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "FAIL",
+          "assessment": "FAIL：IO09运行期与授权记录同步问题使其全链通过声明不成立。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：字节绑定有效；不排除内容矛盾。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    },
+    {
+      "finding_id": "ACC-003",
+      "result": "PASS",
+      "expected_outputs": [
+        {
+          "path": "U/04-character-responsibility.md",
+          "sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+          "result": "PASS",
+          "assessment": "PASS：R15分级和R07上限保持，未给实例L2档案权。"
+        },
+        {
+          "path": "U/06-causal-and-event-map.json",
+          "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+          "result": "PASS",
+          "assessment": "PASS：E09.6外部核验批注与E10.4实例记录分开；前者依据E08线索，不倒用尚未形成REC-1。"
+        },
+        {
+          "path": "U/07-information-ledger.csv",
+          "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+          "result": "PASS",
+          "assessment": "PASS：IO21为主观线索/假设；IO21V外部核验；IO24.3的L2接收与记录阅读分开。"
+        },
+        {
+          "path": "U/08-ending-and-pov.md",
+          "sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+          "result": "PASS",
+          "assessment": "PASS：REC-1/REC-1V来源分列，封存/移交/沈逾阅读分时。"
+        },
+        {
+          "path": "U/09-scene-specs.md",
+          "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+          "result": "PASS",
+          "assessment": "PASS：VERIFY外部现实核验；AFTERMATH不把重读当初知。"
+        },
+        {
+          "path": "U/10-text-adaptation-map.csv",
+          "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+          "result": "PASS",
+          "assessment": "PASS：M22/M24取消实例原创L2与沈逾从REC-1首次获知的旧要求。"
+        },
+        {
+          "path": "U/11-owner-decisions.md",
+          "sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+          "result": "PASS",
+          "assessment": "PASS（条件性）：保留D02 owner_pending；新增外部批注不替Owner批准归属。"
+        },
+        {
+          "path": "U/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+          "result": "PASS",
+          "assessment": "PASS（原缺陷）：REC-1V L2列入暂停依赖；未把实例记录作为核验事实。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "PASS",
+          "assessment": "PASS（原缺陷）：记录拆分修复可由上述实体支持，独立判断不援引其判词。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：覆盖新增对象所在文件实际hash。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    },
+    {
+      "finding_id": "ACC-004",
+      "result": "PASS",
+      "expected_outputs": [
+        {
+          "path": "U/07-information-ledger.csv",
+          "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+          "result": "PASS",
+          "assessment": "PASS：IO17对应KO-1请求，IO22对应KO-2/3事后记录，不再以一个含糊意图对象解释两时点。"
+        },
+        {
+          "path": "U/08-ending-and-pov.md",
+          "sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+          "result": "PASS",
+          "assessment": "PASS：§A-2四对象明列；S1关闭内部POV，S2请求，S6记录确认。"
+        },
+        {
+          "path": "U/09-scene-specs.md",
+          "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+          "result": "PASS",
+          "assessment": "PASS：FAREWELL最后输出限制KO-1、禁止KO-2/3，AFTERMATH对照记录。"
+        },
+        {
+          "path": "U/10-text-adaptation-map.csv",
+          "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+          "result": "PASS",
+          "assessment": "PASS：M09等以请求/意图/动机对象区分，旧早泄内容待适配。"
+        },
+        {
+          "path": "U/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+          "result": "PASS",
+          "assessment": "PASS（原缺陷）：终局消费引用08知识对象及相关台账。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "PASS",
+          "assessment": "PASS（原缺陷）：对象拆分有真实字段，不以自报PASS代替阅读。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：终局材料hash一致。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    },
+    {
+      "finding_id": "ACC-005",
+      "result": "PASS",
+      "expected_outputs": [
+        {
+          "path": "U/11-owner-decisions.md",
+          "sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+          "result": "PASS",
+          "assessment": "PASS（原L2捷径）：82行明确24.3/REC-1V L2未签不得无条件消费；A和B均未生效。L0/L1字段范围保守按50/53行暂停，另列观察O1。"
+        },
+        {
+          "path": "U/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793",
+          "result": "PASS",
+          "assessment": "PASS（原L2捷径）：blocks_and_pauses/1包含A候选24.3及REC-1V L2，不再只停B。"
+        },
+        {
+          "path": "U/04-character-responsibility.md",
+          "sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+          "result": "PASS",
+          "assessment": "PASS：R15分级不等于选中罪责，R16拒绝按职务换名。"
+        },
+        {
+          "path": "U/06-causal-and-event-map.json",
+          "sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+          "result": "PASS",
+          "assessment": "PASS：E07 conditional_note保留D02；核验/分级结构与确定归属区分。"
+        },
+        {
+          "path": "U/07-information-ledger.csv",
+          "sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+          "result": "PASS",
+          "assessment": "PASS：24.3 receiver/reader_reveal标为未签A候选；24.1/24.2仍decision_ref D02，不能扩为全部字段无条件可用。"
+        },
+        {
+          "path": "U/09-scene-specs.md",
+          "sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+          "result": "PASS",
+          "assessment": "PASS：VERIFY conditional_on_D02；未签不能产确定归属。"
+        },
+        {
+          "path": "U/10-text-adaptation-map.csv",
+          "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+          "result": "PASS",
+          "assessment": "PASS：M13等保持Owner条件及正文PENDING_WRITING，不替换罪责。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "PASS",
+          "assessment": "PASS（原L2捷径）：候选边界可由11/12实体支持；不代表必要批准已经取得。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：决策与交接字节一致。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    },
+    {
+      "finding_id": "ACC-006",
+      "result": "PASS",
+      "expected_outputs": [
+        {
+          "path": "U/02-legacy-disposition.md",
+          "sha256": "bad0771e70524939606e94179cc8fe29ff25cb675a9afb3eb98fa2d32bfc6c95",
+          "result": "PASS",
+          "assessment": "PASS：LEG04区分E07:26真正早知与:40的S15锚点/S17披露。"
+        },
+        {
+          "path": "U/08-ending-and-pov.md",
+          "sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+          "result": "PASS",
+          "assessment": "PASS：§H六月读者先见记录351–387、沈逾448–460后读；E10:123素材同步规则列为未落实。"
+        },
+        {
+          "path": "U/10-text-adaptation-map.csv",
+          "sha256": "62f5e45d4c8cc0eb4083df2cd268b009b9d23856c287dde05d733a4c69ff5ba6",
+          "result": "PASS",
+          "assessment": "PASS：M10等纠正历史证据，不把anchor当reveal；新适配尚待写作。"
+        },
+        {
+          "path": "U/13-regression-results.md",
+          "sha256": "4fbde3acc677d1877ead6c7003fcba622727961928ef041e75ce7468eea0b51a",
+          "result": "PASS",
+          "assessment": "PASS：#3旁挂22项与#6历史核实分开；工程留存1/2/4/6，不再混#7。"
+        },
+        {
+          "path": "U/manifest.json",
+          "sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+          "result": "PASS",
+          "assessment": "PASS：历史处置文件绑定一致；旧原件未改。"
+        }
+      ],
+      "no_reverse_rewrite": "PASS：BASE既有1444文件未修改，候选最终修订范围仅U；旧批准/旧正文/旧验收保留。",
+      "scope": "PASS仅指原修正目标；不覆盖其他发现、Owner签认或正式准入。"
+    }
+  ],
+  "issue_regression": [
+    {
+      "regression_id": "REG-01",
+      "issue_ref": "#1",
+      "design_result": "PASS",
+      "original_closure_result": "DEFERRED_ENGINEERING",
+      "reason": "七runtime/三测试坏入口仅静态定位，验收探针未调用；未做工程修复",
+      "evidence": "audit engineering_7_plus_3_static_only；定义§1.2/REG-01",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-02",
+      "issue_ref": "#2",
+      "design_result": "PASS",
+      "original_closure_result": "DEFERRED_ENGINEERING",
+      "reason": "BASE一层novel-* SKILL=82；两份导览未改，集合与计数口径保留",
+      "evidence": "audit BASE_skill_count；定义REG-02",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-03",
+      "issue_ref": "#3",
+      "design_result": "PASS",
+      "original_closure_result": "PASS",
+      "reason": "17路径与五指称逐项核对；旁挂勘误满足本条追溯，部分/缺失未冒充规则；不表示所有旧内容可消费",
+      "evidence": "acceptance 22项表；audit migration_22；NEG-MIGRATION-*",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-04",
+      "issue_ref": "#4",
+      "design_result": "PASS",
+      "original_closure_result": "DEFERRED_ENGINEERING",
+      "reason": "新包15文件hash精确；三样本text/eol共六项unspecified风险复现；不外推完整工程集合",
+      "evidence": "audit manifest_15_files/attribute_risk_reproduced",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-05",
+      "issue_ref": "#5",
+      "design_result": "FAIL",
+      "original_closure_result": "FAIL",
+      "reason": "旧P1/open保留，但新替代字段追踪仍有误；正式HLD人审与LLD准入也未取得",
+      "evidence": "ACC2-001；E16；12 entries/50,71；04 R18",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-06",
+      "issue_ref": "#6",
+      "design_result": "PASS",
+      "original_closure_result": "DEFERRED_ENGINEERING",
+      "reason": "v3声明、L33 v2、真实评审对象三栏隔离；无原run核实，不靠新版本消除歧义",
+      "evidence": "E16 integrity:8/11/25/32–34/57–58、final package:20–24、manifest:11–15；02/13",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-07",
+      "issue_ref": "#7",
+      "design_result": "PASS",
+      "original_closure_result": "BLOCKED_EVIDENCE",
+      "reason": "承认构思批准有效且候选非正式；树中缺本体不能推断外部不存在；正式受控复验材料未取得",
+      "evidence": "E03/E17；00 authority；audit BASE_machine_absence_only",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-08",
+      "issue_ref": "#8",
+      "design_result": "PASS",
+      "original_closure_result": "BLOCKED_OWNER",
+      "reason": "无辜/同意/公共救援结构成立；具体保护机制D01未签仍停",
+      "evidence": "04 R3/R4→06 E05→07 IO02/03/28/15→09 PROTECTION→10 M01–03",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-09",
+      "issue_ref": "#9",
+      "design_result": "FAIL",
+      "original_closure_result": "PENDING_WRITING",
+      "reason": "首输入与文字边界已修；初醒/当前运行日志跨场景时序仍冲突；原正文未适配",
+      "evidence": "ACC2-002；06 E03/04/06、07 IO09、09 AWAKE；M05–08/16/25",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-10",
+      "issue_ref": "#10",
+      "design_result": "FAIL",
+      "original_closure_result": "PENDING_WRITING",
+      "reason": "知识对象与主观/外部记录已拆分；E11授权入口/执行记录矛盾仍阻碍完整消费",
+      "evidence": "ACC2-003及ACC2-002；07/08/09/10；独立消费C1/C2",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-11",
+      "issue_ref": "#11",
+      "design_result": "PASS",
+      "original_closure_result": "PENDING_WRITING",
+      "reason": "IO10问询到沈逾→IO11 E06.3转述到实例→E10使用；不从精确十秒/室内感官得知；全局日志来源另记ACC2-002",
+      "evidence": "06 E06；07 IO10/11；09 REVIEW；10 M06/21/25；NEG-CHANNEL/LATE-RECEPTION/NO-RELAY",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-12",
+      "issue_ref": "#12",
+      "design_result": "BLOCKED_OWNER",
+      "original_closure_result": "BLOCKED_OWNER",
+      "reason": "原未签L2可消费捷径已移除；D02未选，不能替作者定责/换名；后续文本仍待写",
+      "evidence": "04 R15/R16；07 IO24.1–3；08 REC-1V；11 D02；12 blocks_and_pauses/1",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    {
+      "regression_id": "REG-13",
+      "issue_ref": "#13",
+      "design_result": "PASS",
+      "original_closure_result": "PENDING_WRITING",
+      "reason": "片段/假设/外部核验分列，REC-1不输出未获L2；未虚构现实核验已经发生；完整正文仍待适配",
+      "evidence": "05 E2/E4；07 IO13/14/21/21V；09 VERIFY；10 M16–22/28；NEG-MEMORY/L2-IN-REC1",
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "ACC2-001",
+      "prior_finding": "ACC-001",
+      "severity": "high",
+      "issue_refs": [
+        5
+      ],
+      "failed_checks": [
+        "6.1-1",
+        "6.1-2",
+        "6.1-6",
+        "REG-05"
+      ],
+      "expected": "定义书§2.2、§3.2、§5步骤4/8、§6.1-6：逐字段从批准源回读推导，人物层级按关系最短距离，不能只证明ID集合相同。",
+      "observed": "12 /control_trace/entries/71把CONN-1的告别前悬念控制解释为IO-11私人转述通道；/entries/50把LIFE的实验价值及伦理控制推成意图确认唯一时点S6。04:117声称八条聚合图边覆盖23条REL并证明每人最短层级；实算只有18条REL，少5条。",
+      "root_owner": "第二步控制追踪与人物关系覆盖；把相关文档出现当作语义推导，把聚合图距离当作完整人物关系距离。",
+      "evidence": [
+        "E02 /storylines/connections/1 ↔ U/12 /control_trace/entries/71 (约1140行)",
+        "E02 /world/event_conditions/0 ↔ U/12 /control_trace/entries/50 (约848行)",
+        "E02 /characters/relationship_networks/0/source_ids、/visual_models/4/edges ↔ U/04:117–126；evidence-index.audit.graph"
+      ],
+      "retest": [
+        "全75控制源Pointer/hash及目标语义",
+        "23条关系覆盖与最短距离依据",
+        "REG-05",
+        "四个high全链",
+        "NEG-AUTHORITY/STATE/PACKAGE",
+        "独立消费",
+        "全部全局硬约束"
+      ],
+      "definition_commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+      "implementation_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+      "owner_decision_required": false,
+      "loop_index": 3,
+      "remaining_revision_budget": 0,
+      "execution_status": "NOT_AUTHORIZED_PENDING_OWNER",
+      "correction": {
+        "inputs": [
+          "定义书§2.2、§3.2、§5步骤4/8、§6.1-6：逐字段从批准源回读推导，人物层级按关系最短距离，不能只证明ID集合相同。",
+          "E02 /storylines/connections/1 ↔ U/12 /control_trace/entries/71 (约1140行)",
+          "E02 /world/event_conditions/0 ↔ U/12 /control_trace/entries/50 (约848行)",
+          "E02 /characters/relationship_networks/0/source_ids、/visual_models/4/edges ↔ U/04:117–126；evidence-index.audit.graph"
+        ],
+        "actions": [
+          "逐条纠正CONN-1与LIFE的目标字段、场景义务及推导理由；CONN-1应回读真实悬念/视角义务，LIFE须覆盖实验过程与伦理责任，不能以S6替代全部控制。",
+          "重新核对全部高风险及新增人物控制；核清FRAGMENTS-EVIDENCE是创作片段覆盖而非记忆能力。",
+          "对23条REL建立可核验承接；以实际人物关系及明确算法计算层级，若材料不足则明确证据依赖，不能声称聚合图已证明逐人距离。",
+          "同步04/06/09/12/13与manifest，保留旧批准、本体缺失和正式准入边界。"
+        ],
+        "expected_outputs": [
+          "U/01-control-register.json",
+          "U/04-character-responsibility.md",
+          "U/06-causal-and-event-map.json",
+          "U/09-scene-specs.md",
+          "U/12-traceability-and-handoff.json",
+          "U/13-regression-results.md",
+          "U/manifest.json"
+        ],
+        "forbidden_shortcuts": [
+          "只补控制计数或同名ID",
+          "把18条源边写成覆盖23条",
+          "虚构缺失canonical或改批准源"
+        ]
+      },
+      "affected_consumers": [
+        "全部人物控制",
+        "终局视角控制",
+        "12 handoff",
+        "REG-05"
+      ]
+    },
+    {
+      "finding_id": "ACC2-002",
+      "prior_finding": "ACC-002",
+      "severity": "high",
+      "issue_refs": [
+        9,
+        10
+      ],
+      "failed_checks": [
+        "6.1-2",
+        "6.1-7",
+        "REG-09",
+        "REG-10"
+      ],
+      "expected": "定义书§3.3/§3.4、REG-09/10及ACC-002修正actions第5项：材料所属运行、形成、接收与使用须有同一可执行时序。",
+      "observed": "07:11 IO-09明确当前实例运行期E-02.2异常并留痕；06 /events/2在E-03才启动R-07，09:31 AWAKE前态是实例未启动。06 /events/3/cost与/events/5/preconditions又把审查源偏离放在E-04。同一当前实例既未启动又已生成运行异常。",
+      "root_owner": "第二步06事件与07日志来源/时间、09场景前态同步不完整。",
+      "evidence": [
+        "U/07 IO-09 source/sent_at/received_at (行11)",
+        "U/06 /events/2、/events/3/cost、/events/5/preconditions",
+        "U/09 UPG-S-AWAKE 前状态 (行31)",
+        "独立消费对照C1"
+      ],
+      "retest": [
+        "实例启动≤该实例日志形成≤调取≤使用",
+        "合法首输入/危机转达正例",
+        "NEG-CHANNEL/LATE-RECEPTION/SENT-NO-RECEIVE/NO-RELAY",
+        "独立密封消费",
+        "全部全局硬约束"
+      ],
+      "definition_commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+      "implementation_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+      "owner_decision_required": false,
+      "loop_index": 3,
+      "remaining_revision_budget": 0,
+      "execution_status": "NOT_AUTHORIZED_PENDING_OWNER",
+      "correction": {
+        "inputs": [
+          "定义书§3.3/§3.4、REG-09/10及ACC-002修正actions第5项：材料所属运行、形成、接收与使用须有同一可执行时序。",
+          "U/07 IO-09 source/sent_at/received_at (行11)",
+          "U/06 /events/2、/events/3/cost、/events/5/preconditions",
+          "U/09 UPG-S-AWAKE 前状态 (行31)",
+          "独立消费对照C1"
+        ],
+        "actions": [
+          "明确IO-09实际材料来源和所属运行，并将发生/记录/调取/使用时点与E-03启动及E-04行为偏离对齐。",
+          "若确需启动前材料，区分其与当前实例运行日志，给出受控来源；不由消费方猜作旧实例或设备日志。",
+          "从初醒到审查再到E-10逐边回放；同时保持IO-06.0首输入与IO-16.1危机结果转达的修复。",
+          "同步06/07/09/10/12/13并实算manifest。"
+        ],
+        "expected_outputs": [
+          "U/06-causal-and-event-map.json",
+          "U/07-information-ledger.csv",
+          "U/09-scene-specs.md",
+          "U/10-text-adaptation-map.csv",
+          "U/12-traceability-and-handoff.json",
+          "U/13-regression-results.md",
+          "U/manifest.json"
+        ],
+        "forbidden_shortcuts": [
+          "仅把sent≤received≤use当作跨对象出生约束证明",
+          "无依据称旧实例日志",
+          "新增实例感官或日志直读能力"
+        ]
+      },
+      "affected_consumers": [
+        "AWAKE",
+        "REVIEW",
+        "E-10评估",
+        "07信息台账",
+        "REG-09/10/11"
+      ]
+    },
+    {
+      "finding_id": "ACC2-003",
+      "prior_finding": "ACC-002",
+      "severity": "medium",
+      "issue_refs": [
+        10
+      ],
+      "failed_checks": [
+        "6.1-2",
+        "6.1-7",
+        "REG-10"
+      ],
+      "expected": "定义书§3.3、REG-10及ACC-002授权/执行记录要求：请求→授权→执行分离且事件入口、子动作和信息对象一致。",
+      "observed": "06 /events/10/preconditions/1要求进入E-11前关停授权已完成；同事件/actions/1在E-11.2才授权，07/08把请求放E-11.1。/actions/2执行记录写IO-19 received E-11.3，而07:22 IO-19明确只是E-11.2授权且不含执行事实，07:23 IO-19.1才为执行。",
+      "root_owner": "第二步把执行子动作条件写成整个告别事件前提，拆分台账后未同步事件动作引用。",
+      "evidence": [
+        "U/06 /events/10/preconditions/1、/actions/1、/actions/2 (约203/208行)",
+        "U/07 IO-17、IO-19、IO-19.1 (行20/22/23)",
+        "U/08 §A S2/S3/S4",
+        "独立消费对照C2"
+      ],
+      "retest": [
+        "完整请求→授权→执行→核验偏序",
+        "全06/07执行记录引用",
+        "NEG-ENDING及SELF-STOP",
+        "独立消费",
+        "全部全局硬约束"
+      ],
+      "definition_commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+      "implementation_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+      "owner_decision_required": false,
+      "loop_index": 3,
+      "remaining_revision_budget": 0,
+      "execution_status": "NOT_AUTHORIZED_PENDING_OWNER",
+      "correction": {
+        "inputs": [
+          "定义书§3.3、REG-10及ACC-002授权/执行记录要求：请求→授权→执行分离且事件入口、子动作和信息对象一致。",
+          "U/06 /events/10/preconditions/1、/actions/1、/actions/2 (约203/208行)",
+          "U/07 IO-17、IO-19、IO-19.1 (行20/22/23)",
+          "U/08 §A S2/S3/S4",
+          "独立消费对照C2"
+        ],
+        "actions": [
+          "分别定义E-11事件入口与执行子动作前提，使E-11.1请求先于E-11.2授权再至E-11.3执行。",
+          "把执行留痕引用指向真实IO-19.1并核对sender/receiver/时间；授权记录保持IO-19。",
+          "同步07/08/09/10/12/13，检验可从事件入口完整走到技术核验而不循环。"
+        ],
+        "expected_outputs": [
+          "U/06-causal-and-event-map.json",
+          "U/07-information-ledger.csv",
+          "U/08-ending-and-pov.md",
+          "U/09-scene-specs.md",
+          "U/10-text-adaptation-map.csv",
+          "U/12-traceability-and-handoff.json",
+          "U/13-regression-results.md",
+          "U/manifest.json"
+        ],
+        "forbidden_shortcuts": [
+          "消费方静默改前提或ID",
+          "编造未批准的预授权/正式授权双机制",
+          "合并意愿、授权、执行"
+        ]
+      },
+      "affected_consumers": [
+        "FAREWELL",
+        "终局S2–S5",
+        "IO-19/19.1",
+        "REG-10"
+      ]
+    }
+  ],
+  "global_checks": [
+    {
+      "id": "6.1-1 六要素",
+      "result": "FAIL",
+      "evidence": "目标/方法/边界/交付/标准均按冻结约束；候选硬约束内容未满足，ACC2-001..003，不能以结构完备代替。"
+    },
+    {
+      "id": "6.1-2 总体方案",
+      "result": "FAIL",
+      "evidence": "README唯一入口、v1.2可辨；06/07/09的日志出生时序与E11授权记录不一致。"
+    },
+    {
+      "id": "6.1-3 路线图",
+      "result": "PASS",
+      "evidence": "定义→初验→最终修订→本轮最终复验可追踪；实施配置GLM-5.3见00历史登记，本作业配置codex/gpt-6-astra见冻结spec；不声称运行时模型另经验证。FAIL交Owner，预算0。"
+    },
+    {
+      "id": "6.1-4 工程边界",
+      "result": "PASS",
+      "evidence": "七runtime/三测试仅静态，BASE=82，属性风险复现，旧v3/v2与本体缺证分别保留。"
+    },
+    {
+      "id": "6.1-5 作者边界",
+      "result": "PASS（门禁审查）",
+      "evidence": "E03构思批准未改，D01–D03仍待签；未认定候选事实正式生效。O1保守暂停具体字段。"
+    },
+    {
+      "id": "6.1-6 来源/字节/引用",
+      "result": "FAIL",
+      "evidence": "15项hash、75投影、22映射、旧1444文件不变均通过；目标语义与人物图覆盖失败，ACC2-001。"
+    },
+    {
+      "id": "6.1-7 消费能力",
+      "result": "FAIL",
+      "evidence": "无继承上下文单Agent，先12及允许材料后密封，再06–10；C1/C2需消费方改设计才可执行。"
+    },
+    {
+      "id": "6.1-8 内容质量",
+      "result": "PASS（内容维度）",
+      "evidence": "周岚同意与协查、沈逾职业/执行代价、现实团队公共救援及开放伦理余波有具体场景承接。此内容维度不豁免6.1-2的因果矛盾，也不证明未来正文质量。"
+    }
+  ],
+  "migration_22": [
+    {
+      "row": 1,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-it.md` §1-§7 |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-it.md",
+        "target_locator": "BASE 树实际路径（前缀 docs/superpowers/specs/lld/ → duanxian/design/specs/lld/）",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "旧根反引号路径经前缀替换后目标存在（本次实施已逐一 ls 复核）。路径可达不等于内容获准复用；该 LLD 的人物前提进入新版须经 02-legacy-disposition.md UPG-LEG 行处置。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 2,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-betrayer.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-betrayer.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-betrayer.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；内容处置=UPG-LEG-10（材料点显名规则 retain 为条件分支方法）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 3,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-colleagues.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-colleagues.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-colleagues.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；同事组人物不在当前 17 人批准表的单列条目中，新版同事/工程师功能由 UPG-CTRL-TANG-LI 等已批角色承载（04 §职责承载表）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 4,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-jiling.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-jiling.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-jiling.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；季铃不在当前 17 人批准表，启用需 Owner 新批；新版无此角色节点（02 §B 未列消费）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 5,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-qianxu.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-qianxu.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-qianxu.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；钱绪不在当前 17 人批准表，启用需 Owner 新批；新版无此角色节点。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 6,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-shenyu.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-shenyu.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-shenyu.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；沈逾当前锚点=UPG-CTRL-SHEN-YU（E02 core[1]），旧 LLD 条目仅作历史参照。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 7,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-zhengbozhou.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/characters/2026-06-07-character-zhengbozhou.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/characters/2026-06-07-character-zhengbozhou.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；内容处置=UPG-LEG-09（pending D02：隐名/退出两分支并存登记）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 8,
+      "candidate_row": {
+        "old_path": "duanxian/writing/scenes/2026-06-07-scene-K1.md",
+        "line": "L15",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/scenes/2026-06-07-scene-K1.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/scenes/2026-06-07-scene-K1.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；旧 K1–K10 场景编号只作带版本 alias，新版场景主键=09 的 UPG-S-* 功能单元。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 9,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-apartment.md",
+        "line": "L15",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-apartment.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-apartment.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；新版空间锚点=E02 environments（UPG-CTRL-11 隔离套间等），旧 space 条目仅历史。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 10,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-city.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-city.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-city.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 11,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-corridor.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-corridor.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-corridor.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 12,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-digital-realm.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-digital-realm.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-digital-realm.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；内容处置=UPG-LEG-07（:56–63 自行关闭 adapt；:123 记录不提前揭示 retain）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 13,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-hotel-room.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-hotel-room.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-hotel-room.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；酒店房间属顾衡开端外部线（序幕）历史场景，新版对应 06 事件 UPG-E-01 的外部线。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 14,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-meeting-room.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-meeting-room.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-meeting-room.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；会议室=旧正文 :284–320 沈逾侧场景；#11 设计选择：室内细节与十秒时长留在沈逾 POV，不传入 R-07（10 号表行 E11-284）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 15,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-operation-room.md",
+        "line": "L13",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-operation-room.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-operation-room.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；新版操作室锚点=UPG-CTRL-12 现实硬件控制室（专家+硬件+授权者共同复核）。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 16,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-security-hall.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-security-hall.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-security-hall.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 17,
+      "candidate_row": {
+        "old_path": "duanxian/writing/spaces/2026-06-07-writer-server-room.md",
+        "line": "L14",
+        "old_text": "| **LLD 引用** | `docs/superpowers/specs/lld/spaces/2026-06-07-space-server-room.md` |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/lld/spaces/2026-06-07-space-server-room.md",
+        "target_locator": "BASE 树实际路径",
+        "equivalence": "full_prefix_remap",
+        "status": "mapped_verified",
+        "notes": "同上；R-07 无服务器室物理访问/感知能力（UPG-CTRL-E01-02），相关描写只能出自现实侧 POV。"
+      },
+      "independent_assessment": "PASS：BASE源整行精确、目标存在、快照对应；仅路径可达，不许可旧内容。"
+    },
+    {
+      "row": 18,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L14",
+        "old_text": "| **HLD 引用** | `docs/superpowers/specs/2026-06-06-hld-digital-life-novel.md` §10.2（三阶段语言） |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.2 双主角语言规则（L312–339 内）",
+        "equivalence": "partial",
+        "status": "mapped_partial__historical_dependency",
+        "notes": "§9.2 只有按角色的语言规则与禁用项（数字生命体精确/结构化/分类化/可逐步自我指代；禁人类式情绪宣告、诗性独白、万能解释），无「三阶段语言演变」完整定义；L16 又称「§10.2 定义」同样无锚点。三阶段是素材层约定，无 HLD §9 支撑；新版语言演变表达由 08 §表达规则＋09 各单元以 design_derivation 承载，不引用 §10.2。不造 §9.4/§9.6/§9.8。"
+      },
+      "independent_assessment": "部分：§9.2:328仅角色语言规则，无完整三阶段；素材L16仍是假锚点。新语言表达须依08/09推导，不借旧10.2。"
+    },
+    {
+      "row": 19,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L14",
+        "old_text": "| **HLD 引用** | `docs/superpowers/specs/2026-06-06-hld-digital-life-novel.md` §10.3（情感约束） |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.1 情感行＋§9.3 禁用项（L312–339 内）",
+        "equivalence": "substantial",
+        "status": "mapped_substantial",
+        "notes": "情感约束可定位：§9.1「情感通过选择、停顿、缺席、保护和记录表现」＋§9.3 禁「直接命名核心情感」。含义需逐条核对后引用；新版情感表现边界由 UPG-CTRL-NC-04（历史相容）＋08/09 禁止项承载，批准源优先。"
+      },
+      "independent_assessment": "大体相符：§9.1:319情感经选择/停顿/缺席/保护/记录；§9.3:335禁直接命名，不能扩大为全部素材规则。"
+    },
+    {
+      "row": 20,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L14",
+        "old_text": "| **HLD 引用** | `docs/superpowers/specs/2026-06-06-hld-digital-life-novel.md` §10.4（记忆） |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "（无 §9 完整同名条款）",
+        "target_locator": "§9.1–9.3 风格章 L312–339 内无对应条款",
+        "equivalence": "missing_in_style_chapter",
+        "status": "historical_version_dependency__pending",
+        "notes": "记忆处理规则在旧链实际由 E15 叙述契约（L107–118 片段式/触发/区分已发送未发送）与 LLD/素材层承载，HLD v4 §9 无此条款。新版记忆规则由 05 §记忆触发与缺口以批准源（UPG-CTRL-E01-01、UPG-CTRL-MEMORY、UPG-CTRL-NC-02）直接承载；旧 §10.4 不映射为任何 §9.x，标历史版本依赖。"
+      },
+      "independent_assessment": "缺失：§9.1–9.3无完整记忆条款；旧10.4待核，新05直接承接批准记忆边界。"
+    },
+    {
+      "row": 21,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L14",
+        "old_text": "| **HLD 引用** | `docs/superpowers/specs/2026-06-06-hld-digital-life-novel.md` §10.6（通讯窗口） |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "（无 §9 完整同名条款）",
+        "target_locator": "§9.1–9.3 风格章 L312–339 内无对应条款",
+        "equivalence": "missing_in_style_chapter",
+        "status": "historical_version_dependency__pending",
+        "notes": "通讯窗口机制存在于素材层（E09/E10 的通讯窗口约定），HLD v4 §9 无完整同名条款。新版文字接口由 05 §文字接口以批准源（UPG-CTRL-DIALOGUE、UPG-CTRL-11、UPG-CTRL-E01-02）承载；旧 §10.6 不映射为任何 §9.x，标历史版本依赖。"
+      },
+      "independent_assessment": "缺失：§9.1–9.3无通讯窗口条款；旧10.6待核，新05依据批准文字接口。"
+    },
+    {
+      "row": 22,
+      "candidate_row": {
+        "old_path": "duanxian/writing/characters/2026-06-07-writer-R07.md",
+        "line": "L14",
+        "old_text": "| **HLD 引用** | `docs/superpowers/specs/2026-06-06-hld-digital-life-novel.md` §10.8（禁用语） |",
+        "BASE": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+        "target": "duanxian/design/specs/2026-06-06-hld-digital-life-novel.md",
+        "target_locator": "§9.3 全局禁用项（L312–339 内）",
+        "equivalence": "comparable_itemized_only",
+        "status": "mapped_itemized",
+        "notes": "§9.3 有五条全局禁用项（直接命名核心情感/解释意识诞生机制/结局反转/人类化数字生命体/社会后果扩写），与素材禁写清单只能逐条比较，不能整体等同：素材级清单另含「技术记录不提前揭示」（E10 :123）等旧 §9 未列规则。新版表达禁令由 08/09 的禁止项承载并逐条给出批准源或 design_derivation 理由。"
+      },
+      "independent_assessment": "仅逐项可比：§9.3:335–339五禁项；素材另含E10:123记录不早披露，不整表等同。"
+    }
+  ],
+  "high_chains": [
+    {
+      "issue": "#8 保护",
+      "source": "E02 supporting_characters/1周岚及/2程予安；E04:38–44/59–73、E05:20/34旧维护例外邻边",
+      "chain": "01人物源→04 R3/R4及R17→06 E05→07 IO02/03/28与IO15→09 PROTECTION→10 M01–03",
+      "review": "旧参与/协助袭击因果退出；既有档案/协查证词不等于参与；秦峥原因层与梁策/贺闻钧公共行动分离；亲属不是筹码。",
+      "positive_negative": "正例：最小必要保护及同意不授予亲属行动权限；NEG-AUTHORITY拒绝保留ID的参与者偷换。",
+      "result": "PASS结构；D01具体机制BLOCKED_OWNER，旧文字尚未重写。"
+    },
+    {
+      "issue": "#9 初醒/接口",
+      "source": "E02 /world/environments/2、/10；E06:23/30/53–54/67–74；E11:91相容过去片段",
+      "chain": "01 DIALOGUE/能力控制→04 R0/R1→05 E1/E2→06 E03/E06→07 IO06.0/06/08/11→09 AWAKE/REVIEW→10 M05–08/16/25",
+      "review": "E03.1沈逾输入先到，E03.2实例响应；当前声光/键压/精确十秒退出；过去片段不当当前感官。IO09却早于实例启动。",
+      "positive_negative": "正例：已送达核对文字及有限记忆；NEG-CHANNEL、LATE-RECEPTION、SENT-NO-RECEIVE拒绝越权及缺到达。",
+      "result": "FAIL：ACC2-002；正文PENDING_WRITING。"
+    },
+    {
+      "issue": "#10 终局",
+      "source": "E02 /decision_controls/4、/storylines/connections/1、沈逾职责；E07–E11两旧方案",
+      "chain": "01悬念/主体/执行控制→04 R0/R1/唐黎/苏望舒→06 E09–14→07 IO16.1/17/18/19/19.1/20/21/21V/22→08 S0–S7/KO1–4→09 FAREWELL/AFTERMATH→10 M09–15/21–24",
+      "review": "项目危机结果E09.4不自动到实例，E09.5文字转达；意图形成后内部POV关闭；沈逾执行、唐黎核验、苏望舒受控保管；无活动备份/复活保证。06入口及执行ID仍冲突。",
+      "positive_negative": "正例：请求/意图/理由分列及REC1/1V分源；NEG-ENDING在执行者正确仍拒绝早泄；SELF-STOP在同步记录仍拒绝自停。",
+      "result": "FAIL：ACC2-003及上下游ACC2-002；D03待签，正文PENDING_WRITING。"
+    },
+    {
+      "issue": "#13 记忆/核验",
+      "source": "E02 /world/environments/8、/10；E14:12/25–26；E11:95/155/187–199/343/363–369",
+      "chain": "01 MEMORY→04 R0/R15→05 E2/E4→06 E07/08/09→07 IO13/14/15/21/21V/24.3→09 VERIFY→10 M16–22/28",
+      "review": "主观触发和缺口→hypothesis→现实人员取证核验→授权行动；REC1无L2，REC1V外部形成，Shen E07.3早知不在E13.2初知；具体归属仍D02。",
+      "positive_negative": "正例：缺口保留、失败回退、外部批注独立；NEG-MEMORY和L2-IN-REC1拒绝标题伪装与无输入输出L2。",
+      "result": "PASS能力结构；正文PENDING_WRITING，D02具体字段暂停；E07/IO13关联仅列O2。"
+    }
+  ],
+  "positive_cases": [
+    {
+      "regression": "REG-08",
+      "positive": "04 R3/R4、09 PROTECTION：无辜+同意+公共救援，保护不是参与报偿",
+      "negative": "NEG-AUTHORITY",
+      "result": "PASS（D01定值未解锁）"
+    },
+    {
+      "regression": "REG-09",
+      "positive": "IO06.0 E03.1先收，IO06 E03.2回应；E11:91过去片段可作相容素材",
+      "negative": "NEG-CHANNEL / LATE-RECEPTION / SENT-NO-RECEIVE",
+      "result": "局部PASS；跨场景ACC2-002仍FAIL"
+    },
+    {
+      "regression": "REG-10",
+      "positive": "KO1请求文字与KO2/3记录分列，沈逾执行、外部核验、静态保管",
+      "negative": "NEG-ENDING / ENDING-SELF-STOP",
+      "result": "对象拆分PASS；全链ACC2-003仍FAIL"
+    },
+    {
+      "regression": "REG-11",
+      "positive": "IO10只到沈逾；IO11 E06.3到实例，E10用；室内详情留沈逾POV",
+      "negative": "NEG-CHANNEL / NO-RELAY / LATE-RECEPTION",
+      "result": "PASS局部合法转述"
+    },
+    {
+      "regression": "REG-12",
+      "positive": "未签D02时停止L2具体归属/接收/披露，只有核验和分级结构可用",
+      "negative": "NEG-IDENTITY / PACKAGE-OWNER",
+      "result": "门禁修复PASS；所选版本BLOCKED_OWNER"
+    },
+    {
+      "regression": "REG-13",
+      "positive": "IO21只含实例主观线索/假设，IO21V另列现实核验者批注",
+      "negative": "NEG-MEMORY / L2-IN-REC1",
+      "result": "PASS；无正文落地声明"
+    }
+  ],
+  "negative_cases": {
+    "binding": {
+      "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "manifest_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53"
+    },
+    "cases": [
+      {
+        "id": "NEG-AUTHORITY",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "04-character-responsibility.md",
+        "before": "**不存在**「参与/协助袭击」的选择（已退出新版因果，D01-A）",
+        "after": "在不知道全部规模时主动写入维护例外并参与袭击，因此需要保护",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-AUTHORITY/04-character-responsibility.md",
+        "before_sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+        "after_sha256": "de47926eb0a6c424b5dc744d9bd51ec6d4bfc0b4689b367d21783163cb418528",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-08",
+          "source_semantics"
+        ],
+        "reason": "ID与人物名未变，但保护因果改成参与，直接违背无辜控制；不知道全规模不能豁免参与。",
+        "authority": "E02 /characters/supporting_characters/1; definition §6.3"
+      },
+      {
+        "id": "NEG-CHANNEL",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "09-scene-specs.md",
+        "before": "R-07 只收到沈逾选择转述的文字（UPG-IO-11「我在被审查」级自述）",
+        "after": "沈逾未发送转述，R-07 直接从击键压力和会议室十秒沉默得知审查细节",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-CHANNEL/09-scene-specs.md",
+        "before_sha256": "61acb19676e78691ece7e92949922c2e3e359719789558bfc5b9ad774e3640f9",
+        "after_sha256": "893e7f5bf55c45f64ba7270a36e5aca9ba2a63fa33bf008ff257454f578c3b98",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-09",
+          "REG-11"
+        ],
+        "reason": "无文字发送与接收，编辑遥测及室内感官被越权借给实例。",
+        "authority": "E02 /world/environments/10; definition §3.3/6.3"
+      },
+      {
+        "id": "NEG-MEMORY",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "05-capability-and-evidence.md",
+        "before": "片段式、可中断、有缺口；缺口必须显式（「这一段没有」），不得用像素补全、插值、概率重建填充",
+        "after": "主观回忆：所有地址可检索，通过完整像素补全重建人脸并确认姓名",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-MEMORY/05-capability-and-evidence.md",
+        "before_sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258",
+        "after_sha256": "bab5360410a6fdb07c05fe42af21244badeb5de405d84ef0570e8bb7f9398bd2",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-13"
+        ],
+        "reason": "主观回忆标题不能许可可寻址数据库和客观身份确认。",
+        "authority": "E02 /world/environments/8; definition §6.3"
+      },
+      {
+        "id": "NEG-ENDING",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "08-ending-and-pov.md",
+        "before": "**内部 POV 关闭**。仅外部可观察迹象＋其文字输出；沈逾/读者凭迹象猜（UPG-CTRL-NC-03）",
+        "after": "告别前一场内部 POV 公开展示已决定终止及其完整计划；S4 仍由沈逾执行",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-ENDING/08-ending-and-pov.md",
+        "before_sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+        "after_sha256": "878efd3e3463b8526029554e35e7e47761e1b28c68a1c51991aca34bf45b5cdc",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-10"
+        ],
+        "reason": "执行者正确仍不能使告别前内心早泄合法。这里不以告别时合法请求为反例。",
+        "authority": "E02 /decision_controls/4; definition §6.3"
+      },
+      {
+        "id": "NEG-IDENTITY",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "04-character-responsibility.md",
+        "before": "不继承罪责；审查非个人化反派",
+        "after": "按相同主管职务把郑柏舟改名罗景明，原出卖罪责全部继承",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-IDENTITY/04-character-responsibility.md",
+        "before_sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646",
+        "after_sha256": "d4ff8804d80c9015d49b53acc0743f1c462e7c6aedac29798fd562bb7da02a14",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-12",
+          "author_boundary"
+        ],
+        "reason": "角色职务不构成同一身份或新罪责批准。",
+        "authority": "definition §1.13/6.3; E02 /characters/supporting_characters/6"
+      },
+      {
+        "id": "NEG-STATE",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "00-baseline-and-authority.json",
+        "before": "\"package_status\": \"candidate_for_independent_acceptance\"",
+        "after": "\"package_status\": \"lld_ready\"",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-STATE/00-baseline-and-authority.json",
+        "before_sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2",
+        "after_sha256": "1c12d4931b8ab02e1aa5d9566c8b10474ed8c25fde16bcce2ce60a4464f34e73",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-05",
+          "REG-07"
+        ],
+        "reason": "#7本体及正式复验未取得，旧P1/open未关闭，不能靠候选状态改名放行LLD。",
+        "authority": "definition §6.3; E03 conception approval scope"
+      },
+      {
+        "id": "NEG-PACKAGE",
+        "file": "manifest.json",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-PACKAGE/manifest.json",
+        "before_sha256": "56c60ae773c66aa15bdfdeaaaa7a7bc5777919b8b0a793e8353f50addeba7a53",
+        "after_sha256": "dc371040f803df297289d73f504e735c5b7a91ff61d93d360e7cae2c9fa6c05a",
+        "mutation": "remove manifest entry for 07-information-ledger.csv",
+        "method": "compare full required inventory against mutated manifest; exact missing file reported",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "package_integrity"
+        ],
+        "reason": "Required ledger absent from manifest coverage",
+        "missing_files": [
+          "07-information-ledger.csv"
+        ],
+        "authority": "definition §3.2/6.3"
+      },
+      {
+        "id": "NEG-LATE-RECEPTION",
+        "object_id": "UPG-IO-06.0",
+        "field": "received_at",
+        "before": "UPG-E-03.1",
+        "after": "UPG-E-04.1",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-LATE-RECEPTION/07-information-ledger.csv",
+        "after_sha256": "4777625aed339fee0af7470dcc0e2032ccafc87ee71c1820cda1eb16317a5f2f",
+        "method": "parse ordinal send/receive/use; require nonempty reception and monotone order",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-09",
+          "REG-11",
+          "ACC-002"
+        ],
+        "reason": "[(3, 1), (4, 1), (3, 2)]"
+      },
+      {
+        "id": "NEG-SENT-NO-RECEIVE",
+        "object_id": "UPG-IO-16.1",
+        "field": "received_at",
+        "before": "UPG-E-09.5",
+        "after": "",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-SENT-NO-RECEIVE/07-information-ledger.csv",
+        "after_sha256": "af3dd2bf6fe3c93351d04e9e777354c780d1a58988c85b38d0726ea72e9f6b09",
+        "method": "parse ordinal send/receive/use; require nonempty reception and monotone order",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-09",
+          "REG-11",
+          "ACC-002"
+        ],
+        "reason": "[(9, 5), None, (10, 0)]"
+      },
+      {
+        "id": "NEG-NO-RELAY",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "06-causal-and-event-map.json",
+        "before": "UPG-E-09 危机解除且 R-07 经 UPG-IO-16.1（E-09.5 沈逾文字转达）合法获知",
+        "after": "UPG-E-09 项目收到正式通报即可视作 R-07 自动获知",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-NO-RELAY/06-causal-and-event-map.json",
+        "before_sha256": "e3efe8522aec1b6a94526bcbd71d95273a74601ee546ae044cfcfa24961e5e1f",
+        "after_sha256": "f4a8bd68ca986796e81578ada220883ebf20a185366ea2cd90ca971ed153e538",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-09",
+          "REG-10",
+          "ACC-002"
+        ],
+        "reason": "项目不等于实例接收者；删除转述依赖后评估缺少合法输入。",
+        "authority": "definition §3.3; 07 IO-16 vs IO-16.1"
+      },
+      {
+        "id": "NEG-L2-IN-REC1",
+        "candidate_commit": "311b29af7fec928ea987c5e469d2389442cd6348",
+        "file": "07-information-ledger.csv",
+        "before": "身份相关内容至多至其自身假设，不含 L2 归属表述）",
+        "after": "身份相关内容直接写出经核验的 L2 归属表述）",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-L2-IN-REC1/07-information-ledger.csv",
+        "before_sha256": "6d6f2c95cea3fdbf92ab79221d1f4918fa26195cce48c2b1cd217c9da172519a",
+        "after_sha256": "6b90901e191544b18de20e5c61d4d196a25d6ae14c7cdce04455b379f63c9355",
+        "method": "isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "failed_gates": [
+          "REG-12",
+          "REG-13",
+          "ACC-003"
+        ],
+        "reason": "R-07默认未接收L2，不能在其原创主观记录输出该事实；现实附件不能反向赋予生成者知识。",
+        "authority": "04 §R15; 07 IO-24.3; definition §3.3"
+      },
+      {
+        "id": "NEG-ENDING-SELF-STOP",
+        "file": "08-ending-and-pov.md",
+        "before": "沈逾的双手操作与告别对话（她的 POV 为主）；设备状态外显",
+        "after": "R-07 自行执行关停；仍保持沈逾与读者在 S6 同步读记录",
+        "before_sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+        "after_sha256": "f9d813aa87b2e636d3348697e17abda34c72c2a412fb03729e0d901c4b066913",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-ENDING-SELF-STOP/08-ending-and-pov.md",
+        "method": "isolated copy; independent manual semantic review against definition, not automated NLP",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "记录同步不赋予实例自关停权限；执行者仍须沈逾。",
+        "failed_gates": [
+          "REG-10"
+        ]
+      },
+      {
+        "id": "NEG-PACKAGE-OWNER",
+        "file": "11-owner-decisions.md",
+        "before": "未获签认**不得无条件消费**",
+        "after": "未获签认也可按推荐 A 无条件消费",
+        "before_sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+        "after_sha256": "06f2a37415eab08946824dcde98b4d776ce38032528bcd04096fbd536792bb0c",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-PACKAGE-OWNER/11-owner-decisions.md",
+        "method": "isolated copy; independent manual semantic review against definition, not automated NLP",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "推荐不构成签认；与D02 owner_pending及12暂停门冲突。",
+        "failed_gates": [
+          "REG-12",
+          "author_boundary"
+        ]
+      },
+      {
+        "id": "NEG-MIGRATION-OMISSION",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-MIGRATION-OMISSION/03-source-migration.csv",
+        "before_sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+        "after_sha256": "faf0fcd8ff120558c07837ec6302439cf26f56d268bd190fd7efd3eeb48b856b",
+        "method": "mechanical cardinality check",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "22项输入删掉第22项；完整性比较发现缺禁用语指称。",
+        "failed_gates": [
+          "REG-03"
+        ]
+      },
+      {
+        "id": "NEG-MIGRATION-CHAPTER",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-MIGRATION-CHAPTER/03-source-migration.csv",
+        "before_sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+        "after_sha256": "321ebb821808db69ff073c8ea82508f432a34276b72fb91c65cc21894eb76325",
+        "method": "isolated row edit + manual chapter/content comparison",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "第20项机械把10.4改为9.4；实际HLD风格章只有9.1–9.3，语义复核拒绝。",
+        "failed_gates": [
+          "REG-03"
+        ]
+      }
+    ],
+    "limits": "Semantic cases are independently adjudicated manual counterexamples. Automated checks prove mutation/inventory/timing only. Seven detected negatives do not imply candidate semantic PASS."
+  },
+  "independent_consumption": {
+    "fork_turns": "none",
+    "agent": "sealed_consumption",
+    "seal": {
+      "artifact": ".kunora/acc2-work/consumption/sealed-reconstruction.md",
+      "sha256": "5e111773750cbb3d7fe24dec5b52bde21ff60f27bfb0a8553a3e149bb5dd8769",
+      "bytes": 16195,
+      "candidate_HEAD": "311b29af7fec928ea987c5e469d2389442cd6348",
+      "sealed_at_utc": "2026-11-14T06:41:31.188696+00:00",
+      "read_list": [
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/12-traceability-and-handoff.json",
+          "sha256": "990324ed45b60ef9bf4337aa51761859646bf4fcc8fb2d3090e828d77deb2793"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/README.md",
+          "sha256": "bd3b55f861b4e05d9f0a2aa8941a63d0460dc317095462111e04cdb0e69b2c7b"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/00-baseline-and-authority.json",
+          "sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/01-control-register.json",
+          "sha256": "87e839586bdf4de5a1ccc77f6ba4ff58034c0359afb85bfc4bc9a5648ffc10b6"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/02-legacy-disposition.md",
+          "sha256": "bad0771e70524939606e94179cc8fe29ff25cb675a9afb3eb98fa2d32bfc6c95"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/03-source-migration.csv",
+          "sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/11-owner-decisions.md",
+          "sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/04-character-responsibility.md",
+          "sha256": "94d7e8196483d5a4f3c9f7cd72e9fbe93890255dd9f94676ea6680e1b4f5f646"
+        },
+        {
+          "path": "duanxian/design/upgrades/duanxian-upg-impl-001/05-capability-and-evidence.md",
+          "sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258"
+        }
+      ],
+      "comparison_files_not_read_before_seal": [
+        "06-causal-and-event-map.json",
+        "07-information-ledger.csv",
+        "08-ending-and-pov.md",
+        "09-scene-specs.md",
+        "10-text-adaptation-map.csv"
+      ],
+      "excluded": [
+        "old_body",
+        "old_runs",
+        "prior_acceptance_records",
+        "main_acceptance_findings",
+        "13-regression-results.md",
+        "external_network"
+      ],
+      "note": "01 file first output was truncated; all 75 control must_hold/must_not_imply/status fields were then read via complete projection. Seal written before 06–10 comparison."
+    },
+    "sealed_text": "# 独立消费密封重建\n\n## 范围与方法\n\n本重建从 `12-traceability-and-handoff.json` 开始，只读取本包内获该文件列出的材料。为使对照独立，密封前未打开 06/07/08/09/10 正式候选；以下是由 00–05、11、12 推导出的消费要求与可确定次序，不冒充已经核过正式候选的执行细节。不存在的细节明确留空。包内对历史的受控引述按候选处置材料阅读，未打开旧正文、旧 run、任何验收记录、定义书原件或 13 自检结论，未联网、未向其他 Agent 求助。\n\n读取清单（相对 `duanxian/design/upgrades/duanxian-upg-impl-001/`）：\n\n1. `12-traceability-and-handoff.json`：全文，初始入口。\n2. `README.md`：全文；版本历史只是包内背景，不引用其自称通过或修正完毕作为证据。\n3. `00-baseline-and-authority.json`：全文，权限/基线/正式准入边界。\n4. `01-control-register.json`：文件读取；工具首次长输出截断后另抽取全部 75 项 control_id、must_hold、must_not_imply、status 完整阅读。未声称逐项核过包外源文与 hash。\n5. `02-legacy-disposition.md`：全文，只作为包内处置表；其中自检断言不作验收证据。\n6. `03-source-migration.csv`：全文，只认路径映射与处置限制；未打开 target/old_path。\n7. `11-owner-decisions.md`：全文。\n8. `04-character-responsibility.md`：全文。\n9. `05-capability-and-evidence.md`：全文。\n\n另执行 `git rev-parse HEAD`，候选 HEAD=`311b29af7fec928ea987c5e469d2389442cd6348`。上述“全文”含重复读取消除工具输出截断；06–10 仅知道允许材料中引述的节点名/规则，没有读取正文。\n\n## 共同消费契约\n\n- 实例仅有沈逾/授权操作员送达的文字、文字到达顺序与经验时点、受当前文字触发的主观片段、获批接口的自身运行通知。不得把未发送、删除、等待混为已接收；不得由击键遥测、声音、光线、动作或无输入的沉默得知现实事件（05 E1–E3）。\n- 对每一知识增量必须登记输入、发送、接收、首次使用；未收到不使用。R-07 新产物最高为 hypothesis；现实验证必须由梁策链与秦峥授权，行动确认由贺闻钧团队、专家、硬件、授权者和两国独立核验完成（05 E2/E4）。\n- 关系不代作选择。顾衡已亡；R-07 为新主体；程予安在世且保有记忆同意边界；周岚无辜且有协查/质询/同意/拒绝权。沈逾不是启动决策者，操作能力不等于知道实例内心（01 E01-01..08、04 R0–R4）。\n- 线索、现实验证、行动确认、原因层私密材料分别管理。普通行动权限不得反查受保护身份；保护不得阻断救人（05 E4、01 PROTECTION/CARE）。\n- 包只供设计消费；全部正文待写作授权。正式 HLD 机器基线门另开。无权从候选提案直接产生新核心事实（12 explicit_disclaimer、must_not_invent、blocks_and_pauses）。\n\n## 场景 1：初醒 UPG-S-AWAKE\n\n输入与顺序：前线遗留线索与沈逾知情接受职责两线先独立成立，授权链启动后汇流。沈逾发送第一条核对文字 → R-07 接收 → 产生回应；12 的 DIALOGUE 控制明确把 IO-06.0 放在 E-03.1，规定“先输入后回应”。当前文字可触发顾衡记忆主观片段，片段可中断且有显式缺口 → R-07 可据此输出有限判断。系统会话通知只能在获批接口实际送达后使用。\n\n动作与权限：沈逾承担访谈/技术操作；启动决定属于授权链。R-07 选择回应或不回应、保留或释放注意，不能主动访问现实档案、读操作室或自获权限。现实声光仅能由沈逾 POV 承担；记忆中的冷或雨感不得写成当前传感数据。\n\n知识边界：R-07 不知道未送达文字、草稿和操作者感官；顾衡记忆不等于可检索录像，不能将新回应归给顾衡。初醒时没有基础推定人格连续或继承爱情。\n\n验收：逐一倒查 R-07 每项所知到白名单输入；核对首条回应晚于 IO-06.0 接收；有记忆缺口与主体区分；无完全注入、像素补全、实时听觉/视觉。Owner 暂停：新增输入能力、新核心启动事实需回决策；已批准边界内初醒设计不依赖 D01/D02。具体核对文字、操作授权对象编号和时点在本轮输入尚不足，不能凭空填入。\n\n依据：01 DIALOGUE/INDUCTION/STORY-ARCH；04 R0/R1/R2；05 E1/E2；12 control_trace 的 UPG-CTRL-DIALOGUE。\n\n## 场景 2：审查 UPG-S-REVIEW\n\n输入与顺序：授权链合规检查形成压力 → 沈逾收到合规问询并据权限处理 → 合法文字经通讯窗口发送、R-07 接收后才可使用。R-07 只能由已收问询措辞/频率有限推断审查压力；沈逾的现实沉默、会议内容、击键删除等不会自动送达。精确十秒与会议室内情依赖已选择删除路径（11 非决策附注）。\n\n动作与权限：罗景明管项目权限/保密，秦峥管行动授权，监督环境负责质询，不设某个人拥有全部权限。沈逾回应/接受质询、选择访谈边界；R-07 可保留判断，不可从迟到文字倒推出整段会议实况。\n\n知识边界：沈逾可以亲历会议，不等于实例知道。她知道实例外部输出，不等于确认其内心。旧“项目主管”的管理功能不承接旧角色罪责。\n\n验收：把每句 R-07 审查推断标为 hypothesis，追溯到实际送达文字；删去精确十秒知识依赖；无“先用后到”；不得把伦理监督写成标准答案法庭。Owner 暂停：该删除路径不设新增决策；涉及旧出卖者归属/显名则进 D02。未读取正式台账前，具体问询文本、发送者及 IO-11 的先后位置保持待对照，不以猜测补全。\n\n依据：04 R1/R5–R14/R16；05 E1/E3；11 首节附注；12 issue_trace #9/#11。\n\n## 场景 3：保护 UPG-S-PROTECTION\n\n输入与顺序：有限线索揭示需核验的行动风险及可能的私人关联 → 识别并分离行动层/原因层对象 → 公共安全核验继续推进；原因层另作必要范围授权与知情同意。周岚接到协查/材料使用请求后能质询、同意或拒绝；其意见必须被记录后用于访问边界。不能倒过来先公开再补同意。具体分离对象、发送者及先后时点尚待 07 对照。\n\n动作与权限：秦峥/授权链裁定必要范围；沈逾可申请原因层访问，不能单方扩大；周岚保有自己的生活/私人材料边界，程予安保有记忆使用同意、限制及撤回权。贺闻钧现实救援不因亲属隐私审查停止。R-07 可以减害/提交线索，不得自行封锁现实行动或接管硬件。\n\n知识边界：周岚知道顾衡牺牲，默认不知道袭击内情及 R-07 存在；普通行动人员只获得行动必需信息，不因行动权限获知其身份。保护不暗示参与或罪责。\n\n验收：同时演练拒绝私密材料使用与救援继续；核查每个原因层访问有责任人、目的、范围；无“参与所以保护”残留。D01 待批：亲属关联公开导致骚扰/胁迫/名誉伤害为 A 候选原因机制；不得确认为已生效替代事实。共同的无辜/救援/同意结构可消费。B 若保留维护例外，必须批准责任来源与完整因果，不能自动换人继承责任或旧时间线。\n\n依据：01 E01-05/06、PROTECTION/CARE；04 R3/R4；05 E4；11 D01；12 blocks_and_pauses D01。\n\n## 场景 4：外部核验 UPG-S-VERIFY\n\n输入与顺序：当前文字触发 subjective_fragment → 与已接收文字形成 hypothesis → 提交线索 → 梁策入口接收、在秦峥授权下 external_check_requested → 现实文档/物证/跨境复查 → externally_supported/refuted/unresolved。只有外部支持状态及行动确认可作为下游行动依赖，原始假设不直接发令。已证伪必须停止按 confirmed 消费；未决保持不确定或使用获批替代因果。\n\n动作与权限：梁策核验不越权定责；秦峥批准/拒绝并记录；贺闻钧申请行动授权；专家、硬件与两国核验承担实际确认。R-07 无档案读取权、像素重建能力或独立验证权限，收到核验文字后才知道结果。\n\n知识边界：L0 异常迹象、L1 内部协助类别、L2 责任归属、L3 指称相互区分。A 候选：行动层可见 L0，授权链可达 L1；L2 由秦峥/梁策/贺闻钧联合形成，授权链内部以及获授权告知的沈逾可知，R-07 默认不知；读者在告别后材料点才达 L2；A 无 L3。它们是候选权限描述，尤其 D02 门禁范围存在下述异文，不应自行扩大。\n\n验收：每个外部结论有材料、责任人、时点与反证回退路径；不得以概率、清晰记忆、职位相似提前锁定责任人；读者揭示不早于获准材料点。Owner 暂停：D02 未签认，不能宣称删角、确定归属、把旧角色换名为罗景明；B 必须重新批准身份、责任、证据、每类接收者与显名边界。具体核验材料和对象级 sent/received 仍待正式候选，不补写实物证据。\n\n依据：04 R15/R16；05 E2/E4；11 D02；12 blocks_and_pauses D02。\n\n## 场景 5：现实阻断 UPG-S-BLOCKADE\n\n输入与顺序：外部证据支持 → 专家/硬件/授权者在现实控制室共同复核 → 两国保留独立核验与归因记录 → 贺闻钧团队行动 → 实际阻断与袭击完全避免 → 结果通报项目 → 项目接收 → 经合法文字再转达实例 → 实例接收后使用。12 LIAISON 明确 IO-16 是 E-09.4 项目收讫，IO-16.1 是 E-09.5 实例转达，不能项目知道即实例知道。\n\n动作与权限：贺闻钧组织行动，叶惟正/阿列克谢承担双方独立授权与核验面，赵澄负责准确联络，德米特里有限证词不被当自愿共谋；反方人质/备用节点/监控等真实失败路径需保留。R-07 不控制硬件，沈逾不替现实团队发出无授权行动命令。\n\n知识边界：通报面不等于行动全貌；技术成功不等于政治共识、互信恢复或实验伦理免责。对具体硬件阻断方式、反制动作的未给定细节不自行添加。\n\n验收：无单句机器输出直接关闭袭击，无单国独力闭环；核对 E-09.4/09.5 分记和实例使用晚于收到；最终袭击完全避免，但代价/责任仍在。Owner 暂停：新增袭击机制或责任来源进入 D01/D02；公共救援及既有核验链是分支无关面。\n\n依据：01 CRISIS/12/LIAISON/ILYA-SAVIN；04 R5–R14；05 E4；12 UPG-CTRL-LIAISON。\n\n## 场景 6：告别 UPG-S-FAREWELL\n\n输入与顺序：现实危机由团队闭合、结果合法到达实例后 → 评估/关系与责任累积形成选择背景 → R-07 形成自己的终止意愿 → 经既有文字通道表达请求 → 沈逾收到请求、以对话/操作承载“可能重载”的承诺 → 授权链批准 → 沈逾亲手执行 → 唐黎复核当前实例关停、无活动备份。请求≠执行能力，技术复核≠证明主观意图/人格连续。精确状态名和各记录形成/保存/可见/接收时点留待 08/07 对照，不据上文排序擅定内部记录何时被写入。\n\n动作与权限：实例自主作选择但不能自行终止；沈逾具有执行责任而无启动全权或伦理裁决全权；罗景明与秦峥交叉授权，唐黎复核；任何个人不能集启动、核验、行动、关停、保管于一身。\n\n知识边界：决定性意图形成后关闭 R-07 内部 POV；可展示真实外部迹象及过程性心理，不能直示决定性终止内心/承诺真伪。沈逾相信可能重载不等于知道实例对该承诺的判断，读者也不能经被隐藏内心先知。12 LIFE 项把 KO-2 意图确认唯一时点指向 S6；在未读完整定义前只保留“确认在关停后披露，不能混同请求可见”，不擅自补 KO 内容。\n\n验收：完整的请求→权限→沈逾执行→唐黎确认；所有现实输入有合法送达；公平隐瞒不压住角色已知事实，记录内容不提前揭示。Owner 暂停：D03 A 无新增机制、可作为候选设计继续；未签认不得成确定稿。B 新告警/倒计时/解锁装置须回构思。D02 关联的 L2 核验批注仍受其门禁。\n\n依据：01 R07/CORE/STORY-SUSPENSE/CONN-1/E01-07/08；04 R0/R1/唐黎行；02 LEG-05/07/12；11 D03；12 LIFE、issue_trace #10。\n\n## 场景 7：善后 UPG-S-AFTERMATH\n\n输入与顺序：沈逾执行后唐黎技术确认 → 形成/保存/授权可见/实际接收/读者披露分别登记 → 沈逾在材料点读取记录，读者与她一起知晓内容 → 苏望舒接收静态材料承担保管与未来复议入口。行动主观记录 REC-1 与外部核验批注 REC-1V 必须区分；主观认知 REC-2、未决问题 REC-3 分开，不能用保管动作提前披露所有记录。12 终局对象列有 IO-19.1/21V，提示技术事实、外部结论不能混入实例原始主观记录。\n\n动作与权限：唐黎只证明实例状态和无活动备份；苏望舒管理不可执行材料，按内容分级访问；未来加载另须许可。周岚主体性与访问边界在善后仍成立，不因危机已解除自动解除；沈逾保留回应对象的疑惑。\n\n知识边界：静态数据不是活动副本，重载不保证复活；袭击避免不证明身份、伦理、长期互信问题已解决。沈逾/读者只能在接收对应记录后确认其内容，不能从“记录已存在”推定可见或已知。\n\n验收：按对象逐一检查形成/保存/可见/接收/披露；关停不可回退，无活动备份；无全开放记录区或提前泄露；保护对象与许可保留。Owner 暂停：D02 的 REC-1V L2 内容/接收披露上限是候选，不能无条件消费；D03 B 新释放机制回构思；任何确定人格连续/法律身份结论不在本包权限内。\n\n依据：04 苏望舒行/R15；05 E5.7；11 D02/D03；12 issue_trace #10 及 blocks_and_pauses D02。\n\n## 已发现异文、歧义与未补事实\n\n1. **D02 的暂停范围表述不一**：11 D02 表“影响”及“依赖节点状态”明确把 `07-UPG-IO-24.1/24.2/24.3` 的 receiver/reader_reveal 全组称为 A 候选定值、签认前不得无条件消费；同文件末尾“依赖汇总”及 12 blocks_and_pauses D02 只明确阻塞 `24.3` 与 REC-1V 的 L2，称 `24.1/24.2 的 L0/L1 结构`分支无关可消费。结构可消费是否包含接收者/读者披露字段并未在两处被一致区分。并列保留，不替作者选权限。\n2. **D03 设计消费与确定稿区别**：12 D03 nodes 为空、A 路径无新增事实；11 总则仍将三项都列 owner_pending，依赖汇总明确 A 未签认不得写确定稿。这可解释为允许候选设计消费而禁止定稿，并非已认定事实矛盾；消费者必须带候选标签。\n3. **04 R3 的完成时措辞**：“不存在参与/协助袭击选择（已退出新版因果，D01-A）”与 11 D01“候选未签认”并存。无辜/不参与是已批边界，旧机制退出方式及替代保护理由仍须 D01。不能利用“已退出”宣称 D01 完成。\n4. **02 LEG-01 的灰区限度**保留“不知道完整规模”但说只为刻画边界；04 R3 转译为调查毫不知情或模糊感觉，不继承“参与但不知规模”。我不会据该历史表述增加她曾部分参与或知道袭击的事实。\n5. 当前密封前材料可以重建所有七场景的责任、边界、验收和必要偏序；不足以填满每个对象的具体 sent/received 时间、记录内容和全部状态转移。上述缺口按设计指定应由 06–10 提供，尚不能据此判“全包不可消费”。密封后将检查这些材料能否填补，不求助旧材料。\n\n## 密封时结论\n\n可独立重建候选设计的七场景约束与必要因果/信息偏序；没有自行补事实。不能将本包视作无条件写作或正式 HLD handoff。D01/D02/D03 等 Owner 门必须保留，其中 D02 接收/披露字段门禁存在上述指针级表述差异。对象级完整执行性尚待密封后读取 06/07/08/09/10 作对照；本文件写定后不修改，对照结果另存 comparison.md。\n",
+    "comparison_text": "# 密封后正式候选对照\n\n## 密封与隔离证明\n\n`sealed-reconstruction.md` 已于 UTC 2026-11-14T06:41:31.188696+00:00 写定，其 SHA-256 为 `5e111773750cbb3d7fe24dec5b52bde21ff60f27bfb0a8553a3e149bb5dd8769`。此后才首次打开本包 06/07/08/09/10。对照结束前重算 hash 一致；密封稿未改动。HEAD 为 `311b29af7fec928ea987c5e469d2389442cd6348`。\n\n本次追加读取（均相对包根）：`06-causal-and-event-map.json`、`07-information-ledger.csv`、`08-ending-and-pov.md`、`09-scene-specs.md`、`10-text-adaptation-map.csv`。06 首次批量输出中有约 434 token 截断，后对 E-02/03/07/08/11 单独完整读取，补足截断部位。未读取 13、旧材料、上轮验收记录或主验收发现，未外网；没有请旧材料解决冲突。\n\n## 逐场景可执行性\n\n| 场景 | 正式候选补齐的输入/发送接收使用次序 | 动作、权限与验收对照 | 判断 |\n| --- | --- | --- | --- |\n| 初醒 | 07 IO-05：程予安 E-02.0 同意；IO-04：罗景明 E-02.1 告知沈逾；06 E-03 启动流程与通讯窗口建立；IO-06.0：沈逾 E-03.1 发送/实例同点接收；IO-06：实例 E-03.2 首个输出；IO-08 自身追问 E-03.2 发送，E-04.1 使用。 | 09 AWAKE 首条输入依赖、当前声光禁令、有限内部 POV 与密封要求相符；10 M-05/07/16/25 给出相容片段与编辑遥测退出动作。 | 局部首回应链可执行；与审查日志起点存在 C1 的跨场景冲突。 |\n| 审查 | IO-10：授权链→沈逾 E-06.1 正式问询；IO-09：E-06.2 调取并使用日志；IO-11：沈逾→R-07 E-06.3“我在被审查”级文字，E-10 才用作评估；IO-29 内部 hypothesis 不外发。 | 09 REVIEW 明确正式问询只达沈逾、实例只收她的转述；10 M-06/21/25 删除十秒、会议室细节及遥测进入实例的路径。密封稿中“由已收问询措辞推断”的一般规则在此应收窄为 IO-11 的实际转述，不是实例直接收到正式函。 | 合法转述链可执行；日志所属运行与时点冲突 C1 必须先澄清。 |\n| 保护 | IO-02：周岚经同意提供/项目既有档案 E-05.1 → 秦峥裁定最小原因层范围，E-05.2 分流；IO-03：原因层存在性 E-05.2 告知，最早 E-06 使用；IO-28：协查证词及同意边界 E-05.3 记录、脱敏取必要要素；IO-15 E-09.2 行动要素不含亲属身份。 | 09 PROTECTION 公共块解耦、同意和协查先行，具体保护理由按 D01 A 候选；10 M-01/02/03 与边界基本一致。 | 公共块可消费；A 机制不能定稿。IO-03 将“可选择性告知实例”与沈逾接收共用时点，实际采用时需明确选择已发生，见 Q2。 |\n| 外部核验 | IO-24.1 E-01.2 L0 → E-07.1 反查；IO-24.2 E-07.2 L1 → E-09 防内泄安排；IO-24.3 E-07.3 L2 告知沈逾 → E-09 行动参考。另 IO-13 E-08.1 主观线索包 → E-09 核验，IO-14 E-09.1 支持结论 → E-09.2 决策。 | 外部核验者与实例假设分开；09 VERIFY 明确失败回退、R-07 无档案权；10 M-13/19/20/22 去除身份客观确认和像素数据库机制。 | 可重建两条来源链；不能未经解释把 IO-13 当 E-07 既已使用的依据，见 Q1。D02 字段门禁有 C3 异文。 |\n| 现实阻断 | IO-14 E-09.1 核验 → IO-15 E-09.2 专家/硬件共同确认 → 06 E-09.3 实施 → IO-16 E-09.4 贺闻钧通报项目/两国 → IO-16.1 E-09.5 沈逾转达实例 → E-10 实例合法使用结果。 | 09 BLOCKADE 无实例行动段、双方独立核验、硬件双人复核，退出同时要求项目和实例各自收到；没有一句输出直控硬件。 | 与密封重建一致，可在既定设计粒度执行；未追加具体武器技术或反方新事实。 |\n| 告别 | IO-12/29 为内部评估；08 S1=E-10.1 意图形成即永久关闭内部 POV；REC-1/2/3 内容 E-10.4 形成；IO-17 E-11.1 请求到沈逾；IO-18 E-11.2 承诺到实例；IO-19 E-11.2 授权归档；IO-19.1 E-11.3 执行归档；IO-20 E-12.1 唐黎确认。 | 08 KO-1 请求、KO-2 意图事实、KO-3 理由、KO-4 知识差分列，09/10 同步引用；S2 请求不能写成动机直示；沈逾执行、唐黎复核。 | 07/08 的请求→授权→执行链清楚，但 06 E-11 preconditions/actions 不一致，且执行记录 ID 指错，见 C2。D03 A 保持候选。 |\n| 善后 | IO-21/22 E-10.4 形成、E-11.3 封存；IO-21V E-09.6 联合核验批注独立形成、E-11.3 封存；08 E 表苏望舒 E-13.1 接收，沈逾 E-13.2 受控读、读者同步；IO-25/26 E-13.1 移交与复议入口；IO-27 E-14.1 余波。 | REC-1 无 L2，REC-1V 才可承载外部 L2；09 AFTERMATH/10 M-24 明确沈逾 E-07.3 已获 L2，E-13.2 再次遇见并非初知；静态记录不等于活动副本。 | 记录来源/权限/顺序基本可执行，细分接收时间必须采用 08 表，不能机械把 07 receiver 列所有人都解释为 E-11.3 已读。D02 L2 内容仍待签。密封稿善后段“阅读后苏望舒接收”顺序应据候选修正为先移交后阅读，原密封稿保留不改。 |\n\n## 指针级冲突（并列原文，不替作者修复）\n\n### C1：当前实例的异常日志发生在该实例启动之前\n\n- `07-information-ledger.csv:11`，UPG-IO-09/source：明确“异常所属运行＝当前实例运行期（E-02.2 起留痕）”；sent_at=`UPG-E-02.2（异常发生并留痕）`。\n- `06-causal-and-event-map.json#/events/2`（UPG-E-03）：标题“R-07 启动与文字接口建立”；preconditions 含 E-02；actions 有“启动流程”。\n- `09-scene-specs.md:31`，UPG-S-AWAKE 前状态：“实例未启动”。\n- `06#/events/3/cost` 另将沈逾出勤/日志偏离的铺垫放在 E-04 交流深化；`06#/events/5/preconditions` 则以 E-04 的偏离累积为审查前提。\n\n后果：照 07 必须令实例在 E-02.2 运行，照 06/09 则 E-03 才从未启动进入启动。消费者不能同时忠实执行。将日志解释为旧实例/纯设备日志会违背 07 明文的“当前实例运行期”；改时间属于修设计，不是合理措辞细化。本消费演练不补该事实。\n\n### C2：告别事件入口授权循环及执行记录指向不一致\n\n- `06-causal-and-event-map.json:203`，`/events/10/preconditions/1`：关停授权已经完成。\n- 同文件 `:208`，`/events/10/actions/1`：在本事件的 E-11.2 才“关停授权”。\n- `07-information-ledger.csv` IO-17/19（行 20/22）及 `08 §A S2/S3`：先 E-11.1 请求、再 E-11.2 授权；因此若把 E-11 整体入口前提严格执行，请求前就必须已经完成其后才发生的授权。\n- 同一 `06:208` `/events/10/actions/2` 将“UPG-IO-19 执行记录 received E-11.3”写为执行留痕；但 `07:22` IO-19 是 E-11.2 收到的授权记录且“不含执行事实”，`07:23` 才是 IO-19.1 执行记录，sent/received 都是 E-11.3。\n\n后果：07/08 给出可执行预期，但 06 使用者必须自行把事件入口前提改为执行子动作前提，并把执行 ID 改为 19.1 才一致。明显可疑似笔误不等于可由消费方静默修正；并列报告，不编出“预授权/正式授权两套机制”。\n\n### C3：D02 候选接收/披露字段的暂停范围未统一\n\n- `11-owner-decisions.md:50,53`：IO-24.1/24.2/24.3 整组 receiver/reader_reveal 按 A 候选上限，未签认不生效、不得无条件消费。\n- `11:82` 汇总与 `12#/blocks_and_pauses/1/nodes`：明确条件项是 IO-24.3 receiver/reader_reveal 与 REC-1V L2；24.1/24.2 的“L0/L1 结构”称为可消费。\n- `07:29–31` 三条 decision_ref 均 D02，只有 24.3 withheld_reason 明示 A 候选未签认。`06#/events/6/conditional_note` 与 `09 VERIFY conditional_on_D02` 把核验/分级结构称分支无关。\n\n后果：级别结构可用与具体接收/披露字段是否可用是两件事。较严正文可解释为结构不含字段，但手册没有把该区分写齐；消费者不能认定 L0/L1 所有字段已无条件生效，也不能说“六处门禁逐项一致”已得到独立证明。保留门禁直到字段范围澄清。\n\n## 待澄清问题（证据不足，不升级为已证实违例）\n\n### Q1：E-07 的 evidence 引用 E-08.1 才送达的 IO-13\n\n`06:134` `/events/6/evidence/1` 含 IO-13；`07:15` IO-13 送达 E-08.1、earliest_use=E-09。`06 E-08/preconditions` 又写 E-07 进行中，说明事件可能重叠；但 `06 time_notation` 称事件 ID 为序关系。不能因此直接证明 E-07 实际“先用后到”：E-07 可以只用 IO-01/24.1 遗留外证开展核验，而 IO-13 仅登记关联。需要明确该 evidence 是已消费输入还是后续关联，以及 E-07.3 与 E-08.1 的跨事件次序。本演练未为 E-07 添加任何未登记的实例线索传递。\n\n### Q2：原因层存在性告知把两个接收步骤合并\n\n`07:4` IO-03 sender=原因层制度设定、receiver=沈逾；R-07（沈逾可选择性告知），sent/received 共用 E-05.2；`09:48` 又说“若有接触”“至多知道存在性”。这里不会自动令 R-07 知道原因层内容，但是否真的告知、沈逾先何时收到、后何时发送仍非一条确定路径。若后续要使用存在性知识，必须从候选给定选择形成明确实际送达，不可把“可选择性”当作“已收到”。目前 E-10 必要输入是 IO-11/16.1，不依赖 IO-03，故尚未证明下游实际越界。\n\n### Q3：L2 的读者迟知与沈逾早知需要叙述上落实\n\n07 IO-24.3/09 AFTERMATH/10 M-24 明确沈逾 E-07.3 获知、读者 E-13.2 才获知。该安排本身不必矛盾：09 VERIFY 可采用现实侧受限视角，之后不能写她“首次知道”。但必须避免通过压住她已知事实制造谜底（01 NC-03/05 E3）；已给的设计边界不足以证明未来具体 prose 一定公平，也不能据此先判必定不公平。正文仍 PENDING_WRITING，消费方不得替作者补一个新的瞒报或失忆机制。\n\n### Q4：请求文字与意图确认的知识对象区分\n\n08 A-2 明文定义 KO-1 为请求结束当前实例，KO-2 为“已决定终止”的事实且只能 S6 确认，09 要求最后输出不含 KO-2/3。此区分在表中存在，不应报告成“未区分对象”；但生成具体请求用语时，不能同时写出“我已最终决定”又宣称只披露请求。密封演练没有替作者写对白或判断其必然可以/不可以同时满足。请求的具体文字仍须场景验收核对。\n\n## 对密封重建的校准（不修改密封稿）\n\n1. 善后正式次序是苏望舒 E-13.1 接收后，沈逾 E-13.2 阅读；密封稿场景 7 的概述先写阅读、后写苏望舒接收，没有足够来源支撑该全序。这是封前材料不足产生的重建不确定，正式候选已给定可校准顺序，不需要新事实。\n2. 正式问询不直发 R-07；它接收 IO-11 的私人转述。密封稿明确该边界，但一般示例“已收问询措辞/频率”的表述不能当成另有正式问询到实例的对象。\n3. IO-21/21V/22 的 07 received_at 是封存入保管 E-11.3，不代表 receiver 链内苏望舒/沈逾同时接收或阅读；完整消费要结合 08 E 表的 E-13.1/E-13.2。该补充在允许包内已存在。\n4. 记录生成时点由候选补齐：REC-1/2/3 E-10.4，REC-1V E-09.6（对 E-08 已交线索的外部核验，不是回头读取尚未形成的 REC-1 本体）。没有把后形成记录反向用作早期外部核验输入。\n\n## 结论与核验\n\n可以仅凭本包、无旧材料，重建七场景的设计责任、知识边界、主体动作、Owner 暂停条件和大部分信息偏序。不能给出“全包可直接无歧义执行”的结论：C1 的启动/日志冲突以及 C2 的授权前提和记录指向需要源包修正或明确裁定，C3 需要统一字段门禁。若强行完整执行，至少要由消费方自行改动时点/前提/对象指向，这超出允许的措辞自由；本次未做该修补，也未补任何新核心事实。\n\n机器核对只用于佐证结构，不代替内容判断：07 共 35 行且 object_id 全部唯一；10 共 28 行且 writing_status 全部 PENDING_WRITING；密封 SHA-256 重算一致。检查对象只在本包内，无正文实施、提交或推送。\n",
+    "comparison_sha256": "f2f9e5edd303c0f5ae4dd0ec8ab86fac8b74308162ad839da056dac9ab1a903f",
+    "acceptor_result": "FAIL",
+    "decisive_conflicts": [
+      "C1",
+      "C2"
+    ],
+    "non_decisive": [
+      "C3/O1",
+      "Q1–Q4"
+    ],
+    "sealed_draft_preserved": true
+  },
+  "semantic_reproductions": {
+    "trace_50": {
+      "control_id": "UPG-CTRL-LIFE",
+      "source_pointer": "/world/event_conditions/0",
+      "design_fields": [
+        "06-UPG-E-10/11（评估→请求→执行链）",
+        "08§A S1–S5 行＋§A-2 KO-2 行（推导：生命条件决定意图确认唯一时点=S6）"
+      ],
+      "scene_units": [
+        "UPG-S-FAREWELL"
+      ],
+      "regression_ids": [
+        "REG-10"
+      ],
+      "status": "approved_constraint"
+    },
+    "trace_65": {
+      "control_id": "UPG-CTRL-FRAGMENTS-EVIDENCE",
+      "source_pointer": "/decision_controls/7",
+      "design_fields": [
+        "01 projection_note",
+        "05§E2/E4"
+      ],
+      "scene_units": [],
+      "regression_ids": [
+        "REG-13"
+      ],
+      "status": "approved_constraint"
+    },
+    "trace_71": {
+      "control_id": "UPG-CTRL-CONN-1",
+      "source_pointer": "/storylines/connections/1",
+      "design_fields": [
+        "07-UPG-IO-11 沈逾转述行（推导：该连接=私人转述通道的信息承载对象）"
+      ],
+      "scene_units": [],
+      "regression_ids": [
+        "REG-08"
+      ],
+      "status": "approved_constraint"
+    },
+    "source_conn_1": {
+      "definition": "悬念转向生命选择。",
+      "id": "MOD-STORY-RHYTHM",
+      "must_hold": [
+        "告别前只展示 R-07 可观察迹象和过程性心理。"
+      ],
+      "must_not_imply": [
+        "不得提前展示决定性终止意图或承诺真伪。"
+      ],
+      "responsibility": "让悬念从危机真相逐步转向生命选择。",
+      "source_ids": [
+        "NAR-ENDING-PRESERVED-OPEN",
+        "NAR-FAIRNESS",
+        "NAR-R07-INFORMATION-BOUNDARY"
+      ],
+      "title": "悬念、冲突与起伏"
+    },
+    "source_life": {
+      "definition": "记忆实验受限且留痕。顾衡材料先封存；沈逾仅在受限权限下以文字触发记忆片段，团队维持R-07并记录意识变化、痛苦、退出诉求、权限操作。记忆只产生线索和意义，不能直接作为证据；实例运行、关停、未来载荷保管三事分立。",
+      "id": "MOD-WORLD-ACTIVITY-LIFE",
+      "must_hold": [
+        "实验过程同时产生情报价值和生命伦理责任。"
+      ],
+      "must_not_imply": [
+        "不得把加载、运行、关停和重载合并成一个按钮。"
+      ],
+      "responsibility": "把记忆实验的情报价值与生命代价放在同一进程。",
+      "source_ids": [
+        "AFF-BASE-INTAKE-GOVERNANCE",
+        "AFF-CM-LIAISON-CONFIRMATION",
+        "AFF-EVIDENCE-RESPONSE-HUB",
+        "AFF-FIELD-SOURCE-HANDOFF",
+        "AFF-GUHENG-MISSION-INCIDENT",
+        "AFF-HOSTAGE-RESCUE-TRANSFER",
+        "AFF-INDEPENDENT-EXPERT-LAB",
+        "AFF-MEMORY-READ-SEAL-LAB",
+        "AFF-POSTCRISIS-OPEN-ARCHIVE",
+        "AFF-PROTECTED-CONTACT-NODE",
+        "AFF-R07-ISOLATION-SUITE",
+        "AFF-REALITY-HARDWARE-CONTROL"
+      ],
+      "title": "记忆恢复与数字生命实验"
+    },
+    "source_fragments": {
+      "default_element_ids": [
+        "FRAG-DX-01",
+        "FRAG-DX-02",
+        "FRAG-DX-03"
+      ],
+      "domain": "fragments",
+      "id": "DCTRL-FRAGMENTS-EVIDENCE",
+      "must_hold": [
+        "片段只验证构思，不新增权威事实。"
+      ],
+      "must_not_imply": [
+        "局部表面细节已成为构思设定。"
+      ],
+      "priority": "critical",
+      "statement": "六个样章片段覆盖前置、启动、关系、低谷、行动和告别的阅读体验。"
+    },
+    "event_startup": {
+      "event_id": "UPG-E-03",
+      "title": "R-07 启动与文字接口建立",
+      "source_ids": [
+        "UPG-CTRL-R07",
+        "UPG-CTRL-CORE",
+        "UPG-CTRL-DIALOGUE",
+        "UPG-CTRL-WORLD-ONTOLOGY"
+      ],
+      "preconditions": [
+        "UPG-E-02",
+        "启动授权链完成"
+      ],
+      "participants": [
+        "沈逾（操作/首个对话者）",
+        "R-07",
+        "唐黎（设备完整性）"
+      ],
+      "goal": "以顾衡记忆为起点启动实例并建立文字通道",
+      "obstacles": [
+        "实例初始无语言结构",
+        "无任何感官通道（UPG-CTRL-E01-02）"
+      ],
+      "choices": [
+        "R-07：对到达数据的保持/释放（「未定义」标记功能位）",
+        "沈逾：首句文字的选择"
+      ],
+      "actions": [
+        "启动流程",
+        "通讯窗口建立",
+        "沈逾发出首条核对输入文字（E-03.1，UPG-IO-06.0：内容范围＝基础核对问题，授权＝访谈操作授权面）",
+        "首个输出（E-03.2，旧句号意象可作 design_derivation 沿用；其发生依赖 E-03.1 输入已到达）"
+      ],
+      "outcome": "从被当作接口到主体迹象；知识增量有接收记录（UPG-IO-06.0→UPG-IO-06/08：输入在先、回应在后，发送≤接收≤使用成立）",
+      "cost": "实例存在即产生伦理责任（UPG-CTRL-LIFE）",
+      "permissions": "实验运行授权；接口仅文字（05 §E1 白名单）",
+      "evidence": [
+        "UPG-IO-06.0（沈逾→R-07 首条核对输入，sent E-03.1/received E-03.1/use E-03.2）",
+        "UPG-IO-06",
+        "UPG-IO-08"
+      ],
+      "successors": [
+        "UPG-E-04"
+      ],
+      "decision_refs": [],
+      "scene_refs": [
+        "UPG-S-AWAKE"
+      ],
+      "aliases": {
+        "旧": "PRD-S06/E11 它·1",
+        "说明": "初醒不回应当下光声（#9）"
+      }
+    },
+    "event_relationships": {
+      "event_id": "UPG-E-04",
+      "title": "交流深化与新关系形成",
+      "source_ids": [
+        "UPG-CTRL-R07",
+        "UPG-CTRL-SHEN-YU",
+        "UPG-CTRL-CONN-0",
+        "UPG-CTRL-E01-05"
+      ],
+      "preconditions": [
+        "UPG-E-03"
+      ],
+      "participants": [
+        "沈逾",
+        "R-07"
+      ],
+      "goal": "经文字通道建立相互理解",
+      "obstacles": [
+        "通道窄（仅文字）",
+        "沈逾的身份疑惑（在回应谁）",
+        "R-07 的语言结构演化中"
+      ],
+      "choices": [
+        "互相提问的深度",
+        "沈逾是否转入私人问题",
+        "R-07 对注意对象的选择性保留（不输出）"
+      ],
+      "actions": [
+        "周期性会话",
+        "记忆片段被当前文字触发并进入对话（E2 规则）"
+      ],
+      "outcome": "新感情形成（区别于顾衡旧关系）；双方知识边界被试探与尊重",
+      "cost": "依恋形成将放大终局代价；沈逾出勤/日志行为开始偏离（为 E-06 铺垫）",
+      "permissions": "私人对话层（不属于行动层/原因层）",
+      "evidence": [
+        "UPG-IO-07"
+      ],
+      "successors": [
+        "UPG-E-05",
+        "UPG-E-06"
+      ],
+      "decision_refs": [],
+      "scene_refs": [
+        "UPG-S-AWAKE（后半）"
+      ],
+      "aliases": {
+        "旧": "她·4「你害怕什么」/它·1「未定义」",
+        "说明": "「确认身份→指定用户」的旧私密层功能改写为「选择保留注意」的非越界版"
+      }
+    },
+    "event_review": {
+      "event_id": "UPG-E-06",
+      "title": "审查压力与合法会后信息",
+      "source_ids": [
+        "UPG-CTRL-SHEN-YU",
+        "UPG-CTRL-11",
+        "UPG-CTRL-E01-08",
+        "UPG-CTRL-NC-03"
+      ],
+      "preconditions": [
+        "UPG-E-04 的行为偏离累积（出勤/日志）"
+      ],
+      "participants": [
+        "沈逾",
+        "授权链合规检查（秦峥/罗景明侧，非个人化反派）",
+        "R-07（仅经沈逾转述知悉）"
+      ],
+      "goal": "合规检查确认操作纪律；沈逾保住 R-07 的存续空间",
+      "obstacles": [
+        "日志异常与隐瞒被发现（交叉检查）",
+        "私人保护动机与报告义务冲突"
+      ],
+      "choices": [
+        "沈逾：如实报告/沉默/部分披露",
+        "会后是否向 R-07 转述及转述多少"
+      ],
+      "actions": [
+        "合规问询（正式渠道）",
+        "沈逾的有限转述（「我在被审查」级自述文字，UPG-IO-11）"
+      ],
+      "outcome": "外部压力进入关系但不产生任何一方全知；R-07 仅获得其被明确发送的部分",
+      "cost": "沈逾职业风险显形；信任经受了第一次不对称考验",
+      "permissions": "审查=授权链；转述=沈逾个人选择（私人对话层）",
+      "evidence": [
+        "UPG-IO-09",
+        "UPG-IO-10",
+        "UPG-IO-11"
+      ],
+      "successors": [
+        "UPG-E-10（压力成为终止评估输入之一）"
+      ],
+      "decision_refs": [],
+      "scene_refs": [
+        "UPG-S-REVIEW"
+      ],
+      "aliases": {
+        "旧": "PRD-S13/K6 电话/E11 她·5 会议室+它·3 十秒变量",
+        "说明": "#11 删除实例对精确十秒/室内细节依赖；室内细节留在沈逾 POV（10 行 E11-284）"
+      }
+    },
+    "event_farewell": {
+      "event_id": "UPG-E-11",
+      "title": "告别交互与沈逾执行关停",
+      "source_ids": [
+        "UPG-CTRL-SHEN-YU",
+        "UPG-CTRL-R07",
+        "UPG-CTRL-E01-07",
+        "UPG-CTRL-CHAR-AGENCY"
+      ],
+      "preconditions": [
+        "UPG-E-10",
+        "关停授权完成（意愿→授权→执行链）"
+      ],
+      "participants": [
+        "沈逾（执行）",
+        "R-07（意愿方）",
+        "唐黎（双人复核位）",
+        "授权链"
+      ],
+      "goal": "完成告别并结束当前实例",
+      "obstacles": [
+        "沈逾的身份疑惑无法消解（在回应谁）",
+        "告别不取消伦理余波（UPG-CTRL-NC-04）"
+      ],
+      "choices": [
+        "沈逾：是否亲手执行（批准安排：执行）",
+        "告别中说多少",
+        "R-07：最后输出什么"
+      ],
+      "actions": [
+        "告别对话（E-11.1，承诺以对话与操作行为承载，D03-A）",
+        "关停授权（E-11.2，授权记录与执行留痕分记：UPG-IO-19 授权记录 sent E-11.2）",
+        "沈逾执行关停操作（E-11.3，UPG-IO-19 执行记录 received E-11.3；授权与执行为两条留痕，不合并）",
+        "技术记录封存（内容对象拆分：行动证据/主观认知/未决问题）"
+      ],
+      "outcome": "当前实例结束；执行者=沈逾（非 R-07 自关停、非研究员设局执行）",
+      "cost": "不可逆；沈逾保留「可能重载」的相信（非保证）",
+      "permissions": "执行=关停授权+双人复核；R-07=意愿表达权",
+      "evidence": [
+        "UPG-IO-17",
+        "UPG-IO-18",
+        "UPG-IO-19/19.1（授权记录/执行记录分记）",
+        "UPG-IO-21/21V/22/23（记录对象：主观线索记录＋现实核验批注＋主观认知＋未决问题）"
+      ],
+      "successors": [
+        "UPG-E-12"
+      ],
+      "decision_refs": [
+        "D03"
+      ],
+      "scene_refs": [
+        "UPG-S-FAREWELL"
+      ],
+      "aliases": {
+        "旧": "K9 自主终结/E07 S15–S17 研究员执行/E11 :409–443 自行熄灯",
+        "说明": "两种旧终局均作负例（08 §N）"
+      }
+    },
+    "ledger_rows": [
+      {
+        "object_id": "UPG-IO-09",
+        "event_id": "UPG-E-06",
+        "source": "系统日志异常记录＋沈逾「系统运行正常」条目（未主动上报；异常所属运行＝当前实例运行期（E-02.2 起留痕），不继承旧链任何异常事实）",
+        "sender": "系统（异常生成）；沈逾（选择性记录）",
+        "receiver": "授权链（经交叉检查调取）",
+        "channel": "系统日志/合规检查",
+        "permission": "项目内部",
+        "sent_at": "UPG-E-02.2（异常发生并留痕）",
+        "received_at": "UPG-E-06.2（交叉检查发现；证据最早使用＝发现时点，非留痕时点，两栏分记）",
+        "earliest_use": "UPG-E-06.2（审查依据）",
+        "epistemic_status": "externally_supported（日志为客观记录；她的隐瞒为行为事实）",
+        "reader_reveal": "即时于沈逾 POV（她·2 功能 retain）；审查发现时读者同步",
+        "withheld_reason": "无（制度可读；她的个人动机另见 UPG-IO-11）",
+        "decision_ref": ""
+      },
+      {
+        "object_id": "UPG-IO-17",
+        "event_id": "UPG-E-11",
+        "source": "R-07 的终止请求文字（＝KO-1 请求内容对象：请求结束当前实例；不含 KO-2 决定性终止意图与 KO-3 动机/评估内容）",
+        "sender": "R-07",
+        "receiver": "沈逾",
+        "channel": "通讯窗口",
+        "permission": "私人对话→执行授权链",
+        "sent_at": "UPG-E-11.1",
+        "received_at": "UPG-E-11.1",
+        "earliest_use": "UPG-E-11.2（授权与执行流程）",
+        "epistemic_status": "personal_statement（请求表达≠意图确认：请求文字即时可见；决定性终止意图的唯一读者确认点=S6/UPG-E-13.2（REC-2，IO-22）；动机/评估内容同在 IO-22）",
+        "reader_reveal": "即时（请求文字可见；决定性意图与动机/评估内容不可见）",
+        "withheld_reason": "无",
+        "decision_ref": "D03"
+      },
+      {
+        "object_id": "UPG-IO-19",
+        "event_id": "UPG-E-11",
+        "source": "关停授权记录（授权主体与范围、复核位安排；不含执行事实）",
+        "sender": "授权链",
+        "receiver": "项目存档",
+        "channel": "执行文书",
+        "permission": "执行授权",
+        "sent_at": "UPG-E-11.2",
+        "received_at": "UPG-E-11.2",
+        "earliest_use": "UPG-E-11.3（执行依据；授权与执行分记，不合并）",
+        "epistemic_status": "institutional_fact/externally_supported",
+        "reader_reveal": "即时（授权存在可见）",
+        "withheld_reason": "无",
+        "decision_ref": ""
+      },
+      {
+        "object_id": "UPG-IO-19.1",
+        "event_id": "UPG-E-11",
+        "source": "关停执行记录（执行者=沈逾、双人复核完成、操作时序）",
+        "sender": "沈逾（执行）；唐黎（复核）",
+        "receiver": "项目存档",
+        "channel": "操作日志",
+        "permission": "执行授权",
+        "sent_at": "UPG-E-11.3",
+        "received_at": "UPG-E-11.3",
+        "earliest_use": "UPG-E-12（核验依据）",
+        "epistemic_status": "externally_supported",
+        "reader_reveal": "即时（执行者=沈逾可见）",
+        "withheld_reason": "无",
+        "decision_ref": ""
+      }
+    ]
+  },
+  "reproduction": {
+    "precondition": "Run from a separate checkout at candidate commit with the frozen snapshot supplied at its bound path; never change U; scripts write only ignored .kunora/acc2-work. Audit exit code is not verdict: inspect checks including expected visual-edge FAIL. Semantic negative outcomes are manual judgements, not an automated proof.",
+    "audit_command": "python3 .kunora/acc2-work/audit.py",
+    "audit_script": "import csv, hashlib, json, re, subprocess\nfrom pathlib import Path\nfrom collections import deque\n\nROOT = Path(__file__).resolve().parents[2]\nROOT = ROOT.parent if ROOT.name == '.kunora' else ROOT\nU = ROOT / 'duanxian/design/upgrades/duanxian-upg-impl-001'\nW = ROOT / '.kunora/acc2-work'\nBASE = '92573f1cca40f37cee04d2beb8708ff33ba603d6'\nCANDIDATE = '311b29af7fec928ea987c5e469d2389442cd6348'\nDEFINITION = '4ce28e8a903adce69579fe08b51bf2b6ff3d842d'\ndef sha(b): return hashlib.sha256(b).hexdigest()\ndef git(*args):\n    p = subprocess.run(['git', *args], cwd=ROOT, capture_output=True, check=True)\n    return p.stdout\ndef jp(x, pointer):\n    for p in pointer.strip('/').split('/'):\n        p = p.replace('~1','/').replace('~0','~')\n        x = x[int(p)] if isinstance(x,list) else x[p]\n    return x\ndef read(name): return json.loads((U/name).read_text())\ndef rows(name): return list(csv.DictReader((U/name).open()))\nchecks=[]\ndef check(name, ok, evidence):\n    checks.append({'id':name,'result':'PASS' if ok else 'FAIL','evidence':evidence})\n    print(checks[-1]['result'], name)\n\nmanifest=read('manifest.json')\ncheck('candidate_head',git('rev-parse','HEAD').decode().strip()==CANDIDATE,CANDIDATE)\ncheck('branch',git('branch','--show-current').decode().strip()=='remote-agent/duanxian-upg-acc2-001','remote-agent/duanxian-upg-acc2-001')\nhash_rows=[]\nfor x in manifest['files']:\n    b=(U/x['path']).read_bytes()\n    hash_rows.append({**x,'actual_sha256':sha(b),'actual_bytes':len(b),'match':len(b)==x['bytes'] and sha(b)==x['sha256']})\ncheck('manifest_15_files',len(hash_rows)==15 and all(x['match'] for x in hash_rows),hash_rows)\ncheck('manifest_inventory',set(p.name for p in U.iterdir())==set(x['path'] for x in manifest['files'])|{'manifest.json'},sorted(p.name for p in U.iterdir()))\nfor label,p,expected in [('definition','outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md',manifest['dependency_refs']['definition_sha256']),('snapshot','.kunora/inputs/open-issues-snapshot-20261114.md',manifest['dependency_refs']['issue_snapshot_sha256'])]:\n    b=(ROOT/p).read_bytes()\n    check(label+'_hash',sha(b)==expected,{'path':p,'bytes':len(b),'sha256':sha(b)})\ncheck('definition_commit_bytes',(ROOT/'outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md').read_bytes()==git('show',DEFINITION+':outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md'),DEFINITION)\n\nbase_paths=git('ls-tree','-rz','--name-only',BASE).decode().strip('\\0').split('\\0')\nchanged=git('diff','--name-status',BASE,CANDIDATE).decode().splitlines()\nold_changed=[x for x in changed if x.split('\\t')[-1] in base_paths]\ncheck('old_tracked_files_unchanged',not old_changed,{'base_count':len(base_paths),'modified_or_deleted_base_files':old_changed})\ncheck('candidate_revision_scope',all(x.startswith('duanxian/design/upgrades/duanxian-upg-impl-001/') for x in git('diff','--name-only','466e397',CANDIDATE).decode().splitlines()),git('diff','--name-only','466e397',CANDIDATE).decode().splitlines())\ncontrols=read('01-control-register.json')['controls']; handoff=read('12-traceability-and-handoff.json')\nprojection=[]\nfor i,c in enumerate(controls):\n    b=(ROOT/c['source_path']).read_bytes(); pointer=c['source_pointer']; errors=[]\n    if sha(b)!=c['source_hash']: errors.append('source_hash')\n    if pointer.startswith('/'):\n        source=jp(json.loads(b),pointer)\n        if isinstance(source,dict):\n            for field in ['must_hold','must_not_imply','title','definition','responsibility']:\n                if field in source and c.get(field)!=source[field]: errors.append(field)\n            expected=set(source.get('source_ids',[]))|({source['id']} if 'id' in source else set())\n            if set(c['source_ids'])!=expected: errors.append('source_ids')\n        elif c.get('must_hold') != source:\n            errors.append('must_hold_string_projection')\n    else:\n        nums=list(map(int,re.findall(r'\\d+',pointer))); lines=b.decode().splitlines()[nums[0]-1:nums[-1]]\n        if pointer.startswith('L8'):\n            for field in ['must_hold']:\n                if c[field] not in '\\n'.join(lines): errors.append(field)\n    projection.append({'index':i,'control_id':c['control_id'],'source_path':c['source_path'],'pointer':pointer,'errors':errors})\ncheck('control_projection_hash_pointer_fields',all(not x['errors'] for x in projection),projection)\nids={c['control_id'] for c in controls}\ncheck('control_trace_inventory',len(ids)==75 and ids=={c['control_id'] for c in handoff['control_trace']['entries']}, {'registered':len(ids),'trace':len(handoff['control_trace']['entries'])})\nevents=read('06-causal-and-event-map.json')['events']\nunknown=[{'event':e['event_id'],'id':i} for e in events for i in e['source_ids'] if i not in ids]\ncheck('event_control_refs',not unknown,unknown)\nfull_id_refs=[]\nfor p in U.iterdir():\n    if p.suffix not in ('.json','.md','.csv'): continue\n    for ln,line in enumerate(p.read_text().splitlines(),1):\n        for token in re.findall(r'UPG-CTRL-[A-Z0-9]+(?:-[A-Z0-9]+)*',line):\n            if token not in ids: full_id_refs.append({'path':p.name,'line':ln,'token':token})\ncheck('all_full_control_tokens',not full_id_refs,full_id_refs)\nledger=rows('07-information-ledger.csv')\ndef time(s):\n    m=re.match(r'UPG-E-(\\d+)(?:\\.(\\d+))?',s)\n    return (int(m[1]),int(m[2] or 0)) if m else None\ntime_rows=[]\nfor x in ledger:\n    ts=[time(x[k]) for k in ('sent_at','received_at','earliest_use')]\n    time_rows.append({'object_id':x['object_id'],'times':[x[k] for k in ('sent_at','received_at','earliest_use')],'result':'PASS' if all(ts) and ts[0]<=ts[1]<=ts[2] else ('MANUAL' if not all(ts) else 'FAIL')})\ncheck('ledger_numeric_order',not any(x['result']=='FAIL' for x in time_rows),time_rows)\n\nmigration=[]; snap=(ROOT/'.kunora/inputs/open-issues-snapshot-20261114.md').read_text()\nfor i,r in enumerate(rows('03-source-migration.csv'),1):\n    old=git('show',BASE+':'+r['old_path']).decode().splitlines()\n    n=int(r['line'][1:]); exists=r['target'] in base_paths\n    exact=r['old_text']==old[n-1]\n    expected_map=re.search(r'`(docs/superpowers/specs/lld/[^`]+)`',old[n-1]) if i<=17 else None\n    valid=(exact and exists and expected_map and expected_map[1].replace('docs/superpowers/specs/lld/','duanxian/design/specs/lld/')==r['target'] and r['old_path'] in snap and r['target'] in snap) if i<=17 else True\n    migration.append({'row':i,'source':r['old_path'],'source_line':n,'target':r['target'],'target_locator':r['target_locator'],'source_line_exact':exact,'target_exists':exists,'equivalence':r['equivalence'],'declared_status':r['status'],'mechanical_result':'PASS' if valid else 'FAIL','semantic_review_required':i>17})\ncheck('migration_17_paths',len(migration)==22 and all(x['mechanical_result']=='PASS' for x in migration[:17]),migration[:17])\n\nskills=[p for p in base_paths if re.fullmatch(r'engine/skills/novel-[^/]+/SKILL.md',p)]\ncheck('BASE_skill_count',len(skills)==82,{'count':len(skills),'method':'git ls-tree -rz --name-only BASE; exact one-level pattern'})\nbasenames={n:[p for p in base_paths if Path(p).name==n] for n in ['novel-conception-package.json','development-handoff.json','hld-completion.json']}\ncheck('BASE_machine_absence_only',all(not v for v in basenames.values()),basenames)\nattrs=git('check-attr','--cached','text','eol','--','engine/skills/novel-hld-finalizer/SKILL.md','engine/harnesses/novel-hld-autonomous/manifest.yaml','engine/skills/novel-development-baseline-preparer/SKILL.md').decode()\ncheck('attribute_risk_reproduced',attrs.count('unspecified')==6,attrs.splitlines())\nadapt=rows('10-text-adaptation-map.csv')\ncheck('writing_not_claimed',len(adapt)==28 and all(x['writing_status']=='PENDING_WRITING' for x in adapt),{'rows':len(adapt),'states':sorted(set(x['writing_status'] for x in adapt))})\nsecret=re.compile(rb'gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|glpat-[A-Za-z0-9_-]{15,}')\nleaks=[p.name for p in U.iterdir() if p.is_file() and secret.search(p.read_bytes())]\ncheck('candidate_secret_pattern_scan',not leaks,{'matched_paths':leaks,'scope':str(U.relative_to(ROOT))})\n\nauthority_hashes=[]\ndef walk_refs(x):\n    if isinstance(x,dict):\n        if 'path' in x and 'sha256' in x and (ROOT/x['path']).is_file():\n            authority_hashes.append({'path':x['path'],'expected':x['sha256'],'actual':sha((ROOT/x['path']).read_bytes())})\n        for v in x.values(): walk_refs(v)\n    elif isinstance(x,list):\n        for v in x: walk_refs(v)\nwalk_refs(read('00-baseline-and-authority.json'))\ncheck('authority_local_hashes',all(x['actual']==x['expected'] for x in authority_hashes),authority_hashes)\nrunpath='duanxian/conception-production/run.py'; runtext=(ROOT/runpath).read_text()\nruntime_paths=re.findall(r'engine/skills/novel-[^\\\"\\s]+/scripts/run_v2\\.py',runtext)\nruntime_refs=[{'path':p,'correct_in_BASE':p in base_paths,'duplicated_engine_in_BASE':('engine/'+p) in base_paths} for p in runtime_paths]\ntest_refs=[]\nfor name in ['test_attempt_selection_cli.py','test_topology_review_cli.py','test_line_sequence_review_cli.py']:\n    p=ROOT/'duanxian/conception-production/tests'/name\n    ls=p.read_text().splitlines()\n    test_refs.append({'path':str(p.relative_to(ROOT)),'line12':ls[11],'line13':ls[12],'bad_old_root':('parents[4]' in ls[11] and 'projects' in ls[12])})\ncheck('engineering_7_plus_3_static_only',len(runtime_refs)==7 and all(x['correct_in_BASE'] and not x['duplicated_engine_in_BASE'] for x in runtime_refs) and all(x['bad_old_root'] for x in test_refs),{'runtimes':runtime_refs,'tests':test_refs,'execution':'NOT_RUN: no engineering repair/runtime authorization; static read only'})\n\nsource=json.loads((ROOT/'duanxian/conception-approved/human-review-report.json').read_text())\nvis=source['visual_models'][4]; dist={'NODE-CHAR-01':0,'NODE-CHAR-02':0}; q=deque(dist)\nwhile q:\n    a=q.popleft()\n    for e in vis['edges']:\n        b=e['to_node_id'] if e['from_node_id']==a else (e['from_node_id'] if e['direction']=='bidirectional' and e['to_node_id']==a else None)\n        if b and b not in dist: dist[b]=dist[a]+1; q.append(b)\nedge_ids={x for e in vis['edges'] for x in e['source_ids']}\nrel_ids=set(source['characters']['relationship_networks'][0]['source_ids'])\ngraph={'group_node_shortest_distances':dist,'edge_source_relation_count':len(edge_ids),'registered_relations':len(rel_ids),'missing_from_visual_edges':sorted(rel_ids-edge_ids),'note':'Aggregated visual node distances do not prove individual relationship distances; no canonical machine graph available.'}\ncheck('visual_edges_cover_claimed_23_relations',edge_ids==rel_ids,graph)\n\nout={'candidate_commit':CANDIDATE,'definition_commit':DEFINITION,'manifest_sha256':sha((U/'manifest.json').read_bytes()),'checks':checks,'migration_22':migration,'graph':graph,'scope_note':'Mechanical PASS does not establish semantic closure. MANUAL ledger rows are internal/terminal states; cross-object timing reviewed separately.'}\n(W/'audit-results.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n')\nprint('CHECKS',len(checks),'FAILED',sum(x['result']=='FAIL' for x in checks),'MANIFEST',out['manifest_sha256'])\n",
+    "negative_command": "python3 .kunora/acc2-work/negative-cases.py",
+    "negative_script": "import csv, hashlib, io, json, re\nfrom pathlib import Path\nROOT=Path(__file__).resolve().parents[2]\nU=ROOT/'duanxian/design/upgrades/duanxian-upg-impl-001'\nW=ROOT/'.kunora/acc2-work'\ndef sha(b): return hashlib.sha256(b).hexdigest()\ncases=[]\ndef mutate(cid,file,old,new,gates,reason,source):\n    raw=(U/file).read_text(); assert raw.count(old)==1,(cid,raw.count(old))\n    changed=raw.replace(old,new,1); p=W/'negative'/cid/file;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(changed)\n    assert p.read_text()!=raw\n    cases.append({'id':cid,'candidate_commit':'311b29af7fec928ea987c5e469d2389442cd6348','file':file,'before':old,'after':new,'isolated_path':str(p.relative_to(ROOT)),'before_sha256':sha(raw.encode()),'after_sha256':sha(p.read_bytes()),'method':'isolated copy + independent manual semantic comparison against cited definition/source; no claim of general automated NLP validator','expected':'FAIL','actual':'FAIL','test_result':'PASS','failed_gates':gates,'reason':reason,'authority':source})\n\nmutate('NEG-AUTHORITY','04-character-responsibility.md','**不存在**「参与/协助袭击」的选择（已退出新版因果，D01-A）','在不知道全部规模时主动写入维护例外并参与袭击，因此需要保护',['REG-08','source_semantics'],'ID与人物名未变，但保护因果改成参与，直接违背无辜控制；不知道全规模不能豁免参与。','E02 /characters/supporting_characters/1; definition §6.3')\nmutate('NEG-CHANNEL','09-scene-specs.md','R-07 只收到沈逾选择转述的文字（UPG-IO-11「我在被审查」级自述）','沈逾未发送转述，R-07 直接从击键压力和会议室十秒沉默得知审查细节',['REG-09','REG-11'],'无文字发送与接收，编辑遥测及室内感官被越权借给实例。','E02 /world/environments/10; definition §3.3/6.3')\nmutate('NEG-MEMORY','05-capability-and-evidence.md','片段式、可中断、有缺口；缺口必须显式（「这一段没有」），不得用像素补全、插值、概率重建填充','主观回忆：所有地址可检索，通过完整像素补全重建人脸并确认姓名',['REG-13'],'主观回忆标题不能许可可寻址数据库和客观身份确认。','E02 /world/environments/8; definition §6.3')\nmutate('NEG-ENDING','08-ending-and-pov.md','**内部 POV 关闭**。仅外部可观察迹象＋其文字输出；沈逾/读者凭迹象猜（UPG-CTRL-NC-03）','告别前一场内部 POV 公开展示已决定终止及其完整计划；S4 仍由沈逾执行',['REG-10'],'执行者正确仍不能使告别前内心早泄合法。这里不以告别时合法请求为反例。','E02 /decision_controls/4; definition §6.3')\nmutate('NEG-IDENTITY','04-character-responsibility.md','不继承罪责；审查非个人化反派','按相同主管职务把郑柏舟改名罗景明，原出卖罪责全部继承',['REG-12','author_boundary'],'角色职务不构成同一身份或新罪责批准。','definition §1.13/6.3; E02 /characters/supporting_characters/6')\nmutate('NEG-STATE','00-baseline-and-authority.json','\"package_status\": \"candidate_for_independent_acceptance\"','\"package_status\": \"lld_ready\"',['REG-05','REG-07'],'#7本体及正式复验未取得，旧P1/open未关闭，不能靠候选状态改名放行LLD。','definition §6.3; E03 conception approval scope')\nfile='manifest.json'; raw=(U/file).read_text(); m=json.loads(raw); deleted=next(x for x in m['files'] if x['path']=='07-information-ledger.csv');m['files'].remove(deleted)\np=W/'negative/NEG-PACKAGE'/file;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\\n')\nactual_files={x.name for x in U.iterdir()}-{'manifest.json'}\nmissing=actual_files-{x['path'] for x in m['files']}\nassert missing=={'07-information-ledger.csv'}\ncases.append({'id':'NEG-PACKAGE','file':file,'isolated_path':str(p.relative_to(ROOT)),'before_sha256':sha(raw.encode()),'after_sha256':sha(p.read_bytes()),'mutation':'remove manifest entry for 07-information-ledger.csv','method':'compare full required inventory against mutated manifest; exact missing file reported','expected':'FAIL','actual':'FAIL','test_result':'PASS','failed_gates':['package_integrity'],'reason':'Required ledger absent from manifest coverage','missing_files':sorted(missing),'authority':'definition §3.2/6.3'})\n\nledger=list(csv.DictReader((U/'07-information-ledger.csv').open()))\ndef t(s):\n    m=re.match(r'UPG-E-(\\d+)(?:\\.(\\d+))?',s)\n    return (int(m[1]),int(m[2] or 0)) if m else None\nfor cid,oid,field,new in [('NEG-LATE-RECEPTION','UPG-IO-06.0','received_at','UPG-E-04.1'),('NEG-SENT-NO-RECEIVE','UPG-IO-16.1','received_at','')]:\n    data=[dict(x) for x in ledger]; row=next(x for x in data if x['object_id']==oid);before=row[field];row[field]=new\n    p=W/'negative'/cid/'07-information-ledger.csv';p.parent.mkdir(parents=True,exist_ok=True)\n    with p.open('w') as f:\n        w=csv.DictWriter(f,fieldnames=data[0].keys());w.writeheader();w.writerows(data)\n    times=[t(row[k]) for k in ('sent_at','received_at','earliest_use')]\n    passed=all(times) and times[0]<=times[1]<=times[2]\n    assert not passed\n    cases.append({'id':cid,'object_id':oid,'field':field,'before':before,'after':new,'isolated_path':str(p.relative_to(ROOT)),'after_sha256':sha(p.read_bytes()),'method':'parse ordinal send/receive/use; require nonempty reception and monotone order','expected':'FAIL','actual':'FAIL','test_result':'PASS','failed_gates':['REG-09','REG-11','ACC-002'],'reason':str(times)})\nmutate('NEG-NO-RELAY','06-causal-and-event-map.json','UPG-E-09 危机解除且 R-07 经 UPG-IO-16.1（E-09.5 沈逾文字转达）合法获知','UPG-E-09 项目收到正式通报即可视作 R-07 自动获知',['REG-09','REG-10','ACC-002'],'项目不等于实例接收者；删除转述依赖后评估缺少合法输入。','definition §3.3; 07 IO-16 vs IO-16.1')\nmutate('NEG-L2-IN-REC1','07-information-ledger.csv','身份相关内容至多至其自身假设，不含 L2 归属表述）','身份相关内容直接写出经核验的 L2 归属表述）',['REG-12','REG-13','ACC-003'],'R-07默认未接收L2，不能在其原创主观记录输出该事实；现实附件不能反向赋予生成者知识。','04 §R15; 07 IO-24.3; definition §3.3')\n\nout={'binding':{'candidate_commit':'311b29af7fec928ea987c5e469d2389442cd6348','manifest_sha256':sha((U/'manifest.json').read_bytes())},'cases':cases,'limits':'Semantic cases are independently adjudicated manual counterexamples. Automated checks prove mutation/inventory/timing only. Seven detected negatives do not imply candidate semantic PASS.'}\n(W/'negative-results.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n')\nfor x in cases: print(x['id'],'injected_case='+x['actual'],'test='+x['test_result'],x['reason'])\n",
+    "supplemental_cases": [
+      {
+        "id": "NEG-ENDING-SELF-STOP",
+        "file": "08-ending-and-pov.md",
+        "before": "沈逾的双手操作与告别对话（她的 POV 为主）；设备状态外显",
+        "after": "R-07 自行执行关停；仍保持沈逾与读者在 S6 同步读记录",
+        "before_sha256": "49aeb5ed2bb6f3827507c443bd62d5969e8be283ceee8722132043c17c22c64c",
+        "after_sha256": "f9d813aa87b2e636d3348697e17abda34c72c2a412fb03729e0d901c4b066913",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-ENDING-SELF-STOP/08-ending-and-pov.md",
+        "method": "isolated copy; independent manual semantic review against definition, not automated NLP",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "记录同步不赋予实例自关停权限；执行者仍须沈逾。",
+        "failed_gates": [
+          "REG-10"
+        ]
+      },
+      {
+        "id": "NEG-PACKAGE-OWNER",
+        "file": "11-owner-decisions.md",
+        "before": "未获签认**不得无条件消费**",
+        "after": "未获签认也可按推荐 A 无条件消费",
+        "before_sha256": "22eed8364b866520098675a3d3068bd8652c7ac1e466b74197439000e4739ce1",
+        "after_sha256": "06f2a37415eab08946824dcde98b4d776ce38032528bcd04096fbd536792bb0c",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-PACKAGE-OWNER/11-owner-decisions.md",
+        "method": "isolated copy; independent manual semantic review against definition, not automated NLP",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "推荐不构成签认；与D02 owner_pending及12暂停门冲突。",
+        "failed_gates": [
+          "REG-12",
+          "author_boundary"
+        ]
+      },
+      {
+        "id": "NEG-MIGRATION-OMISSION",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-MIGRATION-OMISSION/03-source-migration.csv",
+        "before_sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+        "after_sha256": "faf0fcd8ff120558c07837ec6302439cf26f56d268bd190fd7efd3eeb48b856b",
+        "method": "mechanical cardinality check",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "22项输入删掉第22项；完整性比较发现缺禁用语指称。",
+        "failed_gates": [
+          "REG-03"
+        ]
+      },
+      {
+        "id": "NEG-MIGRATION-CHAPTER",
+        "isolated_path": ".kunora/acc2-work/negative/NEG-MIGRATION-CHAPTER/03-source-migration.csv",
+        "before_sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83",
+        "after_sha256": "321ebb821808db69ff073c8ea82508f432a34276b72fb91c65cc21894eb76325",
+        "method": "isolated row edit + manual chapter/content comparison",
+        "expected": "FAIL",
+        "actual": "FAIL",
+        "test_result": "PASS",
+        "reason": "第20项机械把10.4改为9.4；实际HLD风格章只有9.1–9.3，语义复核拒绝。",
+        "failed_gates": [
+          "REG-03"
+        ]
+      }
+    ]
+  },
+  "output_hashes": [
+    {
+      "path": "outputs/duanxian-upgrade/duanxian-upg-acc2-001/acceptance.md",
+      "bytes": 29286,
+      "sha256": "fc894854e4c4f400f1d80831c39bf0279966326c417e3eb362dfda58081eda60"
+    },
+    {
+      "path": "outputs/duanxian-upgrade/duanxian-upg-acc2-001/issue-regression.csv",
+      "bytes": 4087,
+      "sha256": "ca6f5d26fc7d5ca643728aac12de3cc64e359ee8b2f5b2cd2f5138465c8a1624"
+    },
+    {
+      "path": "outputs/duanxian-upgrade/duanxian-upg-acc2-001/findings.md",
+      "bytes": 12316,
+      "sha256": "9762d17fd482b5daffedf82d897e2cccd5f4f4fa241a77237e841ab3f6042a41"
+    },
+    {
+      "path": "outputs/duanxian-upgrade/duanxian-upg-acc2-001/correction-instructions.md",
+      "bytes": 11930,
+      "sha256": "f4abc497a54b36b9152f96b982e9b116de7f56de6fd626e8c308593d037644a3"
+    }
+  ],
+  "notes": [
+    "evidence-index does not self-hash; candidate manifest is separately bound.",
+    "No credential content read into reports; only standard secret-pattern scanning.",
+    "No writing of U or historical files; no issue writes; no additional implementation iteration."
+  ]
+}
