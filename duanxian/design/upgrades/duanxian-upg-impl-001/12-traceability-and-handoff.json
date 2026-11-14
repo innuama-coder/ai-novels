@@ -1,0 +1,1308 @@
+{
+ "schema_version": "1.0",
+ "package_id": "duanxian-upg-impl-001",
+ "document_kind": "design_traceability_and_handoff",
+ "explicit_disclaimer": "本文件是设计适配包的追踪与交接文件，**不是**正式 `lld-handoff.json`，不构成任何正式 stage completion、HLD/LLD 准入或写作授权。消费本包≠进入下一阶段。",
+ "consumption_order": [
+  "README.md",
+  "00-baseline-and-authority.json",
+  "01-control-register.json",
+  "02-legacy-disposition.md + 03-source-migration.csv",
+  "11-owner-decisions.md",
+  "04-character-responsibility.md + 05-capability-and-evidence.md",
+  "06-causal-and-event-map.json + 07-information-ledger.csv",
+  "08-ending-and-pov.md",
+  "09-scene-specs.md + 10-text-adaptation-map.csv",
+  "12-traceability-and-handoff.json",
+  "13-regression-results.md + manifest.json"
+ ],
+ "allowed_freedoms": [
+  "局部措辞与场景进入方式（不改变事实的表达）",
+  "在 09 规格边界内细化动作/对白条件/感官材料",
+  "在不违反 05/07 的前提下安排合法文字通道内的具体交流内容"
+ ],
+ "must_not_invent": [
+  "新核心事实（袭击机制/责任人/新增配角/终局机制）——一律回 11 决策点",
+  "R-07 的新能力或新输入通道（05§E1 白名单外）",
+  "旧链内容的直接复用（必经 02 处置表）",
+  "未批分支的确定化（conditional_on_* 块）"
+ ],
+ "blocks_and_pauses": [
+  {
+   "gate": "D01",
+   "nodes": [
+    "06-UPG-E-05 原因层子字段",
+    "09-UPG-S-PROTECTION 原因层机制块",
+    "10-UPG-M-01/02 分支差异"
+   ],
+   "effect": "上述节点不得写成确定稿；其余节点正常消费"
+  },
+  {
+   "gate": "D02",
+   "nodes": [
+    "06-UPG-E-07 责任归属子字段",
+    "09-UPG-S-VERIFY 结论披露块",
+    "07-UPG-IO-24.x B 分支差异",
+    "10-UPG-M-13/19/22/24/26/27 分支差异"
+   ],
+   "effect": "同上"
+  },
+  {
+   "gate": "D03",
+   "nodes": [],
+   "effect": "A 路径无新增事实；若 Owner 提 B 机制则 08/09 终局节点回构思阶段"
+  },
+  {
+   "gate": "#7 机器本体",
+   "nodes": [
+    "正式 HLD 机器基线消费"
+   ],
+   "effect": "阻塞正式准入，不阻塞本包设计消费"
+  },
+  {
+   "gate": "写作授权",
+   "nodes": [
+    "10 号表全部行的正文实施"
+   ],
+   "effect": "writing_status 保持 PENDING_WRITING"
+  }
+ ],
+ "independent_consumption_requirement": "第三步验收的消费演练应仅凭本包（含 12 指定的允许交付材料）重建重点场景的输入/动作/边界/验收，密封后对照正式候选；凡需自行找旧正文/旧 run 补事实即消费失败。",
+ "control_trace": {
+  "coverage_statement": "01 登记 72 条控制，本表逐条映射到设计字段、场景单元与回归 ID。",
+  "unmapped_controls": [],
+  "entries": [
+   {
+    "control_id": "UPG-CTRL-E01-01",
+    "source_pointer": "L81",
+    "design_fields": [
+     "04§R0",
+     "05§E2"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE"
+    ],
+    "regression_ids": [
+     "REG-09",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-02",
+    "source_pointer": "L82",
+    "design_fields": [
+     "05§E1"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE",
+     "UPG-S-REVIEW"
+    ],
+    "regression_ids": [
+     "REG-09"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-03",
+    "source_pointer": "L83",
+    "design_fields": [
+     "04§R1",
+     "04§R5–R14 权限列",
+     "06 各事件 permissions"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-04",
+    "source_pointer": "L84",
+    "design_fields": [
+     "05§E4",
+     "06-UPG-E-08/09"
+    ],
+    "scene_units": [
+     "UPG-S-VERIFY",
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-05",
+    "source_pointer": "L85",
+    "design_fields": [
+     "04§R2/R3/R4"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-06",
+    "source_pointer": "L86",
+    "design_fields": [
+     "05§E4 分层",
+     "07 permission 列"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-09"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-07",
+    "source_pointer": "L87",
+    "design_fields": [
+     "08 全文"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-E01-08",
+    "source_pointer": "L89",
+    "design_fields": [
+     "04§R1",
+     "08§D"
+    ],
+    "scene_units": [
+     "UPG-S-REVIEW",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10",
+     "REG-12"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-NC-01",
+    "source_pointer": "L93-97",
+    "design_fields": [
+     "08§B POV 分配总表"
+    ],
+    "scene_units": [
+     "全部单元"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "historical_only"
+   },
+   {
+    "control_id": "UPG-CTRL-NC-02",
+    "source_pointer": "L93-97",
+    "design_fields": [
+     "05§E2"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE"
+    ],
+    "regression_ids": [
+     "REG-09",
+     "REG-13"
+    ],
+    "status": "historical_only"
+   },
+   {
+    "control_id": "UPG-CTRL-NC-03",
+    "source_pointer": "L93-97",
+    "design_fields": [
+     "08§A/C"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "historical_only"
+   },
+   {
+    "control_id": "UPG-CTRL-NC-04",
+    "source_pointer": "L93-97",
+    "design_fields": [
+     "08§G"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "historical_only"
+   },
+   {
+    "control_id": "UPG-CTRL-NC-05",
+    "source_pointer": "L93-97",
+    "design_fields": [
+     "08§B 旧编号映射表"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "historical_only"
+   },
+   {
+    "control_id": "UPG-CTRL-R07",
+    "source_pointer": "/characters/core_characters/0",
+    "design_fields": [
+     "04§R0",
+     "05 全文",
+     "06-UPG-E-03/04/08/10/11",
+     "08 全文"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE",
+     "UPG-S-VERIFY",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-09",
+     "REG-10",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-SHEN-YU",
+    "source_pointer": "/characters/core_characters/1",
+    "design_fields": [
+     "04§R1",
+     "06-UPG-E-02/11",
+     "08§A/D"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN",
+     "UPG-S-REVIEW",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-GUHENG",
+    "source_pointer": "/characters/supporting_characters/0",
+    "design_fields": [
+     "04§R2",
+     "06-UPG-E-01"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-12"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-ZHOULAN",
+    "source_pointer": "/characters/supporting_characters/1",
+    "design_fields": [
+     "04§R3",
+     "06-UPG-E-05",
+     "07-UPG-IO-02/28"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CHENG-YUAN",
+    "source_pointer": "/characters/supporting_characters/2",
+    "design_fields": [
+     "04§R4",
+     "07-UPG-IO-05"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN",
+     "UPG-S-PROTECTION"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-XU-MANQING",
+    "source_pointer": "/characters/supporting_characters/3",
+    "design_fields": [
+     "04§R5"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-QIN-ZHENG",
+    "source_pointer": "/characters/supporting_characters/4",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-05/07"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-12"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LIANG-CE",
+    "source_pointer": "/characters/supporting_characters/5",
+    "design_fields": [
+     "04§R5",
+     "05§E4",
+     "06-UPG-E-07"
+    ],
+    "scene_units": [
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-12",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LUO-JINGMING",
+    "source_pointer": "/characters/supporting_characters/6",
+    "design_fields": [
+     "04§R5",
+     "04§R16"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN",
+     "UPG-S-REVIEW"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-12"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-TANG-LI",
+    "source_pointer": "/characters/supporting_characters/7",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-12"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-HE-WENJUN",
+    "source_pointer": "/characters/supporting_characters/8",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-ILYA-SAVIN",
+    "source_pointer": "/characters/supporting_characters/9",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-01/09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-DMITRI-VOLKOV",
+    "source_pointer": "/characters/supporting_characters/10",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-C-STATE-REP",
+    "source_pointer": "/characters/supporting_characters/11",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-M-STATE-REP",
+    "source_pointer": "/characters/supporting_characters/12",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-DIPLOMATIC-LIAISON",
+    "source_pointer": "/characters/supporting_characters/13",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-FUTURE-CUSTODIAN",
+    "source_pointer": "/characters/supporting_characters/14",
+    "design_fields": [
+     "04§R5",
+     "06-UPG-E-13/14",
+     "08§E/F"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CHARCONST",
+    "source_pointer": "/characters/constraints/0",
+    "design_fields": [
+     "04§R17"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WORLD-DEF",
+    "source_pointer": "/world/definition",
+    "design_fields": [
+     "04",
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-FIELD",
+    "source_pointer": "/world/environments/0",
+    "design_fields": [
+     "04§R2",
+     "06-UPG-E-01"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-INDUCTION",
+    "source_pointer": "/world/environments/1",
+    "design_fields": [
+     "04§R1",
+     "06-UPG-E-02"
+    ],
+    "scene_units": [
+     "UPG-S-OPEN"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-DIALOGUE",
+    "source_pointer": "/world/environments/2",
+    "design_fields": [
+     "05§E1"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE"
+    ],
+    "regression_ids": [
+     "REG-09"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-COMMAND",
+    "source_pointer": "/world/environments/3",
+    "design_fields": [
+     "05§E4",
+     "06-UPG-E-08"
+    ],
+    "scene_units": [
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-PROTECTION",
+    "source_pointer": "/world/environments/4",
+    "design_fields": [
+     "04§R3",
+     "06-UPG-E-05",
+     "07-UPG-IO-02"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-OVERSIGHT",
+    "source_pointer": "/world/environments/5",
+    "design_fields": [
+     "04§R16",
+     "06-UPG-E-11"
+    ],
+    "scene_units": [
+     "UPG-S-REVIEW",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LIAISON",
+    "source_pointer": "/world/environments/6",
+    "design_fields": [
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CORE",
+    "source_pointer": "/world/environments/7",
+    "design_fields": [
+     "08§A S2–S4",
+     "06-UPG-E-10/11"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-MEMORY",
+    "source_pointer": "/world/environments/8",
+    "design_fields": [
+     "05§E2"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE",
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CUSTODY",
+    "source_pointer": "/world/environments/9",
+    "design_fields": [
+     "08§E/F",
+     "06-UPG-E-13"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-11",
+    "source_pointer": "/world/environments/10",
+    "design_fields": [
+     "05§E1 黑名单",
+     "09-UPG-S-AWAKE/REVIEW 合法输入"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE",
+     "UPG-S-REVIEW"
+    ],
+    "regression_ids": [
+     "REG-09",
+     "REG-11"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-12",
+    "source_pointer": "/world/environments/11",
+    "design_fields": [
+     "05§E4",
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE",
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-DEFINITION",
+    "source_pointer": "/world/systems/0",
+    "design_fields": [
+     "04",
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-SYSTEMS",
+    "source_pointer": "/world/systems/1",
+    "design_fields": [
+     "04§R1 权限",
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LOGIC",
+    "source_pointer": "/world/systems/2",
+    "design_fields": [
+     "05",
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LIFE",
+    "source_pointer": "/world/event_conditions/0",
+    "design_fields": [
+     "06-UPG-E-10/11",
+     "08"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CRISIS",
+    "source_pointer": "/world/event_conditions/1",
+    "design_fields": [
+     "06-UPG-E-09"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE"
+    ],
+    "regression_ids": [
+     "REG-08",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CARE",
+    "source_pointer": "/world/event_conditions/2",
+    "design_fields": [
+     "04§R3/R4",
+     "06-UPG-E-05"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CONSTRAINTS",
+    "source_pointer": "/world/event_conditions/3",
+    "design_fields": [
+     "05§E4",
+     "06"
+    ],
+    "scene_units": [
+     "UPG-S-PROTECTION",
+     "UPG-S-VERIFY"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-BOUNDARIES",
+    "source_pointer": "/world/event_conditions/4",
+    "design_fields": [
+     "06-UPG-E-14",
+     "08§F"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WCONST",
+    "source_pointer": "/world/constraints/0",
+    "design_fields": [
+     "05"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WBOUND",
+    "source_pointer": "/world/boundaries/0",
+    "design_fields": [
+     "08§F"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WORLD-LOGIC",
+    "source_pointer": "/world/operating_logic",
+    "design_fields": [
+     "05",
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WORLD-ONTOLOGY",
+    "source_pointer": "/decision_controls/0",
+    "design_fields": [
+     "04§R0",
+     "08"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL",
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10",
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-WORLD-BEARING",
+    "source_pointer": "/decision_controls/1",
+    "design_fields": [
+     "06 各事件 obstacles/permissions"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-STORY-ARCH",
+    "source_pointer": "/decision_controls/2",
+    "design_fields": [
+     "06 覆盖核对"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-STORY-CAUSAL",
+    "source_pointer": "/decision_controls/3",
+    "design_fields": [
+     "06-UPG-E-09/10"
+    ],
+    "scene_units": [
+     "UPG-S-BLOCKADE",
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-STORY-SUSPENSE",
+    "source_pointer": "/decision_controls/4",
+    "design_fields": [
+     "08§A S1 起",
+     "05§E3"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CHAR-AGENCY",
+    "source_pointer": "/decision_controls/5",
+    "design_fields": [
+     "04§R0/R3",
+     "06 choices"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL",
+     "UPG-S-PROTECTION"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CHAR-NETWORK",
+    "source_pointer": "/decision_controls/6",
+    "design_fields": [
+     "04§R5–R14",
+     "04§R16"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-FRAGMENTS-EVIDENCE",
+    "source_pointer": "/decision_controls/7",
+    "design_fields": [
+     "01 projection_note",
+     "05§E2/E4"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-13"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-SUBJECT",
+    "source_pointer": "/storylines/story_subject",
+    "design_fields": [
+     "06 mainline_source"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-RHYTHM",
+    "source_pointer": "/storylines/suspense_conflict_rhythm",
+    "design_fields": [
+     "08§A/C"
+    ],
+    "scene_units": [
+     "UPG-S-FAREWELL"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LINE-0",
+    "source_pointer": "/storylines/lines/0",
+    "design_fields": [
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-LINE-1",
+    "source_pointer": "/storylines/lines/1",
+    "design_fields": [
+     "06 coverage_note"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CONN-0",
+    "source_pointer": "/storylines/connections/0",
+    "design_fields": [
+     "04§R17",
+     "06-UPG-E-04"
+    ],
+    "scene_units": [
+     "UPG-S-AWAKE"
+    ],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-CONN-1",
+    "source_pointer": "/storylines/connections/1",
+    "design_fields": [
+     "07"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-MEVT-0",
+    "source_pointer": "/storylines/major_events/0",
+    "design_fields": [
+     "06"
+    ],
+    "scene_units": [],
+    "regression_ids": [
+     "REG-08"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-MEVT-1",
+    "source_pointer": "/storylines/major_events/1",
+    "design_fields": [
+     "06-UPG-E-14",
+     "08§F"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   },
+   {
+    "control_id": "UPG-CTRL-STORYCONST",
+    "source_pointer": "/storylines/constraints/0",
+    "design_fields": [
+     "08§F",
+     "06-UPG-E-14"
+    ],
+    "scene_units": [
+     "UPG-S-AFTERMATH"
+    ],
+    "regression_ids": [
+     "REG-10"
+    ],
+    "status": "approved_constraint"
+   }
+  ]
+ },
+ "issue_trace": [
+  {
+   "issue": 1,
+   "title": "七运行时路径＋三测试入口",
+   "design_anchors": [
+    "00§write_scope",
+    "02-UPG-LEG-15",
+    "12§阻塞"
+   ],
+   "regression": "REG-01",
+   "closure_state": "DEFERRED_ENGINEERING"
+  },
+  {
+   "issue": 2,
+   "title": "两处技能计数",
+   "design_anchors": [
+    "02-UPG-LEG-15"
+   ],
+   "regression": "REG-02",
+   "closure_state": "DEFERRED_ENGINEERING"
+  },
+  {
+   "issue": 3,
+   "title": "17 素材路径＋R07 五风格指称",
+   "design_anchors": [
+    "03（22 行）",
+    "02-UPG-LEG-14"
+   ],
+   "regression": "REG-03",
+   "closure_state": "design 层承接完成；正文勘误另行授权"
+  },
+  {
+   "issue": 4,
+   "title": ".gitattributes 匹配",
+   "design_anchors": [
+    "02-UPG-LEG-15",
+    "manifest（本包实际 hash）"
+   ],
+   "regression": "REG-04",
+   "closure_state": "DEFERRED_ENGINEERING"
+  },
+  {
+   "issue": 5,
+   "title": "HLD-TRACE-CLOSURE 未闭合",
+   "design_anchors": [
+    "02§C 替代声明",
+    "12 本表",
+    "00§formal_hld_admission"
+   ],
+   "regression": "REG-05",
+   "closure_state": "替代记录已立（候选）；正式准入另议"
+  },
+  {
+   "issue": 6,
+   "title": "人审 v2/v3 混用",
+   "design_anchors": [
+    "02§D 三栏保留"
+   ],
+   "regression": "REG-06",
+   "closure_state": "歧义如实保留；查清待历史责任人"
+  },
+  {
+   "issue": 7,
+   "title": "三机器 basename 不可得",
+   "design_anchors": [
+    "00§machine_package_evidence",
+    "02-UPG-LEG-16"
+   ],
+   "regression": "REG-07",
+   "closure_state": "BLOCKED_EVIDENCE（正式机器基线消费）"
+  },
+  {
+   "issue": 8,
+   "title": "周岚参与链",
+   "design_anchors": [
+    "04§R3",
+    "06-UPG-E-05",
+    "07-UPG-IO-02/28",
+    "09-UPG-S-PROTECTION",
+    "10-UPG-M-01/02/03",
+    "11-D01"
+   ],
+   "regression": "REG-08",
+   "closure_state": "设计候选（D01-A）；正文 PENDING_WRITING"
+  },
+  {
+   "issue": 9,
+   "title": "初醒/审查当前视听",
+   "design_anchors": [
+    "05§E1",
+    "09-UPG-S-AWAKE/REVIEW",
+    "10-UPG-M-05/06/07"
+   ],
+   "regression": "REG-09",
+   "closure_state": "设计层闭合；正文 PENDING_WRITING"
+  },
+  {
+   "issue": 10,
+   "title": "终止执行与披露顺序",
+   "design_anchors": [
+    "08 全文",
+    "07 终局对象",
+    "09-UPG-S-FAREWELL/AFTERMATH",
+    "10-UPG-M-08..M-15/23",
+    "11-D03"
+   ],
+   "regression": "REG-10",
+   "closure_state": "设计层闭合；正文 PENDING_WRITING"
+  },
+  {
+   "issue": 11,
+   "title": "十秒沉默来源",
+   "design_anchors": [
+    "05§E3",
+    "09-UPG-S-REVIEW（删除依赖路径）",
+    "07-UPG-IO-11",
+    "10-UPG-M-21"
+   ],
+   "regression": "REG-11",
+   "closure_state": "设计层闭合（删除路径）；正文 PENDING_WRITING"
+  },
+  {
+   "issue": 12,
+   "title": "郑柏舟显名与旧素材禁令",
+   "design_anchors": [
+    "04§R15/R16",
+    "07-UPG-IO-24.x",
+    "09-UPG-S-VERIFY",
+    "10-UPG-M-13/19/20/22/24/26/27",
+    "11-D02"
+   ],
+   "regression": "REG-12",
+   "closure_state": "BLOCKED_OWNER（D02）；正文 PENDING_WRITING"
+  },
+  {
+   "issue": 13,
+   "title": "记忆数据库化与像素补全",
+   "design_anchors": [
+    "05§E2",
+    "10-UPG-M-16/17/18/19/28"
+   ],
+   "regression": "REG-13",
+   "closure_state": "设计层闭合；正文 PENDING_WRITING"
+  }
+ ],
+ "dependency_refs": [
+  "00-baseline-and-authority.json",
+  "01-control-register.json",
+  "02-legacy-disposition.md",
+  "03-source-migration.csv",
+  "04-character-responsibility.md",
+  "05-capability-and-evidence.md",
+  "06-causal-and-event-map.json",
+  "07-information-ledger.csv",
+  "08-ending-and-pov.md",
+  "09-scene-specs.md",
+  "10-text-adaptation-map.csv",
+  "11-owner-decisions.md",
+  "13-regression-results.md"
+ ],
+ "consumed_by": [
+  "第三步独立验收 duanxian-upg-acc-001",
+  "获授权的后续 HLD/LLD/写作作业"
+ ]
+}

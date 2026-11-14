@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "package_id": "duanxian-upg-impl-001",
+  "package_kind": "conception_design_adaptation_package_candidate",
+  "package_status": "candidate_for_independent_acceptance",
+  "authority_note": "本包是对已批准构思基准的构思/设计适配与完善，不是重新批准构思，不是正式 HLD/LLD 准入凭证，也不是正式 stage completion。正式 HLD 生产若获单独授权，必须从重验通过的 canonical 机器基线进入，不能由本包冒充 canonical。",
+  "job": {
+    "job_id": 2325,
+    "job_ref": "duanxian-upg-impl-001",
+    "protocol_position": "第二步实施（定义 duanxian-upg-def-001 已完成；第三步独立验收 duanxian-upg-acc-001 在本作业之后）",
+    "implementer_model_config": "GLM-5.3",
+    "work_branch": "remote-agent/duanxian-upg-impl-001"
+  },
+  "baseline": {
+    "repo": "innuama-coder/ai-novels",
+    "evidence_baseline_base": {
+      "commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+      "role": "冻结证据基线（BASE）。全部既有文件行号与 JSON Pointer 均绑定该提交。"
+    },
+    "definition_commit": {
+      "commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+      "role": "升级定义书入库提交；本实施作业的唯一工作指令源位于该提交内。",
+      "definition_book": {
+        "path": "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md",
+        "bytes": 70796,
+        "sha256": "f2474997981699f5ad0cae9f6ee5b924238b2619536171e6830dcb7364844a52"
+      },
+      "definition_acceptance_evidence": "定义作业十二阶段收口（JOB #2317 ENDED）；judge r1 PASS（登记 note_35873）；Owner manual-review 三项确认完成（记录于定义作业 acceptance.md 补验节）。据此本作业按定义书 §5 步骤 0「验收证据核对」进入正式实施，不保持候选研究状态。"
+    },
+    "implementation_base": {
+      "commit": "4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+      "role": "本实施作业的基线 HEAD（分支 remote-agent/duanxian-upg-impl-001 初始化位）。实施开始时工作树干净，无初始 dirty 文件。"
+    },
+    "issue_snapshot": {
+      "path": ".kunora/inputs/open-issues-snapshot-20261114.md",
+      "bytes": 60713,
+      "sha256": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67",
+      "issue_count": 13,
+      "note": "冻结快照，本作业唯一 ISSUE 输入；GitHub 原文未另行拉取，未向任何 ISSUE 写入信息。"
+    }
+  },
+  "authority": {
+    "current_authority": {
+      "statement": "duanxian/novel-goals.md 与 duanxian/conception-approved/ 包（作者 2026-08-17 批准）是当前权威口径；七月 HLD、六月 PRD/LLD/素材与正文属于历史链，只经 02-legacy-disposition.md 进入本包。",
+      "novel_goals": {
+        "path": "duanxian/novel-goals.md",
+        "sha256": "5ebbce4fe46c17b787c628b15ab8a16e9d0e29fdd6831c25ed541790e5f0f297",
+        "consumed_by": ["01-control-register.json", "04-character-responsibility.md", "05-capability-and-evidence.md", "06-causal-and-event-map.json", "08-ending-and-pov.md"]
+      },
+      "conception_approved": {
+        "author_decision": {
+          "path": "duanxian/conception-approved/author-decision.json",
+          "sha256": "4f5a070d22a92fb211b9e99709e04e05b16460aa52ae40c7ebb0eaf49249e2bd",
+          "run_id": "duanxian-conception-v2-20260811-18",
+          "decision": "approved",
+          "approval_scope": "conception",
+          "approval_record_head": "构思合格，完成提交并推送。",
+          "unresolved_items": []
+        },
+        "conception_completion": {
+          "path": "duanxian/conception-approved/conception-completion.json",
+          "sha256": "4eabd4af2b249493f3aae1a2668c4de9b37dea7f61628e1b454293e49587d127",
+          "status": "ready",
+          "stage_completions": ["B0", "S1", "W1", "E1", "T1", "C1", "Q1", "P1", "H1"]
+        },
+        "human_review_report": {
+          "path": "duanxian/conception-approved/human-review-report.json",
+          "sha256": "f3d848f15547e77bcb0a0d54b288efe9989e53e286470a200544966af173c640",
+          "consumed_pointers": ["/characters", "/world", "/decision_controls", "/storylines"]
+        },
+        "package_readme": {
+          "path": "duanxian/conception-approved/README.md",
+          "sha256": "652be2cc1494199c84839733c5b5e496cfc28fb8a8a46020fb8b1fd3cdf7bd6f"
+        }
+      }
+    },
+    "control_projection_note": "01-control-register.json 中的批准控制投影取自上述人审 JSON 的确切 Pointer 与逐字内容，属只读投影；该投影不是 P1 机器本体，不用于替代任何正式 validator 复验。"
+  },
+  "machine_package_evidence": {
+    "status": "evidence_unavailable_in_git_tree",
+    "issue_refs": ["#7"],
+    "facts": [
+      "BASE 全树 1444 个跟踪路径中，novel-conception-package.json、development-handoff.json、hld-completion.json 三个 basename 均为零命中（定义书 §1.8 已精确枚举）。",
+      "duanxian/conception-approved/README.md 与 .gitignore 明示运行数据不入 Git；E03 保留的引用与 hash 证明引用与批准存在，不能证明机器本体在树内，也不能推断仓库外不存在。",
+      "本作业实施中未取得受控渠道的机器本体材料，未执行任何正式复验；本包不包含对机器包的任何新增验证声明。"
+    ],
+    "controlled_refs_from_e03": [
+      {"role": "构思完成记录", "path": "P1/stage-completion.json", "sha256": "42e307d1089a58ed3df6f13059007fe33f48da993b8c62832edc141f2a6e249b", "source": "author-decision.json#/machine_package"},
+      {"role": "P1 清单", "path": "P1/package-manifest.json", "sha256": "bba81d35a089320074eb8677911707052ba99b1265fbf19731c78785a1eef8ce", "source": "author-decision.json#/machine_package 与 conception-completion.json#/p1_manifest"},
+      {"role": "开发交接", "path": "P1/development-handoff.json", "sha256": "d48194db32a43575c96ff2df0c9bccf0f8d95a98f2b7bc7bc601068078c33957", "source": "conception-completion.json#/development_handoff"},
+      {"role": "运行状态", "path": "state/revision-037.json", "sha256": "1ca5af5ccd6f56a495229dca2587c600653f73187c600d06616ad5a3177cb030", "source": "conception-completion.json#/run_state"},
+      {"role": "验证记录", "path": "completion/validation.json", "sha256": "c370cea55df3c2bd6fa15045a112b0fc36e9f449d492ff237a4e1dcb3023be45", "source": "conception-completion.json#/validation"}
+    ],
+    "note_on_refs": "上述为运行目录相对路径的同 run 受控引用登记（脱敏，无秘密）；路径在 Git 树内不可达即为 #7 的证据缺口本身。责任人与受控取证渠道见 02-legacy-disposition.md 与 13-regression-results.md 的 REG-07 行。"
+  },
+  "formal_hld_admission": {
+    "status": "blocked_by_evidence_and_pending_gates",
+    "gates": [
+      {"gate": "机器本体受控复验（#7）", "status": "open", "owner": "工程/运行责任人", "impact": "正式 HLD 消费机器基线前必须闭合；不阻塞本包设计适配工作。"},
+      {"gate": "旧 HLD-TRACE-CLOSURE P1（#5）", "status": "superseded_by_explicit_replacement_record", "note": "本包以 02/03/12 的逐字段追踪重建替代路线承接，旧 open 原文保持不变；替代记录生效不自动等于正式 HLD 人审或 lld_ready。"},
+      {"gate": "旧 HLD 人审 v2/v3 歧义（#6）", "status": "open_ambiguity_preserved", "note": "本包完整保留歧义三栏（manifest 声明 v3.0／L33 原文 v2.0／真实评审对象未从记录证实），不声称查清。"},
+      {"gate": "D01–D03 Owner 签认", "status": "owner_pending", "note": "三个决策点未签认；相关依赖节点保持条件分支/BLOCKED_OWNER 语义，见 11-owner-decisions.md。"}
+    ],
+    "conclusion": "本包是设计适配候选（design candidate）。candidate 状态如实陈述：不宣称 lld_ready，不宣称正式 HLD 准入，不宣称任何 ISSUE 已在 GitHub 关闭。"
+  },
+  "write_scope": {
+    "whitelist_root": "duanxian/design/upgrades/duanxian-upg-impl-001/",
+    "files": [
+      "README.md", "00-baseline-and-authority.json", "01-control-register.json", "02-legacy-disposition.md",
+      "03-source-migration.csv", "04-character-responsibility.md", "05-capability-and-evidence.md",
+      "06-causal-and-event-map.json", "07-information-ledger.csv", "08-ending-and-pov.md", "09-scene-specs.md",
+      "10-text-adaptation-map.csv", "11-owner-decisions.md", "12-traceability-and-handoff.json",
+      "13-regression-results.md", "manifest.json"
+    ],
+    "existing_files_modified": 0,
+    "out_of_scope_reminders": [
+      "不改写批准构思、宪法/模板/历史证据；不编辑引擎代码与仓库属性；不创建/关闭/评论 GitHub ISSUE；不改旧正文为发布稿；不实施全书写作；不推送 main 或未授权分支；仅访问 github.com/api.github.com 之外无任何外部网络；秘密零打印零写入。"
+    ]
+  },
+  "evidence_gaps_summary": [
+    {"id": "GAP-MACHINE", "issue_refs": ["#7"], "statement": "三个机器交付 basename 在冻结树不可得；受控渠道取证与正式复验未完成。", "blocking": "仅阻塞正式机器基线消费，不阻塞本包设计适配。"},
+    {"id": "GAP-OWNER", "issue_refs": ["#8", "#12", "#10"], "statement": "D01/D02/D03 未签认；旧维护例外责任替代、郑柏舟支线取舍、终局新增机制保持条件分支。", "blocking": "阻塞依赖节点的无条件消费，不阻塞独立节点。"},
+    {"id": "GAP-WRITING", "issue_refs": ["#9", "#10", "#11", "#12", "#13"], "statement": "正文适配未授权；10 号表全部 writing_status=PENDING_WRITING，原始关闭条件中的正文实证未发生。", "blocking": "阻塞 ISSUE 原始关闭，不阻塞设计验收。"},
+    {"id": "GAP-ENGINEERING", "issue_refs": ["#1", "#2", "#4", "#6"], "statement": "工程线四条留存后续处置；本包只登记依赖与隔离，不执行修复。", "blocking": "不阻塞设计适配；工程关闭另行授权。"}
+  ],
+  "dependency_refs": ["outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md", "duanxian/novel-goals.md", "duanxian/conception-approved/author-decision.json", "duanxian/conception-approved/conception-completion.json", "duanxian/conception-approved/human-review-report.json"],
+  "consumed_by": ["01-control-register.json", "13-regression-results.md", "manifest.json"]
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "package_id": "duanxian-upg-impl-001",
+  "package_kind": "conception_design_adaptation_package",
+  "package_status": "candidate_for_independent_acceptance",
+  "note": "hash 覆盖 15 个文件的实际 UTF-8 字节；manifest.json 自身不自哈希（再生成即覆盖本文件）。",
+  "dependency_refs": {
+    "definition": "outputs/duanxian-upgrade/duanxian-upg-def-001-definition.md @ 4ce28e8a903adce69579fe08b51bf2b6ff3d842d",
+    "definition_sha256": "f2474997a235cd438084654090686d298d334c0e28b5ab912d43b40c571a4a52",
+    "evidence_base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+    "issue_snapshot": ".kunora/inputs/open-issues-snapshot-20261114.md",
+    "issue_snapshot_sha256": "1e35e5e10f75d4c7fda990ef6be71cd0020af935130c78c07c6431f774c7ea67"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3901,
+      "sha256": "267f0ed396cf2035b299efe193ff1cf0a613f7d22d07fee49a82794ae6f57594"
+    },
+    {
+      "path": "00-baseline-and-authority.json",
+      "bytes": 10413,
+      "sha256": "eba7e59adc0630a776ee6cea5d1c79ac2f7d4d63ba5d05d9b357873378ca80b2"
+    },
+    {
+      "path": "01-control-register.json",
+      "bytes": 91348,
+      "sha256": "920d71b9a4fb841ad52e5621b992da806ef3d6ca1d1155e0062ae45614cef92d"
+    },
+    {
+      "path": "02-legacy-disposition.md",
+      "bytes": 17163,
+      "sha256": "547bfb70586f539d3e00f8ab9f7ff4e0a2a16b287f20919f40793ac0fe0f253e"
+    },
+    {
+      "path": "03-source-migration.csv",
+      "bytes": 11163,
+      "sha256": "d01c338e1e89b8f4fcf4779702a1b9c44faab28b26f69c323dd0fda0361edc83"
+    },
+    {
+      "path": "04-character-responsibility.md",
+      "bytes": 15467,
+      "sha256": "bf6a8787813a13de9c2422638f9aaa732b7a5cd71db52809fcfabfd18d98cff6"
+    },
+    {
+      "path": "05-capability-and-evidence.md",
+      "bytes": 7782,
+      "sha256": "43fe34e9760858d6a0108293f48c3df04110a2e6d2df5f6d1902b7e2cf0bf258"
+    },
+    {
+      "path": "06-causal-and-event-map.json",
+      "bytes": 21602,
+      "sha256": "d5f343958012232da88e67c8c80c2463296fc1152d54ee2d98832633349f7682"
+    },
+    {
+      "path": "07-information-ledger.csv",
+      "bytes": 11849,
+      "sha256": "736b3273eaadd815c52bd1f06a41224dc8813daab52234d481c73a134807207a"
+    },
+    {
+      "path": "08-ending-and-pov.md",
+      "bytes": 8084,
+      "sha256": "99a58b0d83fdd1b2e3dc023ee522d4433e0d3c17ca5f939758d7bd06aaf62e89"
+    },
+    {
+      "path": "09-scene-specs.md",
+      "bytes": 15120,
+      "sha256": "af2125f5444f84c96f26f04369fc8a8bcba01a415d1030f9227a62c8cd2d2656"
+    },
+    {
+      "path": "10-text-adaptation-map.csv",
+      "bytes": 17160,
+      "sha256": "9cc902d8af971c8b99ec224a40027ced016d5fcfbf0867e6cbca6c073aec3102"
+    },
+    {
+      "path": "11-owner-decisions.md",
+      "bytes": 10005,
+      "sha256": "9be5532cbede6be1ea2794c49672f9baa9337b6802f51633ba696132c8ba7184"
+    },
+    {
+      "path": "12-traceability-and-handoff.json",
+      "bytes": 27750,
+      "sha256": "e70020550b3d06b82a87f1c8e377f608677974d9ff45592193506396876ea663"
+    },
+    {
+      "path": "13-regression-results.md",
+      "bytes": 19564,
+      "sha256": "109d3fbb809b1d4009c17ea7390c5b271c0f1c63d5079257eae275beae2dfb5f"
+    }
+  ]
+}
