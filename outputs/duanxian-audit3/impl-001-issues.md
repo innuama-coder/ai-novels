@@ -1,0 +1,455 @@
+# duanxian-audit3-impl-001 · 新 ISSUE 提交登记 v3（impl2-001 → impl3-001 修正版）
+
+- 版本：v2，2026-11-15，作业 duanxian-audit3-impl2-001（JOB #2394）按 acc-001 验收记录 §7/ACC-F009＋ACC-F007 修正。v1 登记内容原样保留于本文件（历史 hash、授权与回读记录零改动）；v2 只新增字段、收据与重归类结论，不补造任何历史请求日志。
+- 版本：v3，2026-11-15，作业 duanxian-audit3-impl3-001（JOB #2471）按 acc2-001 验收记录 §A2/07 修正单 **ACC-F013**（#17/#19/#20 处置与门判修正，自然语言与 JSON 同步）＋**ACC-F014**（四维差异表 #3/#4/#7 机制/关闭条件重做＋22 条复核）修正：见 §2.4/§2.6/§2.7、§5.2 v3 批注与文末 **v3 JSON delta**；v1/v2 登记内容（含全部历史 hash、授权与回读记录）原样保留。impl3-001 零 GitHub API 读写，线上状态以 impl2-001 GET 收据为准。
+- 版本：v4，2026-11-15，作业 duanxian-audit3-impl4-001（JOB #2493）按 acc3-001 验收记录 §A3/08 修正单 **ACC-F017**（#20 主候选单一可验目标＋附带项逐项分类闭合，自然语言/§5.2/JSON 同步）修正：见 §2.7 v4 处置与五门状态表、§5.2 候选 #20 行 v4 列与文末 **v4 JSON delta**；v1/v2/v3 登记内容（含全部历史 hash、授权与回读记录）原样保留。impl4-001 零 GitHub API 读写，线上状态仍以 impl2-001 GET 收据为准。
+- 作业（v1 原文）：JOB #2382（duanxian-audit3-impl-001，R3 审视实施）
+- 审计基线 BASE：`92573f1cca40f37cee04d2beb8708ff33ba603d6`；定义书 @ `024ef15a201a536592162b5f8442cf6a57699a8d`
+- 输入快照：`.kunora/inputs/open-issues-snapshot-20261114b.md`（SHA-256 `f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90`）
+- 提交规程：定义书 §5.1（POST 仅 title+body；201 判成功；逐条 GET 回读核对标题/标记/正文 SHA-256；标记格式 `<!-- duanxian-audit3-impl-001:DX3-Fnnn:base=<BASE> -->`）
+- v1 提交时点实时核验（原文保留）：`GET /repos/innuama-coder/ai-novels/issues?state=all` 分页全量＝13 条、与冻结快照一致、无 PR、无第三方新增。
+- v2 线上复核（impl2-001，公开无认证 GET，2026-11-15）：全量 22 条、无 PR；#14–#22 全部 `state=open`，`created_at` 与验收附录 B 一致，正文 SHA-256 与 v1 提交体逐一相同——**线上原文未动**。本轮零评论/零关闭/零编辑/零新建（见 §2 各条 `retrieved_body_sha256` 与文末 v2 JSON `impl2_recheck`）。
+- 证据缺失声明（ACC-F009 要求如实说明）：v1 交付未留存逐条 POST 响应原始日志，本登记不补造；九条发布成功的事实依据＝线上 live 状态＋v1 逐条 GET 回读哈希（`body_sha256_sent`＝`body_sha256_readback`）＋acc-001 附录 B 独立回读收据＋impl2-001 复核 GET，四方一致。
+
+## 1. 本次创建（v1 表原样保留；created_at 等全字段见 §2 与 v2 JSON）
+
+| 编号 | ISSUE | 标题 | 链接 | 回读 |
+|---|---|---|---|---|
+| DX3-F001 | #14 | [断线审视] 多层设计产物的文档路径与引用在重构后失配（既有三条 ISSUE 范围外的路径漂移族） | https://github.com/innuama-coder/ai-novels/issues/14 | OK（SHA-256 一致） |
+| DX3-F002 | #15 | [断线审视] 审阅简报 brief.html 版本链引用全失效、处于审阅真空并含已废止内容 | https://github.com/innuama-coder/ai-novels/issues/15 | OK |
+| DX3-F003 | #16 | [断线审视] 主体定义 v1.1 残留旧终局口径而构思审计全 passed 未捕获 | https://github.com/innuama-coder/ai-novels/issues/16 | OK |
+| DX3-F004 | #17 | [断线审视] HLD-04 与 HLD-07 对处置组是否掌握行动层情报的表述相反 | https://github.com/innuama-coder/ai-novels/issues/17 | OK |
+| DX3-F005 | #18 | [断线审视] PRD 终包对 HLD 入口门状态自述矛盾（L34 与 L281 相反） | https://github.com/innuama-coder/ai-novels/issues/18 | OK |
+| DX3-F006 | #19 | [断线审视] 历史层启动与归责口径同批准层「沈逾非启动者」存在未声明冲突族（G02） | https://github.com/innuama-coder/ai-novels/issues/19 | OK |
+| DX3-F007 | #20 | [断线审视] 六月写作线素材与正文对同一事件的事实互斥未收敛（K1 传输/人数/面孔/载体/地点/匹配次数） | https://github.com/innuama-coder/ai-novels/issues/20 | OK |
+| DX3-F008 | #21 | [断线审视] 批准报告控制条目残留早期迭代计数（「十个环境」vs 实际 12、「六个样章片段」vs 实际 3） | https://github.com/innuama-coder/ai-novels/issues/21 | OK |
+| DX3-F009 | #22 | [断线审视] 构思工程脚本路径失配扩展至样片驱动器等三处（#1 同根因、其关闭范围之外） | https://github.com/innuama-coder/ai-novels/issues/22 | OK |
+
+回读明细（正文 SHA-256，sent＝提交体，readback＝GET 回读体）与逐条结果见文末 JSON。9/9 成功、0 失败；每条含六要素（标记/BASE/编号/责任阶段/严重度、可证伪命题、应然实然证据、与 13 条差异、建议与关闭条件、采纳边界）。
+**v2 批注**：上表为 v1 事实记录（发布动作确实发生且回读一致）。v1 报告「9 条五门全过/零重复」的总声明已按 ACC-F007 撤回——#14/#22 重归类 out_of_scope/existing，#15/#16/#17/#19/#20 命题收窄，#18/#21 保留确证核心。逐门状态见 §2，四维差异表见 §5.2；线上处置建议（均 OWNER_PENDING）见 `impl2-001-external-correction-proposal.md`。
+
+## 2. 候选全字段登记 v2（定义 §5.1 要求字段；ACC-F009 产物）
+
+五门（定义书 L107）：①范围门（属 DX-G01–09 构思/设计命题）②证据门（应然实然有 BASE 原文证据含版本/上下文/反证）③查重门（与 13 条＋发布前实时全状态语义比较）④目标门（单一修订目标/责任阶段/独立验收条件）⑤边界门（只提设计改进，不改故事）。
+
+### 2.1 DX3-F001（#14）
+- finding_id：DX3-F001
+- dedup_disposition：`reclassified_out_of_scope_existing`（v1 submit → v2 按 ACC-F007/§3.7 重归类）
+- closest_existing：#1（构思 CLI 路径族）、#3（素材路径迁移）、#4（.gitattributes 前缀）
+- difference_reason（v2）：自承「文档迁移工程整理」，责任阶段与关闭条件为全树路径工程整理；旧条范围排除后未证明任何独立构思/设计控制受影响——**与既有条无机制差异成立**
+- publish_gate：v1 判五门全过 → v2 撤回：门①不成立（定义 §4.3/S05 停止工程缺陷扩展）、门③不成立（与 #1/#3/#4 同机制）
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F001:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256（sent＝readback＝线上现行）：`5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28`
+- publish_status：`published_open`＋v2 重归类 out_of_scope/existing；线上处置建议＝Owner 允许时关闭并说明（OWNER_PENDING，未执行）
+- number：14；url：https://github.com/innuama-coder/ai-novels/issues/14；created_at：`2026-11-14T12:52:13Z`（验收附录 B；impl2 GET 同）；get_verified：true（v1 回读＋验收附录 B＋impl2-001 GET 三方一致）；retrieved_body_sha256（impl2-001）：`5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28`
+
+### 2.2 DX3-F002（#15）
+- finding_id：DX3-F002
+- dedup_disposition：`published_narrowed`（收窄保留；acc-001 §3.2）
+- closest_existing：#6（版本指称混用——对象不同：brief.html 审阅简报 vs canonical 规格）、#3（引用失效——载体不同：冻结快照内文档 vs 线上审阅简报）
+- difference_reason：审阅简报版本链引用与审阅状态可见性无既有条覆盖；#6/#3 机制邻接但对象与控制不同
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（「全部失配」全称失败：I3 core-character v1.0 相符、I2 世界契约件不在库不可对照；周岚婚姻＝对象混淆；三个月 vs D+58＝非同一事件）；收窄命题「部分版本引用待对齐且 awaiting_author_review 状态需保持可见」仍过门
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F002:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc`
+- publish_status：`published_open`；线上原文含被撤回断言，编辑建议 OWNER_PENDING（GET 保存新旧 hash 后改写为窄观察，或不足独立立项则关闭）
+- number：15；url：https://github.com/innuama-coder/ai-novels/issues/15；created_at：`2026-11-14T12:52:18Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc`
+
+### 2.3 DX3-F003（#16）
+- finding_id：DX3-F003
+- dedup_disposition：`published_narrowed`
+- closest_existing：#10（终局披露族——控制不同：主体定义版本残留 vs 叙事披露顺序）
+- difference_reason：subject-definition v1.1 残留旧终局口径无既有条覆盖；#10 对象为叙事顺序非版本残留
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（「三处旧终局直接违反第一部不知情」为误判：L34 创伤≠已知受骗、L41 明指第二部、L61 时间线 delegated；causal 版本定位改正为 v1.1 非 v2.0）；版本事实（v1.1）与残留观察保留
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F003:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300`
+- publish_status：`published_open`；撤回违规结论的编辑建议 OWNER_PENDING；不另立「纠错 Issue」
+- number：16；url：https://github.com/innuama-coder/ai-novels/issues/16；created_at：`2026-11-14T12:52:22Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300`
+
+### 2.4 DX3-F004（#17）
+- finding_id：DX3-F004
+- dedup_disposition：`published_reanchored_insufficient_evidence`（现行强命题证据不足；设计对齐问题保留待证）
+- closest_existing：#5（HLD 追踪门——控制不同：权限/知情映射 vs 事件-状态绑定）
+- difference_reason：HLD-04 权限列与 HLD-07 知情时点的映射问题无既有条覆盖；#5 为 trace 完整性
+- publish_gate：v1 判五门全过 → v2：门②不成立（「两者不可能同时为真」缺同一时点/同一信息粒度桥接；源列是 Known by 非 visible_to）；重锚定后窄命题「权限/实际知情/时序映射待澄清」过门，与 #5 不同的设计裁决须在补桥接后证明；**v3（ACC-F013）修正**：v2「窄命题过门」判定撤回——「同一时点/粒度映射桥接缺失」即窄命题自身的已证内容，桥接未补齐前证据门②对 #17 整体**未过维持**；单一可验关闭目标＝补齐 HLD-04（04-character-system.md L15/L21）与 HLD-07（07-time-information-system.md L15/L20）在同一时点/同一信息粒度的映射桥接，补齐后重判门②
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F004:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93`
+- publish_status：`published_open`；收窄编辑建议 OWNER_PENDING（visible_to→Known by、删「不可能同时为真」）；v3：门②未过维持（ACC-F013），不新建纠错 ISSUE、不自动拆发、不代 Owner 改线上
+- number：17；url：https://github.com/innuama-coder/ai-novels/issues/17；created_at：`2026-11-14T12:52:27Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93`
+- v2 锚点（重锚定依据）：HLD-04＝`duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/04-character-system.md` L15（Information permission 列）L21（「危机解除后……掌握行动层；原因层须复核申请」）；HLD-07＝同目录 `artifacts/07-time-information-system.md` L15（Known by 列）L20（HLD-07-04 行动层 D+57；HLD-07-05 完整原因层 Hidden from 处置组＋读者）
+
+### 2.5 DX3-F005（#18）
+- finding_id：DX3-F005
+- dedup_disposition：`published_confirmed_core_cause_marked_inference`（核心确证保留；成因标推断）
+- closest_existing：#6（状态自述族——对象不同：PRD 终包门状态 vs canonical 标签）
+- difference_reason：PRD 终包 L34「入口仍需等待人类评审」vs L281「人类 PRD 评审已确认…pass_to_hld」前后状态未标过程/终态，无既有条覆盖
+- publish_gate：v1 判五门全过 → v2：核心成立、低严重度合理、过门维持；成因（07-10 gate-report pending → 07-13 confirmed 的确认时间窗）为旁证推断非直证；不能据此断言今天 HLD 未获准进入
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F005:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4`
+- publish_status：`published_open`；核心无需因验收失败而关闭；历史终包状态说明的实施守授权边界
+- number：18；url：https://github.com/innuama-coder/ai-novels/issues/18；created_at：`2026-11-14T12:52:32Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4`
+
+### 2.6 DX3-F006（#19）
+- finding_id：DX3-F006
+- dedup_disposition：`published_narrowed`
+- closest_existing：#8（参与链族——对象不同：沈逾启动归责 vs 周岚维护例外）
+- difference_reason：六月线濒死/生前转移与批准「死亡后加载」的适配映射无既有条覆盖
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（「研究员参与执行即违规」被反例否定——批准禁「决策者/启动者」允「执行者」；「没有任何口径迁移声明」被否定——`duanxian/README.md` L22–23 历史链隔离＋`duanxian/novel-goals.md` L67–71 专列历史隔离）；窄子集「特定残留的逐条适配映射是否足够」保留过门；**v3（ACC-F013）隔离充分性明确判断**：总隔离声明对**层级误用**风险充分（明示旧线已被上层替代、不得作当前口径引用）、对**事实级再利用**风险不充分（清单化素材仍可被消费、具体事实可被直接采用而无逐条适配标记）——窄命题「事实级逐条适配映射缺失」保留过门；单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F006:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0`
+- publish_status：`published_open`；删除两项被反例否定断言的编辑建议 OWNER_PENDING
+- number：19；url：https://github.com/innuama-coder/ai-novels/issues/19；created_at：`2026-11-14T12:52:37Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0`
+- v2 窄子集证据：LLD K2（`duanxian/design/specs/lld/scenes/2026-06-07-scene-K2.md` L26）、`design-scenes-draft.md` L15–22、PRD L38/L120/L190
+
+### 2.7 DX3-F007（#20）
+- finding_id：DX3-F007
+- dedup_disposition：`published_narrowed`
+- closest_existing：#11（十秒沉默——信息先用后到族）、#12（郑柏舟显名——载体对齐）、#13（记忆可检索——机制邻接）
+- difference_reason：正文与素材对同一事件的计数矛盾（两次 vs 七次）无既有条直接覆盖；#11/#12/#13 为比较对象（非覆盖）；**v4（ACC-F017）**：#20 的独立性**仅由计数矛盾支撑**——载体对齐子集移出独立性理由与命题本体，改列独立不发布观察（见下五门表）；v2 原文「及载体对齐子集无既有条直接覆盖」的并列写法不再作为当前候选组织方式
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（人数、面孔同一性、「未写即未发生」、仓库/地点等互斥未证明——acc-001 §3.5/ACC-F006）；计数确证保留：正文 L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点）；「七」污染源＝R07 §2.2 表/片段 C 第七次回放（成因推断）；**v3（ACC-F013）逐子项处置**：传输＝撤回；人数＝撤回；面孔＝撤回；地点＝撤回；**匹配次数＝确证成立保留**（L191/L195 两次 67%→82% vs L464 七次；L379/L472 七个认知节点为另一计数对象，不计入本命题），**单一可验关闭目标＝正文计数口径收敛**（对同一推理链的匹配次数统一）；K4/K6 载体＝**待证保留为独立子项**（meeting-room L17–29 K4/K6 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话＋正文 L302 回指 K6 电话——采用基准未定，关闭目标＝采用基准声明，与计数目标明确非同一）；工程/道具/披露附带项＝**剥离归 #11/#12/#13**（不以「载体对齐子集」吞并）；**v4（ACC-F017）主候选单一化＋附带项分类闭合**：主候选**唯一**可验关闭目标＝**正文计数口径收敛**（同一推理链匹配次数统一；**只此一个**——反例测试成立：只解决计数即完全满足主候选目标，不需任何载体/道具/披露决定；计数修正无需决定 K4/K6 电话或会议室）；K4/K6 载体的「采用基准声明」**不再是 #20 的关闭目标或独立性理由**（v3 将两目标并置于「单一目标」表述的写法撤回），改列**独立不发布观察**（证据限度＝meeting-room L17/L20/L28–38＋§3.1–3.4 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话·K8 面对面/正文 L302 回指 K6 电话，采用基准未定）；附带项**逐项处置**（撤回 v3「剥离归 #11/#12/#13」笼统归并——冻结 #11＝十秒沉默文字来源标注、#12＝郑柏舟记录区省略 vs 正文点名、#13＝完整记忆检索边界，其关闭条件均不自动覆盖下列子项）：①第比利斯时间标注（正文 L157/L335/L375）＝**register_only**（#11/#12/#13 关闭条件均不覆盖）；②K6 编号进入正文（L302「K6 的电话里」）＝**register_only**（同前不覆盖）；③L502 名片无素材来源＝**待证**（机制邻接 #11「来源未标」族，但 #11 关闭条件（十秒沉默来源标注）不覆盖本项，不以邻接冒充已有覆盖）；④素材字符缺损＝**existing REG-03**（register_only 已登记）。候选/子项五门状态表见本节末
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F007:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f`
+- publish_status：`published_open`；撤回未证互斥、保留单一对齐目标的编辑建议 OWNER_PENDING；多机制若不能形成单一目标则关闭，有效证据记入报告，不批量拆发；**v4（ACC-F017）**：主候选＝计数口径收敛（单一目标），K4/K6 载体与附带项均不发布（独立观察/登记项/待证），线上编辑建议仍 OWNER_PENDING（未执行）
+- number：20；url：https://github.com/innuama-coder/ai-novels/issues/20；created_at：`2026-11-14T12:52:42Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f`
+
+#20 v4 候选/子项五门状态表（ACC-F017 产物；主候选与观察/登记项分层，可直接读出各门状态；「—」＝该门不适用于登记型观察）：
+
+| 项 | 层 | ①范围门 | ②证据门 | ③查重门 | ④目标门 | ⑤边界门 | 处置/发布状态 |
+|---|---|---|---|---|---|---|---|
+| 正文计数口径收敛（L191/L195 两次 67%→82% vs L464 七次；L363 明写两次；L379/L472 七节点＝另一对象不计入） | **主候选**（唯一命题） | 过（正文一致性设计命题） | 过（BASE 原文行号在案；「七」污染源＝推断标注） | 过（#11/#12/#13 为比较对象非覆盖） | 过（**v4 起单一**关闭目标＝计数口径收敛；反例测试成立） | 过（只提设计改进） | 现行候选（线上 #20 原文含已撤回断言→编辑收窄建议 OWNER_PENDING） |
+| K4/K6 载体（会议室 vs 电话/面对面） | 独立观察（待证） | 过 | **待证**（双侧事实在案：meeting-room L17/L20/L28–38＋§3.1–3.4 vs shenyu L82/zhengbozhou L191–199/正文 L302；采用基准未定） | 待比较（#12 载体披露族邻接，非同一对象） | 过（自身观察目标＝采用基准声明） | 过 | **不发布**（`not_published_independent_observation`；非 #20 关闭目标；证据未决；外部如需处置另经 Owner 授权） |
+| 第比利斯时间标注（L157/L335/L375） | 附带项 | —（呈现层观察） | 在案 | 无既有条覆盖 | — | — | register_only（不发布） |
+| K6 编号进入正文（L302） | 附带项 | —（呈现层观察） | 在案 | 无既有条覆盖 | — | — | register_only（不发布） |
+| L502 名片无素材来源 | 附带项 | — | 在案（正文 L502；writing 素材无来源记载） | 邻接 #11「来源未标」族但 #11 关闭条件不覆盖本项 | — | — | 待证（不发布；不以邻接冒充已有覆盖） |
+| 素材字符缺损 | 附带项 | — | 在案 | existing REG-03（register_only 已登记） | — | — | 归 REG-03（不重复登记） |
+
+历史发布与外部动作（v4 明示分层）：线上 #20＝v1 历史发布（`published_open`，原文未动，作为历史记录保留，不因 v4 分类改变而自动编辑/关闭）；一切线上编辑/关闭/评论＝外部动作，全部 OWNER_PENDING（未执行，impl4-001 零 GitHub 写操作）。
+
+### 2.8 DX3-F008（#21）
+- finding_id：DX3-F008
+- dedup_disposition：`published_confirmed_core_cause_marked_inference`
+- closest_existing：#2（计数核对族——对象不同：A3 控制条目文案 vs README 技能数）
+- difference_reason：A3 `/decision_controls/1/statement`「十个环境」vs `/world/environments` 实列 12；`/decision_controls/7/statement`「六个样章片段」vs `/fragments` 实列 3——批准包内部计数矛盾无既有条覆盖
+- publish_gate：v1 判五门全过 → v2：两处计数独立复算成立、过门维持；成因「早期迭代计数残留」为推断（h1_plan L893–901 六 briefs 选二、h1_fragments L51–198 六→三死数据块为旁证，生成因果无库内直证）；计数通过≠体验控制通过；现行片段映射改正为 **03/04/06 三项**（v1「两深场景 04/06」少计 03）
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F008:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b`
+- publish_status：`published_open`；如需编辑＝明确「计数不符已证，迭代成因是推测；体验控制是否满足不由计数核对证明」；A3 批准包勘误需另授权，不改原字节
+- number：21；url：https://github.com/innuama-coder/ai-novels/issues/21；created_at：`2026-11-14T12:52:47Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b`
+
+### 2.9 DX3-F009（#22）
+- finding_id：DX3-F009
+- dedup_disposition：`reclassified_out_of_scope_existing`（v1 submit → v2 按 ACC-F007/§3.7 重归类）
+- closest_existing：#1（自承同根因：构思 CLI 路径族）
+- difference_reason（v2）：自承「#1 同根因」；新载体（样片驱动器等三处）不自动形成新控制/新修订目标；静态引用失效不能概括为所有脚本均不可导入（无运行验证）——**与 #1 无机制差异成立**
+- publish_gate：v1 判五门全过 → v2 撤回：门①不成立（§4.3/S05）、门③不成立（#1 同族）
+- marker：`<!-- duanxian-audit3-impl-001:DX3-F009:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
+- body_sha256：`186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f`
+- publish_status：`published_open`＋v2 重归类 out_of_scope/existing；线上处置建议＝Owner 允许时关闭并说明（OWNER_PENDING，未执行）；工程修复须另授权冻结任务，本轮禁止执行加载器修复/生产测试
+- number：22；url：https://github.com/innuama-coder/ai-novels/issues/22；created_at：`2026-11-14T12:52:51Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f`
+
+## 3. 既有 13 条引用（v1 表保留＋v2 批注；零评论/零关闭/零编辑维持至 impl2-001）
+
+| 既有 | 主题 | R3 处置（v1 原文；详见 impl-001-report.md §5） |
+|---|---|---|
+| #1 (C-I01) | run.py 七路径＋三测试入口 | 复核属实并精确化（L41-48/L47 失败点/f7ac2db 半改）；不重复提交；范围外同族立 DX3-F009 |
+| #2 (C-I02) | 81 vs 82 技能计数 | 实测 engine/skills=82，与 ISSUE 声明一致；无新证据 |
+| #3 (C-I03) | 17 素材 LLD 迁移＋R07 章节引用 | 属实；全树文字命中本不在其关闭范围，新实例归 DX3-F001 |
+| #4 (C-I04) | .gitattributes engine/ 前缀 | 属实；机制独立，无新载体 |
+| #5 (C-I05) | HLD-TRACE-CLOSURE P1 | 补证（06 绑定错位/10 缺行/11 handoff 失衡/01 原子复用） |
+| #6 (C-I06) | v2.0/v3.0 标签混用 | 补证（gate-report:9；canonical 六项实质差） |
+| #7 (C-I07) | 三个机器包基名缺失 | 佐证（conception-runs 不入库；驱动器代际差异） |
+| #8 (C2-I01) | 周岚维护例外参与链 | 补证（proposal 04:21/PRD FREEZE-12/subject:42-43/brief:282/design-task-package L93,97） |
+| #9 (C2-I02) | R-07 当前视听 | 补证（PRD S15-16、design:90、tech:233、digital-realm:91、正文:245/255/271、shenyu:27、声音印随） |
+| #10 (C2-I03) | 终局自行关闭＋提前披露 | 补证（proposal 04:25,58、PRD 05:26-28+INFO-06、LLD K9 族、design-scenes-draft） |
+| #11 (C2-I04) | 十秒沉默来源 | 补证（正文:367 安全通信记录同族） |
+| #12 (C2-I05) | 郑柏舟显名 | 补证（betrayer:44-47 记录区省略 vs 正文:365 点名） |
+| #13 (C2-I06) | 完整可检索记忆 | 补证（PRD S11-12、proposal 04:23/09:20/12:20、LLD K8、PRD:38,98、视网膜重建） |
+
+**v2 批注（ACC-F007）**：#1 行「范围外同族立 DX3-F009」与 #3 行「新实例归 DX3-F001」两句为 v1 扩发结论，已撤回——F001/F009 重归 out_of_scope/existing（§2.1/§2.9），既有条处置（不重复提交/补证）不变。#8–#13 的应然均以批准层为当前控制、历史内容只是适配反侧（acc-001 §5）；旧 HLD 的 pass_to_hld 与 pending_hld_human_review 保留不同阶段意义，六条内容 Issue 未被本轮评论、编辑或关闭。
+
+## 4. REG-01..08／REJ-01..02（v2 修订；均未发布）
+
+登记不提交八项维持（REG-01 OPEN-01~03 映射缺表、REG-02 qianxu 文件名歧义、REG-03 style-reference 防护缺口＋字符损坏、REG-04 V2 报告 L1613-1646 表格截断、REG-05 A2/A0 revision-037/038 时序、REG-06 48 小时 vs 三个月张力（可相容）、REG-07 素材-正文覆盖缺口＝正常未完成创作、REG-08 PRD 09 风险检查零检出＋00↔09 断链）；publish_gate＝未过门①/④（流程或工程观察，非本轮故事控制命题），publish_status＝`not_published_register_only`，marker/body_sha256＝不适用。
+
+**REJ-01 v2 拆分判定（ACC-F004；v1「亲验后判兼容」整体结论撤回）**：
+
+| 子项 | v2 判定 | 依据 |
+|---|---|---|
+| PRD FREEZE-05（「学生时代暗恋」） | 与批准层相容，维持不立案 | N05：单侧暗恋相容；程予安为在世妻子而非周岚新增身世 |
+| PRD FREEZE-10 L20（「结尾必须呈现研究员事后理解骗局」） | 与 N4「第一部不确认受骗」**需显式历史适配**；与 #10/#16 语义比较后再定候选资格，本轮不发布 | acc-001 §3.3/N08：强要求 vs 开放项，REJ-01 v1 漏读此行 |
+
+REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系列钩子：不推荐」为建议级（N08 相容）。
+
+## 5.2 四维差异表（ACC-F007 产物；覆盖全部 22 条 all-state）
+
+四维＝对象（管什么）／控制（依哪层控制判）／机制（问题如何发生）／关闭条件（怎样算修好）。候选 #14/#22 与既有 #1/#3/#4 同机制、无新控制，即重归类依据；其余候选给出与最近既有条的对象/控制差。
+
+| 条目 | 对象 | 控制 | 机制 | 关闭条件 |
+|---|---|---|---|---|
+| 既有 #1 | run.py 运行时路径＋测试入口 | 构思 CLI 可运行性（工程） | 重构后半改（f7ac2db） | 路径修复并过测试 |
+| 既有 #2 | README 技能计数声明 | 文档计数准确 | 目录实数 82 vs 声明 81 | 计数勘误 |
+| 既有 #3 | 17 份素材 LLD 路径＋R07 引用 | 素材路径有效（工程） | **v3 重做**：旧根文本引用迁移（17 件各 3 处 backtick `docs/superpowers/specs/lld/` 文本引用→`duanxian/design/specs/lld/`，17 个目标全在库）＋R07 内容指称章节错位（writer-R07 L14 引 §10.2/10.3/10.4/10.6/10.8、L16 引 §10.2；2026-06-06-hld v4.0 风格章为 §9（L312–339）、§10 为 HLD→LLD 交付包（L343）） | **v3 重做**：17 项引用逐条可定位＋R07 五处指称按内容对照（给准确定位/注明历史版本依赖或待核，不补造）；非 .gitattributes 迁移 |
+| 既有 #4 | .gitattributes engine/ 前缀 | **v3 重做**：HLD 工件跨平台字节稳定（根 .gitattributes L1–2 声明 byte-exact manifest 所需 text/eol 属性约束） | **v3 重做**：规则路径前缀失配（L3–23 规则均以 `harnesses/`、`skills/` 开头缺 `engine/` 前缀；实测 3 件真文件 text/eol 全 unspecified；为风险观察，未见实际哈希损伤） | **v3 重做**：按实际树调整规则覆盖＋在全预期集复查 text/eol（非 3 件抽样）；非忽略规则问题 |
+| 既有 #5 | HLD-TRACE-CLOSURE P1 追踪门 | 事件-状态绑定可追踪 | 绑定错位/缺行 | trace 补行＋人评关闭 |
+| 既有 #6 | v2.0/v3.0 标签指称 | 评审版本指称准确 | 标签混用 | 版本指称澄清 |
+| 既有 #7 | 三个机器交付文件 | **v3 重做**：批准包 A2 指针对象的可审计访问（run/包清单及其 hash 在 A2 有登记） | **v3 重做**：受控同版取证链缺失（性质＝证据补充请求，非已证生产失败或留存策略违例——政策 A0 README L3「运行账本不入 Git」＋.gitignore L11–18 已明示；A2 指针：run_id=duanxian-conception-v2-20260811-18、development_handoff=P1/development-handoff.json sha256 d48194db…、p1_manifest=P1/package-manifest.json sha256 bba81d35…） | **v3 重做**：可审计访问说明＋确切 run/版本＋包清单及 hash＋回溯 manifest/完成记录/作者决定/正式 validation/execution/实现快照/来源链＋受控环境 validator 重放（basename 存在或两项 hash 一致均不足以证全链可用）；非留存策略声明 |
+| 既有 #8 | 周岚维护例外参与链 | 周岚参与边界（批准层封闭） | 历史维护例外链残留 | 参与链对齐批准层 |
+| 既有 #9 | R-07 当前视听 | 当前无感官契约（批准层） | 视听残留进载体 | 载体对齐 |
+| 既有 #10 | 终局自行关闭＋提前披露 | 终局顺序（批准层封闭） | 披露顺序残留 | 顺序对齐 |
+| 既有 #11 | 十秒沉默文字来源 | 信息时序先用后到 | 来源未标 | 来源标注对齐 |
+| 既有 #12 | 郑柏舟显名 | 显名禁令（betrayer §7） | 记录区省略 vs 正文点名 | 披露口径对齐 |
+| 既有 #13 | 完整可检索记忆/像素重建 | 记忆检索边界（ENV-MEMORY 封闭） | 重建表述残留 | 检索边界对齐 |
+| 候选 #15 | brief.html 版本链引用＋审阅状态呈现 | 审阅可见性（awaiting_author_review 须保持可见） | 版本引用与留存件不一致（I0/I1/I4/I5 四项；I3 相符；I2 不在库） | brief 版本引用对齐＋状态可见；GET 存新旧 hash 后编辑或关闭 |
+| 候选 #16 | subject-definition v1.1 旧终局残留＋causal 版本定位（实为 v1.1） | 第一部不知情契约（N4） | 历史版本残留未治理；构思审计未捕获（创伤≠已知受骗、L41 第二部、L61 delegated） | 主体定义终局口径治理；撤回违规结论 |
+| 候选 #17 | HLD-04 权限列↔HLD-07 知情时点映射 | 处置组行动层/原因层权限分级（Information permission vs Known by） | 同一时点/同一粒度桥接未建立（D+57 行动层 vs 危机解除后原因层复核） | **v3（ACC-F013）**：单一可验关闭目标＝同一时点/同粒度映射桥接补齐，补齐后重判门②（未补齐前门②未过维持）；不能补齐则按 Owner 裁决关闭；不自动拆发 |
+| 候选 #18 | PRD 终包 L34/L281 门状态自述 | PRD→HLD 入口门状态记录 | 终包前后行未标过程/终态（07-10–07-13 确认时间窗为旁证） | 历史终包状态说明澄清（勘误需授权） |
+| 候选 #19 | 六月线濒死/生前转移 vs 批准死亡后加载 | 死亡后加载终局＋沈逾执行者非启动者（G02） | 历史层-批准层适配映射缺失（总隔离声明在场：README L22-23/novel-goals L67-71；v3 判断：对层级误用充分、对事实级再利用不充分） | **v3（ACC-F013）**：单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）；不改写故事 |
+| 候选 #20 | 正文与素材对同一事件的表述（**v4：仅计数矛盾为 #20 主候选命题**） | 匹配次数一致性（单次/两次计数契约）；载体对齐不再列入本候选控制 | 素材迭代残留进入正文（两次 vs 七次；「七」污染源 R07 §2.2/片段 C＝推断）；v3 逐子项＝传输/人数/面孔/地点撤回（维持不恢复）；**v4（ACC-F017）**：载体与附带项移出主候选——K4/K6 载体＝独立不发布观察；第比利斯时间（L157/L335/L375）＝register_only、K6 编号进正文（L302）＝register_only、L502 名片无素材来源＝待证（邻接 #11「来源未标」族但其关闭条件不覆盖）、素材字符缺损＝existing REG-03 | **v4（ACC-F017）**：主候选**唯一**关闭目标＝正文计数口径收敛（同一推理链匹配次数统一；反例测试成立——只解决计数即满足主候选，与载体/道具/披露决定无关）；K4/K6 载体的采用基准声明＝独立观察自身目标，**非 #20 关闭目标**（v3 双目标并置撤回）；附带项逐项处置（v3「剥离归 #11/#12/#13」笼统归并撤回）；五门状态表见 §2.7 |
+| 候选 #21 | A3 decision_controls 计数文案 | 环境/片段体验控制条目 statement | 早期迭代计数残留（推断；h1_plan 六选二/h1_fragments 六→三死数据为旁证） | 控制条目文案与实列对齐（A3 勘误另授权，不改原字节）；计数≠体验控制 |
+| 候选 #14（重归类） | 全树文档路径/引用（工程整理） | **无独立故事控制** | 与 #1/#3/#4 同机制：路径迁移后引用失配 | 全树路径工程整理（超出本轮；另授权任务）——本轮关闭建议 OWNER_PENDING |
+| 候选 #22（重归类） | 构思工程脚本路径（样片驱动器等） | **无独立故事控制** | 与 #1 同根因路径失配；静态引用失效≠运行失败 | 工程修复另授权冻结任务——本轮关闭建议 OWNER_PENDING |
+
+**v3 批注（ACC-F014）**：对全部 22 行复核「只换对象/载体即新机制」式外推——命中 4 处：上行 #3（v2 机制误写 .gitattributes 迁移）、#4（v2 控制误写忽略规则机制）、#7（v2 关闭误写留存策略声明）三处概括，及报告 §5 DEDUP-03/04/07 行沿用的同一概括，均已按各该行 **v3 重做**列修正并互相同步；其余 19 行（含 #14/#22 重归类行与 #15/#16/#18/#21 行）复核未发现同类外推。冻结快照（`.kunora/inputs/open-issues-snapshot-20261114b.md`）零改动；本表不替 Owner 修改任何关闭标准，线上原文未动。
+
+## 机器可读登记
+
+### v1 JSON（历史原样保留，未改动）
+
+```json
+{
+  "schema_version": "1.0",
+  "job_ref": "duanxian-audit3-impl-001",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "existing_references": [
+    {"iid": "DEDUP-01", "issue": 1, "disposition": "recheck_confirmed_precised"},
+    {"iid": "DEDUP-02", "issue": 2, "disposition": "recheck_confirmed"},
+    {"iid": "DEDUP-03", "issue": 3, "disposition": "recheck_confirmed_scope_respected"},
+    {"iid": "DEDUP-04", "issue": 4, "disposition": "recheck_confirmed"},
+    {"iid": "DEDUP-05", "issue": 5, "disposition": "evidence_added"},
+    {"iid": "DEDUP-06", "issue": 6, "disposition": "evidence_added"},
+    {"iid": "DEDUP-07", "issue": 7, "disposition": "corroborated"},
+    {"iid": "DEDUP-08", "issue": 8, "disposition": "evidence_added"},
+    {"iid": "DEDUP-09", "issue": 9, "disposition": "evidence_added"},
+    {"iid": "DEDUP-10", "issue": 10, "disposition": "evidence_added"},
+    {"iid": "DEDUP-11", "issue": 11, "disposition": "evidence_added"},
+    {"iid": "DEDUP-12", "issue": 12, "disposition": "evidence_added"},
+    {"iid": "DEDUP-13", "issue": 13, "disposition": "evidence_added"}
+  ],
+  "candidates": [
+    {"id": "DX3-F001", "verdict": "submit", "issue": 14},
+    {"id": "DX3-F002", "verdict": "submit", "issue": 15},
+    {"id": "DX3-F003", "verdict": "submit", "issue": 16},
+    {"id": "DX3-F004", "verdict": "submit", "issue": 17},
+    {"id": "DX3-F005", "verdict": "submit", "issue": 18},
+    {"id": "DX3-F006", "verdict": "submit", "issue": 19},
+    {"id": "DX3-F007", "verdict": "submit", "issue": 20},
+    {"id": "DX3-F008", "verdict": "submit", "issue": 21},
+    {"id": "DX3-F009", "verdict": "submit", "issue": 22},
+    {"id": "REG-01", "verdict": "register_only", "subject": "OPEN-01~03 映射缺表（intake L21 有正文响应）"},
+    {"id": "REG-02", "verdict": "register_only", "subject": "writer-qianxu 文件名歧义（#3 迁移表已缓解）"},
+    {"id": "REG-03", "verdict": "register_only", "subject": "style-reference 模仿防护声明缺口＋字符损坏"},
+    {"id": "REG-04", "verdict": "register_only", "subject": "V2 报告 L1613-1646 表格截断"},
+    {"id": "REG-05", "verdict": "register_only", "subject": "A2/A0 revision-037/038 时序呈现"},
+    {"id": "REG-06", "verdict": "register_only", "subject": "48 小时 vs 三个月进入时序张力（可相容）"},
+    {"id": "REG-07", "verdict": "register_only", "subject": "素材-正文覆盖缺口＝正常未完成创作"},
+    {"id": "REG-08", "verdict": "register_only", "subject": "PRD 09 风险检查零检出＋00↔09 断链（流程观察）"},
+    {"id": "REJ-01", "verdict": "rejected_after_recheck", "subject": "PRD FREEZE-05/10 与 G05/G08 冲突（亲验后判兼容）"},
+    {"id": "REJ-02", "verdict": "rejected_after_recheck", "subject": "proposal 12-ending 封死未来重载（实为建议级）"}
+  ],
+  "created": [
+    {"iid": "DX3-F001", "number": 14, "url": "https://github.com/innuama-coder/ai-novels/issues/14", "readback_ok": true, "body_sha256_sent": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28", "body_sha256_readback": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28"},
+    {"iid": "DX3-F002", "number": 15, "url": "https://github.com/innuama-coder/ai-novels/issues/15", "readback_ok": true, "body_sha256_sent": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc", "body_sha256_readback": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc"},
+    {"iid": "DX3-F003", "number": 16, "url": "https://github.com/innuama-coder/ai-novels/issues/16", "readback_ok": true, "body_sha256_sent": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300", "body_sha256_readback": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300"},
+    {"iid": "DX3-F004", "number": 17, "url": "https://github.com/innuama-coder/ai-novels/issues/17", "readback_ok": true, "body_sha256_sent": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93", "body_sha256_readback": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93"},
+    {"iid": "DX3-F005", "number": 18, "url": "https://github.com/innuama-coder/ai-novels/issues/18", "readback_ok": true, "body_sha256_sent": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4", "body_sha256_readback": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4"},
+    {"iid": "DX3-F006", "number": 19, "url": "https://github.com/innuama-coder/ai-novels/issues/19", "readback_ok": true, "body_sha256_sent": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0", "body_sha256_readback": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0"},
+    {"iid": "DX3-F007", "number": 20, "url": "https://github.com/innuama-coder/ai-novels/issues/20", "readback_ok": true, "body_sha256_sent": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f", "body_sha256_readback": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f"},
+    {"iid": "DX3-F008", "number": 21, "url": "https://github.com/innuama-coder/ai-novels/issues/21", "readback_ok": true, "body_sha256_sent": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b", "body_sha256_readback": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b"},
+    {"iid": "DX3-F009", "number": 22, "url": "https://github.com/innuama-coder/ai-novels/issues/22", "readback_ok": true, "body_sha256_sent": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f", "body_sha256_readback": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f"}
+  ],
+  "failures": []
+}
+```
+
+### v2 JSON（schema 2.0；全字段登记，ACC-F009 产物；纠错后仍保留上方 v1 hash 与授权记录）
+
+```json
+{
+  "schema_version": "2.0",
+  "job_ref": "duanxian-audit3-impl-001",
+  "revised_by_job": "duanxian-audit3-impl2-001",
+  "revision_source": "acc-001 §7 ACC-F007/ACC-F009",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "evidence_gap_disclosure": "v1 未留存逐条 POST 原始日志；成功事实由 live 状态＋v1 回读 hash＋acc-001 附录 B＋impl2 GET 四方一致支撑，不补造历史日志",
+  "existing_references": [
+    {"iid": "DEDUP-01", "issue": 1, "disposition": "recheck_confirmed_precised", "v2_note": "v1『同族立 F009』撤回；F009 重归 out_of_scope/existing"},
+    {"iid": "DEDUP-02", "issue": 2, "disposition": "recheck_confirmed"},
+    {"iid": "DEDUP-03", "issue": 3, "disposition": "recheck_confirmed_scope_respected", "v2_note": "v1『新实例归 F001』撤回；F001 重归 out_of_scope/existing"},
+    {"iid": "DEDUP-04", "issue": 4, "disposition": "recheck_confirmed"},
+    {"iid": "DEDUP-05", "issue": 5, "disposition": "evidence_added"},
+    {"iid": "DEDUP-06", "issue": 6, "disposition": "evidence_added"},
+    {"iid": "DEDUP-07", "issue": 7, "disposition": "corroborated"},
+    {"iid": "DEDUP-08", "issue": 8, "disposition": "evidence_added"},
+    {"iid": "DEDUP-09", "issue": 9, "disposition": "evidence_added"},
+    {"iid": "DEDUP-10", "issue": 10, "disposition": "evidence_added", "v2_note": "FREEZE-10 适配子问题回归本族比较（REJ-01 拆分）"},
+    {"iid": "DEDUP-11", "issue": 11, "disposition": "evidence_added"},
+    {"iid": "DEDUP-12", "issue": 12, "disposition": "evidence_added"},
+    {"iid": "DEDUP-13", "issue": 13, "disposition": "evidence_added"}
+  ],
+  "candidates": [
+    {"finding_id": "DX3-F001", "dedup_disposition": "reclassified_out_of_scope_existing", "closest_existing": [1, 3, 4], "difference_reason": "自承文档迁移工程整理，无独立故事控制，与既有同机制", "publish_gate": "v1 五门全过→撤回；门①范围门不成立（§4.3/S05），门③与 #1/#3/#4 机制重复", "marker": "<!-- duanxian-audit3-impl-001:DX3-F001:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28", "publish_status": "published_open; reclassified out_of_scope/existing; owner close recommendation OWNER_PENDING", "number": 14, "url": "https://github.com/innuama-coder/ai-novels/issues/14", "created_at": "2026-11-14T12:52:13Z", "get_verified": true, "retrieved_body_sha256": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28"},
+    {"finding_id": "DX3-F002", "dedup_disposition": "published_narrowed", "closest_existing": [6, 3], "difference_reason": "审阅简报版本链引用与审阅状态可见性无既有条覆盖；#6/#3 机制邻接但对象不同", "publish_gate": "v1 五门全过→门②部分不成立（全称失配/对象混淆/非同一事件互斥撤回）；窄命题过门", "marker": "<!-- duanxian-audit3-impl-001:DX3-F002:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc", "publish_status": "published_open; narrowed; edit proposal OWNER_PENDING", "number": 15, "url": "https://github.com/innuama-coder/ai-novels/issues/15", "created_at": "2026-11-14T12:52:18Z", "get_verified": true, "retrieved_body_sha256": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc"},
+    {"finding_id": "DX3-F003", "dedup_disposition": "published_narrowed", "closest_existing": [10], "difference_reason": "主体定义版本残留无既有条覆盖；#10 为叙事顺序", "publish_gate": "v1 五门全过→门②部分不成立（三处直接违反为误判；causal 定位改 v1.1）；版本事实保留", "marker": "<!-- duanxian-audit3-impl-001:DX3-F003:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300", "publish_status": "published_open; narrowed; edit proposal OWNER_PENDING", "number": 16, "url": "https://github.com/innuama-coder/ai-novels/issues/16", "created_at": "2026-11-14T12:52:22Z", "get_verified": true, "retrieved_body_sha256": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300"},
+    {"finding_id": "DX3-F004", "dedup_disposition": "published_reanchored_insufficient_evidence", "closest_existing": [5], "difference_reason": "权限/知情映射与 #5 trace 完整性控制不同", "publish_gate": "v1 五门全过→门②不成立（『不可能同时为真』缺同时点/同粒度桥接）；重锚定窄命题过门待证", "marker": "<!-- duanxian-audit3-impl-001:DX3-F004:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93", "publish_status": "published_open; reanchored (HLD-04 L15/L21 vs HLD-07 L15/L20); edit proposal OWNER_PENDING", "number": 17, "url": "https://github.com/innuama-coder/ai-novels/issues/17", "created_at": "2026-11-14T12:52:27Z", "get_verified": true, "retrieved_body_sha256": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93"},
+    {"finding_id": "DX3-F005", "dedup_disposition": "published_confirmed_core_cause_marked_inference", "closest_existing": [6], "difference_reason": "PRD 终包门状态自述无既有条覆盖", "publish_gate": "核心成立过门维持；成因（07-10→07-13 确认时间窗）为旁证推断", "marker": "<!-- duanxian-audit3-impl-001:DX3-F005:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4", "publish_status": "published_open; core confirmed; no forced closure", "number": 18, "url": "https://github.com/innuama-coder/ai-novels/issues/18", "created_at": "2026-11-14T12:52:32Z", "get_verified": true, "retrieved_body_sha256": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4"},
+    {"finding_id": "DX3-F006", "dedup_disposition": "published_narrowed", "closest_existing": [8], "difference_reason": "沈逾启动归责适配映射与 #8 周岚参与链对象不同", "publish_gate": "v1 五门全过→门②部分不成立（执行≠违规；隔离声明在场）；窄子集（K2:26/design-scenes L15-22/PRD L38,120,190）保留", "marker": "<!-- duanxian-audit3-impl-001:DX3-F006:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0", "publish_status": "published_open; narrowed; edit proposal OWNER_PENDING", "number": 19, "url": "https://github.com/innuama-coder/ai-novels/issues/19", "created_at": "2026-11-14T12:52:37Z", "get_verified": true, "retrieved_body_sha256": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0"},
+    {"finding_id": "DX3-F007", "dedup_disposition": "published_narrowed", "closest_existing": [11, 12, 13], "difference_reason": "正文计数矛盾（L191/L195 两次 vs L464 七次）无既有条直接覆盖；#11/#12/#13 为子项比较", "publish_gate": "v1 五门全过→门②部分不成立（人数/面孔/未写即未发生/仓库地点互斥未证）；计数确证保留", "marker": "<!-- duanxian-audit3-impl-001:DX3-F007:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f", "publish_status": "published_open; narrowed to counting + carrier alignment subset; edit proposal OWNER_PENDING", "number": 20, "url": "https://github.com/innuama-coder/ai-novels/issues/20", "created_at": "2026-11-14T12:52:42Z", "get_verified": true, "retrieved_body_sha256": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f"},
+    {"finding_id": "DX3-F008", "dedup_disposition": "published_confirmed_core_cause_marked_inference", "closest_existing": [2], "difference_reason": "A3 控制条目计数矛盾（十 vs 12、六 vs 3）无既有条覆盖", "publish_gate": "两处计数独立复算成立过门维持；迭代残留成因＝推断；现行片段映射改正 03/04/06；计数通过≠体验控制通过", "marker": "<!-- duanxian-audit3-impl-001:DX3-F008:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b", "publish_status": "published_open; core confirmed; A3 erratum requires separate authorization", "number": 21, "url": "https://github.com/innuama-coder/ai-novels/issues/21", "created_at": "2026-11-14T12:52:47Z", "get_verified": true, "retrieved_body_sha256": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b"},
+    {"finding_id": "DX3-F009", "dedup_disposition": "reclassified_out_of_scope_existing", "closest_existing": [1], "difference_reason": "自承 #1 同根因；新载体不形成新控制；静态引用失效≠运行验证失败", "publish_gate": "v1 五门全过→撤回；门①不成立，门③与 #1 同族", "marker": "<!-- duanxian-audit3-impl-001:DX3-F009:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->", "body_sha256": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f", "publish_status": "published_open; reclassified out_of_scope/existing; owner close recommendation OWNER_PENDING", "number": 22, "url": "https://github.com/innuama-coder/ai-novels/issues/22", "created_at": "2026-11-14T12:52:51Z", "get_verified": true, "retrieved_body_sha256": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f"},
+    {"finding_id": "REG-01", "dedup_disposition": "register_only", "closest_existing": [], "difference_reason": "流程观察非故事控制", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-02", "dedup_disposition": "register_only", "closest_existing": [3], "difference_reason": "#3 迁移表已缓解", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-03", "dedup_disposition": "register_only", "closest_existing": [], "difference_reason": "工程/规范观察", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-04", "dedup_disposition": "register_only", "closest_existing": [7], "difference_reason": "机器交付留存族；表格截断为工程观察", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-05", "dedup_disposition": "register_only", "closest_existing": [6], "difference_reason": "版本指称族；时序呈现观察", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-06", "dedup_disposition": "register_only", "closest_existing": [10], "difference_reason": "可相容时序张力", "publish_gate": "门②未过（相容）", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-07", "dedup_disposition": "register_only", "closest_existing": [], "difference_reason": "正常未完成创作非缺陷", "publish_gate": "门①未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REG-08", "dedup_disposition": "register_only", "closest_existing": [5], "difference_reason": "门追踪族流程观察", "publish_gate": "门①/④未过", "marker": null, "body_sha256": null, "publish_status": "not_published_register_only"},
+    {"finding_id": "REJ-01", "dedup_disposition": "rejected_split_v2", "closest_existing": [10, 16], "difference_reason": "v2 拆分：FREEZE-05 相容维持不立案；FREEZE-10 L20 强要求与 N4 第一部不确认受骗需显式历史适配，与 #10/#16 比较后再定资格", "publish_gate": "v1 整体拒绝→v2 拆分；FREEZE-10 子项本轮不发布", "marker": null, "body_sha256": null, "publish_status": "not_published; FREEZE-10 sub-item pending comparison"},
+    {"finding_id": "REJ-02", "dedup_disposition": "rejected_after_recheck", "closest_existing": [10], "difference_reason": "『系列钩子：不推荐』为建议级（N08 相容）", "publish_gate": "维持拒绝", "marker": null, "body_sha256": null, "publish_status": "not_published"}
+  ],
+  "created": [
+    {"iid": "DX3-F001", "finding_id": "DX3-F001", "number": 14, "url": "https://github.com/innuama-coder/ai-novels/issues/14", "created_at": "2026-11-14T12:52:13Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28", "body_sha256_readback": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28", "retrieved_body_sha256": "5fb154303e9e1d576e746c1cf2bdf0f836d4caad749a01b4fe18bb73f0cb2d28"},
+    {"iid": "DX3-F002", "finding_id": "DX3-F002", "number": 15, "url": "https://github.com/innuama-coder/ai-novels/issues/15", "created_at": "2026-11-14T12:52:18Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc", "body_sha256_readback": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc", "retrieved_body_sha256": "7581445b5ab13913ec59aa2859915cbad7f9de3a5dc5caa336a50de4787073cc"},
+    {"iid": "DX3-F003", "finding_id": "DX3-F003", "number": 16, "url": "https://github.com/innuama-coder/ai-novels/issues/16", "created_at": "2026-11-14T12:52:22Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300", "body_sha256_readback": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300", "retrieved_body_sha256": "c43c926d355ea5a4c1ce9b088cec9b3a14f4c66684baa1a0124ae7c772291300"},
+    {"iid": "DX3-F004", "finding_id": "DX3-F004", "number": 17, "url": "https://github.com/innuama-coder/ai-novels/issues/17", "created_at": "2026-11-14T12:52:27Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93", "body_sha256_readback": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93", "retrieved_body_sha256": "ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93"},
+    {"iid": "DX3-F005", "finding_id": "DX3-F005", "number": 18, "url": "https://github.com/innuama-coder/ai-novels/issues/18", "created_at": "2026-11-14T12:52:32Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4", "body_sha256_readback": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4", "retrieved_body_sha256": "34c9ec64c3f1aaa8d1cce96566caa4f857d5c400649826b2b415699fee6ea9b4"},
+    {"iid": "DX3-F006", "finding_id": "DX3-F006", "number": 19, "url": "https://github.com/innuama-coder/ai-novels/issues/19", "created_at": "2026-11-14T12:52:37Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0", "body_sha256_readback": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0", "retrieved_body_sha256": "8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0"},
+    {"iid": "DX3-F007", "finding_id": "DX3-F007", "number": 20, "url": "https://github.com/innuama-coder/ai-novels/issues/20", "created_at": "2026-11-14T12:52:42Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f", "body_sha256_readback": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f", "retrieved_body_sha256": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f"},
+    {"iid": "DX3-F008", "finding_id": "DX3-F008", "number": 21, "url": "https://github.com/innuama-coder/ai-novels/issues/21", "created_at": "2026-11-14T12:52:47Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b", "body_sha256_readback": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b", "retrieved_body_sha256": "c10b62c7d1933001565ee9c6676770dd2eacd9b89f04cf29d720e829a34e773b"},
+    {"iid": "DX3-F009", "finding_id": "DX3-F009", "number": 22, "url": "https://github.com/innuama-coder/ai-novels/issues/22", "created_at": "2026-11-14T12:52:51Z", "created_at_source": "acc-001 附录 B；impl2 GET 一致", "get_verified": true, "body_sha256_sent": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f", "body_sha256_readback": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f", "retrieved_body_sha256": "186d0bd68319530e46757729e7feaaac661d2b988a6284129f510435add6457f"}
+  ],
+  "failures": [],
+  "impl2_recheck": {
+    "date": "2026-11-15",
+    "method": "unauthenticated GET /repos/innuama-coder/ai-novels/issues?state=all&per_page=100&page=1",
+    "result": "22 items, 0 PR; #14-#22 all open; created_at matches acc-001 Appendix B; body SHA-256 identical to v1 sent hashes (line originals unchanged)",
+    "writes_this_loop": "none (zero comments/closures/edits/creations by impl2-001)"
+  }
+}
+```
+
+### v3 JSON delta（schema 3.0-delta；ACC-F013/ACC-F014 产物；只登记本轮变更字段，v1/v2 JSON 原样保留于上）
+
+```json
+{
+  "schema_version": "3.0-delta",
+  "job_ref": "duanxian-audit3-impl-001",
+  "revised_by_job": "duanxian-audit3-impl3-001",
+  "revision_source": "acc2-001 §A2/07 ACC-F013 + ACC-F014",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "candidate_updates": [
+    {"finding_id": "DX3-F004", "publish_gate": "v3: 门②未过维持——强命题（权限矛盾）反证成立；窄命题（同一时点/粒度映射桥接缺失）为已证观察，v2『窄命题过门』撤回；未过门维持至桥接补齐", "publish_status": "published_open; gate-2 not passed (v3, ACC-F013); no correction-issue creation, no auto-split, no owner-side edits", "closure_target_single_verifiable": "补齐 HLD-04（L15/L21）与 HLD-07（L15/L20）同一时点/同一信息粒度映射桥接；补齐后重判门②"},
+    {"finding_id": "DX3-F006", "publish_gate": "v3: 窄命题保留过门；隔离充分性双层判断＝总隔离声明（README L22-23 + novel-goals L67-71）对层级误用充分、对事实级再利用不充分", "publish_status": "published_open; narrowed (facts-level per-item adaptation mapping missing retained); edit proposal OWNER_PENDING", "closure_target_single_verifiable": "Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）"},
+    {"finding_id": "DX3-F007", "publish_gate": "v3 逐子项: 传输/人数/面孔/地点=撤回; 匹配次数=确证保留（L191/L195 两次 vs L464 七次；L379/L472 七节点为另一对象）; K4/K6 载体=待证保留独立子项; 工程/道具/披露=剥离归 #11/#12/#13", "publish_status": "published_open; per-subitem dispositions fixed (v3, ACC-F013); edit proposal OWNER_PENDING", "closure_target_single_verifiable": "正文计数口径收敛（同一推理链匹配次数统一）；K4/K6 子项关闭目标＝采用基准声明（与计数目标明确非同一）"}
+  ],
+  "dedup_fourdim_updates": [
+    {"issue": 3, "mechanism_v3": "旧根文本引用迁移（17 件各 3 处 backtick LLD 文本引用→duanxian/design/specs/lld/，17 目标全在库）＋R07 内容指称章节错位（writer-R07 L14/L16 引 §10.2–10.8；风格章实为 §9 L312–339、§10 为 HLD→LLD 交付包 L343）", "closure_v3": "17 项引用逐条可定位＋R07 五处指称按内容对照（不补造）", "retracted_v2_claim": "『.gitattributes 迁移』机制概括（只换对象外推）"},
+    {"issue": 4, "control_v3": "HLD 工件跨平台字节稳定（.gitattributes L1–2 byte-exact manifest 的 text/eol 属性约束）", "mechanism_v3": "规则路径前缀失配（L3–23 缺 engine/ 前缀；3 件实测 text/eol 全 unspecified；未见实际哈希损伤）", "closure_v3": "按实际树调整规则覆盖＋全预期集 text/eol 检查（非 3 件抽样）", "retracted_v2_claim": "『忽略规则机制』控制概括（只换载体外推）"},
+    {"issue": 7, "mechanism_v3": "受控同版取证链缺失（证据补充请求；政策 A0 README L3 与 .gitignore L11–18 已明示不入库；A2 指针 run_id=duanxian-conception-v2-20260811-18、development_handoff sha256 d48194db…、p1_manifest sha256 bba81d35… 在库）", "closure_v3": "可审计访问说明＋确切 run/版本＋包清单及 hash＋全链回溯（manifest/完成记录/作者决定/validation/execution/实现快照/来源链）＋受控 validator 重放", "retracted_v2_claim": "『留存策略声明』关闭条件（只换对象外推）"}
+  ],
+  "fourdim_recheck_22": "其余 19 条复核未发现『只换对象/载体即新机制』式外推（ACC-F014）",
+  "snapshot_changes": "none（冻结快照零改动，不替 Owner 修改关闭标准）",
+  "github_api_writes_this_loop": "none (zero API calls by impl3-001; online state per impl2-001 GET receipt)"
+}
+```
+
+### v4 JSON delta（schema 4.0-delta；ACC-F017 产物；只登记本轮变更字段，v1/v2/v3 JSON 原样保留于上）
+
+```json
+{
+  "schema_version": "4.0-delta",
+  "job_ref": "duanxian-audit3-impl-001",
+  "revised_by_job": "duanxian-audit3-impl4-001",
+  "revision_source": "acc3-001 §A3/08 ACC-F015 + ACC-F016 + ACC-F017（本 delta 登记其中 ACC-F017 的 #20 重组；ACC-F015/F016 修正位于 report/pointer/ledger，不涉本登记历史字段）",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "candidate_updates": [
+    {
+      "finding_id": "DX3-F007",
+      "reorganized_by": "ACC-F017（v3 双目标并置与『剥离归 #11/#12/#13』笼统归并撤回）",
+      "main_candidate": {
+        "proposition": "正文计数矛盾确证：L191/L195 两次匹配（67%→82%，L363 明写第一次/第二次）vs L464『七次匹配』（同一推理链）；L379/L472 七个认知节点为另一计数对象，不计入",
+        "closure_target_single_verifiable": "正文计数口径收敛（同一推理链匹配次数统一）",
+        "single_target_counterexample_test": "PASS——只解决计数即完全满足主候选目标；计数修正无需决定 K4/K6 电话或会议室，也不需任何道具/披露决定",
+        "publish_gate_v4": "①过（正文一致性设计命题）②过（BASE 原文行号在案；『七』污染源 R07 §2.2/片段 C＝推断标注）③过（#11/#12/#13 为比较对象非覆盖）④过（v4 起单一关闭目标）⑤过"
+      },
+      "independent_observations": [
+        {
+          "id": "OBS-CARRIER-K4K6",
+          "subject": "K4/K6 载体（会议室 vs 电话/面对面）待证",
+          "evidence": "meeting-room（spaces/2026-06-07-writer-meeting-room.md）L17/L20/L28–38＋§3.1–3.4 写 K4/K6/K8 在会议室；writer-shenyu L82 写 K6 回答电话；writer-zhengbozhou L191–199 写 K4/K6 电话、K8 面对面；正文 L302 回指『K6 的电话里』",
+          "evidence_limit": "两组记录均真实在案，采用基准（何者为正文口径）未定；不判矛盾已确证",
+          "own_closure_direction": "采用基准声明（K4/K6 采用哪一载体基准）",
+          "relation_to_main_candidate": "非 #20 关闭目标、非独立性理由、非关闭条件（v3 并置写法撤回）",
+          "publish_status": "not_published_independent_observation",
+          "non_publish_reason": "与主候选目标不同源（修正载体不消除计数矛盾）；证据未决（②待证）；如需外部处置另经 Owner 授权"
+        },
+        {
+          "id": "OBS-INCIDENTAL-TBILISI-TIME",
+          "subject": "第比利斯时间标注（正文 L157/L335/L375）",
+          "disposition": "register_only",
+          "mechanism_match": "#11（十秒沉默来源标注）/#12（郑柏舟披露口径）/#13（记忆检索边界）关闭条件均不覆盖",
+          "publish_status": "not_published_register_only"
+        },
+        {
+          "id": "OBS-INCIDENTAL-K6-LABEL",
+          "subject": "K6 编号进入正文（L302）",
+          "disposition": "register_only",
+          "mechanism_match": "#11/#12/#13 关闭条件均不覆盖（呈现层观察）",
+          "publish_status": "not_published_register_only"
+        },
+        {
+          "id": "OBS-INCIDENTAL-L502-CARD",
+          "subject": "L502 名片无素材来源",
+          "disposition": "pending_evidence",
+          "mechanism_match": "机制邻接 #11『来源未标』族，但 #11 关闭条件（十秒沉默来源标注）不覆盖本项——不以邻接冒充已有覆盖",
+          "publish_status": "not_published_pending_evidence"
+        },
+        {
+          "id": "OBS-INCIDENTAL-CHAR-CORRUPTION",
+          "subject": "素材字符缺损",
+          "disposition": "existing_register_only",
+          "mechanism_match": "existing REG-03（style-reference 防护缺口＋字符损坏，register_only 已登记）",
+          "publish_status": "already_registered_REG-03"
+        }
+      ],
+      "historical_publish": {
+        "number": 20,
+        "state": "published_open",
+        "online_body_unchanged": true,
+        "body_sha256": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f",
+        "note": "v1 历史发布作为历史记录保留；v4 分类不自动触发任何线上编辑/关闭"
+      },
+      "external_actions": "线上 #20 的编辑收窄/关闭等一切写动作＝OWNER_PENDING（未执行；impl4-001 零 GitHub 写操作）",
+      "retracted_v3_claims": [
+        "v3『单一可验关闭目标』字段同时装入『正文计数口径收敛』与『K4/K6 采用基准声明』两个明确不同的目标（acc3 I04 反例）",
+        "v3『工程/道具/披露附带项＝剥离归 #11/#12/#13』无逐子项机制/关闭条件对应（acc3 I03 反例；冻结 #11/#12/#13 的关闭条件均不自动覆盖第比利斯时间、K6 编号、L502 名片、字符缺损）",
+        "v2/v3 difference_reason 以『及载体对齐子集』并列作为 #20 独立性理由（v4 起独立性仅由计数矛盾支撑）"
+      ],
+      "unchanged_v3_dispositions": "传输/人数/面孔/地点＝撤回（维持，不恢复）；匹配次数确证保留（有效计数证据不丢失）"
+    }
+  ],
+  "five_gate_table_ref": "§2.7 v4 候选/子项五门状态表（自然语言与本 delta 同步）",
+  "fourdim_table_ref": "§5.2 候选 #20 行 v4 列",
+  "snapshot_changes": "none（冻结快照零改动，不替 Owner 修改关闭标准）",
+  "github_api_writes_this_loop": "none (zero API calls by impl4-001; online state per impl2-001 GET receipt)"
+}
+```
+
+注：v1 `body_sha256_sent`/`body_sha256_readback` 为提交体与 GET 回读体的 SHA-256，九条两两一致（readback_ok 全 true）；v2 `retrieved_body_sha256` 为 impl2-001 公开无认证 GET 复核值，与 v1 哈希逐条相同＝线上原文未动。本轮未获任何 ISSUE 编辑/关闭/评论授权，全部线上处置建议（#14/#22 关闭说明、#15/#16/#17/#19/#20 收窄编辑、#21 口径澄清）状态 OWNER_PENDING，汇总见 `impl2-001-external-correction-proposal.md`（v3 批注同此状态）。impl3-001 维持零线上写操作；#17/#19/#20 的 v3 处置与门判修正见 §2.4/§2.6/§2.7、§5.2 与 v3 JSON delta，自然语言与 JSON 同步。
