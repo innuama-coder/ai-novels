@@ -1,6 +1,7 @@
-# duanxian-audit3-impl-001 · 新 ISSUE 提交登记 v2（impl2-001 修正版）
+# duanxian-audit3-impl-001 · 新 ISSUE 提交登记 v3（impl2-001 → impl3-001 修正版）
 
 - 版本：v2，2026-11-15，作业 duanxian-audit3-impl2-001（JOB #2394）按 acc-001 验收记录 §7/ACC-F009＋ACC-F007 修正。v1 登记内容原样保留于本文件（历史 hash、授权与回读记录零改动）；v2 只新增字段、收据与重归类结论，不补造任何历史请求日志。
+- 版本：v3，2026-11-15，作业 duanxian-audit3-impl3-001（JOB #2471）按 acc2-001 验收记录 §A2/07 修正单 **ACC-F013**（#17/#19/#20 处置与门判修正，自然语言与 JSON 同步）＋**ACC-F014**（四维差异表 #3/#4/#7 机制/关闭条件重做＋22 条复核）修正：见 §2.4/§2.6/§2.7、§5.2 v3 批注与文末 **v3 JSON delta**；v1/v2 登记内容（含全部历史 hash、授权与回读记录）原样保留。impl3-001 零 GitHub API 读写，线上状态以 impl2-001 GET 收据为准。
 - 作业（v1 原文）：JOB #2382（duanxian-audit3-impl-001，R3 审视实施）
 - 审计基线 BASE：`92573f1cca40f37cee04d2beb8708ff33ba603d6`；定义书 @ `024ef15a201a536592162b5f8442cf6a57699a8d`
 - 输入快照：`.kunora/inputs/open-issues-snapshot-20261114b.md`（SHA-256 `f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90`）
@@ -68,10 +69,10 @@
 - dedup_disposition：`published_reanchored_insufficient_evidence`（现行强命题证据不足；设计对齐问题保留待证）
 - closest_existing：#5（HLD 追踪门——控制不同：权限/知情映射 vs 事件-状态绑定）
 - difference_reason：HLD-04 权限列与 HLD-07 知情时点的映射问题无既有条覆盖；#5 为 trace 完整性
-- publish_gate：v1 判五门全过 → v2：门②不成立（「两者不可能同时为真」缺同一时点/同一信息粒度桥接；源列是 Known by 非 visible_to）；重锚定后窄命题「权限/实际知情/时序映射待澄清」过门，与 #5 不同的设计裁决须在补桥接后证明
+- publish_gate：v1 判五门全过 → v2：门②不成立（「两者不可能同时为真」缺同一时点/同一信息粒度桥接；源列是 Known by 非 visible_to）；重锚定后窄命题「权限/实际知情/时序映射待澄清」过门，与 #5 不同的设计裁决须在补桥接后证明；**v3（ACC-F013）修正**：v2「窄命题过门」判定撤回——「同一时点/粒度映射桥接缺失」即窄命题自身的已证内容，桥接未补齐前证据门②对 #17 整体**未过维持**；单一可验关闭目标＝补齐 HLD-04（04-character-system.md L15/L21）与 HLD-07（07-time-information-system.md L15/L20）在同一时点/同一信息粒度的映射桥接，补齐后重判门②
 - marker：`<!-- duanxian-audit3-impl-001:DX3-F004:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
 - body_sha256：`ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93`
-- publish_status：`published_open`；收窄编辑建议 OWNER_PENDING（visible_to→Known by、删「不可能同时为真」）
+- publish_status：`published_open`；收窄编辑建议 OWNER_PENDING（visible_to→Known by、删「不可能同时为真」）；v3：门②未过维持（ACC-F013），不新建纠错 ISSUE、不自动拆发、不代 Owner 改线上
 - number：17；url：https://github.com/innuama-coder/ai-novels/issues/17；created_at：`2026-11-14T12:52:27Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`ddae703bfc11bf45f5631a21290430a4d9efc8507830b9c2e97e7eb6cd5e4e93`
 - v2 锚点（重锚定依据）：HLD-04＝`duanxian/design/runs/hld/2026-07-13-duanxian-hld-workflow/artifacts/04-character-system.md` L15（Information permission 列）L21（「危机解除后……掌握行动层；原因层须复核申请」）；HLD-07＝同目录 `artifacts/07-time-information-system.md` L15（Known by 列）L20（HLD-07-04 行动层 D+57；HLD-07-05 完整原因层 Hidden from 处置组＋读者）
 
@@ -91,7 +92,7 @@
 - dedup_disposition：`published_narrowed`
 - closest_existing：#8（参与链族——对象不同：沈逾启动归责 vs 周岚维护例外）
 - difference_reason：六月线濒死/生前转移与批准「死亡后加载」的适配映射无既有条覆盖
-- publish_gate：v1 判五门全过 → v2：门②部分不成立（「研究员参与执行即违规」被反例否定——批准禁「决策者/启动者」允「执行者」；「没有任何口径迁移声明」被否定——`duanxian/README.md` L22–23 历史链隔离＋`duanxian/novel-goals.md` L67–71 专列历史隔离）；窄子集「特定残留的逐条适配映射是否足够」保留过门
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（「研究员参与执行即违规」被反例否定——批准禁「决策者/启动者」允「执行者」；「没有任何口径迁移声明」被否定——`duanxian/README.md` L22–23 历史链隔离＋`duanxian/novel-goals.md` L67–71 专列历史隔离）；窄子集「特定残留的逐条适配映射是否足够」保留过门；**v3（ACC-F013）隔离充分性明确判断**：总隔离声明对**层级误用**风险充分（明示旧线已被上层替代、不得作当前口径引用）、对**事实级再利用**风险不充分（清单化素材仍可被消费、具体事实可被直接采用而无逐条适配标记）——窄命题「事实级逐条适配映射缺失」保留过门；单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）
 - marker：`<!-- duanxian-audit3-impl-001:DX3-F006:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
 - body_sha256：`8521063d9fa73ad6e338cfbcf3749da1de54dfc0dab69bc77ad5e304a88cf5d0`
 - publish_status：`published_open`；删除两项被反例否定断言的编辑建议 OWNER_PENDING
@@ -103,7 +104,7 @@
 - dedup_disposition：`published_narrowed`
 - closest_existing：#11（十秒沉默——信息先用后到族）、#12（郑柏舟显名——载体对齐）、#13（记忆可检索——机制邻接）
 - difference_reason：正文与素材对同一事件的计数矛盾（两次 vs 七次）及载体对齐子集无既有条直接覆盖；#11/#12/#13 为子项比较对象
-- publish_gate：v1 判五门全过 → v2：门②部分不成立（人数、面孔同一性、「未写即未发生」、仓库/地点等互斥未证明——acc-001 §3.5/ACC-F006）；计数确证保留：正文 L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点）；「七」污染源＝R07 §2.2 表/片段 C 第七次回放（成因推断）
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（人数、面孔同一性、「未写即未发生」、仓库/地点等互斥未证明——acc-001 §3.5/ACC-F006）；计数确证保留：正文 L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点）；「七」污染源＝R07 §2.2 表/片段 C 第七次回放（成因推断）；**v3（ACC-F013）逐子项处置**：传输＝撤回；人数＝撤回；面孔＝撤回；地点＝撤回；**匹配次数＝确证成立保留**（L191/L195 两次 67%→82% vs L464 七次；L379/L472 七个认知节点为另一计数对象，不计入本命题），**单一可验关闭目标＝正文计数口径收敛**（对同一推理链的匹配次数统一）；K4/K6 载体＝**待证保留为独立子项**（meeting-room L17–29 K4/K6 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话＋正文 L302 回指 K6 电话——采用基准未定，关闭目标＝采用基准声明，与计数目标明确非同一）；工程/道具/披露附带项＝**剥离归 #11/#12/#13**（不以「载体对齐子集」吞并）
 - marker：`<!-- duanxian-audit3-impl-001:DX3-F007:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
 - body_sha256：`eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f`
 - publish_status：`published_open`；撤回未证互斥、保留单一对齐目标的编辑建议 OWNER_PENDING；多机制若不能形成单一目标则关闭，有效证据记入报告，不批量拆发
@@ -172,11 +173,11 @@ REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系�
 |---|---|---|---|---|
 | 既有 #1 | run.py 运行时路径＋测试入口 | 构思 CLI 可运行性（工程） | 重构后半改（f7ac2db） | 路径修复并过测试 |
 | 既有 #2 | README 技能计数声明 | 文档计数准确 | 目录实数 82 vs 声明 81 | 计数勘误 |
-| 既有 #3 | 17 份素材 LLD 路径＋R07 引用 | 素材路径有效（工程） | .gitattributes 迁移 | 明示的 17＋5 件修复 |
-| 既有 #4 | .gitattributes engine/ 前缀 | 忽略规则机制 | 前缀缺失 | 规则修复 |
+| 既有 #3 | 17 份素材 LLD 路径＋R07 引用 | 素材路径有效（工程） | **v3 重做**：旧根文本引用迁移（17 件各 3 处 backtick `docs/superpowers/specs/lld/` 文本引用→`duanxian/design/specs/lld/`，17 个目标全在库）＋R07 内容指称章节错位（writer-R07 L14 引 §10.2/10.3/10.4/10.6/10.8、L16 引 §10.2；2026-06-06-hld v4.0 风格章为 §9（L312–339）、§10 为 HLD→LLD 交付包（L343）） | **v3 重做**：17 项引用逐条可定位＋R07 五处指称按内容对照（给准确定位/注明历史版本依赖或待核，不补造）；非 .gitattributes 迁移 |
+| 既有 #4 | .gitattributes engine/ 前缀 | **v3 重做**：HLD 工件跨平台字节稳定（根 .gitattributes L1–2 声明 byte-exact manifest 所需 text/eol 属性约束） | **v3 重做**：规则路径前缀失配（L3–23 规则均以 `harnesses/`、`skills/` 开头缺 `engine/` 前缀；实测 3 件真文件 text/eol 全 unspecified；为风险观察，未见实际哈希损伤） | **v3 重做**：按实际树调整规则覆盖＋在全预期集复查 text/eol（非 3 件抽样）；非忽略规则问题 |
 | 既有 #5 | HLD-TRACE-CLOSURE P1 追踪门 | 事件-状态绑定可追踪 | 绑定错位/缺行 | trace 补行＋人评关闭 |
 | 既有 #6 | v2.0/v3.0 标签指称 | 评审版本指称准确 | 标签混用 | 版本指称澄清 |
-| 既有 #7 | 三个机器交付文件 | 交付可复现（工程） | 未留存（conception-runs 不入库为既定策略） | 留存策略声明 |
+| 既有 #7 | 三个机器交付文件 | **v3 重做**：批准包 A2 指针对象的可审计访问（run/包清单及其 hash 在 A2 有登记） | **v3 重做**：受控同版取证链缺失（性质＝证据补充请求，非已证生产失败或留存策略违例——政策 A0 README L3「运行账本不入 Git」＋.gitignore L11–18 已明示；A2 指针：run_id=duanxian-conception-v2-20260811-18、development_handoff=P1/development-handoff.json sha256 d48194db…、p1_manifest=P1/package-manifest.json sha256 bba81d35…） | **v3 重做**：可审计访问说明＋确切 run/版本＋包清单及 hash＋回溯 manifest/完成记录/作者决定/正式 validation/execution/实现快照/来源链＋受控环境 validator 重放（basename 存在或两项 hash 一致均不足以证全链可用）；非留存策略声明 |
 | 既有 #8 | 周岚维护例外参与链 | 周岚参与边界（批准层封闭） | 历史维护例外链残留 | 参与链对齐批准层 |
 | 既有 #9 | R-07 当前视听 | 当前无感官契约（批准层） | 视听残留进载体 | 载体对齐 |
 | 既有 #10 | 终局自行关闭＋提前披露 | 终局顺序（批准层封闭） | 披露顺序残留 | 顺序对齐 |
@@ -185,13 +186,15 @@ REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系�
 | 既有 #13 | 完整可检索记忆/像素重建 | 记忆检索边界（ENV-MEMORY 封闭） | 重建表述残留 | 检索边界对齐 |
 | 候选 #15 | brief.html 版本链引用＋审阅状态呈现 | 审阅可见性（awaiting_author_review 须保持可见） | 版本引用与留存件不一致（I0/I1/I4/I5 四项；I3 相符；I2 不在库） | brief 版本引用对齐＋状态可见；GET 存新旧 hash 后编辑或关闭 |
 | 候选 #16 | subject-definition v1.1 旧终局残留＋causal 版本定位（实为 v1.1） | 第一部不知情契约（N4） | 历史版本残留未治理；构思审计未捕获（创伤≠已知受骗、L41 第二部、L61 delegated） | 主体定义终局口径治理；撤回违规结论 |
-| 候选 #17 | HLD-04 权限列↔HLD-07 知情时点映射 | 处置组行动层/原因层权限分级（Information permission vs Known by） | 同一时点/同一粒度桥接未建立（D+57 行动层 vs 危机解除后原因层复核） | 补齐映射表则保留设计对齐问题，否则关闭 |
+| 候选 #17 | HLD-04 权限列↔HLD-07 知情时点映射 | 处置组行动层/原因层权限分级（Information permission vs Known by） | 同一时点/同一粒度桥接未建立（D+57 行动层 vs 危机解除后原因层复核） | **v3（ACC-F013）**：单一可验关闭目标＝同一时点/同粒度映射桥接补齐，补齐后重判门②（未补齐前门②未过维持）；不能补齐则按 Owner 裁决关闭；不自动拆发 |
 | 候选 #18 | PRD 终包 L34/L281 门状态自述 | PRD→HLD 入口门状态记录 | 终包前后行未标过程/终态（07-10–07-13 确认时间窗为旁证） | 历史终包状态说明澄清（勘误需授权） |
-| 候选 #19 | 六月线濒死/生前转移 vs 批准死亡后加载 | 死亡后加载终局＋沈逾执行者非启动者（G02） | 历史层-批准层适配映射缺失（总隔离声明在场：README L22-23/novel-goals L67-71） | 逐条适配映射声明；总隔离足够则关闭；不改写故事 |
-| 候选 #20 | 正文与素材对同一事件的表述 | 匹配次数一致性＋载体对齐（单次/两次计数契约） | 素材迭代残留进入正文（两次 vs 七次；「七」污染源 R07 §2.2/片段 C） | 单一对齐目标确立；多机制不成单一目标则关闭并记证据 |
+| 候选 #19 | 六月线濒死/生前转移 vs 批准死亡后加载 | 死亡后加载终局＋沈逾执行者非启动者（G02） | 历史层-批准层适配映射缺失（总隔离声明在场：README L22-23/novel-goals L67-71；v3 判断：对层级误用充分、对事实级再利用不充分） | **v3（ACC-F013）**：单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）；不改写故事 |
+| 候选 #20 | 正文与素材对同一事件的表述 | 匹配次数一致性＋载体对齐（单次/两次计数契约） | 素材迭代残留进入正文（两次 vs 七次；「七」污染源 R07 §2.2/片段 C）；v3 逐子项＝传输/人数/面孔/地点撤回，匹配次数确证，K4/K6 载体待证，工程/道具/披露剥离 | **v3（ACC-F013）**：单一可验关闭目标＝正文计数口径收敛（同一推理链匹配次数统一）；K4/K6 载体＝独立子项，关闭目标＝采用基准声明（与计数目标非同一）；剥离子项归 #11/#12/#13 |
 | 候选 #21 | A3 decision_controls 计数文案 | 环境/片段体验控制条目 statement | 早期迭代计数残留（推断；h1_plan 六选二/h1_fragments 六→三死数据为旁证） | 控制条目文案与实列对齐（A3 勘误另授权，不改原字节）；计数≠体验控制 |
 | 候选 #14（重归类） | 全树文档路径/引用（工程整理） | **无独立故事控制** | 与 #1/#3/#4 同机制：路径迁移后引用失配 | 全树路径工程整理（超出本轮；另授权任务）——本轮关闭建议 OWNER_PENDING |
 | 候选 #22（重归类） | 构思工程脚本路径（样片驱动器等） | **无独立故事控制** | 与 #1 同根因路径失配；静态引用失效≠运行失败 | 工程修复另授权冻结任务——本轮关闭建议 OWNER_PENDING |
+
+**v3 批注（ACC-F014）**：对全部 22 行复核「只换对象/载体即新机制」式外推——命中 4 处：上行 #3（v2 机制误写 .gitattributes 迁移）、#4（v2 控制误写忽略规则机制）、#7（v2 关闭误写留存策略声明）三处概括，及报告 §5 DEDUP-03/04/07 行沿用的同一概括，均已按各该行 **v3 重做**列修正并互相同步；其余 19 行（含 #14/#22 重归类行与 #15/#16/#18/#21 行）复核未发现同类外推。冻结快照（`.kunora/inputs/open-issues-snapshot-20261114b.md`）零改动；本表不替 Owner 修改任何关闭标准，线上原文未动。
 
 ## 机器可读登记
 
@@ -324,4 +327,31 @@ REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系�
 }
 ```
 
-注：v1 `body_sha256_sent`/`body_sha256_readback` 为提交体与 GET 回读体的 SHA-256，九条两两一致（readback_ok 全 true）；v2 `retrieved_body_sha256` 为 impl2-001 公开无认证 GET 复核值，与 v1 哈希逐条相同＝线上原文未动。本轮未获任何 ISSUE 编辑/关闭/评论授权，全部线上处置建议（#14/#22 关闭说明、#15/#16/#17/#19/#20 收窄编辑、#21 口径澄清）状态 OWNER_PENDING，汇总见 `impl2-001-external-correction-proposal.md`。
+### v3 JSON delta（schema 3.0-delta；ACC-F013/ACC-F014 产物；只登记本轮变更字段，v1/v2 JSON 原样保留于上）
+
+```json
+{
+  "schema_version": "3.0-delta",
+  "job_ref": "duanxian-audit3-impl-001",
+  "revised_by_job": "duanxian-audit3-impl3-001",
+  "revision_source": "acc2-001 §A2/07 ACC-F013 + ACC-F014",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "candidate_updates": [
+    {"finding_id": "DX3-F004", "publish_gate": "v3: 门②未过维持——强命题（权限矛盾）反证成立；窄命题（同一时点/粒度映射桥接缺失）为已证观察，v2『窄命题过门』撤回；未过门维持至桥接补齐", "publish_status": "published_open; gate-2 not passed (v3, ACC-F013); no correction-issue creation, no auto-split, no owner-side edits", "closure_target_single_verifiable": "补齐 HLD-04（L15/L21）与 HLD-07（L15/L20）同一时点/同一信息粒度映射桥接；补齐后重判门②"},
+    {"finding_id": "DX3-F006", "publish_gate": "v3: 窄命题保留过门；隔离充分性双层判断＝总隔离声明（README L22-23 + novel-goals L67-71）对层级误用充分、对事实级再利用不充分", "publish_status": "published_open; narrowed (facts-level per-item adaptation mapping missing retained); edit proposal OWNER_PENDING", "closure_target_single_verifiable": "Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）"},
+    {"finding_id": "DX3-F007", "publish_gate": "v3 逐子项: 传输/人数/面孔/地点=撤回; 匹配次数=确证保留（L191/L195 两次 vs L464 七次；L379/L472 七节点为另一对象）; K4/K6 载体=待证保留独立子项; 工程/道具/披露=剥离归 #11/#12/#13", "publish_status": "published_open; per-subitem dispositions fixed (v3, ACC-F013); edit proposal OWNER_PENDING", "closure_target_single_verifiable": "正文计数口径收敛（同一推理链匹配次数统一）；K4/K6 子项关闭目标＝采用基准声明（与计数目标明确非同一）"}
+  ],
+  "dedup_fourdim_updates": [
+    {"issue": 3, "mechanism_v3": "旧根文本引用迁移（17 件各 3 处 backtick LLD 文本引用→duanxian/design/specs/lld/，17 目标全在库）＋R07 内容指称章节错位（writer-R07 L14/L16 引 §10.2–10.8；风格章实为 §9 L312–339、§10 为 HLD→LLD 交付包 L343）", "closure_v3": "17 项引用逐条可定位＋R07 五处指称按内容对照（不补造）", "retracted_v2_claim": "『.gitattributes 迁移』机制概括（只换对象外推）"},
+    {"issue": 4, "control_v3": "HLD 工件跨平台字节稳定（.gitattributes L1–2 byte-exact manifest 的 text/eol 属性约束）", "mechanism_v3": "规则路径前缀失配（L3–23 缺 engine/ 前缀；3 件实测 text/eol 全 unspecified；未见实际哈希损伤）", "closure_v3": "按实际树调整规则覆盖＋全预期集 text/eol 检查（非 3 件抽样）", "retracted_v2_claim": "『忽略规则机制』控制概括（只换载体外推）"},
+    {"issue": 7, "mechanism_v3": "受控同版取证链缺失（证据补充请求；政策 A0 README L3 与 .gitignore L11–18 已明示不入库；A2 指针 run_id=duanxian-conception-v2-20260811-18、development_handoff sha256 d48194db…、p1_manifest sha256 bba81d35… 在库）", "closure_v3": "可审计访问说明＋确切 run/版本＋包清单及 hash＋全链回溯（manifest/完成记录/作者决定/validation/execution/实现快照/来源链）＋受控 validator 重放", "retracted_v2_claim": "『留存策略声明』关闭条件（只换对象外推）"}
+  ],
+  "fourdim_recheck_22": "其余 19 条复核未发现『只换对象/载体即新机制』式外推（ACC-F014）",
+  "snapshot_changes": "none（冻结快照零改动，不替 Owner 修改关闭标准）",
+  "github_api_writes_this_loop": "none (zero API calls by impl3-001; online state per impl2-001 GET receipt)"
+}
+```
+
+注：v1 `body_sha256_sent`/`body_sha256_readback` 为提交体与 GET 回读体的 SHA-256，九条两两一致（readback_ok 全 true）；v2 `retrieved_body_sha256` 为 impl2-001 公开无认证 GET 复核值，与 v1 哈希逐条相同＝线上原文未动。本轮未获任何 ISSUE 编辑/关闭/评论授权，全部线上处置建议（#14/#22 关闭说明、#15/#16/#17/#19/#20 收窄编辑、#21 口径澄清）状态 OWNER_PENDING，汇总见 `impl2-001-external-correction-proposal.md`（v3 批注同此状态）。impl3-001 维持零线上写操作；#17/#19/#20 的 v3 处置与门判修正见 §2.4/§2.6/§2.7、§5.2 与 v3 JSON delta，自然语言与 JSON 同步。
