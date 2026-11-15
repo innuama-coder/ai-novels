@@ -1,9 +1,9 @@
-# 《断线》R3 审视实施报告 v3（duanxian-audit3-impl-001 → impl2-001 → impl3-001 修正版）
+# 《断线》R3 审视实施报告 v4（duanxian-audit3-impl-001 → impl2-001 → impl3-001 → impl4-001 修正版）
 
-- 作业：JOB #2382 · duanxian-audit3-impl-001（三步协议第二步：审视实施）；**本 v2 由修正作业 JOB #2394 · duanxian-audit3-impl2-001 依据独立验收 `acc-001-acceptance.md` §7 修正单 ACC-F001–F010 改写**；**本 v3 由修正作业 JOB #2471 · duanxian-audit3-impl3-001 依据独立验收 `acc2-001-acceptance.md` §A2/07 修正单 ACC-F011–F014 续改**。
+- 作业：JOB #2382 · duanxian-audit3-impl-001（三步协议第二步：审视实施）；**本 v2 由修正作业 JOB #2394 · duanxian-audit3-impl2-001 依据独立验收 `acc-001-acceptance.md` §7 修正单 ACC-F001–F010 改写**；**本 v3 由修正作业 JOB #2471 · duanxian-audit3-impl3-001 依据独立验收 `acc2-001-acceptance.md` §A2/07 修正单 ACC-F011–F014 续改**；**本 v4 由修正作业 JOB #2493 · duanxian-audit3-impl4-001 依据独立验收 `acc3-001-acceptance.md` §A3/08 修正单 ACC-F015–F017 续改**。
 - 定义书：`outputs/duanxian-audit3/def-001-definition.md`（@ 024ef15a，唯一工作指令源）。
 - 审计基线 BASE：`92573f1cca40f37cee04d2beb8708ff33ba603d6`；本作业基线 156ffc48（＝acc2-001 交付提交）。
-- 判决历史（保留不抹除）：acc-001 对 v1 报告质量线／ISSUE 质量线／总体均判 **FAIL**，返回第二步 LOOP；v2 为该 LOOP 的修正交付。acc2-001 对 v2 复验仍判 **FAIL** 并出具修正单 ACC-F011–F014（ACC-F011 为阻断项）；本 v3 为第二轮 LOOP 的修正交付，**仍待第三步独立复验（acc3），不自宣布 PASS**。
+- 判决历史（保留不抹除）：acc-001 对 v1 报告质量线／ISSUE 质量线／总体均判 **FAIL**，返回第二步 LOOP；v2 为该 LOOP 的修正交付。acc2-001 对 v2 复验仍判 **FAIL** 并出具修正单 ACC-F011–F014（ACC-F011 为阻断项）；本 v3 为第二轮 LOOP 的修正交付。acc3-001 对 v3 复验仍判 **FAIL**（ACC-F011/F012/F013 三项残余＝ACC-F015–F017；ACC-F014 判 PASS）并出具修正单 ACC-F015–F017；本 v4 为第三轮 LOOP 的修正交付，**待第四步独立复验（acc4），不自宣布 PASS**。
 - 判断目标：DX-G01..G09（定义书第二节冻结口径）。两条判断轴：与目标一致性、实现程度。
 
 ---
@@ -15,7 +15,7 @@
 - 全读证据账：**逐件可回读全读账 v2**（`outputs/duanxian-audit3/impl-001-reading-ledger.md`，155 条）——R=127（`duanxian/` 除 `conception-production/`、`testing/` 外全树）＋定义 N 集 8 件（G1–G7＋根 README；G7＝`duanxian/novel-goals.md` 与 R 重合，账内记 R，N 标记其余 7 件非 duanxian 路径）→ **R∪N=134**；E=21（工程候选集）；合计 **155 件逐件登记** BASE blob OID／SHA-256／字节／阅读区间或 Pointer 覆盖／摘要／目标映射／支持-反证-未读。
 - 阅读时间与诚实声明：v1 无逐件账，acc-001 R02 判「提交证据不能证明全读」。本 v2 的 155 件逐件自读全部发生于 impl2-001 期间（2026-11-14/15）——**补读重建，不溯及 v1 历史，不伪造历史阅读时间**；不以验收方字节清单或任何他人清单替代自读（全读账 §0）。
 - E 集 21 件逐件选择与闭合理由见全读账 §2；未闭合项 9 条见全读账 §3（A3 P1 原值仅哈希、机器链字节级不可复算、两机器链关系未裁决等）。
-- 批准包深读：A3 `human-review-report.json`（约 2.84 MB 单行 JSON）按顶层域分块——内容域 3792 行全文、三索引阵列**逐 Pointer 语义覆盖**（v3 新增 `impl3-001-pointer-coverage-table.md`，ACC-F011：RL 4602/4602＝18 语义组合全读；DI 4602/4602 库内六字段全量核验＋91 (阶段×域) 组语义直读；SC 3924/3924＝64 源族直读、引用 4626 次全解析零断引用；同值复用 525 对全列；P1 值体 4602 条未读＝#7 维持，不声称补出）；A5 HTML 18 分块全覆盖（可见文本＋嵌入数据）。
+- 批准包深读：A3 `human-review-report.json`（约 2.84 MB 单行 JSON）按顶层域分块——内容域 3792 行全文、三索引阵列**逐 Pointer 语义覆盖**（v3 新增 `impl3-001-pointer-coverage-table.md`，ACC-F011：RL 4602/4602＝18 语义组合全读；DI 4602/4602 库内六字段全量核验＋91 (阶段×域) 组语义直读；SC 3924/3924＝64 源族直读、引用 4626 次全解析零断引用；同值复用 525 对全列——**v4（ACC-F015）：EV 同来源双入口 148 组＝同值 0、非复用，与 525 真复用对按两种分组分开判定，逐组全列见 POINTER §6a**；P1 值体 4602 条未读＝#7 维持，不声称补出）；A5 HTML 18 分块全覆盖（可见文本＋嵌入数据）。
 - 实时远端核验：v1 于 2026-11-14 GET 全量 22 条与冻结快照一致（§10）；impl2-001 未做任何 GitHub 写操作，#14–#22 当前状态以无认证 GET 收据为准（issues v2 §5.1）。
 
 ### 1.2 版本谱系（v2 修正：A1/A2 名称对调、因果 v1.1、writing 17 件、「六月线」定名）
@@ -116,18 +116,28 @@ G01 新主体（R-07≠顾衡复生，无预装情感）；G02 启动条件与�
 - 结构层（局部绑定，保留）：A1↔A2↔A3 的 run_id、schema_version、P1 哈希三处一致；A2 三包哈希齐备；PRD manifest 11/11 匹配。acc-001 R05 独立复算认可这些**局部绑定**。
 - 内容层（静态阅读，降级表述）：testing 21 件内嵌故事数据经 impl2-001 逐件全文静态阅读，conception 链 (a) 与批准口径未见冲突；**但 v1「机器链已复验（内容级）」撤回**——静态源码只证明写法，不证明任何 run 已按当前字节执行。
 - 字节层（不可复算，v3 修正引擎可得性表述，ACC-F012）：v2「conception-runs/ 全部 run root 与 engine/ 不在库」**前半句成立、后半句错误**——engine/ 源码树在库（BASE `git ls-tree -rz` 计 1290 路径，含 10 件 `engine/skills/*/run_v2.py` 与 harnesses runtime）；真正不在库者为运行目录 `duanxian/conception-runs/`（0 路径）与 `engine/projects/`（0 路径，migration-finalization.json 输入缺失）。A3 run `20260811-18` 的 `h1_session_id` 前缀 `H1-IMPLEMENTATION-`≠库内 `duanxian/testing/run_duanxian_conception_v2.py` 生成格式 `H1-DUANXIAN-<run_id>`（L128）——该差异**仅证两处格式不一致，不能推出实际执行入口不在库**；入口在库而实际执行的脚本版本绑定未证（#7 边界维持）。
-- **引擎/入口可得性四列证据表（v3 新增，ACC-F012）**——证据＝BASE `92573f1c` `git ls-tree -rz` 全树枚举＋入口脚本 `duanxian/testing/run_duanxian_conception_v2.py` 静态逐行追读（L16–58）：
+- **引擎/入口可得性四列证据表（v3 新增，ACC-F012；v4 按 ACC-F016 重做七入口行、harnesses 行与三机器包行）**——证据＝BASE `92573f1c` `git ls-tree -rz` 全树枚举＋逐候选路径 `git cat-file -e` 核验＋入口脚本 `duanxian/testing/run_duanxian_conception_v2.py` 静态逐行追读（ENGINE/RUN_ROOT/MIGRATION 定义 L16–35、importlib 导入 L37–44、`load_stage_runtime` 三候选根 L43–55、七技能调用 L80–123）。**v3 表四处失真表述（经 acc3 §A3/03 反例证实）撤回**：①统一 `-designer` 后缀的花括号路径（构造 Q1/P1 两个不存在的技能名）；②「三根回退首根（ENGINE）」（调用串自带 `engine/` 前缀，首候选＝`ENGINE/engine/skills/…` 拼重根不存在，实际命中**第二候选** `ENGINE.parent`＝仓库根）；③「模块可导入」（静态核验未证导入）；④三机器文件统归「A2 manifest 哈希引用」（A2 对 hld-completion.json 零引用）。v4 表列＝仓库路径／解析根·阶段来源（脚本依据）／实际存在／运行绑定：
 
 | 仓库路径（BASE） | 解析根（脚本依据） | 实际存在 | 运行绑定 |
 |---|---|---|---|
 | `engine/` 全树 | run 脚本 L16–19 `ENGINE=parents[2]/engine`＋sys.path.insert | **在库**（1290 路径） | 静态解析根成立；实际执行版本未证 |
-| `engine/skills/novel-{storyline-architecture,world-model,environment-system,event-timeline,character-system,conception-reviewer,conception-deliverable-assembler}-designer/scripts/run_v2.py`（7 入口） | L78–115 load_stage_runtime 三根回退首根（ENGINE） | **在库**（该型共 10 件，7 个被引用件全部命中） | 七技能入口可解析；实际执行版本未证 |
-| `engine/harnesses/novel-conception-autonomous/runtime/__init__.py`、`runtime/production_orchestrator.py` | L37–44 importlib 导入 | **在库** | 模块可导入；实际执行版本未证 |
+| S1 `engine/skills/novel-storyline-architecture-designer/scripts/run_v2.py`（调用串 L80–83） | L44–48 三候选按序：① `ENGINE/engine/skills/…`（拼两次 engine，**不存在**）→ ② **`ENGINE.parent`＝仓库根（命中）** → ③ `NOVEL/…`（备而未用） | **在库**（②命中，`git cat-file -e` 逐候选验证） | 静态解析成立；实际执行版本未证 |
+| W1 `engine/skills/novel-world-model-designer/scripts/run_v2.py`（L84–87） | 同上三候选序（②命中） | **在库** | 同上 |
+| E1 `engine/skills/novel-environment-system-designer/scripts/run_v2.py`（L92–95） | 同上（②命中） | **在库** | 同上 |
+| T1 `engine/skills/novel-event-timeline-designer/scripts/run_v2.py`（L100–103） | 同上（②命中） | **在库** | 同上 |
+| C1 `engine/skills/novel-character-system-designer/scripts/run_v2.py`（L108–111） | 同上（②命中） | **在库** | 同上 |
+| Q1 `engine/skills/novel-conception-reviewer/scripts/run_v2.py`（L116–119；**真名无 `-designer` 后缀**） | 同上（②命中） | **在库** | 同上 |
+| P1 `engine/skills/novel-conception-deliverable-assembler/scripts/run_v2.py`（L120–123；**真名无 `-designer` 后缀**） | 同上（②命中） | **在库** | 同上 |
+| `engine/harnesses/novel-conception-autonomous/runtime/__init__.py`、`runtime/production_orchestrator.py` | L37–44 importlib 导入（`harnesses.novel-conception-autonomous.runtime[.production_orchestrator]`，sys.path 已插 ENGINE） | **在库**（源文件与导入路径存在） | **源文件/导入路径静态存在；模块导入与依赖闭包可执行性未证（未运行 import）**；实际执行版本未证 |
 | `duanxian/conception-runs/<run_id>/` | L24–27 RUN_ROOT＝NOVEL/conception-runs/RUN_ID（默认 20260802-04） | **不在库**（0 路径） | 运行产物目录缺失（#7） |
 | `engine/projects/duanxian/compatibility-migrations/b0-compat-01/final/migration-finalization.json` | L29–35 MIGRATION 常量 | **不在库**（engine/projects/ 0 路径） | migration 输入缺失 |
-| `novel-conception-package.json`／`development-handoff.json`／`hld-completion.json`（三机器包） | A2 manifest 哈希引用 | **不在库**（BASE 1444 路径零命中） | 未留存（#7 维持） |
+| `novel-conception-package.json`（P1 机器包本体） | 阶段来源＝**P1 机器包**（engine 构思 V2 契约命名：`final-delivery-contract.md` 等）；A2 证据＝`p1_manifest` 指针（`P1/package-manifest.json` sha256 `bba81d35…`）＝**manifest 间接引用，非包本体哈希** | **不在库**（BASE 1444 路径 basename 零命中） | 未留存（#7 维持） |
+| `development-handoff.json`（P1→开发移交） | 阶段来源＝**P1 交付物**；A2 证据＝`development_handoff` 指针（`P1/development-handoff.json` sha256 `d48194db…`）＝**直接哈希引用** | **不在库**（同上） | 未留存（#7 维持） |
+| `hld-completion.json`（HLD 链终验件） | 阶段来源＝**HLD 自主工作流 V1 的 HF1 finalizer 契约产物**（`hld-skill-contract-catalog-v1.md` L223/L1261–1268、`hld-autonomous-workflow-v1-design.md` L89/L681/L903）；**A2 `conception-completion.json` 对其零引用**（顶层键无任何 hld-completion 字段/字符串）——其缺失是**独立 HLD 阶段证据边界，非构思完成记录必含项**（冻结 #7 明示，不由此推断新版 HLD 未运行） | **不在库**（同上） | 未留存；阶段证据边界单列 |
 | `runtime/production_orchestrator.py`（acc2 引用的裸路径） | —（acc2 §A2 所引） | **不在库**（仓库根无此文件） | acc2 引用路径不精确；实件位于上行 engine/harnesses/…/runtime/ 下且在库 |
 | `duanxian/testing/run_duanxian_conception_v2.py` | 入口脚本本体 | **在库** | 本表证据源（静态追读完成） |
+
+注（v4，ACC-F016）：`engine/skills/*/run_v2.py` 该型共 10 件在库，上表 7 个被引用件全部命中（②根）；v3 花括号＋统一 `-designer` 后缀写出的 `engine/skills/novel-conception-reviewer-designer/scripts/run_v2.py` 与 `engine/skills/novel-conception-deliverable-assembler-designer/scripts/run_v2.py` 两路径经三候选根逐一 `git cat-file -e` 验证**均不存在**（acc3 反例成立）；另有四件测试构建器调用串（`testing/duanxian_w1_model.py`、`testing/duanxian_e1_builder.py`、`testing/duanxian_t1_builder.py`、`testing/duanxian_c1_builder.py`，L88–115）不带 `engine/` 前缀、①②根不存在而**③根 `NOVEL/testing/…`（＝`duanxian/testing/…`）命中**，不在本表七技能之列。
 - **两机器链矛盾（v2 新登记，未闭合）**：链 (a) conception-production 设定顾衡牺牲/死亡且「不得把顾衡写成仍存活的行动者」（w1 L34/L44/L459、run_v2 L193）；链 (b) hld-run-08（HI1 三变体 000230/237/238）设定顾衡「昏迷垂危且未脑死亡」的在世患者（n=140 L108/294/413、n=141 L536）。两链互斥，库内无先后/替代关系裁决文件——**v1 §6「下游 HLD 层 build_run08 三件同样一致」撤回**；登记于全读账 §3-3，本轮不裁决、不发布新候选（超出修正单范围）。
 - 工程可用性（静态）：run.py 七路径双前缀（#1）等布局问题保持 #1/#3/#4 范围归并，本轮不扩发（ACC-F007）。
 
@@ -160,7 +170,7 @@ G01 新主体（R-07≠顾衡复生，无预装情感）；G02 启动条件与�
 | DX3-F004（#17） | HLD 处置组权限与 D+57 实际知情的映射待澄清 | **重锚定**：HLD-04（`artifacts/04-character-system.md` L15 Information permission 列；L21「危机解除后……掌握行动层；原因层须复核申请」）vs HLD-07（`artifacts/07-time-information-system.md` L15 Known by 列；L20 HLD-07-04 行动层 D+57、HLD-07-05 完整原因层 Hidden from 处置组＋读者）；**删除「不可能同时为真」**；判定 insufficient_evidence（同一时点/粒度映射未建立）；**v3（ACC-F013）**：#17 维持「未过门②」——强命题（权限矛盾）已被反证、窄命题（HLD-04 与 HLD-07 同一时点/粒度映射桥接缺失）为已证观察；单一可验关闭目标＝补齐该映射桥接；未过门维持至桥接补齐，不自动拆发 |
 | DX3-F005（#18） | PRD 终包门状态自述矛盾（final L34 vs L281）——核心确证保留 | 保留；**成因标推断**（07-10 gate-report 人评 pending → 07-13 confirmed，确认时间窗 07-10–07-13 为旁证，非直证） |
 | DX3-F006（#19） | 六月线濒死/生前转移（LLD K2:26、design-scenes-draft L15-22、PRD L38/L120/L190）相对批准「死亡后加载」的**历史适配映射**未建立 | **收窄**：撤回「研究员参与执行即违规」（批准禁决策允执行）与「没有任何口径迁移声明」（README L22-23 隔离在场）；保留窄子集；**v3（ACC-F013）**：隔离充分性判断＝总隔离声明（README L22-23＋novel-goals L67-71）对**层级误用**风险充分、对**事实级再利用**风险不充分（清单化素材仍可被消费、具体事实可被直接采用）；窄命题「事实级逐条适配映射缺失」保留，单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明 |
-| DX3-F007（#20） | 正文计数矛盾确证：L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点），及经证实的载体对齐子集 | **收窄**（acc-001 §3.5/ACC-F006）：撤回人数、面孔同一性、「未写即未发生」、仓库/地点等未证互斥；工程残留子项剥离与 #11/#12/#13 比较；**v3（ACC-F013）逐子项**：传输＝撤回；人数＝撤回；面孔＝撤回；地点＝撤回；**匹配次数＝确证成立保留**（L191/L195 两次 67%→82% vs L464 七次；L379/L472 七个认知节点为另一计数对象），单一可验关闭目标＝正文计数口径收敛（同一推理链匹配次数统一）；K4/K6 载体＝待证保留为独立子项（会议室 vs 电话未决，关闭目标＝采用基准声明，与计数目标明确非同一）；工程/道具/披露附带项＝剥离归 #11/#12/#13（不以「载体对齐子集」吞并） |
+| DX3-F007（#20） | 正文计数矛盾确证：L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 明写第一次/第二次；L379/L472 七个认知节点为另一计数对象）——**v4 起为 #20 主候选的唯一命题**；载体与其余子项不再并入主候选命题或其关闭条件 | **收窄**（acc-001 §3.5/ACC-F006）：撤回人数、面孔同一性、「未写即未发生」、仓库/地点等未证互斥（v4 维持不恢复）；**v3（ACC-F013）逐子项**：传输/人数/面孔/地点＝撤回；匹配次数＝确证保留；**v4（ACC-F017）主候选单一化＋附带项分类闭合**：主候选**单一**可验关闭目标＝正文计数口径收敛（同一推理链匹配次数统一；**只此一个**——反例测试成立：只解决计数即完全满足主候选目标，不需任何载体/道具/披露决定，计数修正也无需决定 K4/K6 电话或会议室）；K4/K6 载体＝**独立不发布观察**（不再是 #20 关闭目标或独立性理由；证据限度＝meeting-room L17/L20/L28–38＋§3.1–3.4 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话·面对面/正文 L302 回指 K6 电话，采用基准未定，其自身潜在关闭方向＝采用基准声明）；附带项**逐项处置**（撤回 v3「剥离归 #11/#12/#13」笼统归并）：①第比利斯时间标注（正文 L157/L335/L375）＝register_only（#11 十秒沉默来源标注/#12 郑柏舟披露口径/#13 记忆检索边界的关闭条件均不覆盖）；②K6 编号进入正文（L302）＝register_only（同上不覆盖）；③L502 名片无素材来源＝待证（机制**邻接** #11「来源未标」族，但 #11 关闭条件不覆盖本项，不以邻接冒充已有覆盖）；④素材字符缺损＝existing REG-03（register_only 已登记）。候选/子项五门状态表见 issues v4 §2.7；自然语言/§5.2/JSON delta 三方同步 |
 | DX3-F008（#21） | A3 控制条目计数残留：decision_controls/1「十个环境」vs 实列 12；decision_controls/7「六个样章片段」vs 实列 3 | 保留计数确证；**成因标推断**（早期迭代计数残留为推测——h1_plan 侧 statement 已改「两个深场景」、h1_fragments 存在六→三死数据块，生成因果无库内直证）；**现行映射修正为 03/04/06 三片段**（v1「两深场景 04/06」系少计 03）；计数通过≠体验控制通过 |
 | DX3-F009（#22） | #1 同族工程脚本路径失配扩展 | **重归类 out_of_scope/existing**（ACC-F007）：静态引用失效≠运行验证失败；v1「五门全过」撤回；线上处置建议＝关闭并说明（OWNER_PENDING） |
 
@@ -182,6 +192,7 @@ OPEN-01~03 映射缺表、qianxu 文件名歧义、style-reference 防护缺口�
 3. 提交署名按作业宪法冻结命令逐字执行，无附加署名行。
 4. **（impl2-001 新增）**：本 v2 仅改 `impl-001-report.md`、`impl-001-issues.md` 两件白名单文件，新增 `impl-001-reading-ledger.md`、`impl2-001-external-correction-proposal.md` 两件白名单文件；线上 ISSUE 零写操作（纠错建议全部 OWNER_PENDING，未执行）。
 5. **（impl3-001 新增）**：本 v3 仅改上述四件白名单文件并新增 `impl3-001-pointer-coverage-table.md`（共 5 件，spec 白名单内）；隔离探针与中间产物全部置于 gitignore 的 `.kunora/impl3-work/`，不入库；线上 ISSUE 零写操作维持。
+6. **（impl4-001 新增）**：本 v4 仅改五件白名单既有文件（本报告＋issues＋ledger＋proposal＋pointer）并新增 `impl4-001-correction-notes.md`（共 6 件，spec 白名单内）；隔离探针与中间产物全部置于 gitignore 的 `.kunora/impl4-work/`，不入库；线上 ISSUE 零写操作维持（ACC-F015–F017 均不涉任何线上编辑，外部建议仍 OWNER_PENDING）。
 
 ---
 
@@ -191,7 +202,10 @@ OPEN-01~03 映射缺表、qianxu 文件名歧义、style-reference 防护缺口�
 - impl2-001：**零 GitHub 写操作**；#14–#22 的建议纠错动作逐条写入 `impl2-001-external-correction-proposal.md`（OWNER_PENDING）；fresh 无认证 GET 收据（created_at、body SHA-256）登记于 issues v2 §5.1（ACC-F009）。
 - 推送：remote-agent/duanxian-audit3-impl2-001 单提交，仅含四件白名单交付物，无 force。
 - impl3-001：**零 GitHub 写操作**；推送 remote-agent/duanxian-audit3-impl3-001 单提交，仅含五件白名单交付物（四改一增），无 force；#14–#22 线上处置建议仍全部 OWNER_PENDING（见 `impl2-001-external-correction-proposal.md` v3 批注）。
+- impl4-001：**零 GitHub 写操作**；推送 remote-agent/duanxian-audit3-impl4-001 单提交，仅含六件白名单交付物（五改一增），无 force；#14–#22 线上处置建议仍全部 OWNER_PENDING（见 `impl2-001-external-correction-proposal.md` v4 批注）。
 
-## 11. 结语（v3）
+## 11. 结语（v4）
 
 本轮 impl3-001 按 acc2 §A2/07 修正单 ACC-F011–F014 完成第二轮修正交付：**(1)** **ACC-F011（阻断项）闭合**——新增 `impl3-001-pointer-coverage-table.md`：A3 三索引逐 Pointer 语义覆盖，RL 4602/4602＝18 语义组合全读（未读＝无），DI 4602/4602 库内六字段全量核验＋91 (阶段×域) 组语义直读（未读＝P1 值体 4602 条，#7 维持、不声称补出），SC 3924/3924＝64 源族直读（引用 4626 次全解析零断引用，42 个 MOD-/FRAG- 全部解析为 A3 内容域双词表），同值复用 525 对（7 域型）全列＋非等价语境核验；内嵌复算脚本＝可回读收据；v2「distinct 值全读」表述撤回，总表与 §1.1/本节声明同文。**(2)** **ACC-F012**——引擎/入口可得性四列证据表（仓库路径/解析根/实际存在/运行绑定）：engine/ 源码 1290 路径在库、七技能 run_v2.py 与 harnesses runtime 在库；真正缺失＝运行目录 conception-runs/、engine/projects/ migration 输入、三机器包（#7 维持）；h1 前缀差异降格为「格式不一致」单一含义；§3/§4/§6 与矩阵同步纠正。**(3)** **ACC-F013**——#17 维持未过门②（映射桥接缺失＝已证观察，关闭＝桥接补齐）；#19 明确隔离充分性双层判断（层级误用充分/事实级再利用不充分），窄命题保留；#20 逐子项处置（传输/人数/面孔/地点撤回；匹配次数确证保留，关闭目标＝正文计数口径收敛；K4/K6 载体待证保留为独立子项；工程/道具/披露剥离归 #11/#12/#13），自然语言与 JSON 同步。**(4)** **ACC-F014**——四维去重表 #3/#4/#7 机制/关闭行重做（旧根文本引用迁移＋R07 章节错位／text-eol 规则前缀失配／受控同版取证链缺失），22 条表复核仅此 4 处同类外推，已传导至 issues v3。线上 ISSUE 仍零写操作（OWNER_PENDING）。**acc-001 与 acc2 的 FAIL 判定历史保留**；本 v3 待第三步独立复验（acc3），不自宣布 PASS。
+
+本轮 impl4-001 按 acc3 §A3/08 修正单 ACC-F015–F017 完成第三轮修正交付（v3→**v4**）：**(1) ACC-F015 闭合**——POINTER §6「CE 321、PROP 159、EV 148×2 并列＝§8 复用对在 SC 侧镜像」的误归类**撤回**：EV 148 组＝**同来源双入口、同值 0、非 §8 复用**（按 source_id 分组与按完整 value_sha256 分组分开判定；POINTER §6a 148 组逐组全列——两侧同 T1/同优先级、148/148 组 decision_control_ids 不同、域恒为 /major_events↔/planned_event_registry）；CE 321/321、PROP 159/159 两侧同哈希＝真复用镜像维持；**525 真复用对零改动不凑数**；§1.1/全读账覆盖闭合描述同步；SC 双入口＝来源展示关联、值身份复用＝完整哈希相同，二者均不证 P1 值体已读。**(2) ACC-F016 闭合**——§6 四列表重做：七技能入口**逐项精确路径＋三候选根实际命中**（调用串自带 engine/ 前缀→①`ENGINE/engine/…` 拼重不存在→**②`ENGINE.parent`＝仓库根命中**；Q1＝novel-conception-reviewer、P1＝novel-conception-deliverable-assembler，**真名无 -designer 后缀**，带后缀两路径三根逐一验证均不存在）；「模块可导入」降为「源文件/导入路径静态存在，导入与依赖闭包可执行性未证」；三机器文件**阶段来源拆分**（P1 包↔A2 `p1_manifest` manifest 间接引用；handoff↔A2 `development_handoff` 直接哈希引用；hld-completion↔HLD V1 HF1 契约产物且 **A2 零引用**＝独立 HLD 阶段证据边界，非构思完成记录必含项）；已修正结论（engine 1290 件在库、缺运行目录/migration/机器包、前缀差异不证入口缺失）保留。**(3) ACC-F017 闭合**——#20 主候选**单一目标**（唯一关闭目标＝正文计数口径收敛；反例测试成立：只解决计数即满足主候选，与载体/道具/披露决定无关）；K4/K6 载体改列**独立不发布观察**（非 #20 关闭目标、非独立性理由，证据限度与不发布理由单列）；附带项**逐项处置**（第比利斯时间 register_only／K6 编号进正文 register_only／L502 名片待证（邻接 #11 但关闭条件不覆盖）／字符缺损 existing REG-03），「剥离归 #11/#12/#13」笼统归并撤回；自然语言/§5.2/v4 JSON delta 三方同步，可区分主候选/历史发布/独立观察/外部待授权。计数确证不丢失，传输/人数/面孔/地点撤回不恢复。线上 ISSUE 仍零写操作（OWNER_PENDING）。**acc-001/acc2/acc3 的 FAIL 判定历史保留**；本 v4 待第四步独立复验（acc4），不自宣布 PASS。

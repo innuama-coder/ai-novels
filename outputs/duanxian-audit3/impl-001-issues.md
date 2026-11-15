@@ -2,6 +2,7 @@
 
 - 版本：v2，2026-11-15，作业 duanxian-audit3-impl2-001（JOB #2394）按 acc-001 验收记录 §7/ACC-F009＋ACC-F007 修正。v1 登记内容原样保留于本文件（历史 hash、授权与回读记录零改动）；v2 只新增字段、收据与重归类结论，不补造任何历史请求日志。
 - 版本：v3，2026-11-15，作业 duanxian-audit3-impl3-001（JOB #2471）按 acc2-001 验收记录 §A2/07 修正单 **ACC-F013**（#17/#19/#20 处置与门判修正，自然语言与 JSON 同步）＋**ACC-F014**（四维差异表 #3/#4/#7 机制/关闭条件重做＋22 条复核）修正：见 §2.4/§2.6/§2.7、§5.2 v3 批注与文末 **v3 JSON delta**；v1/v2 登记内容（含全部历史 hash、授权与回读记录）原样保留。impl3-001 零 GitHub API 读写，线上状态以 impl2-001 GET 收据为准。
+- 版本：v4，2026-11-15，作业 duanxian-audit3-impl4-001（JOB #2493）按 acc3-001 验收记录 §A3/08 修正单 **ACC-F017**（#20 主候选单一可验目标＋附带项逐项分类闭合，自然语言/§5.2/JSON 同步）修正：见 §2.7 v4 处置与五门状态表、§5.2 候选 #20 行 v4 列与文末 **v4 JSON delta**；v1/v2/v3 登记内容（含全部历史 hash、授权与回读记录）原样保留。impl4-001 零 GitHub API 读写，线上状态仍以 impl2-001 GET 收据为准。
 - 作业（v1 原文）：JOB #2382（duanxian-audit3-impl-001，R3 审视实施）
 - 审计基线 BASE：`92573f1cca40f37cee04d2beb8708ff33ba603d6`；定义书 @ `024ef15a201a536592162b5f8442cf6a57699a8d`
 - 输入快照：`.kunora/inputs/open-issues-snapshot-20261114b.md`（SHA-256 `f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90`）
@@ -103,12 +104,25 @@
 - finding_id：DX3-F007
 - dedup_disposition：`published_narrowed`
 - closest_existing：#11（十秒沉默——信息先用后到族）、#12（郑柏舟显名——载体对齐）、#13（记忆可检索——机制邻接）
-- difference_reason：正文与素材对同一事件的计数矛盾（两次 vs 七次）及载体对齐子集无既有条直接覆盖；#11/#12/#13 为子项比较对象
-- publish_gate：v1 判五门全过 → v2：门②部分不成立（人数、面孔同一性、「未写即未发生」、仓库/地点等互斥未证明——acc-001 §3.5/ACC-F006）；计数确证保留：正文 L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点）；「七」污染源＝R07 §2.2 表/片段 C 第七次回放（成因推断）；**v3（ACC-F013）逐子项处置**：传输＝撤回；人数＝撤回；面孔＝撤回；地点＝撤回；**匹配次数＝确证成立保留**（L191/L195 两次 67%→82% vs L464 七次；L379/L472 七个认知节点为另一计数对象，不计入本命题），**单一可验关闭目标＝正文计数口径收敛**（对同一推理链的匹配次数统一）；K4/K6 载体＝**待证保留为独立子项**（meeting-room L17–29 K4/K6 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话＋正文 L302 回指 K6 电话——采用基准未定，关闭目标＝采用基准声明，与计数目标明确非同一）；工程/道具/披露附带项＝**剥离归 #11/#12/#13**（不以「载体对齐子集」吞并）
+- difference_reason：正文与素材对同一事件的计数矛盾（两次 vs 七次）无既有条直接覆盖；#11/#12/#13 为比较对象（非覆盖）；**v4（ACC-F017）**：#20 的独立性**仅由计数矛盾支撑**——载体对齐子集移出独立性理由与命题本体，改列独立不发布观察（见下五门表）；v2 原文「及载体对齐子集无既有条直接覆盖」的并列写法不再作为当前候选组织方式
+- publish_gate：v1 判五门全过 → v2：门②部分不成立（人数、面孔同一性、「未写即未发生」、仓库/地点等互斥未证明——acc-001 §3.5/ACC-F006）；计数确证保留：正文 L191/L195 两次匹配（67%→82%）vs L464「七次匹配」（L363 两次、L379 七节点）；「七」污染源＝R07 §2.2 表/片段 C 第七次回放（成因推断）；**v3（ACC-F013）逐子项处置**：传输＝撤回；人数＝撤回；面孔＝撤回；地点＝撤回；**匹配次数＝确证成立保留**（L191/L195 两次 67%→82% vs L464 七次；L379/L472 七个认知节点为另一计数对象，不计入本命题），**单一可验关闭目标＝正文计数口径收敛**（对同一推理链的匹配次数统一）；K4/K6 载体＝**待证保留为独立子项**（meeting-room L17–29 K4/K6 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话＋正文 L302 回指 K6 电话——采用基准未定，关闭目标＝采用基准声明，与计数目标明确非同一）；工程/道具/披露附带项＝**剥离归 #11/#12/#13**（不以「载体对齐子集」吞并）；**v4（ACC-F017）主候选单一化＋附带项分类闭合**：主候选**唯一**可验关闭目标＝**正文计数口径收敛**（同一推理链匹配次数统一；**只此一个**——反例测试成立：只解决计数即完全满足主候选目标，不需任何载体/道具/披露决定；计数修正无需决定 K4/K6 电话或会议室）；K4/K6 载体的「采用基准声明」**不再是 #20 的关闭目标或独立性理由**（v3 将两目标并置于「单一目标」表述的写法撤回），改列**独立不发布观察**（证据限度＝meeting-room L17/L20/L28–38＋§3.1–3.4 会议室 vs writer-shenyu L82/writer-zhengbozhou L191–199 电话·K8 面对面/正文 L302 回指 K6 电话，采用基准未定）；附带项**逐项处置**（撤回 v3「剥离归 #11/#12/#13」笼统归并——冻结 #11＝十秒沉默文字来源标注、#12＝郑柏舟记录区省略 vs 正文点名、#13＝完整记忆检索边界，其关闭条件均不自动覆盖下列子项）：①第比利斯时间标注（正文 L157/L335/L375）＝**register_only**（#11/#12/#13 关闭条件均不覆盖）；②K6 编号进入正文（L302「K6 的电话里」）＝**register_only**（同前不覆盖）；③L502 名片无素材来源＝**待证**（机制邻接 #11「来源未标」族，但 #11 关闭条件（十秒沉默来源标注）不覆盖本项，不以邻接冒充已有覆盖）；④素材字符缺损＝**existing REG-03**（register_only 已登记）。候选/子项五门状态表见本节末
 - marker：`<!-- duanxian-audit3-impl-001:DX3-F007:base=92573f1cca40f37cee04d2beb8708ff33ba603d6 -->`
 - body_sha256：`eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f`
-- publish_status：`published_open`；撤回未证互斥、保留单一对齐目标的编辑建议 OWNER_PENDING；多机制若不能形成单一目标则关闭，有效证据记入报告，不批量拆发
+- publish_status：`published_open`；撤回未证互斥、保留单一对齐目标的编辑建议 OWNER_PENDING；多机制若不能形成单一目标则关闭，有效证据记入报告，不批量拆发；**v4（ACC-F017）**：主候选＝计数口径收敛（单一目标），K4/K6 载体与附带项均不发布（独立观察/登记项/待证），线上编辑建议仍 OWNER_PENDING（未执行）
 - number：20；url：https://github.com/innuama-coder/ai-novels/issues/20；created_at：`2026-11-14T12:52:42Z`；get_verified：true；retrieved_body_sha256（impl2-001）：`eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f`
+
+#20 v4 候选/子项五门状态表（ACC-F017 产物；主候选与观察/登记项分层，可直接读出各门状态；「—」＝该门不适用于登记型观察）：
+
+| 项 | 层 | ①范围门 | ②证据门 | ③查重门 | ④目标门 | ⑤边界门 | 处置/发布状态 |
+|---|---|---|---|---|---|---|---|
+| 正文计数口径收敛（L191/L195 两次 67%→82% vs L464 七次；L363 明写两次；L379/L472 七节点＝另一对象不计入） | **主候选**（唯一命题） | 过（正文一致性设计命题） | 过（BASE 原文行号在案；「七」污染源＝推断标注） | 过（#11/#12/#13 为比较对象非覆盖） | 过（**v4 起单一**关闭目标＝计数口径收敛；反例测试成立） | 过（只提设计改进） | 现行候选（线上 #20 原文含已撤回断言→编辑收窄建议 OWNER_PENDING） |
+| K4/K6 载体（会议室 vs 电话/面对面） | 独立观察（待证） | 过 | **待证**（双侧事实在案：meeting-room L17/L20/L28–38＋§3.1–3.4 vs shenyu L82/zhengbozhou L191–199/正文 L302；采用基准未定） | 待比较（#12 载体披露族邻接，非同一对象） | 过（自身观察目标＝采用基准声明） | 过 | **不发布**（`not_published_independent_observation`；非 #20 关闭目标；证据未决；外部如需处置另经 Owner 授权） |
+| 第比利斯时间标注（L157/L335/L375） | 附带项 | —（呈现层观察） | 在案 | 无既有条覆盖 | — | — | register_only（不发布） |
+| K6 编号进入正文（L302） | 附带项 | —（呈现层观察） | 在案 | 无既有条覆盖 | — | — | register_only（不发布） |
+| L502 名片无素材来源 | 附带项 | — | 在案（正文 L502；writing 素材无来源记载） | 邻接 #11「来源未标」族但 #11 关闭条件不覆盖本项 | — | — | 待证（不发布；不以邻接冒充已有覆盖） |
+| 素材字符缺损 | 附带项 | — | 在案 | existing REG-03（register_only 已登记） | — | — | 归 REG-03（不重复登记） |
+
+历史发布与外部动作（v4 明示分层）：线上 #20＝v1 历史发布（`published_open`，原文未动，作为历史记录保留，不因 v4 分类改变而自动编辑/关闭）；一切线上编辑/关闭/评论＝外部动作，全部 OWNER_PENDING（未执行，impl4-001 零 GitHub 写操作）。
 
 ### 2.8 DX3-F008（#21）
 - finding_id：DX3-F008
@@ -189,7 +203,7 @@ REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系�
 | 候选 #17 | HLD-04 权限列↔HLD-07 知情时点映射 | 处置组行动层/原因层权限分级（Information permission vs Known by） | 同一时点/同一粒度桥接未建立（D+57 行动层 vs 危机解除后原因层复核） | **v3（ACC-F013）**：单一可验关闭目标＝同一时点/同粒度映射桥接补齐，补齐后重判门②（未补齐前门②未过维持）；不能补齐则按 Owner 裁决关闭；不自动拆发 |
 | 候选 #18 | PRD 终包 L34/L281 门状态自述 | PRD→HLD 入口门状态记录 | 终包前后行未标过程/终态（07-10–07-13 确认时间窗为旁证） | 历史终包状态说明澄清（勘误需授权） |
 | 候选 #19 | 六月线濒死/生前转移 vs 批准死亡后加载 | 死亡后加载终局＋沈逾执行者非启动者（G02） | 历史层-批准层适配映射缺失（总隔离声明在场：README L22-23/novel-goals L67-71；v3 判断：对层级误用充分、对事实级再利用不充分） | **v3（ACC-F013）**：单一可验关闭目标＝Owner 对清单化残留素材逐条适配声明（总隔离声明不单独构成关闭依据）；不改写故事 |
-| 候选 #20 | 正文与素材对同一事件的表述 | 匹配次数一致性＋载体对齐（单次/两次计数契约） | 素材迭代残留进入正文（两次 vs 七次；「七」污染源 R07 §2.2/片段 C）；v3 逐子项＝传输/人数/面孔/地点撤回，匹配次数确证，K4/K6 载体待证，工程/道具/披露剥离 | **v3（ACC-F013）**：单一可验关闭目标＝正文计数口径收敛（同一推理链匹配次数统一）；K4/K6 载体＝独立子项，关闭目标＝采用基准声明（与计数目标非同一）；剥离子项归 #11/#12/#13 |
+| 候选 #20 | 正文与素材对同一事件的表述（**v4：仅计数矛盾为 #20 主候选命题**） | 匹配次数一致性（单次/两次计数契约）；载体对齐不再列入本候选控制 | 素材迭代残留进入正文（两次 vs 七次；「七」污染源 R07 §2.2/片段 C＝推断）；v3 逐子项＝传输/人数/面孔/地点撤回（维持不恢复）；**v4（ACC-F017）**：载体与附带项移出主候选——K4/K6 载体＝独立不发布观察；第比利斯时间（L157/L335/L375）＝register_only、K6 编号进正文（L302）＝register_only、L502 名片无素材来源＝待证（邻接 #11「来源未标」族但其关闭条件不覆盖）、素材字符缺损＝existing REG-03 | **v4（ACC-F017）**：主候选**唯一**关闭目标＝正文计数口径收敛（同一推理链匹配次数统一；反例测试成立——只解决计数即满足主候选，与载体/道具/披露决定无关）；K4/K6 载体的采用基准声明＝独立观察自身目标，**非 #20 关闭目标**（v3 双目标并置撤回）；附带项逐项处置（v3「剥离归 #11/#12/#13」笼统归并撤回）；五门状态表见 §2.7 |
 | 候选 #21 | A3 decision_controls 计数文案 | 环境/片段体验控制条目 statement | 早期迭代计数残留（推断；h1_plan 六选二/h1_fragments 六→三死数据为旁证） | 控制条目文案与实列对齐（A3 勘误另授权，不改原字节）；计数≠体验控制 |
 | 候选 #14（重归类） | 全树文档路径/引用（工程整理） | **无独立故事控制** | 与 #1/#3/#4 同机制：路径迁移后引用失配 | 全树路径工程整理（超出本轮；另授权任务）——本轮关闭建议 OWNER_PENDING |
 | 候选 #22（重归类） | 构思工程脚本路径（样片驱动器等） | **无独立故事控制** | 与 #1 同根因路径失配；静态引用失效≠运行失败 | 工程修复另授权冻结任务——本轮关闭建议 OWNER_PENDING |
@@ -351,6 +365,90 @@ REJ-02（proposal 12-ending「封死未来重载」）维持拒绝：L24「系�
   "fourdim_recheck_22": "其余 19 条复核未发现『只换对象/载体即新机制』式外推（ACC-F014）",
   "snapshot_changes": "none（冻结快照零改动，不替 Owner 修改关闭标准）",
   "github_api_writes_this_loop": "none (zero API calls by impl3-001; online state per impl2-001 GET receipt)"
+}
+```
+
+### v4 JSON delta（schema 4.0-delta；ACC-F017 产物；只登记本轮变更字段，v1/v2/v3 JSON 原样保留于上）
+
+```json
+{
+  "schema_version": "4.0-delta",
+  "job_ref": "duanxian-audit3-impl-001",
+  "revised_by_job": "duanxian-audit3-impl4-001",
+  "revision_source": "acc3-001 §A3/08 ACC-F015 + ACC-F016 + ACC-F017（本 delta 登记其中 ACC-F017 的 #20 重组；ACC-F015/F016 修正位于 report/pointer/ledger，不涉本登记历史字段）",
+  "base_commit": "92573f1cca40f37cee04d2beb8708ff33ba603d6",
+  "definition_commit": "024ef15a201a536592162b5f8442cf6a57699a8d",
+  "snapshot_sha256": "f6cc9ddf44be3ee199c7993e0a37bc56813cb6be8b5e238da35a9f6ffeeffd90",
+  "candidate_updates": [
+    {
+      "finding_id": "DX3-F007",
+      "reorganized_by": "ACC-F017（v3 双目标并置与『剥离归 #11/#12/#13』笼统归并撤回）",
+      "main_candidate": {
+        "proposition": "正文计数矛盾确证：L191/L195 两次匹配（67%→82%，L363 明写第一次/第二次）vs L464『七次匹配』（同一推理链）；L379/L472 七个认知节点为另一计数对象，不计入",
+        "closure_target_single_verifiable": "正文计数口径收敛（同一推理链匹配次数统一）",
+        "single_target_counterexample_test": "PASS——只解决计数即完全满足主候选目标；计数修正无需决定 K4/K6 电话或会议室，也不需任何道具/披露决定",
+        "publish_gate_v4": "①过（正文一致性设计命题）②过（BASE 原文行号在案；『七』污染源 R07 §2.2/片段 C＝推断标注）③过（#11/#12/#13 为比较对象非覆盖）④过（v4 起单一关闭目标）⑤过"
+      },
+      "independent_observations": [
+        {
+          "id": "OBS-CARRIER-K4K6",
+          "subject": "K4/K6 载体（会议室 vs 电话/面对面）待证",
+          "evidence": "meeting-room（spaces/2026-06-07-writer-meeting-room.md）L17/L20/L28–38＋§3.1–3.4 写 K4/K6/K8 在会议室；writer-shenyu L82 写 K6 回答电话；writer-zhengbozhou L191–199 写 K4/K6 电话、K8 面对面；正文 L302 回指『K6 的电话里』",
+          "evidence_limit": "两组记录均真实在案，采用基准（何者为正文口径）未定；不判矛盾已确证",
+          "own_closure_direction": "采用基准声明（K4/K6 采用哪一载体基准）",
+          "relation_to_main_candidate": "非 #20 关闭目标、非独立性理由、非关闭条件（v3 并置写法撤回）",
+          "publish_status": "not_published_independent_observation",
+          "non_publish_reason": "与主候选目标不同源（修正载体不消除计数矛盾）；证据未决（②待证）；如需外部处置另经 Owner 授权"
+        },
+        {
+          "id": "OBS-INCIDENTAL-TBILISI-TIME",
+          "subject": "第比利斯时间标注（正文 L157/L335/L375）",
+          "disposition": "register_only",
+          "mechanism_match": "#11（十秒沉默来源标注）/#12（郑柏舟披露口径）/#13（记忆检索边界）关闭条件均不覆盖",
+          "publish_status": "not_published_register_only"
+        },
+        {
+          "id": "OBS-INCIDENTAL-K6-LABEL",
+          "subject": "K6 编号进入正文（L302）",
+          "disposition": "register_only",
+          "mechanism_match": "#11/#12/#13 关闭条件均不覆盖（呈现层观察）",
+          "publish_status": "not_published_register_only"
+        },
+        {
+          "id": "OBS-INCIDENTAL-L502-CARD",
+          "subject": "L502 名片无素材来源",
+          "disposition": "pending_evidence",
+          "mechanism_match": "机制邻接 #11『来源未标』族，但 #11 关闭条件（十秒沉默来源标注）不覆盖本项——不以邻接冒充已有覆盖",
+          "publish_status": "not_published_pending_evidence"
+        },
+        {
+          "id": "OBS-INCIDENTAL-CHAR-CORRUPTION",
+          "subject": "素材字符缺损",
+          "disposition": "existing_register_only",
+          "mechanism_match": "existing REG-03（style-reference 防护缺口＋字符损坏，register_only 已登记）",
+          "publish_status": "already_registered_REG-03"
+        }
+      ],
+      "historical_publish": {
+        "number": 20,
+        "state": "published_open",
+        "online_body_unchanged": true,
+        "body_sha256": "eea29d09a5e19aaa994ab967e7206b98658da590c514f8920b709470543b5a9f",
+        "note": "v1 历史发布作为历史记录保留；v4 分类不自动触发任何线上编辑/关闭"
+      },
+      "external_actions": "线上 #20 的编辑收窄/关闭等一切写动作＝OWNER_PENDING（未执行；impl4-001 零 GitHub 写操作）",
+      "retracted_v3_claims": [
+        "v3『单一可验关闭目标』字段同时装入『正文计数口径收敛』与『K4/K6 采用基准声明』两个明确不同的目标（acc3 I04 反例）",
+        "v3『工程/道具/披露附带项＝剥离归 #11/#12/#13』无逐子项机制/关闭条件对应（acc3 I03 反例；冻结 #11/#12/#13 的关闭条件均不自动覆盖第比利斯时间、K6 编号、L502 名片、字符缺损）",
+        "v2/v3 difference_reason 以『及载体对齐子集』并列作为 #20 独立性理由（v4 起独立性仅由计数矛盾支撑）"
+      ],
+      "unchanged_v3_dispositions": "传输/人数/面孔/地点＝撤回（维持，不恢复）；匹配次数确证保留（有效计数证据不丢失）"
+    }
+  ],
+  "five_gate_table_ref": "§2.7 v4 候选/子项五门状态表（自然语言与本 delta 同步）",
+  "fourdim_table_ref": "§5.2 候选 #20 行 v4 列",
+  "snapshot_changes": "none（冻结快照零改动，不替 Owner 修改关闭标准）",
+  "github_api_writes_this_loop": "none (zero API calls by impl4-001; online state per impl2-001 GET receipt)"
 }
 ```
 
